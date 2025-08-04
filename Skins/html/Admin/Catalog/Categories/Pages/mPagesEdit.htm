@@ -1,0 +1,131 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование теговой страницы
+			в группе <strong>&laquo;<?php echo $groupInf['name']; ?>&raquo;</strong>
+			в категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>
+		<?php } else { ?>
+			Добавление теговой страницы
+			в группе <strong>&laquo;<?php echo $groupInf['name']; ?>&raquo;</strong>
+			в категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Название страницы (тег) <b class="red">*</b>:<br>
+	<input name="name" id="name" type="text" size="50"
+		   required
+		   msg_required="Введите название страницы"
+		>
+	<a href="javascript:void(0)"
+	   onclick="oTranslate.intoCallback($$$('name').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+	   class="generate_lnk"
+		>
+		&dArr; Перевод
+	</a>
+	<br><br>
+
+	Псевдо-адрес страницы (URL) <b class="red">*</b>:<br>
+	<div style="float: left; line-height: 21px; font-weight: bold">http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Categories::a($categoryInf['id']); ?></div>
+	<input name="url" id="url" type="text" size="50"
+		   required
+		   msg_required="Введите URL страницы"
+		   pattern="[A-Za-z0-9\-]+"
+		   msg_pattern="URL страницы должен содержать только буквы, числа и '-' (дефис)">
+	<a href="javascript:void(0)" onclick="makeURL($$$('name'), $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a>
+	<div class="cl"></div>
+	<br>
+
+
+
+
+
+	<?php /*<br><br><br><br>
+
+
+	<h4>Значения поисковых фильтров</h4>
+	<?php if(count($filters)) { ?>
+		<b class="small">
+			Укажите комбинацию значений поискового фильтра, по которой будут автоматически выбираться серии для отображения на данной странице.<br>
+			Также вы можете включить отображение любой серии, даже не подходящий под указанный фильтр, на этой странице, выбрав соответствующий пункт<br>
+			в разделе редактирования серий в блоке &laquo;Показать серию на теговых страницах&raquo;.
+		</b>
+		<br><br>
+		<table class="admin_table">
+			<tr>
+				<th>Фильтр</th>
+				<th>Значение</th>
+			</tr>
+			<?php foreach($filters as $f) { ?>
+				<tr>
+					<td>
+						<?php echo $f['name']; ?>
+					</td>
+					<td style="column-count: 6">
+						<?php foreach($f['values'] as $vId => $vVal) { ?>
+							<span>
+								<input type="checkbox" name="filters[]" id="filters-<?php echo $vId?>" value="<?php echo $vId?>">
+								<label for="filters-<?php echo $vId?>"><?php echo $vVal?></label>
+							</span>
+							<br>
+						<?php } ?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	<?php } else { ?>
+		Категория &laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo; не содержит поисковых фильтров.<br>
+		Вы можете включить отображение любой серии на этой странице, выбрав соответствующий пункт<br>
+		в разделе редактирования серий в блоке &laquo;Показать серию на теговых страницах&raquo;.
+	<?php } ?>
+	<br><br>*/?>
+
+	<br><br><br><br>
+
+	<h4>Содержание</h4>
+	<b class="small">
+		Вместо заполнения следующих ниже полей (кроме поля &laquo;Текст страницы&raquo;) вручную для каждой теговой страницы,<br>
+		вы можете настроить шаблоны заголовков и метатегов тегоых страниц для категории
+		(<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-meta'), array('id' => $categoryInf['id'])); ?>" target="_blank">
+			http://<?php echo $_SERVER['HTTP_HOST'] . Url::buildUrl(Url::a('admin-catalog-categories-meta'), array('id' => $categoryInf['id'])); ?>
+		</a>).<br>
+		Заполненные вручную поля приоритетнее шаблонов!
+	</b>
+	<br><br>
+
+	Тайтл страницы:<br>
+	<input name="title" type="text" size="100"><br>
+	Место тайтла, где должен автоматически вставляться номер страницы списка серий, нужно обозначить так:<br>
+	<span class="courier">... {Страница %%%} ...</span><br>
+	Т.е. на первой странице списка всё, что в фигурных скобках, будет скрыто, а на 2-й и далее - оно будет отоображаться, а %%% заменится на номер страницы
+	<br><br>
+
+	Заголовок страницы (тег &lt;H1&gt;):<br>
+	<input name="h1" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	Текст страницы:<br>
+	<ckeditor name="text" width="100%" height="400" toolbar="Full"></ckeditor>
+	<br><br>
+
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups'), array(
+	'c'	=> $categoryInf['id']
+)); ?>" class="but-back">Вернуться</a>

@@ -1,0 +1,117 @@
+<script>
+	function changeShowInPrice(){
+		$$$('extra').style.display = $$$('show_in_price').checked ? 'block' : 'none';
+	}
+	onLoad(function(){
+		changeShowInPrice();
+	});
+
+	function applyExtraToAll(){
+		var e = $$$('extra-all').value;
+		var inputs = byTag('INPUT', $$$('extra'));
+		for(var i = 0, l = inputs.length; i < l; i++){
+			inputs[i].value = e;
+		}
+	}
+</script>
+
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование учётной записи дилера
+		<?php } else { ?>
+			Добавление нового дилера
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Имя / Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите имя/название дилера">
+	<br><br>
+
+	<input name="show_in_price" id="show_in_price" type="checkbox" value="1" onchange="changeShowInPrice()">
+	<label for="show_in_price">Показать входные цены</label>
+	<br><br>
+
+	Статус:<br>
+	<select name="status">
+		<option value="<?php echo Dealers::STATUS_OK?>">Активен</option>
+		<option value="<?php echo Dealers::STATUS_BANNED?>">Заблокирован</option>
+	</select>
+	<br><br>
+
+	<br><br><br><br>
+
+
+	<h4>Аккаунт</h4>
+
+	Логин <b class="red">*</b>:<br>
+	<input name="login" type="text" size="50"
+		   required
+		   msg_required="Введите логин дилера">
+	<br><br>
+
+	Пароль <b class="red">*</b>:<br>
+	<input name="pass" type="text" size="50"
+		   required
+		   msg_required="Введите пароль дилера">
+	<br><br>
+
+	E-mail <b class="red">*</b>:<br>
+	<input name="email" type="email" size="50"
+		   required
+		   msg_required="Введите E-mail дилера">
+	<br><br>
+
+	<br><br><br><br>
+
+
+	<h4>Примечание (для администратора)</h4>
+
+	<textarea name="notes" style="width: 600px; height: 150px;"></textarea>
+	<br><br>
+
+	<br><br><br><br>
+
+
+	<div id="extra">
+		<h4>Наценка на отображаемую входную цену</h4>
+		<div style="width: 500px; height: 500px; padding: 10px; border: 1px inset #000; overflow: auto">
+			<div style="float: right; padding: 0 3px 10px 0">
+				<input id="extra-all" size="10" style="text-align: right" value="0"> %<br>
+				<a href="javascript:void(0)" onclick="applyExtraToAll(); return false;">Применить ко всем</a>
+			</div>
+			<table class="admin_table" style="width: 100%;">
+				<tr>
+					<th>Поставщик</th>
+					<th style="width: 110px">Наценка</th>
+				</tr>
+				<?php foreach($suppliers as $s) { ?>
+					<tr>
+						<td>
+							<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), array(
+								'id'	=> $s['id']
+							)); ?>" target="_blank">
+								<?php echo $s['name']; ?>
+							</a>
+						</td>
+						<td>
+							<input name="extra[<?php echo $s['id']; ?>]" size="10" style="text-align: right"> %
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		</div>
+		<br><br><br><br>
+	</div>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-dealers'); ?>" class="but-back">Вернуться</a>

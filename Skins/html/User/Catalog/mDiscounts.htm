@@ -1,0 +1,52 @@
+<div class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+	<span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+		<a href="<?php echo Url::a('index')?>" itemscope itemtype="http://schema.org/Thing" itemid="<?php echo Url::a('index')?>"
+			itemprop="item"><span itemprop="name">Главная</span></a>
+	</span>
+	<span class="nolnk">Акции и скидки</span>
+</div>
+
+<?php if(trim($pageInf['header'])) { ?>
+	<h1><?php echo $pageInf['header']; ?></h1>
+<?php } ?>
+
+<?php if(trim($pageInf['text']) !== '') { ?>
+	<div class="content-text">
+		<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+		<div class="cl"></div>
+	</div>
+<?php } ?>
+
+<?php if(count($categories)) { ?>
+	<?php foreach($categories as $c) { ?>
+		<div class="catalog-series series-in-one-row bottom">
+			<h2><?php echo (trim($c['h1']) !== '' ? $c['h1'] : $c['name'])?></h2>
+
+			<?php if($c['use_noindex']) { ?><noindex><?php } ?>
+				<a
+					href="<?php echo Catalog_Categories::a($c['id'], true)?>"
+					class="catalog-series-catlink"
+					<?php if($c['use_nofollow']) { ?>rel="nofollow"<?php } ?>
+					>
+					Перейти в раздел
+				</a>
+				<?php if($c['use_noindex']) { ?></noindex><?php } ?>
+
+			<div class="cl"></div>
+
+			<?php if(count($c['series'])) { ?>
+				<div>
+					<?php foreach($c['series'] as $sn => $s) { ?>
+						<?php include(_ROOT . Catalog_Series::$tpl); ?>
+					<?php } ?>
+					<div class="cl"></div>
+				</div>
+			<?php } ?>
+		</div>
+	<?php } ?>
+
+<?php } else { ?>
+	<div>
+		<?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
+	</div>
+<?php } ?>

@@ -1,0 +1,43 @@
+<h3>Серии металлической мебели:</h3>
+
+<a href="<?php echo Url::a('admin-catalog-metallseries-edit'); ?>" class="but-add">
+	Добавить
+</a>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Стоимость сборки</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($metallSeries as $ms) { ?>
+		<tr>
+			<td><?php echo $ms['id']?></td>
+			<td><?php echo $ms['name']?></td>
+			<td style="text-align: right">
+				<?php echo Catalog::priceFormat($ms['price_accembly']); ?> руб.
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-metallseries-edit'), array(
+					'id'	=> $ms['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $ms['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($metallSeries)) { ?>
+		<tr><td colspan="5">Серии металлической мебели не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-catalog-metallseries-edit'); ?>" class="but-add">
+	Добавить
+</a>

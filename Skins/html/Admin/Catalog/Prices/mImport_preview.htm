@@ -1,0 +1,124 @@
+<h3>Импорт прайса: предпросмотр изменений</h3>
+
+<br><br>
+
+<h4>Изменения в сериях</h4>
+<table class="admin_table">
+	<tr>
+		<th>
+			Изменяемые свойства
+		</th>
+		<th>
+			К-во серий
+		</th>
+	</tr>
+	<?php
+	$flds = array(
+		'supplier_id'	=> 'Поставщик',
+		'name'			=> 'Название',
+		'extra_charge'	=> 'Наценка серии',
+		'options'	=> 'Характеристики',
+		'title'		=> 'Тайтл страницы',
+		'h1'		=> 'H1 страницы',
+		'dscr'		=> 'Мета-тэг describtion',
+		'kwrd'		=> 'Мета-тэг keywords'
+	);
+	$changesCnt = array();
+	foreach($flds as $f => $n){
+		$changesCnt[$f] = 0;
+	}
+	foreach($updSeries as $upd){
+		foreach($flds as $f => $n){
+			if(isset($upd[$f])){
+				$changesCnt[$f]++;
+			}
+		}
+	}
+	?>
+	<?php foreach($flds as $f => $n) { ?>
+		<?php if(!$changesCnt[$f]) continue; ?>
+		<tr>
+			<td>
+				<?php echo $n?>
+			</td>
+			<td style="text-align: right; padding-right: 10px">
+				<?php echo $changesCnt[$f]?>
+			</td>
+		</tr>
+	<?php } ?>
+	<tr>
+		<th>
+			Всего обновится серий
+		</th>
+		<th style="text-align: right; padding-right: 10px">
+			<?php echo count($updSeries); ?>
+		</th>
+	</tr>
+</table>
+<br><br><br><br>
+
+
+
+<h4>Изменения в товарах</h4>
+<table class="admin_table">
+	<tr>
+		<th>
+			Изменяемые свойства
+		</th>
+		<th>
+			К-во товаров
+		</th>
+	</tr>
+	<?php
+	$flds = array(
+		'group'		=> 'Группа',
+		'name'		=> 'Наименование',
+		'art'		=> 'Артикул',
+		'size'		=> 'Размер',
+		'volume'	=> 'Объём',
+		'weight'	=> 'Масса',
+		'text'		=> 'Описание',
+		'price'			=> 'Цена вход.',
+		'extra_charge'	=> 'Наценка',
+		'discount'	=> 'Скидка',
+		'materials'	=> 'Материалы и цены по ним'
+	);
+	$changesCnt = array();
+	foreach($flds as $f => $n){
+		$changesCnt[$f] = 0;
+	}
+	foreach($updItems as $upd){
+		foreach($flds as $f => $n){
+			if(isset($upd[$f])){
+				$changesCnt[$f]++;
+			}
+		}
+	}
+	?>
+	<?php foreach($flds as $f => $n) { ?>
+		<?php if(!$changesCnt[$f]) continue; ?>
+		<tr>
+			<td>
+				<?php echo $n?>
+			</td>
+			<td style="text-align: right; padding-right: 10px">
+				<?php echo $changesCnt[$f]?>
+			</td>
+		</tr>
+	<?php } ?>
+	<tr>
+		<th>
+			Всего обновится товаров
+		</th>
+		<th style="text-align: right; padding-right: 10px">
+			<?php echo count($updItems); ?>
+		</th>
+	</tr>
+</table>
+<br><br><br>
+
+
+<input type="button" class="submit" value="   Выполнить импорт   " onclick="document.location.href = '<?php echo Url::a('admin-catalog-import'); ?>?execute=1';">
+
+<br><br><br>
+<a href="<?php echo Url::a('admin-catalog-import'); ?>" class="but-back">Вернуться</a>

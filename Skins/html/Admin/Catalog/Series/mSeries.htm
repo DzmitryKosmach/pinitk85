@@ -1,0 +1,342 @@
+<h3>Серии мебели в каталоге:</h3>
+<br><br>
+
+<script>
+	function updFilter(){
+		var cId = $$$('category-id').value;
+
+		AJAX.lookup(
+			'<?php echo Url::buildUrl(0); ?>?upd-filter=' + cId,
+			function(res){
+				res = AJAX.jsonDecode(res);
+				if(res === false){	// Некорректный ответ
+					return;
+				}
+
+				var i, t;
+
+                var suppHtml =
+                    '<option value=""> - Любой поставщик - </option>' +
+                    '<option value="0"> - Без поставщика - </option>';
+
+                // Сортировка по алфавиту. Исходные данные битые из-за AJAX.jsonDecode
+                var suppArr = Array()
+
+                for(i in res.suppliers) {
+                    suppArr.push(res.suppliers[i])
+                }
+
+                suppArr = suppArr.sort()
+
+                for(t in suppArr) {
+                    for(i in res.suppliers) {
+                        if (res.suppliers[i] == suppArr[t]) {
+                            suppHtml += '<option value="' + i + '">' + res.suppliers[i] + '</option>';
+                        }
+                    }
+                }
+
+                /*
+				for(i in res.suppliers){
+					suppHtml += '<option value="' + i + '">' + res.suppliers[i] + '</option>';
+				}
+                 */
+
+				$$$('supplier-id').innerHTML = suppHtml;
+				$$$('supplier-id').value = $$$('filter-supplier-id').value;
+
+				var matsHtml = '<option value="0"> - Любой материал - </option>';
+				for(i in res.materials){
+					matsHtml += '<option value="' + i + '">' + res.materials[i] + '</option>';
+				}
+				$$$('material-id').innerHTML = matsHtml;
+				$$$('material-id').value = $$$('filter-material-id').value;
+			}
+		);
+	}
+	onLoad(function(){updFilter()});
+</script>
+
+<form class="search" action="<?php echo Url::a('admin-catalog-series'); ?>" method="get">
+	<table>
+		<tr>
+			<td>
+				Имя серии:<br>
+				<input type="text" name="id" value="<?php echo (isset($_GET['id']) ? $_GET['id'] : ''); ?>" size="10">
+			</td>
+			<td>
+				Категория:<br>
+				<select name="category_id" id="category-id" style="max-width: 200px" onchange="updFilter()">
+					<option value="0"> - Все категории - </option>
+					<?php foreach($catsIds as $catId) { ?>
+						<option value="<?php echo $catId?>" <?php if(intval($_GET['category_id']) == $catId) { ?>selected<?php } ?>>
+							<?php echo Catalog_Categories::name($catId); ?>
+						</option>
+					<?php } ?>
+				</select>
+			</td>
+			<td>
+				Поставщик:<br>
+				<select name="supplier_id" id="supplier-id" style="max-width: 200px">
+					<option value=""> - Любой поставщик - </option>
+					<option value="0" <?php if(trim($_GET['supplier_id']) !== '' && intval($_GET['supplier_id']) == 0) { ?>selected<?php } ?>>
+						- Без поставщика -
+					</option>
+					<?php foreach($suppliers as $sId => $sName) { ?>
+						<option value="<?php echo $sId?>" <?php if(intval($_GET['supplier_id']) == $sId) { ?>selected<?php } ?>><?php echo $sName?></option>
+					<?php } ?>
+				</select>
+				<input type="hidden" id="filter-supplier-id" value="<?php echo hsch(trim($_GET['supplier_id'])); ?>">
+			</td>
+			<td>
+				Материал:<br>
+				<select name="material_id" id="material-id" style="max-width: 200px">
+					<option value="0"> - Любой материал - </option>
+					<?php foreach($materials as $m) { ?>
+						<option value="<?php echo $m['id']?>" <?php if(intval($_GET['material_id']) == $m['id']) { ?>selected<?php } ?>>
+							<?php echo $m['name']?>
+							<?php if(isset($suppliers[$m['supplier_id']])) { ?>
+								(<?php echo $suppliers[$m['supplier_id']]?>)
+							<?php } ?>
+						</option>
+					<?php } ?>
+				</select>
+				<input type="hidden" id="filter-material-id" value="<?php echo intval($_GET['material_id']); ?>">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Серий на страницу:<br>
+				<input type="text" list="on_page" name="on_page" style="width: 40px" value="<?php echo intval($_GET['on_page']) ? intval($_GET['on_page']) : mSeries::ON_PAGE_DEFAULT?>">
+				<datalist id="on_page">
+					<option value="20">
+					<option value="50">
+					<option value="100">
+				</datalist>
+			</td>
+			<td>
+				Снято с производства:<br>
+				<select name="out_of_production">
+					<option value="0" <?php if(!isset($_GET['out_of_production']) || trim($_GET['out_of_production']) === '0') { ?>selected<?php } ?>>Нет</option>
+					<option value="1" <?php if(isset($_GET['out_of_production']) && trim($_GET['out_of_production']) === '1') { ?>selected<?php } ?>>Да</option>
+					<option value="" <?php if(isset($_GET['out_of_production']) && trim($_GET['out_of_production']) === '') { ?>selected<?php } ?>>Не важно</option>
+				</select>
+			</td>
+            <td>
+                <div style="padding-top: 10px; display: flex; align-items: center">
+                <input type="checkbox" name="have_comments" id="have_comments" value="Y"<?php echo isset($_GET['have_comments']) && $_GET['have_comments'] == "Y" ? " checked" : ""; ?>>
+                <label for="have_comments" style="margin-left: 6px">с заметками</label>
+                </div>
+            </td>
+			<td style="text-align: right">
+				<input type="submit" class="submit" value="Найти">
+			</td>
+		</tr>
+	</table>
+</form>
+<br><br>
+
+<?php $retUrl = Url::buildUrl(0, $_GET); ?>
+
+<div style="float: right">
+	<a href="<?php echo Url::buildUrl(0, $_GET, array('clear-notes' => 1)); ?>" onclick="return window.confirm('Вы действительно хотите удалить все заметки администратора для ВСЕХ серий в каталоге?')">
+		Очистить все заметки
+	</a>
+</div>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-edit'), array(
+	'category_id'	=> intval($_GET['category_id']),
+	'ret'			=> $retUrl
+)); ?>" class="but-add">
+	Добавить серию
+</a>
+
+<?php echo $toggle; ?>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>IDs</th>
+		<th>Фото</th>
+		<th>Название / URL / Категория / Поставщик</th>
+		<?php if($is_admin) { ?><th>Заметки администратора</th><?php } ?>
+		<th>Недавние изменения</th>
+		<?php /*<th class="small1">Мин. цена (цена комплекта)</th>*/?>
+		<th class="small1">Поисковая цена</th>
+		<th class="small1">В наличии</th>
+		<?php /*<th>Значения фильтров</th>*/?>
+		<th class="small1">Фотографии</th>
+		<th class="small1">Товары</th>
+		<th class="small1">Отзывы</th>
+		<th class="small1">Показать в списке категорий</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($series as $s) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $s['id']?></td>
+			<td>
+				<?php if($s['1st_photo']) { ?>
+					<a href="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $s['1st_photo']['id']?>.<?php echo $s['1st_photo']['_img_ext']?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $s['1st_photo']['id']?>_80x60_<?php echo $s['1st_photo']['rm']?>.<?php echo $s['1st_photo']['_img_ext']?>" width="80" height="60" alt="" style="border: 1px solid #CCC;">
+					</a>
+				<?php } ?>
+			</td>
+			<td>
+				<span style="white-space: nowrap">
+					<?php echo $s['name']?>
+				</span>
+				<br>
+				<a href="<?php echo Catalog_Series::a($s); ?>" target="_blank" class="courier"><?php echo Catalog_Series::a($s); ?></a>
+				<br>
+				<b class="small">
+					<?php echo Catalog_Categories::name($s['category_id']); ?>
+				</b>
+				<?php if(isset($suppliers[$s['supplier_id']])) { ?>
+					<br>
+					<a  style="white-space: nowrap" href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), array(
+						'id'	=> $s['supplier_id']
+					)); ?>" target="_blank">
+						<?php echo $suppliers[$s['supplier_id']]?>
+					</a>
+				<?php } ?>
+			</td>
+            <?php if($is_admin) { ?>
+            <td>
+                <?php if($s['admin_comment']) { ?>
+                    <?php if(mb_strlen($s['admin_comment']) >= 128) { ?>
+                        <?php $last4 = mb_substr($s['admin_comment'], 0, 128) . '...'; ?>
+                        <div id="comment-last-<?php echo $s['id']?>"><b class="small">
+                                <a href="javascript:void(0)" onclick="$$$('comment-last-<?php echo $s['id']?>').style.display = 'none'; $$$('comment-all-<?php echo $s['id']?>').style.display = 'block'; return false;">...</a><br>
+                                <?php echo $last4 ? nl2br($last4) : ''; ?>
+                            </b></div>
+                        <div id="comment-all-<?php echo $s['id']?>" style="display: none;"><b class="small">
+                                <a href="javascript:void(0)" onclick="$$$('comment-all-<?php echo $s['id']?>').style.display = 'none'; $$$('comment-last-<?php echo $s['id']?>').style.display = 'block'; return false;">Свернуть</a><br>
+                                <?php echo isset($s['admin_comment']) && $s['admin_comment'] ? nl2br($s['admin_comment']) : ''; ?>
+                            </b></div>
+                    <?php } else { ?>
+                        <div>
+                            <b class="small"><?php echo isset($s['admin_comment']) && $s['admin_comment'] ? nl2br($s['admin_comment']) : ''; ?></b>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+            </td>
+            <?php } ?>
+			<td>
+				<?php if($s['admin_notes']) { ?>
+					<?php if(mb_substr_count($s['admin_notes'], "\n") >= 4) { ?>
+						<?php $last4 = implode("\n", array_slice(array_map('trim', explode("\n", $s['admin_notes'])), -4)); ?>
+						<div id="notes-last-<?php echo $s['id']?>" style="white-space: nowrap;"><b class="small">
+							<a href="javascript:void(0)" onclick="$$$('notes-last-<?php echo $s['id']?>').style.display = 'none'; $$$('notes-all-<?php echo $s['id']?>').style.display = 'block'; return false;">...</a><br>
+							<?php echo $last4 ? nl2br($last4) : ''; ?>
+						</b></div>
+						<div id="notes-all-<?php echo $s['id']?>" style="white-space: nowrap; display: none;"><b class="small">
+							<a href="javascript:void(0)" onclick="$$$('notes-all-<?php echo $s['id']?>').style.display = 'none'; $$$('notes-last-<?php echo $s['id']?>').style.display = 'block'; return false;">Свернуть</a><br>
+							<?php echo isset($s['admin_notes']) && $s['admin_notes'] ? nl2br($s['admin_notes']) : ''; ?>
+						</b></div>
+					<?php } else { ?>
+						<div style="white-space: nowrap;">
+							<b class="small"><?php echo isset($s['admin_notes']) && $s['admin_notes'] ? nl2br($s['admin_notes']) : ''; ?></b>
+						</div>
+					<?php } ?>
+				<?php } ?>
+			</td>
+			<?php /*<td style="white-space: nowrap; text-align: right">
+				<?php echo Catalog::priceFormat($s['price_min']); ?> руб.
+			</td>*/?>
+			<td style="white-space: nowrap">
+				<?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) { ?>
+					<?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от'); ?><br>
+					<?php echo Catalog::priceFormat($s['price_search_min']); ?>
+					<?php if(abs($s['price_search_min']) != abs($s['price_search_max'])) { ?>
+						- <?php echo Catalog::priceFormat($s['price_search_max']); ?>
+					<?php } ?>
+				<?php } else { ?>
+					-
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $s['id'],
+					'opt' => 'in_stock'
+				)); ?>" class="but-opt" title="Серия в наличии">
+					<?php echo $s['in_stock'] ? 1 : 0?>
+				</a>
+				<?php if(intval($s['out_of_production'])) { ?>
+					<b class="small red">Снято с производства</b>
+				<?php } ?>
+			</td>
+
+			<?php /*<td style="white-space: nowrap;"><b class="small">
+				<?php foreach($s['filter_values'] as $fv) { ?>
+					<?php echo $fv['name']?>: <?php echo $fv['value']?><br>
+				<?php } ?>
+			</b></td>*/?>
+
+			<td align="center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-photos'), array(
+					's'		=> $s['id'],
+					'ret'	=> $retUrl
+				)); ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($s['photos_cnt']); ?>
+				</a>
+			</td>
+			<td align="center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+					's'		=> $s['id'],
+					'ret'	=> $retUrl
+				)); ?>" class="but-view" style="white-space: nowrap" title="Перейти к списку">
+					<?php echo intval($s['items_cnt']); ?>/<?php echo intval($s['cross_items']); ?>
+				</a>
+			</td>
+			<td align="center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-reviews'), array(
+					'object'	=> Reviews::OBJ_SERIES,
+					'object_id'	=> $s['id']
+				)); ?>" target="_blank" class="but-view" title="Перейти к списку">
+					<?php echo intval($s['reviews_cnt']); ?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $s['id'],
+					'opt' => 'in_cats_list'
+				)); ?>" class="but-opt" title="Показать в списке категорий">
+					<?php echo $s['in_cats_list'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-edit'), array(
+					'id'	=> $s['id'],
+					'ret'	=> $retUrl
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $s['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($series)) { ?>
+		<tr><td colspan="13">
+			Серии не найдены
+		</td></tr>
+	<?php } ?>
+</table>
+
+<?php echo $toggle?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-edit'), array(
+	'category_id'	=> intval($_GET['category_id']),
+	'ret'			=> $retUrl
+)); ?>" class="but-add">
+	Добавить серию
+</a>

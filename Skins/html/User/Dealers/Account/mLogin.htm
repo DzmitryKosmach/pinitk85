@@ -1,0 +1,51 @@
+<div class="content-text">
+	<?php if(trim($pageInf['header'])) { ?>
+		<h1><?php echo $pageInf['header']; ?></h1>
+	<?php } ?>
+	<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+	<div class="cl"></div>
+
+	<div class="content-white" style="margin-top: 30px; margin-bottom:40px">
+		<form action="" method="post" class="form" style="max-width: 460px">
+			<table class="form-table">
+				<tr>
+					<td class="label required">
+						Логин:
+					</td>
+					<td>
+						<input type="text" name="login" class="text"
+					   		maxlength="1000"
+					   		msg_maxlen="Длина логина не должна превышать 1000 символов"
+					   		required
+					   		msg_required="Вы не указали ваш логин"
+							>
+					</td>
+				</tr>
+				<tr>
+					<td class="label required">
+						Пароль:
+					</td>
+					<td>
+						<input type="password" name="pass" class="text"
+					   		maxlength="100"
+					   		msg_maxlen="Длина пароля не должна превышать 100 символов"
+					   		required
+					   		msg_required="Введите пароль"
+							>
+					</td>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<div style="float: right; padding-top: 6px;">
+							<a href="<?php echo Url::a('dealer-forgetpass'); ?>">Забыли пароль?</a>
+						</div>
+						<button type="submit" class="button button-orange">Войти</button>
+						<div class="cl"></div>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

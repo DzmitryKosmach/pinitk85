@@ -1,0 +1,139 @@
+<?php echo CssCopmress::load('cart')?>
+
+<div id="title" class="title">
+	<div class="centering">
+		<div class="centeringin clearfix">
+			<?php if(count($breadcrumbs)) { ?>
+				<?php $bcLast = array_pop($breadcrumbs); ?>
+				<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+					<?php $position = 0; ?>
+					<?php foreach($breadcrumbs as $bc) { ?>
+						<?php $position = $position + 1 ?>
+						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+							<a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
+								itemid="<?php echo $bc['url']; ?>"
+								itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
+						    <meta itemprop="position" content="<?php echo $position?>" />
+						</li>
+						<li><span> / </span></li>
+					<?php } ?>
+					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+						<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
+							<span itemprop="name"><?php echo $bcLast['name']; ?></span>
+						</span>
+				    	<meta itemprop="position" content="<?php echo $position + 1?>" />
+					</li>
+				</ul>
+			<?php } ?>
+			<?php if(trim($pageInf['header'])) { ?>
+				<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+			<?php } ?>
+		</div>
+	</div>
+</div>
+<div id="content" class="content">
+	<div class="centering">
+		<div class="centeringin clearfix">
+			<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+			<div class="cl"></div>
+
+			<?php if(count($series)) { ?>
+				<table class="cart-table">
+					<tr>
+						<th>&nbsp;</th>
+						<?php foreach($series as $s) { ?>
+							<th>
+								<a href="<?php echo Catalog_Series::a($s)?>"><?php echo $s['name']; ?></a>
+								&nbsp;
+								<a href="<?php echo Url::buildUrl(0, array('remove' => $s['id']))?>" class="remove" title="Удалить из сравнения"></a>
+							</th>
+						<?php } ?>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<?php foreach($series as $s) { ?>
+							<td class="photo">
+								<?php if($s['1st_photo']) { ?>
+
+									<a href="<?php echo Catalog::photoUrl(
+										Catalog_Series_Photos::$imagePath,
+										$s['1st_photo']['id'], 0,0,0, $s['1st_photo']['_img_ext'],
+										$s['1st_photo']['name']
+									)?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+										<img src="<?php echo Catalog::photoUrl(
+											Catalog_Series_Photos::$imagePath,
+											$s['1st_photo']['id'], 175, 110, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext'],
+											$s['1st_photo']['name']
+										)?>" width="175" height="110" alt="<?php echo hsch($s['name'])?>">
+									</a>
+								<?php } ?>
+							</td>
+						<?php } ?>
+					</tr>
+
+					<?php
+                        $prices = array();
+                        foreach($series as $s){
+                            $prices[] = $s['price_min'];
+                        }
+					?>
+					<tr <?php if(Catalog_Compare::isEqual($prices)) { ?>class="equal"<?php } ?>>
+						<td class="total">
+							<span class="b">Цена комплекта:</span>
+						</td>
+						<?php foreach($series as $s) { ?>
+							<td>
+								<?php echo Catalog::priceFormat($s['price_min'])?>
+								<span class="rub">р</span>
+							</td>
+						<?php } ?>
+					</tr>
+					<?php foreach($options as $optName => $series2val) { ?>
+						<tr <?php if(Catalog_Compare::isEqual($series2val)) { ?>class="equal"<?php } ?>>
+							<td class="total">
+								<?php echo $optName?>
+							</td>
+							<?php foreach($series as $s) { ?>
+								<td>
+									<?php echo $series2val[$s['id']]; ?>
+								</td>
+							<?php } ?>
+						</tr>
+					<?php } ?>
+					<tr <?php if(Catalog_Compare::isEqual($matsBySeries)) { ?>class="equal"<?php } ?>>
+						<td class="total">
+							<span class="b">Цветовая гамма</span>
+						</td>
+						<?php foreach($series as $s) { ?>
+							<td>
+								<?php if(count($matsBySeries[$s['id']])) { ?>
+									<?php $mCnt = count($matsBySeries[$s['id']]) ?>
+									<?php foreach($matsBySeries[$s['id']] as $mn => $mId) { ?>
+										<?php $m = $materials[$mId]; ?>
+										<?php if($m['image']['ext']) { ?>
+											<a class="level1"
+											   href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"
+											   target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+											><?php echo $m['name']; ?></a><?php echo ($mn == $mCnt-1 ? '' : ',')?>
+										<?php } else { ?>
+											<?php echo $m['name']; ?><?php echo ($mn == $mCnt-1 ? '' : ',')?>
+										<?php } ?>
+									<?php } ?>
+								<?php } else { ?>
+									-
+								<?php } ?>
+							</td>
+						<?php } ?>
+					</tr>
+				</table>
+				<br><br>
+			<?php } ?>
+
+			<?php if(!count($series)) { ?>
+				<div>
+					<?php echo Pages::msgErr('Нет серий, выбранных для сравнения.')?>
+				</div>
+			<?php } ?>
+		</div>
+	</div>
+</div>

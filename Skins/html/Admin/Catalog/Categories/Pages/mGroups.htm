@@ -1,0 +1,89 @@
+<h3>Группы теговых страниц в категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>:</h3>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories'), array(
+	'p'	=> intval($categoryInf['parent_id'])
+)); ?>" class="but-back">
+	Вернуться
+</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-edit'), array(
+	'c'	=> intval($categoryInf['id'])
+)); ?>" class="but-add">
+	Добавить группу
+</a>
+
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Группа</th>
+		<th class="small1">Теговые страницы</th>
+		<th class="small1">Показать теги в списке серий</th>
+		<th class="small1">Развернуть в фильтре</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($groups as $g) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $g['id']?></td>
+			<td><?php echo $g['name']?></td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-pages'), array('g' => $g['id'])); ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($g['pages_cnt']); ?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act'	=> 'setopt',
+					'itemid'=> $g['id'],
+					'opt'	=> 'in_series_list'
+				)); ?>" class="but-opt" title="Показать теги данной группы в сериях (в списке серий)">
+					<?php echo $g['in_series_list'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act'	=> 'setopt',
+					'itemid'=> $g['id'],
+					'opt'	=> 'opened'
+				)); ?>" class="but-opt" title="Развернуть список тегов в поисковом фильтре">
+					<?php echo $g['opened'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-edit'), array(
+					'id'	=> $g['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $g['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($groups)) { ?>
+		<tr><td colspan="8">Группы не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories'), array(
+	'p'	=> intval($categoryInf['parent_id'])
+)); ?>" class="but-back">
+	Вернуться
+</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-edit'), array(
+	'c'	=> intval($categoryInf['id'])
+)); ?>" class="but-add">
+	Добавить группу
+</a>

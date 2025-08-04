@@ -1,0 +1,98 @@
+<h3>Поисковые фильтры для серий мебели:</h3>
+<br><br>
+
+<a href="<?php echoUrl::a('admin-catalog-filters-edit'); ?>" class="but-add">
+	Добавить фильтр
+</a>
+
+<script>
+	dragTableUrl = '<?php echoUrl::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Вид</th>
+		<th>Значения</th>
+		<th class="small1">Показывать значение<br>в списке серий</th>
+		<th class="small1">Показать фильтр<br>пользователям</th>
+		<th class="small1">Развернуть в<br>боковой колонке</th>
+		<th class="small1">Используется<br>в категориях</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($filters as $f) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo$f['id']; ?></td>
+			<td><?php echo$f['name']; ?></td>
+			<td>
+				<?php if($f['type'] === Catalog_Filters::TYPE_CHECKBOX) { ?>
+					Выбор нескольких вариантов (галочки)
+				<?php } else/*if($f['type'] === Catalog_Filters::TYPE_RADIO)*/ { ?>
+					Выбор одного варианта (кружки с точками)
+				<?php } ?>
+			</td>
+
+			<td align="center">
+				<a href="<?php echoUrl::buildUrl(Url::a('admin-catalog-filters-values'), array(
+					'f'	=> $f['id']
+				)); ?>" class="but-view" title="Перейти к списку">
+					<?php echointval($f['values_cnt']); ?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echoUrl::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $f['id'],
+					'opt' => 'in_series_list'
+				)); ?>" class="but-opt" title="Показывать значение в списке серий">
+					<?php echo$f['in_series_list'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echoUrl::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $f['id'],
+					'opt' => 'display'
+				)); ?>" class="but-opt" title="Показать фильтр пользователям">
+					<?php echo$f['display'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echoUrl::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $f['id'],
+					'opt' => 'opened'
+				)); ?>" class="but-opt" title="Развернуть варианты значений фильтра в кбоковой колонке на странице категории">
+					<?php echo$f['opened'] ? 1 : 0?>
+				</a>
+			</td>
+			<td align="center">
+				<?php echointval($f['cats_cnt']); ?>
+			</td>
+
+			<td>
+				<a href="<?php echoUrl::buildUrl(Url::a('admin-catalog-filters-edit'), array(
+					'id'	=> $f['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echoUrl::buildUrl(0, $_GET, array('act' => 'del', 'n' => $f['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($filters)) { ?>
+		<tr><td colspan="10">
+			Фильтры не созданы
+		</td></tr>
+	<?php } ?>
+</table>
+
+<a href="<?php echoUrl::a('admin-catalog-filters-edit'); ?>" class="but-add">
+	Добавить фильтр
+</a>

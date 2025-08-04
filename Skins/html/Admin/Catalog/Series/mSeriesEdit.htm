@@ -1,0 +1,911 @@
+<form action="">
+	<div style="float: right">
+		<strong>История изменений:</strong><br>
+		<textarea name="admin_notes" style="width: 300px; height: 80px;"></textarea>
+	</div>
+
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование серии мебели
+		<?php } else { ?>
+			Добавление серии мебели
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<input type="checkbox" class="form-part-ctrl" id="form-part-1">
+	<label for="form-part-1">Основные параметры</label>
+	<div class="form-part">
+		Категория:<br>
+		<?php /*<strong><?php echo Catalog_Categories::name($catId)?></strong>*/?>
+		<select name="category_id" style="max-width: 700px">
+			<?php foreach($catsIds as $c) { ?>
+				<option value="<?php echo $c?>">
+					<?php echo Catalog_Categories::name($c)?>
+				</option>
+			<?php } ?>
+		</select>
+		<br>
+		<b class="small">
+			<b class="red">Внимание!</b><br>
+			После изменения категории, к которой относится серия, настоятельно рекомендуется<br>
+			повторно зайти на данную страницу редактирования серии и проверить корректность<br>
+			значений параметров, зависящих от категории (например, параметры групп товаров).
+		</b>
+		<br><br>
+
+		Название серии <b class="red">*</b>:<br>
+		<input name="name" id="name" type="text" size="124"
+			   required
+			   msg_required="Введите название серии"
+			>
+		<a href="javascript:void(0)"
+		   onclick="oTranslate.intoCallback($$$('name').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+		   class="generate_lnk"
+			>
+			&dArr; Перевод
+		</a>
+		<br><br>
+
+		<?php /*Примечание к названию:<br>
+		<input name="comment" type="text" size="50"><br>
+		<b class="small">
+			Отображается в списке серий после названия серии в скобках
+		</b>
+		<br><br>*/?>
+
+		Псевдо-адрес страницы серии (URL) <b class="red">*</b>:<br>
+		<div style="float: left; line-height: 21px; font-weight: bold">http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Categories::a($catId)?></div>
+		<input name="url" id="url" type="text" size="72"
+			   required
+			   msg_required="Введите URL страницы серии"
+			   pattern="[A-Za-z0-9\-]+"
+			   msg_pattern="URL страницы серии должен содержать только буквы, числа и '-' (дефис)">
+		<a href="javascript:void(0)" onclick="makeURL($$$('name'), $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a>
+		<div class="cl"></div>
+		<br>
+
+		Поставщик:<br>
+		<select name="supplier_id" id="supplier_id" onchange="selectSupplier()">
+			<option value="0"> - Нет - </option>
+			<?php foreach($suppliers as $sId => $sName) { ?>
+				<option value="<?php echo $sId?>"><?php echo $sName?></option>
+			<?php } ?>
+		</select><br>
+		<b class="small">От выбора поставщика зависит набор материалов, доступный для выбора для данной серии</b>
+		<br><br>
+
+		<input type="checkbox" name="in_stock" id="in_stock" value="1">
+		<label for="in_stock">
+			Серия в наличии
+		</label>
+		<br><br>
+
+		<input type="checkbox" name="out_of_production" id="out_of_production" value="1">
+		<label for="out_of_production">
+			Снято с производства
+		</label>
+		<br><br>
+
+		<input type="checkbox" name="in_cats_list" id="in_cats_list" value="1">
+		<label for="in_cats_list">
+			Показать серию в списке категорий
+		</label><br>
+		<b class="small">
+			На страницах, где отображается список категорий (например, на главной стр.), под названием каждой<br>
+			категории выводится по три серии, выбранных случайно.<br>
+			Эта опция указывает, что данную серию нужно обязательно отобразить под названием её категории.
+		</b>
+		<br><br>
+
+		Рейтинг серии:<br>
+		<select name="rate">
+			<option value="0">0 звёзд</option>
+			<option value="1">( * ) 1 звезда</option>
+			<option value="2">( * * ) 2 звезды</option>
+			<option value="3">( * * * ) 3 звезды</option>
+			<option value="4">( * * * * ) 4 звезды</option>
+			<option value="5">( * * * * * ) 5 звезд</option>
+		</select><br>
+		<b class="small">
+			Эта оценка будет отображаться в том случае, если с серией не связаны отзывы с оценками,<br>
+			для которых включена опция &laquo;Учитывать эту оценку в расчёте общей оценки для серии&raquo;.
+			<?php if(intval($init['id'])) { ?>
+				<br>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-reviews'), array(
+					'object'	=> Reviews::OBJ_SERIES,
+					'object_id'	=> $init['id']
+				))?>" target="_blank">Найти отзывы о серии</a>
+			<?php } ?>
+		</b>
+
+        <?php if($is_admin) { ?>
+        <p>
+            <label for="admin_comment">Комментарий админа</label><br>
+            <textarea name="admin_comment" id="admin_comment" rows="6" cols="32" style="width: 640px"></textarea>
+        </p>
+        <?php } ?>
+
+		<br><br>
+<!--		<div class="row">-->
+<!--			<div class="item">-->
+<!--				<input type="radio" name="bilet_status" id="none" value="0">-->
+<!--				<label for="none">-->
+<!--					Нет-->
+<!--				</label>-->
+<!--			</div>-->
+<!--			<div class="item">-->
+<!--				<input type="radio" name="bilet_status" id="bestseller" value="1">-->
+<!--				<label for="bestseller">-->
+<!--					Хит-->
+<!--				</label>-->
+<!--			</div>-->
+<!--			<div class="item">-->
+<!--				<input type="radio" name="bilet_status" id="newprod" value="2">-->
+<!--				<label for="newprod">-->
+<!--					Новинка-->
+<!--				</label>-->
+<!--			</div>-->
+<!--			<div class="item">-->
+<!--				<input type="radio" name="bilet_status" id="discount" value="3">-->
+<!--				<label for="discount">Скидка</label>-->
+<!--			</div>-->
+<!--		</div>-->
+		<br><br>
+	</div>
+
+
+
+
+	<input type="checkbox" class="form-part-ctrl" id="form-part-2">
+	<label for="form-part-2">Дополнительно</label>
+	<div class="form-part">
+		Показать маркер на фотографии:<br>
+		<select name="marker_id">
+			<option value="0">- нет -</option>
+			<?php foreach($markers as $m) { ?>
+				<option value="<?php echo $m['id']; ?>"><?php echo $m['text']; ?></option>
+			<?php } ?>
+		</select>
+		<br><br>
+
+		Время доставки:<br>
+		<input name="delivery_time" type="text" size="20"><br>
+		<b class="small">
+			Отображается на странице категории в списке серий
+		</b>
+		<br><br>
+
+		Поиск по цене по товарам в группе:<br>
+		<select name="price_search_group_id">
+			<option value="0"> - Без группы - </option>
+			<?php foreach($groups as $g) { ?>
+				<option value="<?php echo $g['id']; ?>"><?php echo $g['name']; ?></option>
+			<?php } ?>
+		</select>
+		<br>
+		<b class="small">
+			На странице категории при поиске по цене, данная серия будет найдена, если мин.цена одного<br>
+			из товаров выбранной группы попадёт в заданный пользователем диапазон.
+		</b>
+		<br><br><br>
+
+		Курс У.Е.:<br>
+		<select name="usd_course_id" id="usd_course_id" onchange="usdCourseIdChange()" onclick="usdCourseIdChange()" onkeyup="usdCourseIdChange()">
+			<option value="-1">Указать...</option>
+			<option value="0">Общий (<?php echo Catalog::priceFormat(Options::name('global-usd-course'))?> р.)</option>
+			<?php foreach($usdCourses as $c) { ?>
+				<option value="<?php echo $c['id']; ?>"><?php echo $c['name']; ?> (<?php echo Catalog::priceFormat($c['course'])?> р.)</option>
+			<?php } ?>
+		</select>
+		<br><br>
+
+		<div id="block-usd-course">
+			1 у.е. = <input name="usd_course" type="text" size="10" style="text-align: right"> руб.<br>
+			<b class="small">
+				Оставьте 0 (или пустую строку), чтобы для данной серии использовался общий курс (<?php echo Catalog::priceFormat(Catalog_Series::usdCourse())?> руб.)<br>
+				Десятичный разделитель - точка.
+			</b>
+			<br><br>
+		</div>
+
+		Наценка:
+		<input name="extra_charge" type="text" size="10" style="text-align: right"> %<br>
+		<b class="small">
+			Серия не имеет собственной наценки, т.к. у каждого товара она своя, но здесь можно указать её сразу для всех товаров серии.
+		</b>
+
+		<?php /*<div style="padding-left: 30px;">
+			<strong>При изменении наценки на серию:</strong>
+			<br><br>
+
+			<input type="radio" name="extra_charge_action" id="extra_charge_action-1" value="<?php echo Catalog_Series::EXTRA_ACTION_NONE?>">
+			<label for="extra_charge_action-1">
+				Не изменять собственные наценки товаров
+			</label>
+			<br><br>
+
+			<input type="radio" name="extra_charge_action" id="extra_charge_action-2" value="<?php echo Catalog_Series::EXTRA_ACTION_REPL_PART?>">
+			<label for="extra_charge_action-2">
+				Изменить наценку только те на товары, у которых в данный момент она совпадает с наценкой серии
+			</label>
+			<br><br>
+
+			<input type="radio" name="extra_charge_action" id="extra_charge_action-3" value="<?php echo Catalog_Series::EXTRA_ACTION_REPL_ALL?>">
+			<label for="extra_charge_action-3">
+				Изменить наценку на все товары серии
+			</label>
+			<br><br>
+			<br>
+
+			<strong>При импорте прайсов для каждого товара:</strong>
+			<br><br>
+
+			<input type="radio" name="import_extra_formula" id="import_extra_formula-1" value="<?php echo Catalog_Series::IMPORT_FORMULA_EXTRA?>">
+			<label for="import_extra_formula-1">
+				Вычисляется наценка (по вход./выход. ценам)
+			</label>
+			<br><br>
+
+			<input type="radio" name="import_extra_formula" id="import_extra_formula-2" value="<?php echo Catalog_Series::IMPORT_FORMULA_OUT?>">
+			<label for="import_extra_formula-2">
+				Вычисляется выход.цена (по вход.цене и наценке)
+			</label>
+			<br><br>
+		</div>*/?>
+		<br><br><br><br>
+	</div>
+
+
+
+
+	<input type="checkbox" class="form-part-ctrl" id="form-part-3">
+	<label for="form-part-3">Характеристики серии</label>
+	<div class="form-part">
+		<?php /*if(count($filters)) { ?>
+			Значения фильтров для поиска:<br><br>
+			<table class="admin_table">
+				<tr>
+					<th>Фильтр</th>
+					<th>Значение</th>
+				</tr>
+				<?php foreach($filters as $f) { ?>
+					<tr>
+						<td>
+							<?php echo $f['name']; ?>
+						</td>
+						<td style="column-count: 6">
+							<?php foreach($f['values'] as $vId => $vVal) { ?>
+								<span>
+									<input type="checkbox" name="filters[]" id="filters-<?php echo $vId?>" value="<?php echo $vId?>">
+									<label for="filters-<?php echo $vId?>"><?php echo $vVal?></label>
+								</span>
+								<br>
+							<?php } ?>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+			<br><br>
+		<?endif*/?>
+
+		<?php /*Характеристики серии:<br><br>*/?>
+		<table class="admin_table">
+			<tr>
+				<th>Характеристика</th>
+				<th>Значение</th>
+			</tr>
+			<?php foreach($init['options'] as $on => $o) { ?>
+				<tr>
+					<td>
+						<?php if(intval($o['fixed'])) { ?>
+							<input type="hidden" name="options[<?php echo $on?>][name]">
+							<?php echo $o['name']; ?>
+						<?php } else { ?>
+							<input type="text" name="options[<?php echo $on?>][name]" size="40">
+						<?php } ?>
+					</td>
+					<td>
+						<input type="text" name="options[<?php echo $on?>][value]" size="40" list="options-values">
+					</td>
+				</tr>
+			<?php } ?>
+			<?php /*for($i = 0; $i < Catalog_Series_Options::MAX_CNT; $i++) { ?>
+				<tr>
+					<td>
+						<input type="text" name="options[<?php echo $i?>][name]" size="40" list="options-names">
+					</td>
+					<td>
+						<input type="text" name="options[<?php echo $i?>][value]" size="40" list="options-values">
+					</td>
+				</tr>
+			<?endfor*/?>
+		</table>
+		<?php /*<datalist id="options-names">
+			<?php foreach($optionsNames as $on) { ?>
+				<option value="<?php echo hsch($on)?>">
+			<?php } ?>
+		</datalist>*/?>
+		<datalist id="options-values">
+			<?php foreach($optionsValues as $ov) { ?>
+				<option value="<?php echo hsch($ov)?>">
+			<?php } ?>
+		</datalist>
+		<br><br>
+        <?php
+			$matsJS = array();
+			$matsBySuppliers = array();
+			foreach($materials as $m){
+				if(isset($suppliers[$m['supplier_id']])){
+					$s = array(
+						'id'	=> $m['supplier_id'],
+						'name'	=> $suppliers[$m['supplier_id']]
+					);
+				}else{
+					$s = false;
+				}
+				$matsJS[$m['id']] = array(
+					'name'	=> $m['name'],
+					'imgext'	=> $m['_img_ext'] ? $m['_img_ext'] : false,
+					'supplier'	=> $s
+				);
+
+				$sId = $s ? $s['id'] : 0;
+				if(!is_array($matsBySuppliers[$sId])) $matsBySuppliers[$sId] = array();
+				$matsBySuppliers[$sId][] = $m['id'];
+			}
+			ksort($matsBySuppliers);
+
+            //dd($init['materials']);
+			?>
+            <script>
+			var suppliers = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($suppliers))?>');
+			var materials = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($matsJS))?>');
+			var matsBySuppliers = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($matsBySuppliers))?>');
+			var matsSelected = [<?php echo $init['materials'] ? implode(',', $init['materials']) : ''; ?>];
+
+			var linksId = [];
+			<?php foreach($linkages as $l) { ?>
+				linksId.push(<?php echo $l['id']; ?>);
+			<?php } ?>
+
+			/**
+			 * При выборе поставщика в списке доступных материалов отображаются только мат. этого поставщика + мат. без поставщика
+			 * Если поставщик для серии не выбран, то отображаются все материалы, сгруппированные по поставщикам
+			 */
+			function selectSupplier(){
+				var supplierId = $$$('supplier_id').value;
+
+				// Материалы
+				var matsSelectHtml = '';
+				var sId, mn, mId, selected;
+				for(sId in matsBySuppliers){
+					if(sId == 0) continue;
+					if(supplierId == 0 || supplierId == sId){
+						matsSelectHtml += '<optgroup label="' + suppliers[sId] + '">';
+						for(mn in matsBySuppliers[sId]){
+							mId = matsBySuppliers[sId][mn];
+							selected = in_array(mId, matsSelected);
+							matsSelectHtml += '<option value="' + mId + '" ' + (selected ? 'selected' : '') + '>' + materials[mId]['name'] + '</option>';
+						}
+						matsSelectHtml += '</optgroup>';
+					}
+				}
+				if(typeof(matsBySuppliers[0]) !== 'undefined'){
+					matsSelectHtml += '<optgroup label="Без поставщика">';
+					for(mn in matsBySuppliers[0]){
+						mId = matsBySuppliers[0][mn];
+						selected = in_array(mId, matsSelected);
+						matsSelectHtml += '<option value="' + mId + '" ' + (selected ? 'selected' : '') + '>' + materials[mId]['name'] + '</option>';
+					}
+					matsSelectHtml += '</optgroup>';
+				}
+				$$$('materials').innerHTML = matsSelectHtml;
+				if(supplierId != 0){
+					$$$('materials-title').innerHTML = 'Материалы поставщика <em>' + suppliers[supplierId] + '</em>';
+				}else{
+					$$$('materials-title').innerHTML = 'Все материалы';
+				}
+				selectMaterials();
+
+				// Линковка
+				setupLinkSeriesForSupplier(supplierId);
+			}
+			onLoad(function(){selectSupplier()});
+
+			/**
+			 * При выборе одного или нескольких материалов они более подробно отображаются справа
+			 */
+			function selectMaterials(){
+				matsSelected = [];
+				var selectedHTML = '', oneMaterialsHTML = '', mId, mInfo;
+				var options = $$$('materials').options;
+				for(var i = 0, l = options.length; i < l; i++){
+					if(options[i].selected){
+						mId = options[i].value;
+						if(typeof(materials[mId]) == 'undefined') continue;
+						matsSelected.push(mId);
+
+						mInfo = materials[mId];
+
+						oneMaterialsHTML = '';
+						oneMaterialsHTML += '<div class="selected-mat">';
+						oneMaterialsHTML += 	'<div class="pic">';
+						if(mInfo.imgext){
+							oneMaterialsHTML += 	'<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath?>' + mId + '.' + mInfo.imgext + '" target="_blank" onclick="return hs.expand(this)">';
+							oneMaterialsHTML +=			'<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath?>' + mId + '_20x20_0.' + mInfo.imgext + '" width="20" height="20" alt="" style="border: 1px solid #CCC">';
+							oneMaterialsHTML +=		'</a>';
+						}else{
+							oneMaterialsHTML += 	'&nbsp;';
+						}
+						oneMaterialsHTML += 	'</div>';
+						oneMaterialsHTML += 	'<div class="name">';
+						oneMaterialsHTML += 		mInfo.name;
+						if(mInfo.supplier){
+							oneMaterialsHTML += 	'<br>';
+							oneMaterialsHTML +=		'<a href="<?php echo Url::a('admin-catalog-suppliers-view')?>id_' + mInfo.supplier.id + '/" class="small" target="_blank">';
+							oneMaterialsHTML +=			mInfo.supplier.name;
+							oneMaterialsHTML +=		'</a>';
+						}
+						oneMaterialsHTML += 	'</div>';
+						oneMaterialsHTML += '</div>';
+
+						selectedHTML += oneMaterialsHTML;
+					}
+				}
+				$$$('materials-selected').innerHTML = selectedHTML;
+			}
+			onLoad(function(){selectMaterials()});
+
+			/**
+			 * @param suppId
+			 */
+			function setupLinkSeriesForSupplier(suppId){
+				var suppName = suppliers[suppId];
+				for(var i in linksId){
+					$$$('link-only-supp-' + linksId[i] + '-name').innerHTML = suppName;
+					displayLinkSeriesForSupplier(linksId[i]);
+				}
+			}
+
+			var catNames = [];
+			<?php foreach($catsIds as $c) { ?>
+				catNames[<?php echo $c?>] = '<?php echo Catalog_Categories::name($c)?>';
+			<?php } ?>
+
+			/**
+			 * @param linkId
+			 */
+			function displayLinkSeriesForSupplier(linkId){
+				var supplierId = 0;
+				if($$$('link-only-supp-' + linkId).checked){
+					supplierId = $$$('supplier_id').value;
+				}
+
+				var options = byTag('OPTION', $$$('linkage-' + linkId));
+				var selected = [];
+				for(var i in options){
+					if(options[i].selected){
+						selected.push(options[i].value);
+					}
+				}
+
+				var url = D.location.href;
+				url += url.indexOf('?') == -1 ? '?' : '&'; url += 'series-by-supp=' + supplierId;
+				AJAX.lookup(
+					url,
+					function(respond){
+						respond = AJAX.jsonDecode(respond);
+						if(!respond) return;
+						var html = '';
+						var cId, series, sn;
+						for(cId in respond){
+							html += '<optgroup label="' + catNames[cId] + '">';
+							series = respond[cId];
+							for(sn in series){
+								html += '<option value="' + series[sn]['id'] + '" title="' + series[sn]['name'] + '">' + series[sn]['name'] + '</option>';
+							}
+							html += '</optgroup>';
+						}
+						$$$('linkage-' + linkId).innerHTML = html;
+
+						var i, j, cnt = 0;
+						var options = byTag('OPTION', $$$('linkage-' + linkId));
+						for(i in options){
+							for(j in selected){
+								if(options[i].value == selected[j]){
+									options[i].selected = true;
+									cnt++;
+								}
+							}
+						}
+						$$$('linkage-' + linkId + '-count').innerHTML = cnt;
+					}
+				);
+			}
+		</script>
+
+		<style type="text/css">
+			.selected-mat {
+				display: table;
+				width: 100%;
+			}
+			.selected-mat .pic,
+			.selected-mat .name {
+				display: table-cell;
+				vertical-align: middle;
+				padding: 0 6px 10px 0;
+			}
+			.selected-mat .pic {
+				width: 22px;
+			}
+		</style>
+
+		<strong>Материалы серии:</strong><br><br>
+		<table class="simple"><tr>
+			<td style="vertical-align: top">
+				<span id="materials-title">Все материалы</span>:<br>
+				<select name="materials[]" id="materials" multiple style="width: 750px; height: 300px" onchange="selectMaterials()">
+					<?php foreach($matsBySuppliers as $sId => $mIds) { ?>
+						<?php if($sId == 0) continue;?>
+						<optgroup label="<?php echo $suppliers[$sId]; ?>">
+							<?php foreach($mIds as $mId) { ?>
+								<option value="<?php echo $mId?>">
+									<?php echo $materials[$mId]['name']; ?>
+								</option>
+							<?php } ?>
+						</optgroup>
+					<?php } ?>
+					<?php if(isset($matsBySuppliers[0])) { ?>
+						<optgroup label="Без поставщика">
+							<?php foreach($matsBySuppliers[0] as $mId) { ?>
+								<option value="<?php echo $mId?>">
+									<?php echo $materials[$mId]['name']; ?>
+								</option>
+							<?php } ?>
+						</optgroup>
+					<?php } ?>
+				</select>
+				<br>
+				<b class="small">
+					Удерживайте нажатым Ctrl, чтобы выделить<br>
+					несколько пунктов сразу или снять выделение
+				</b>
+			</td>
+			<td style="vertical-align: top; padding-left: 15px">
+				Выбранные для серии материалы:<br>
+				<div id="materials-selected" class="pseudoframe" style="width: 400px; height: 278px">
+
+				</div>
+			</td>
+		</tr></table>
+
+		<br><br><br><br>
+	</div>
+
+	<input type="checkbox" class="form-part-ctrl" id="form-part-4">
+	<label for="form-part-4">Содержание</label>
+	<div class="form-part">
+		Тайтл страницы:<br>
+		<input name="title" type="text" size="100">
+		<br><br>
+
+		Заголовок страницы (тег &lt;H1&gt;):<br>
+		<input name="h1" type="text" size="100">
+		<br><br>
+
+		Мета-тэг description (описание):<br>
+		<input name="dscr" type="text" size="100">
+		<br><br>
+
+		Текст описания серии:<br>
+		<ckeditor name="text" width="100%" height="400" toolbar="Full"></ckeditor>
+		<br><br>
+
+		<?php if(count($groups)) { ?>
+			Отобразить названия групп товаров заголовками &lt;H2&gt; и дописать к ним название серии:<br>
+			<?php foreach($groups as $g) { ?>
+				<input type="checkbox" name="groups-h2[]" id="groups-h2-<?php echo $g['id']; ?>" value="<?php echo $g['id']; ?>">
+				<label for="groups-h2-<?php echo $g['id']; ?>"><?php echo $g['name']; ?></label><br>
+			<?php } ?>
+			<br>
+		<?php } ?>
+
+		HTML-код видео:<br>
+		<textarea name="video" style="width: 500px; height: 80px;"></textarea><br>
+		<b class="small">Ширина видео не должна превышать 400 px</b>
+
+		<br><br><br><br>
+	</div>
+
+	<input type="checkbox" class="form-part-ctrl" id="form-part-5">
+	<label for="form-part-5">Связь с другими сериями</label>
+	<div class="form-part">
+		<table class="admin_table">
+			<tr class="custom_bg">
+				<?php foreach($linkages as $l) { ?>
+					<td style="color: <?php echo $l['color_name']; ?>; text-align: center; font-size: 16px;">
+						<strong><?php echo $l['name']; ?></strong>
+					</td>
+				<?php } ?>
+			</tr>
+			<tr class="custom_bg">
+				<?php foreach($linkages as $l) { ?>
+					<td>
+						<input type="checkbox" id="link-only-supp-<?php echo $l['id']; ?>" onchange="displayLinkSeriesForSupplier(<?php echo $l['id']; ?>)" onclick="displayLinkSeriesForSupplier(<?php echo $l['id']; ?>)" onkeyup="displayLinkSeriesForSupplier(<?php echo $l['id']; ?>)">
+						<label for="link-only-supp-<?php echo $l['id']; ?>">
+							Показать серии только от <strong>&laquo;<span id="link-only-supp-<?php echo $l['id']; ?>-name"></span>&raquo;</strong>
+						</label>
+						<br><br>
+
+						Выбрано: <span id="linkage-<?php echo $l['id']; ?>-count"></span><br>
+						<script>
+							onLoad(function(){oMultiselectCount.add('linkage-<?php echo $l['id']; ?>', 'linkage-<?php echo $l['id']; ?>-count')});
+						</script>
+						<select name="linkage[<?php echo $l['id']; ?>][]" id="linkage-<?php echo $l['id']; ?>" multiple style="width: 450px; height: 300px">
+							<?php foreach($seriesByCats4Links as $cId => $series) { ?>
+								<optgroup label="<?php echo hsch(Catalog_Categories::name($cId))?>">
+									<?php foreach($series as $s) { ?>
+										<option value="<?php echo $s['id']; ?>" title="<?php echo $s['name']; ?>"><?php echo $s['name']; ?></option>
+									<?php } ?>
+								</optgroup>
+							<?php } ?>
+						</select>
+						<br>
+						<b class="small">
+							Удерживайте нажатым Ctrl, чтобы выделить<br>
+							несколько пунктов сразу или снять выделение
+						</b>
+					</td>
+				<?php } ?>
+			</tr>
+		</table>
+
+		<br><br><br><br>
+	</div>
+
+	<?php if(intval($init['id'])) { ?>
+		<input type="checkbox" class="form-part-ctrl" id="form-part-6" checked>
+		<label for="form-part-6">Товары, входящие в базовый комлект серии</label>
+		<div class="form-part">
+			<b class="small">
+				На основе мин. цен этих товаров будет рассчитана мин. цена для всей серии.<br>
+				Если в составе комплекта не будет товаров, то мин. цена серии будет равна мин. цене самого дешёвого товара.
+			</b>
+			<br><br>
+
+			<script>
+				onLoad(function(){oMultiselectCount.add('items-set', 'items-set-count')});
+
+				var itemsOnPhoto = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemsOnPhoto))?>');
+				var itemsInSetAmounts = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemsInSetAmounts))?>');
+
+				function selectItemsSet(){
+					if(!$$$('items-set-selected')) return;
+
+					var selectedHtml = '', amountsHtml = '';
+					var itemId = 0, amount = 1;
+					var items = byTag('OPTION', $$$('items-set'));
+					for(var i = 0, l = items.length; i < l; i++){
+						if(items[i].selected){
+							itemId = items[i].value;
+
+							selectedHtml +=
+								'<div>' +
+									'<input type="checkbox" ' +
+										'id="items-on-photo-' + itemId + '" ' +
+										'name="items-on-photo[' + itemId + ']" ' +
+										'value="1" ' +
+										'onchange="this.checked ? selectItemOnPhoto(' + itemId + ') : unselectItemOnPhoto(' + itemId + ')"' +
+									'>' +
+									'<input type="hidden" id="items-on-photo-x-' + itemId + '" name="items-on-photo-x[' + itemId + ']" value="0">' +
+									'<input type="hidden" id="items-on-photo-y-' + itemId + '" name="items-on-photo-y[' + itemId + ']" value="0">' +
+									'<label for="items-on-photo-' + itemId + '" id="items-on-photo-name-' + itemId + '">' +
+										items[i].innerHTML +
+									'</label>' +
+								'</div>';
+
+							if(typeof(itemsInSetAmounts[itemId])){
+								amount = Math.abs(parseInt(itemsInSetAmounts[itemId]));
+								if(!amount) amount = 1;
+							}else{
+								amount = 1;
+							}
+
+							amountsHtml +=
+								'<div style="padding-top: 5px;">' +
+									trim(items[i].innerHTML) + ':' +
+									'<input type="text" name="items-in-set-amounts[' + itemId + ']" value="' + amount + '" size="4" style="text-align: right">' +
+									' шт.' +
+								'</div>'
+						}
+					}
+					$$$('items-set-selected').innerHTML = selectedHtml;
+					$$$('items-set-amount').innerHTML = amountsHtml;
+
+					var tmpItemsOnPhoto = clone(itemsOnPhoto);
+					unselectAllItemsOnPhoto();
+					for(var iId in tmpItemsOnPhoto){
+						if($$$('items-on-photo-' + iId)){
+							$$$('items-on-photo-' + iId).checked = true;
+							selectItemOnPhoto(
+								iId,
+								tmpItemsOnPhoto[iId][0],
+								tmpItemsOnPhoto[iId][1]
+							);
+						}
+					}
+				}
+				onLoad(function(){selectItemsSet()});
+
+				var onPhotoWrappwerW = -1, onPhotoWrappwerH = -1;
+
+				function selectItemOnPhoto(itemId, x, y){
+					if(onPhotoWrappwerW == -1){
+						var s = elSize($$$('items-on-photo-wrapper'));
+						onPhotoWrappwerW = s.w;
+						onPhotoWrappwerH = s.h;
+					}
+					if(typeof(x) == 'undefined') x = Math.round(onPhotoWrappwerW / 2);
+					if(typeof(y) == 'undefined') y = Math.round(onPhotoWrappwerH / 2);
+
+					itemsOnPhoto[itemId] = [x, y];
+
+					$$$('items-on-photo-x-' + itemId).value = x;
+					$$$('items-on-photo-y-' + itemId).value = y;
+
+					var itemOnPhoto = D.createElement('div');
+					itemOnPhoto.id = 'item-on-photo-' + itemId;
+					itemOnPhoto.className = 'item';
+					itemOnPhoto.innerHTML = $$$('items-on-photo-name-' + itemId).innerHTML;
+					itemOnPhoto.style.left = (x-12) + 'px';
+					itemOnPhoto.style.top = (y-12) + 'px';
+					$$$('items-on-photo').appendChild(itemOnPhoto);
+
+					var startPos = {x:0, y:0};
+					makeDraggable(
+						itemOnPhoto,
+						function(e, startX, startY){
+							var itemDiv = e.target || e.srcElement;
+							startPos.x = itemDiv.offsetLeft + 12;
+							startPos.y = itemDiv.offsetTop + 12;
+						},
+						function(dx, dy, currentX, currentY){
+							var x = startPos.x + dx;
+							var y = startPos.y + dy;
+
+							if(x < 0) x = 0;
+							if(x > onPhotoWrappwerW) x = onPhotoWrappwerW;
+							if(y < 0) y = 0;
+							if(y > onPhotoWrappwerH) y = onPhotoWrappwerH;
+
+							$$$('items-on-photo-x-' + itemId).value = x;
+							$$$('items-on-photo-y-' + itemId).value = y;
+							itemsOnPhoto[itemId] = [x, y];
+
+							itemOnPhoto.style.left = (x-12) + 'px';
+							itemOnPhoto.style.top = (y-12) + 'px';
+						}
+					);
+				}
+
+				function unselectItemOnPhoto(itemId){
+					if($$$('item-on-photo-' + itemId)){
+						removeElement($$$('item-on-photo-' + itemId));
+					}
+					if($$$('items-on-photo-x-' + itemId)){
+						$$$('items-on-photo-x-' + itemId).value = '0';
+					}
+					if($$$('items-on-photo-y-' + itemId)){
+						$$$('items-on-photo-y-' + itemId).value = '0';
+					}
+					if(typeof(itemsOnPhoto[itemId]) != 'undefined'){
+						delete(itemsOnPhoto[itemId]);
+					}
+				}
+
+				function unselectAllItemsOnPhoto(){
+					for(var iId in itemsOnPhoto){
+						unselectItemOnPhoto(iId);
+					}
+				}
+			</script>
+
+			<table class="simple" style="width: 100%">
+                <tr>
+				<td style="vertical-align: top; padding-right: 20px; width: 50%">
+					Выбрано: <span id="items-set-count"></span><br>
+					<select name="items-set[]" id="items-set" multiple style="width: 100%; height: 300px" onchange="selectItemsSet()">
+						<optgroup label="Товары из этой серии">
+							<?php foreach($items as $i) { ?>
+								<?php if($i['series_id'] != $init['id']) continue; ?>
+								<option value="<?php echo $i['id']; ?>">
+									<?php echo $i['name']; ?> <?php echo $i['art']; ?>
+								</option>
+							<?php } ?>
+						</optgroup>
+						<optgroup label="Товары из других серий">
+							<?php foreach($items as $i) { ?>
+								<?php if($i['series_id'] == $init['id']) continue; ?>
+								<option value="<?php echo $i['id']; ?>">
+									<?php echo $i['name']; ?> <?php echo $i['art']; ?>
+								</option>
+							<?php } ?>
+						</optgroup>
+					</select>
+					<br>
+					<b class="small">
+						Удерживайте нажатым Ctrl, чтобы выделить<br>
+						несколько пунктов сразу или снять выделение
+					</b>
+				</td>
+				<?php if($photo0) { ?>
+					<td style="vertical-align: top" rowspan="2">
+						<strong>Отметить на фото:</strong><br>
+						<div id="items-set-selected">
+
+						</div>
+						<br>
+						<div class="items-on-photo" id="items-on-photo-wrapper">
+							<img src="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $photo0['id']; ?>_<?php echo Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W?>x<?php echo Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H?>_<?php echo $photo0['rm']; ?>.<?php echo $photo0['_img_ext']; ?>" width="442" height="350" alt="" style="border: 1px solid #CCC">
+							<div id="items-on-photo">
+
+							</div>
+						</div>
+						<div class="cl"></div>
+					</td>
+				<?php } ?>
+			</tr>
+            <tr>
+                <td style="vertical-align: top; padding: 20px 0">
+                    <strong>К-во товаров в комплекте:</strong><br>
+                    <div id="items-set-amount">
+
+                    </div>
+                </td>
+            </tr>
+            </table>
+
+			<br><br><br><br>
+		</div>
+		<script>
+			onLoad(function(){
+				$$$('form-part-6').checked = false;
+			})
+		</script>
+	<?php } ?>
+
+
+	<?php if(count($pagesGroups)) { ?>
+		<input type="checkbox" class="form-part-ctrl" id="form-part-7">
+		<label for="form-part-7">Показать серию на теговых страницах</label>
+		<div class="form-part">
+			<b class="small">
+				Здесь вы можете включить отображение данной серии на одной или нескольких теговых страницах, независимо от значений фильтров.<br>
+				Кроме этого вы можете настроить сами <a href="<?php echo Url::a('admin-catalog-categories-groups')?>c_<?php echo $catId?>/" target="_blank">теговые страницы</a>
+				таким образом, чтобы на них автоматически отображались серии, подходящие под определённые значения фильтра.
+			</b>
+			<br><br>
+
+			<?php foreach($pagesGroups as $pg) { ?>
+				<strong><?php echo $pg['name']; ?>:</strong><br>
+				<?php foreach($pg['pages'] as $p) { ?>
+					<input type="checkbox" name="pages[]" id="pages-<?php echo $p['id']; ?>" value="<?php echo $p['id']; ?>">
+					<label for="pages-<?php echo $p['id']; ?>">
+						<?php echo $p['name']; ?>
+					</label>
+					<br>
+				<?php } ?>
+				<br>
+			<?php } ?>
+
+			<br><br><br><br>
+		</div>
+	<?php } ?>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo mSeriesEdit::retURL()?>" class="but-back">Вернуться</a>

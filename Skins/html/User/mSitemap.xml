@@ -1,0 +1,43 @@
+<?php echo'<?xml version="1.0" encoding="UTF-8"?>'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<?php foreach($pages as $p):?>
+		<url>
+			<loc>http://<?php echoSitemap::XML_HOST . $p['url']; ?></loc>
+			<?php /*<changefreq>daily</changefreq>
+			<priority><?php echoSitemap::PRIORITY_PAGES?></priority>*/ ?>
+		</url>
+		<?php if($p['id'] == Articles::ARTICLES_PAGE_ID && count($articles)) { ?>
+			<?php foreach($articles as $a) { ?>
+				<url>
+					<loc>http://<?php echoSitemap::XML_HOST . $a['url']; ?></loc>
+					<?php /*<changefreq>daily</changefreq>
+					<priority><?php echoSitemap::PRIORITY_ARTICLES?></priority>*/ ?>
+				</url>
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
+
+	<?php foreach($catalog as $c) { ?>
+		<url>
+			<loc><?php echo$c['url-full']; ?></loc>
+			<?php /*<changefreq>daily</changefreq>
+			<priority><?php echoSitemap::PRIORITY_CATEGORIES?></priority>*/ ?>
+		</url>
+		<?php foreach($c['series'] as $s) { ?>
+			<url>
+				<loc><?php echo$s['url-full']; ?></loc>
+				<?php /*<changefreq>daily</changefreq>
+				<priority><?php echoSitemap::PRIORITY_SERIES?></priority>*/ ?>
+			</url>
+		<?php } ?>
+		<?php foreach($c['pages'] as $pg) { ?>
+			<?php foreach($pg['pages'] as $p) { ?>
+				<url>
+					<loc><?php echo$p['url-full']?></loc>
+					<?php /*<changefreq>daily</changefreq>
+					<priority><?php echoSitemap::PRIORITY_SERIES?></priority>*/ ?>
+				</url>
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
+</urlset>

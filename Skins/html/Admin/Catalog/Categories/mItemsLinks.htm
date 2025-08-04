@@ -1,0 +1,434 @@
+<form action="" xmlns="http://www.w3.org/1999/html">
+	<h3>
+		<?php echo $htmlh1; ?>
+	</h3>
+	<br>
+
+	<?php echo $htmlComment; ?>
+	<br><br>
+
+	<?php /*Любой отдельный товар можно исключить из списка отображения на странице категории или теговой странице.<br>
+	Для этого нужно выбрать соответствующую опцию в разделе редактирования самого товара.
+	<br><br>*/?>
+
+	<style type="text/css">
+		.folding {
+			margin-bottom: 8px;
+		}
+		.folding.no-mrg {
+			margin-bottom: 0;
+		}
+		.folding.small-mrg {
+			margin-bottom: 4px;
+		}
+		.folding-ctrl {
+			display: none;
+		}
+		.folding-ctrl + label {
+			display: inline-block;
+			position: relative;
+			padding: 0 0 0 20px;
+			white-space: nowrap;
+			cursor: pointer;
+		}
+		.folding-ctrl + label.level1 {
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.folding-ctrl + label.level2,
+		.folding-ctrl + label.level3 {
+			font-size: 14px;
+		}
+		.folding-ctrl + label.level3 {
+			position: relative;
+			left: 8px;
+			top: -4px;
+		}
+		.folding-ctrl + label.level4 {
+			font-size: 13px;
+		}
+		.folding-ctrl + label:hover {
+			color: #00F;
+		}
+		.folding-ctrl + label:before {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			margin-top: -6px;
+			width: 11px;
+			height: 11px;
+			background: url('/Skins/img/admin/form-part-ctrl.gif') no-repeat left top;
+		}
+		.folding-content {
+			display: none;
+			padding-left: 30px;
+		}
+		.folding-ctrl:checked + label + .folding-content {
+			display: block;
+		}
+		.folding-ctrl:checked + label:before {
+			background-position: left bottom;
+		}
+
+		input.select-all + label {
+			font-style: italic;
+		}
+
+		label.gr-contains {
+			color: #090;
+			font-weight: bold;;
+		}
+		label.items {
+			font-size: 11px;
+			color: #090;
+		}
+		label.items img {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	</style>
+
+	<script>
+        function selectAll(inp, classname){
+			var inputs;
+			if(inp.parentNode.className == 'folding'){
+				inputs = byTag('INPUT', inp.parentNode.parentNode);
+			}else{
+				inputs = byTag('INPUT', inp.parentNode);
+			}
+
+			var i, l;
+			if(inp.className.indexOf('select-all') !== -1){
+				for(i = 0, l = inputs.length; i < l; i++){
+					if(inputs[i].className.indexOf(classname) == -1) continue;
+					inputs[i].checked = inp.checked;
+				}
+			}else{
+				var allChecked = true;
+				var inputAll;
+				for(i = 0, l = inputs.length; i < l; i++){
+					if(inputs[i].className.indexOf(classname) == -1) continue;
+					if(inputs[i].className.indexOf('select-all') !== -1){
+						inputAll = inputs[i];
+					}else{
+						if(!inputs[i].checked){
+							allChecked = false;
+						}
+					}
+				}
+				if(inputAll) inputAll.checked = allChecked;
+			}
+		}
+
+		function loadSeries(catId, container, callback){
+			if(trim(container.innerHTML) != '') return;
+			container.innerHTML = '<em>Загрузка...</em>';
+
+			AJAX.lookup(
+				D.location.href + '?load-series=' + catId,
+				function(series){
+					series = AJAX.jsonDecode(series);
+					if(series === false){	// Некорректный ответ
+						return;
+					}
+
+					var html = '', s;
+					for(var i = 0, l = series.length; i < l; i++){
+						if(typeof(series[i]) == 'undefined') continue;
+						s = series[i];
+
+						html +=
+							'<div class="folding">' +
+								'<input type="checkbox" class="folding-ctrl"' +
+									'id="folding-series-' + s.id + '" ' +
+									'onchange="if(this.checked) loadGroups(' + s.id + ', $$$(\'series-' + s.id + '\'))"' +
+								'>' +
+								'<label class="level2" for="folding-series-' + s.id + '">' +
+									s.name +
+								'</label>' +
+								'<div class="folding-content" id="series-' + s.id + '">' +
+								'</div>' +
+							'</div>';
+					}
+
+					container.innerHTML = html;
+
+					if(typeof(callback) == 'function'){
+						callback();
+					}
+				}
+			);
+		}
+
+		function loadGroups(seriesId, container, callback){
+			if(trim(container.innerHTML) != '') return;
+			container.innerHTML = '<em>Загрузка...</em>';
+
+            let html = '';
+/*
+            axios.get(D.location.href + '?load-groups=' + seriesId)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+
+                    html = '';
+
+                    if(<?php echo ($itemsOnly ? 'false' : 'true'); ?>){
+                        html +=
+                            '<input type="checkbox" class="select-all select-groups" ' +
+                            'id="select-all-' + seriesId + '" ' +
+                            'onchange="selectAll(this, \'select-groups\')"' +
+                            '>' +
+                            '<label for="select-all-' + seriesId + '">(выбрать все)</label><br>';
+                    }
+
+                    if (response.data.length > 0) {
+                        let el = response.data;
+                        for(var i = 0, l = el.length; i < l; i++) {
+                            let g = el[i];
+                            html +=
+                                '<div class="folding no-mrg">' +
+                                '<input type="checkbox" name="links[]" class="select-groups" ' +
+                                'value="g-' + seriesId + '-' + g.id + '" ' +
+                                'id="group-' + seriesId + '-' + g.id + '" ' +
+                                (g.selected ? 'checked' : '') + ' ' +
+                                'onchange="selectAll(this, \'select-groups\')"' +
+                                '>'+
+                                '<label class="' + (g.contains ? ' gr-contains' : '') + '" for="group-' + seriesId + '-' + g.id + '" ' +
+                                '>' +
+                                g.name + ' (' + g['items-count'] + ')' +
+                                '</label>' +
+                                '<input type="checkbox" class="folding-ctrl"' +
+                                'id="folding-groups-' + seriesId + '-' + g.id + '" ' +
+                                'onchange="if(this.checked) loadItems(' + seriesId + ', ' + g.id + ', $$$(\'items-' + seriesId + '-' + g.id + '\'))"' +
+                                '>' +
+                                '<label class="level3" for="folding-groups-' + seriesId + '-' + g.id + '"></label>' +
+                                '<div class="folding-content" id="items-' + seriesId + '-' + g.id + '">' +
+                                '</div>' +
+                                '</div>';
+                        }
+
+
+                    } else {
+                        html = "пусто";
+                    }
+
+                    container.innerHTML = html;
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                    container.innerHTML = "Ошибка";
+                })
+                .finally(function () {
+                    // always executed
+
+                });
+*/
+            //console.log(D.location.href + '?load-groups=' + seriesId)
+			AJAX.lookup(
+				D.location.href + '?load-groups=' + seriesId,
+				function(groups){
+					groups = AJAX.jsonDecode(groups);
+					if(groups === false){	// Некорректный ответ
+						return;
+					}
+
+					var html = '';
+
+					if(<?php echo ($itemsOnly ? 'false' : 'true'); ?>){
+						html +=
+							'<input type="checkbox" class="select-all select-groups" ' +
+								'id="select-all-' + seriesId + '" ' +
+								'onchange="selectAll(this, \'select-groups\')"' +
+								'>' +
+							'<label for="select-all-' + seriesId + '">(выбрать все)</label><br>';
+					}
+
+					var g;
+					for(var i = 0, l = groups.length; i < l; i++){
+						if(typeof(groups[i]) == 'undefined') continue;
+						g = groups[i];
+
+						if(<?php echo ($itemsOnly ? 'false' : 'true'); ?>){
+							html +=
+								'<div class="folding no-mrg">' +
+									'<input type="checkbox" name="links[]" class="select-groups" ' +
+										'value="g-' + seriesId + '-' + g.id + '" ' +
+										'id="group-' + seriesId + '-' + g.id + '" ' +
+										(g.selected ? 'checked' : '') + ' ' +
+										'onchange="selectAll(this, \'select-groups\')"' +
+										'>'+
+									'<label class="' + (g.contains ? ' gr-contains' : '') + '" for="group-' + seriesId + '-' + g.id + '" ' +
+										'>' +
+										g.name + ' (' + g['items-count'] + ')' +
+									'</label>' +
+									'<input type="checkbox" class="folding-ctrl"' +
+										'id="folding-groups-' + seriesId + '-' + g.id + '" ' +
+										'onchange="if(this.checked) loadItems(' + seriesId + ', ' + g.id + ', $$$(\'items-' + seriesId + '-' + g.id + '\'))"' +
+									'>' +
+									'<label class="level3" for="folding-groups-' + seriesId + '-' + g.id + '"></label>' +
+									'<div class="folding-content" id="items-' + seriesId + '-' + g.id + '">' +
+									'</div>' +
+								'</div>';
+						}else{
+							html +=
+								'<div class="folding small-mrg">' +
+									'<input type="checkbox" class="folding-ctrl"' +
+										'id="folding-groups-' + seriesId + '-' + g.id + '" ' +
+										'onchange="if(this.checked) loadItems(' + seriesId + ', ' + g.id + ', $$$(\'items-' + seriesId + '-' + g.id + '\'))"' +
+										'>' +
+										'<label class="' + (g.contains ? ' gr-contains' : '') + '" for="folding-groups-' + seriesId + '-' + g.id + '">' +
+											g.name + ' (' + g['items-count'] + ')' +
+										'</label>' +
+									'<div class="folding-content" id="items-' + seriesId + '-' + g.id + '">' +
+									'</div>' +
+								'</div>';
+						}
+					}
+
+					container.innerHTML = html;
+
+					if(typeof(callback) == 'function'){
+						callback();
+					}
+				}
+			);
+			/* */
+		}
+
+
+		function highlightGroup(inpItem){
+			console.log(1);
+			var inputs = byTag('INPUT', inpItem.parentNode);
+			var on = false;
+			for(var i = 0, l = inputs.length; i < l; i++){
+				if(inputs[i].className.indexOf('select-all') == -1 && inputs[i].checked){
+					on = true;
+					break;
+				}
+			}
+
+			var label = byTag('LABEL', inpItem.parentNode.parentNode)[0];
+			if(typeof(label) != 'undefined'){
+				label.className = on ? 'gr-contains' : '';
+			}
+		}
+
+
+		function loadItems(seriesId, groupId, container){
+			if(trim(container.innerHTML) != '') return;
+			container.innerHTML = '<em>Загрузка...</em>';
+
+			AJAX.lookup(
+				D.location.href + '?load-items=' + seriesId + '&group=' + groupId,
+				function(items){
+					items = AJAX.jsonDecode(items);
+					if(items === false){	// Некорректный ответ
+						return;
+					}
+
+					var html =
+						'<input type="checkbox" class="select-all select-items" ' +
+							'id="select-all-' + seriesId + '-' + groupId + '" ' +
+							'onchange="selectAll(this, \'select-items\'); highlightGroup(this)"' +
+							'>' +
+						'<label class="items" for="select-all-' + seriesId + '-' + groupId + '">(выбрать все 1)</label><br>';
+
+					var it;
+					var displayedItems = $$$('displayed-items');
+					for(var i = 0, l = items.length; i < l; i++){
+						if(typeof(items[i]) == 'undefined') continue;
+						it = items[i];
+						displayedItems.value += it.id + ',';
+						html +=
+							'<input type="checkbox" name="links[]" class="select-items" ' +
+								'value="i-' + it.id + '" ' +
+								'id="item-' + it.id + '" ' +
+								(it.selected ? 'checked' : '') + ' ' +
+								'onchange="selectAll(this, \'select-items\'); highlightGroup(this)"' +
+							'>' +
+							'<label class="items" for="item-' + it.id + '">' +
+								(it._img_ext ? '<img src="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath?>' + it.id + '_20x15_1.' + it._img_ext + '" width="20" height="15">' : '') +
+								it.name + ' ' + it.art +
+							'</label><br>';
+					}
+
+					container.innerHTML = html;
+				}
+			);
+		}
+
+		var activeCategories = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($activeCategories)); ?>');
+		var activeCategoriesLoaded = [];
+		var activeSeries = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($activeSeries)); ?>');
+
+		onLoad(function(){
+			for(var i = 0, l = activeCategories.length; i < l; i++){
+				(function(i){
+					var catId = activeCategories[i];
+					var container = $$$('category-' + catId);
+					if(!container) return;
+					loadSeries(
+						catId,
+						container,
+						function(){
+							activeCategoriesLoaded.push(catId);
+							$$$('folding-cat-' + catId).checked = true;
+							if(activeCategories.length == activeCategoriesLoaded.length){
+								for(var k = 0, l = activeSeries.length; k < l; k++){
+									(function(k){
+										var sId = activeSeries[k];
+										var container = $$$('series-' + sId);
+										if(!container) return;
+                                        /*
+                                        // TIP: Не загружать автоматически
+										loadGroups(
+											sId,
+											container,
+											function(){
+												$$$('folding-series-' + sId).checked = true;
+											}
+										);
+                                        */
+									})(k);
+								}
+							}
+						}
+					);
+				})(i);
+			}
+		});
+	</script>
+
+	<input type="hidden" name="displayed-items" id="displayed-items">
+
+	<input type="submit" class="submit" value="Сохранить">
+	<br><br>
+
+	<div class="pseudoframe" style="width: 90%; height: auto;">
+		<?php foreach($categories as $c) { ?>
+			<div class="folding">
+				<input type="checkbox" class="folding-ctrl"
+					   id="folding-cat-<?php echo $c['id']; ?>"
+					   onchange="if(this.checked) loadSeries(<?php echo $c['id']; ?>, $$$('category-<?php echo $c['id']; ?>'))"
+					>
+				<label class="level1" for="folding-cat-<?php echo $c['id']; ?>">
+					<?php echo Catalog_Categories::name($c['id']); ?>
+				</label>
+				<div class="folding-content" id="category-<?php echo $c['id']; ?>">
+
+				</div>
+			</div>
+		<?php } ?>
+	</div>
+
+	<br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo $retUrl; ?>" class="but-back">Вернуться</a>

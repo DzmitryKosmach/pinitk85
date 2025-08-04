@@ -1,0 +1,30 @@
+<form action="">
+	<h3>
+		Редактирование блоков &laquo;Преимущества&raquo; в шапке сайта
+	</h3>
+
+	<br><br>
+
+	<?php for($i = 1; $i <= 8; $i++) { ?>
+		<h4>Блок <?php echo $i?></h4>
+
+		URL ссылки для блока:<br>
+		<input name="head-benefit<?php echo $i?>-url" type="text" size="50"><br>
+		<b class="small">Оставьте поле пустым, чтобы нажатие на загловок блока никуда не вело</b>
+		<br><br>
+
+		<strong>Текст блока <b class="red">*</b>:</strong><br>
+		<textarea name="head-benefit<?php echo $i; ?>" style="width: 350px; height: 100px"
+				  required
+				  msg_required="Введите текст блока <?php echo $i; ?>"
+			></textarea><br>
+		<b class="small">
+			Рекомендуется ввести не более 4-х строк.<br>
+			Первая строка считается заголовком блока (отображается крупными буквами и я является ссылкой).
+		</b>
+
+		<br><br><br><br>
+	<?php } ?>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

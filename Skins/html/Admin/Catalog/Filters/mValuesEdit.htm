@@ -1,0 +1,26 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование варианта значения для фильтра <b><?php echo $filter['name']; ?></b>
+		<?php } else {?>
+			Добавление варианта значения для фильтра <b><?php echo $filter['name']; ?></b>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Значение <b class="red">*</b>:<br>
+	<input name="value" type="text" size="70"
+		   required
+		   msg_required="Введите текст значения">
+	<br><br>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-filters-values'), array(
+	'f'	=> $filter['id']
+)); ?>" class="but-back">Вернуться</a>

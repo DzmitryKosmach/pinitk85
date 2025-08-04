@@ -1,0 +1,645 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование товара в серии <b><?php echo $seriesInf['name']; ?></b>
+		<?php } else { ?>
+			Добавление товара в серии <b><?php echo $seriesInf['name']; ?></b>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+
+	<h4>Основные параметры</h4>
+
+    <label for="name">Название товара <b class="red">*</b>:</label><br>
+	<input name="name" id="name" type="text" size="100"
+		   required
+		   msg_required="Введите название товара"
+		>
+	<br><br>
+
+    <label for="art">Артикул <b class="red">*</b>:</label><br>
+	<input name="art" id="art" type="text" size="100"
+		   required
+		   msg_required="Введите артикул товара"
+		>
+	<?php /*<a href="javascript:void(0)"
+	   onclick="oTranslate.intoCallback($$$('name').value + ' ' + $$$('art').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+	   class="generate_lnk"
+		>
+		&dArr; Перевод
+	</a>*/?>
+	<br><br>
+
+	<?php /*Псевдо-адрес страницы серии (URL) <b class="red">*</b>:<br>
+	<div style="float: left; line-height: 21px; font-weight: bold">http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Series::a($seriesInf); ?></div>
+	<input name="url" id="url" type="text" size="50"
+		   required
+		   msg_required="Введите URL страницы товара"
+		   pattern="[A-Za-z0-9\-]+"
+		   msg_pattern="URL страницы товара должен содержать только буквы, числа и '-' (дефис)">
+	<a href="javascript:void(0)" onclick="makeURL($$$('name').value + ' ' + $$$('art').value, $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a>
+	<div class="cl"></div>
+	<br>*/?>
+
+	Группа:<br>
+	<select name="group_id">
+		<option value="0"> - Без группы - </option>
+		<?php foreach($groups as $g) { ?>
+			<option value="<?php echo $g['id']; ?>"><?php echo $g['name']; ?></option>
+		<?php } ?>
+	</select>
+	<br>
+	<b class="small">На странице серии товары выводятся по группам</b>
+	<br><br>
+
+	<?php /*<input type="checkbox" name="items_links_exclude" id="items_links_exclude" value="1">
+	<label for="items_links_exclude">
+		Не отображать товар на страницах категорий
+	</label><br>
+	<b class="small">
+		... или на теговый страницах, даже если он находится в группе,<br>
+		товары которой должны там отображаться
+	</b>
+	<br><br>*/?>
+
+	<?php /*<script>
+		function showSeriesSetOpt(){
+			if(!$$$('series-set-opt')) return;
+			$$$('series-set-opt').style.display = $$$('in_series_set').checked ? 'block' : 'none';
+		}
+		onLoad(function(){showSeriesSetOpt()});
+
+		function showPhotoPicker(){
+			if(!$$$('photo-picker')) return;
+			$$$('photo-picker').style.display = $$$('on_series_photo').checked ? 'block' : 'none';
+		}
+		onLoad(function(){showPhotoPicker()});
+
+		onLoad(function(){
+			if(!$$$('photo-picker')) return;
+
+			var s = elSize($$$('items-on-photo-wrapper'));
+			var onPhotoWrappwerW = s.w;
+			var onPhotoWrappwerH = s.h;
+
+			var startPos = {x:0, y:0};
+			makeDraggable(
+				$$$('item-on-photo'),
+				function(e, startX, startY){
+					var itemDiv = e.target || e.srcElement;
+					startPos.x = itemDiv.offsetLeft + 12;
+					startPos.y = itemDiv.offsetTop + 12;
+				},
+				function(dx, dy, currentX, currentY){
+					var x = startPos.x + dx;
+					var y = startPos.y + dy;
+
+					if(x < 0) x = 0;
+					if(x > onPhotoWrappwerW) x = onPhotoWrappwerW;
+					if(y < 0) y = 0;
+					if(y > onPhotoWrappwerH) y = onPhotoWrappwerH;
+
+					$$$('on_series_photo_x').value = x;
+					$$$('on_series_photo_y').value = y;
+
+					$$$('item-on-photo').style.left = (x-12) + 'px';
+					$$$('item-on-photo').style.top = (y-12) + 'px';
+				}
+			);
+		});
+	</script>
+
+	<input type="checkbox" name="in_series_set" id="in_series_set" value="1" onchange="showSeriesSetOpt()">
+	<label for="in_series_set">
+		Товар входит в базовый комплект серии
+	</label><br>
+	<b class="small">По этим товарам рассчитывается мин. цена серии</b>
+	<br><br>
+
+	<div id="series-set-opt" style="padding-left: 20px; display: none;">
+		К-во товара в базовом комплекте
+		<input name="in_series_set_amount" type="text" size="6" style="text-align: right"> шт.
+		<br><br>
+
+		<?php if($photo0) { ?>
+			<input type="checkbox" name="on_series_photo" id="on_series_photo" value="1" onchange="showPhotoPicker()">
+			<label for="on_series_photo">
+				Отметить товар на фото серии
+			</label>
+			<input type="hidden" name="on_series_photo_x" id="on_series_photo_x">
+			<input type="hidden" name="on_series_photo_y" id="on_series_photo_y">
+			<br><br>
+
+			<div id="photo-picker">
+				<div class="items-on-photo" id="items-on-photo-wrapper">
+					<img src="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $photo0['id']; ?>_392x277_<?php echo $photo0['rm']; ?>.<?php echo $photo0['_img_ext']; ?>" width="392" height="277" alt="" style="border: 1px solid #CCC">
+					<div id="items-on-photo">
+						<div class="item" id="item-on-photo" style="left: <?php echo ($init['on_series_photo_x']-12); ?>px; top: <?php echo ($init['on_series_photo_y']-12); ?>px">
+							<?php echo (intval($init['id']) ? $init['name'] . ' ' . $init['art'] : 'Отметка товара'); ?>
+						</div>
+					</div>
+				</div>
+				<div class="cl"></div>
+			</div>
+		<?php } ?>
+	</div>*/?>
+
+	<input type="checkbox" name="in_ym" id="in_ym" value="1">
+	<label for="in_ym">
+		Включить товар в файл выгрузки в Яндекс.Маркет
+	</label>
+	<br><br>
+
+	Картинка товара <b class="red">*</b>:<br>
+	<?php if($init['_img_ext']) { ?>
+		<a href="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath . $init['id']; ?>.<?php echo $init['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+			<img src="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath . $init['id']; ?>_80x60_1.<?php echo $init['_img_ext']; ?>" width="80" height="60" alt="" style="border: 1px solid #CCC">
+		</a><br>
+	<?php } ?>
+	<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+	<b class="small">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 3200x2400 пикс.
+	</b>
+	<br><br>
+
+
+
+
+
+	<br><br><br><br>
+
+
+	<h4>Стоимость товара</h4>
+
+	<style type="text/css">
+		input.currency-radio:checked + label {
+			font-weight: bold;
+		}
+	</style>
+
+	<script>
+		var usdCourse = <?php echo Catalog_Series::usdCourse($seriesInf['id']); ?>;
+		if(!usdCourse) usdCourse = 1;
+
+		function getMultipler(){
+			var e = parseFloat($$$('extra_charge').value); if(isNaN(e)) e = 0;
+			e = 1 + e/100;
+
+			var d = parseFloat($$$('discount').value); if(isNaN(d)) d = 0;
+			d = 1 - d/100;
+
+			return e * d;
+		}
+
+		function getPriceOut(priceIn, currency){
+			priceIn = parseFloat(priceIn); if(isNaN(priceIn)) priceIn = 0;
+			if(currency == 'usd'){
+				priceIn = priceIn * usdCourse;
+			}
+			var mul = getMultipler();
+
+			return (priceIn * mul).toFixed(<?php echo Catalog::PRICES_DECIMAL?>);
+		}
+
+		function getPriceIn(priceOut, currency){
+			var mul = getMultipler();
+			if(!mul) return false;
+
+			priceOut = parseFloat(priceOut); if(isNaN(priceOut)) priceOut = 0;
+			if(currency == 'usd'){
+				priceOut = priceOut / usdCourse;
+			}
+
+			return (priceOut / mul).toFixed(<?php echo Catalog::PRICES_DECIMAL?>);
+		}
+
+
+		// При изменении основной вход. цены меняется выход. цена
+		function mainPriceOut(){
+			$$$('price-out').value = getPriceOut($$$('price').value, $$$('currency-usd').checked ? 'usd' : 'rub');
+		}
+		onLoad(function(){mainPriceOut()});
+
+		/*function mainPriceIn(){
+			var pIn = getPriceIn($$$('price-out').value, $$$('currency-usd').checked ? 'usd' : 'rub');
+			if(pIn !== false){
+				$$$('price').value = pIn;
+			}
+		}*/
+
+		// При изменении основной выход. цены меняется не вход цена, а наценка
+		function mainPriceExtra(){
+			var priceIn = parseFloat($$$('price').value); if(isNaN(priceIn)) priceIn = 0;
+			if($$$('currency-usd').checked){
+				priceIn = priceIn * usdCourse;
+			}
+
+			var priceOut = parseFloat($$$('price-out').value); if(isNaN(priceOut)) priceOut = 0;
+
+			var d = parseFloat($$$('discount').value); if(isNaN(d)) d = 0;
+			d = 1 - d/100;
+
+			var e = priceOut / (priceIn * d);
+			e = ((e - 1) * 100).toFixed(<?php echo (Catalog::MULTIPLERS_DECIMAL-2); ?>);
+
+			$$$('extra_charge').value = e;
+
+			// Пересчитываем выход. цену по материалам с учётом новой наценки
+			var mId;
+			var mChecks = byTag('INPUT', $$$('materials-table'));
+			for(var i = 0, l = mChecks.length; i < l; i++){
+				if(mChecks[i].type == 'checkbox' && mChecks[i].checked){
+					mId = mChecks[i].value;
+					matPriceOut(mId);
+				}
+			}
+		}
+	</script>
+
+	Курс УЕ:
+	<strong>1 у.е. = <?php echo Catalog::priceFormat(Catalog_Series::usdCourse($seriesInf['id'])); ?> руб.</strong>
+	<br><br>
+
+	Основная входная цена <b class="red">*</b>:
+	<input name="price" id="price" type="text" size="10" style="text-align: right"
+		   required
+		   msg_required="Укажите входную цену товара"
+		   pattern="[0-9]+(\.[0-9]{1,<?php echo Catalog::PRICES_DECIMAL?>})?"
+		   msg_pattern="Некорректно указана входная цена"
+		   onchange="mainPriceOut()" onkeyup="mainPriceOut()"
+		>
+	&nbsp;
+	<input type="radio" class="currency-radio" name="currency" id="currency-rub" value="<?php echo Catalog::RUB?>" onchange="mainPriceOut()" onclick="mainPriceOut()">
+	<label for="currency-rub">руб.</label>
+	<input type="radio" class="currency-radio" name="currency" id="currency-usd" value="<?php echo Catalog::USD?>" onchange="mainPriceOut()" onclick="mainPriceOut()">
+	<label for="currency-usd">у.е.</label>
+	<br>
+	<b class="small">Десятичный разделитель - точка</b>
+	<br><br>
+
+	<table class="simple padding5">
+		<tr>
+			<td>Наценка:</td>
+			<td>
+				<input name="extra_charge" id="extra_charge" type="text" size="6" style="text-align: right"
+					   pattern="[0-9]+(\.[0-9]{1,<?php echo (Catalog::MULTIPLERS_DECIMAL-2); ?>})?"
+					   msg_pattern="Некорректно указана наценка"
+					   onchange="mainPriceOut()" onkeyup="mainPriceOut()"
+					>
+				%
+			</td>
+		</tr>
+		<tr>
+			<td>Скидка:</td>
+			<td>
+				<input name="discount" id="discount" type="text" size="6" style="text-align: right"
+					   pattern="[0-9]+(\.[0-9]{1,<?php echo (Catalog::MULTIPLERS_DECIMAL-2); ?>})?"
+					   msg_pattern="Некорректно указана скидка"
+					   onchange="mainPriceOut()" onkeyup="mainPriceOut()"
+					>
+				%
+			</td>
+		</tr>
+		<tr><td colspan="2">
+			<b class="small">
+				До <?php echo (Catalog::MULTIPLERS_DECIMAL-2); ?> дробных знаков.<br>
+				Десятичный разделитель - точка.
+			</b>
+		</td></tr>
+	</table>
+	<br>
+
+	Основная выходная цена:
+	<input id="price-out" type="text" size="10" style="text-align: right"
+		   onchange="mainPriceExtra()" onkeyup="mainPriceExtra()"
+		>
+	руб.
+	<br><br>
+
+	<?php if(count($materials)) { ?>
+		<style type="text/css">
+			.mat {
+				display: table;
+				width: 100%;
+			}
+			.mat .pic,
+			.mat .name {
+				display: table-cell;
+				vertical-align: middle;
+				padding: 0 6px 0 0;
+			}
+			.mat .pic {
+				width: 22px;
+			}
+		</style>
+
+		<script>
+			function selectMaterial(mId){
+				var on = $$$('mat-' + mId).checked;
+
+				$$$('mat-' + mId + '-price').disabled = !on;
+				$$$('mat-' + mId + '-currency-rub').disabled = !on;
+				$$$('mat-' + mId + '-currency-usd').disabled = !on;
+				$$$('mat-' + mId + '-price-out').disabled = !on;
+				if(on){
+					$$$('mat-' + mId + '-price').style.background = '';
+					$$$('mat-' + mId + '-price-out').style.background = '';
+				}else{
+					$$$('mat-' + mId + '-price').style.background = '#EEE';
+					$$$('mat-' + mId + '-price-out').style.background = '#EEE';
+				}
+			}
+
+			function matPriceOut(mId){
+				$$$('mat-' + mId + '-price-out').value = getPriceOut(
+					$$$('mat-' + mId + '-price').value,
+					$$$('mat-' + mId + '-currency-usd').checked ? 'usd' : 'rub'
+				);
+			}
+
+			function matPriceIn(mId){
+				var pIn = getPriceIn(
+					$$$('mat-' + mId + '-price-out').value,
+					$$$('mat-' + mId + '-currency-usd').checked ? 'usd' : 'rub'
+				);
+				if(pIn !== false){
+					$$$('mat-' + mId + '-price').value = pIn;
+				}
+			}
+		</script>
+
+		<strong>Материалы</strong>
+		<br><br>
+		<table class="admin_table" id="materials-table">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Материал</th>
+				<th>
+					Входная цена<br>
+					<b class="small">
+						(оставьте 0, чтобы использовать общую цену товара)
+					</b>
+				</th>
+				<th>Выходная цена</th>
+			</tr>
+			<?php foreach($materials as $m) { ?>
+				<tr>
+					<td>
+						<input type="checkbox" name="materials[<?php echo $m['id']; ?>][material_id]" id="mat-<?php echo $m['id']; ?>" value="<?php echo $m['id']; ?>" onchange="selectMaterial(<?php echo $m['id']; ?>)" onclick="selectMaterial(<?php echo $m['id']; ?>)">
+						<script>
+							onLoad(function(){
+								selectMaterial(<?php echo $m['id']; ?>);
+								matPriceOut(<?php echo $m['id']; ?>);
+								addHandler($$$('extra_charge'), 'change', function(){matPriceOut(<?php echo $m['id']; ?>)});
+								addHandler($$$('extra_charge'), 'keyup', function(){matPriceOut(<?php echo $m['id']; ?>)});
+								addHandler($$$('discount'), 'change', function(){matPriceOut(<?php echo $m['id']; ?>)});
+								addHandler($$$('discount'), 'keyup', function(){matPriceOut(<?php echo $m['id']; ?>)});
+							});
+						</script>
+					</td>
+					<td>
+						<div class="mat">
+							<div class="pic">
+								<?php if($m['_img_ext']) { ?>
+									<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id']; ?>.<?php echo $m['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+										<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id']; ?>_20x20_0.<?php echo $m['_img_ext']; ?>" width="20" height="20" alt="" style="border: 1px solid #CCC">
+									</a>
+								<?php } ?>
+							</div>
+							<div class="name">
+								<label for="mat-<?php echo $m['id']; ?>">
+									<?php echo $m['name']; ?>
+								</label><br>
+								<?php if(isset($suppliers[$m['supplier_id']])) { ?>
+									<a class="small" href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), array(
+										'id'	=> $m['supplier_id']
+									)); ?>" target="_blank">
+										<?php echo $suppliers[$m['supplier_id']]; ?>
+									</a>
+								<?php } ?>
+							</div>
+						</div>
+					</td>
+					<td>
+						<input type="text" name="materials[<?php echo $m['id']; ?>][price]" id="mat-<?php echo $m['id']; ?>-price" size="10" style="text-align: right"
+							   onchange="matPriceOut(<?php echo $m['id']; ?>)" onkeyup="matPriceOut(<?php echo $m['id']; ?>)"
+							   pattern="[0-9]+(\.[0-9]{1,<?php echo Catalog::PRICES_DECIMAL?>})?"
+							   msg_pattern="Некорректно указана входная цена для материала">
+						&nbsp;
+						<input type="radio" class="currency-radio" name="materials[<?php echo $m['id']; ?>][currency]" id="mat-<?php echo $m['id']; ?>-currency-rub" value="<?php echo Catalog::RUB?>" onchange="matPriceOut(<?php echo $m['id']; ?>)" onclick="matPriceOut(<?php echo $m['id']; ?>)">
+						<label for="mat-<?php echo $m['id']; ?>-currency-rub">руб.</label>
+						<input type="radio" class="currency-radio" name="materials[<?php echo $m['id']; ?>][currency]" id="mat-<?php echo $m['id']; ?>-currency-usd" value="<?php echo Catalog::USD?>" onchange="matPriceOut(<?php echo $m['id']; ?>)" onclick="matPriceOut(<?php echo $m['id']; ?>)">
+						<label for="mat-<?php echo $m['id']; ?>-currency-usd">у.е.</label>
+					</td>
+					<td>
+						<input id="mat-<?php echo $m['id']; ?>-price-out" type="text" size="10" style="text-align: right"
+							   onchange="matPriceIn(<?php echo $m['id']; ?>)" onkeyup="matPriceIn(<?php echo $m['id']; ?>)"
+							>
+						руб.
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+		<br><br>
+	<?php } ?>
+
+
+
+
+
+	<br><br><br><br>
+
+
+	<h4>Параметры для оформления заказа</h4>
+
+	Стоимость доставки (по Мск):
+	<input name="price_delivery" type="text" size="10" style="text-align: right"> руб.<br>
+	<b class="small">
+		Оставьте значение 0, чтобы стоимость доставки вычислялась в соответствии с параметрами калькулятора корзины.
+	</b>
+	<br><br>
+
+	<script>
+		function freeAssemblyChange(){
+			if($$$('assembly_var-0').checked){
+				$$$('block-assembly').style.display = 'block';
+				if($$$('is_metal').checked){
+					$$$('metall-yes').style.display = 'block';
+				}
+			}else{
+				$$$('block-assembly').style.display = 'none';
+				$$$('metall-yes').style.display = 'none';
+			}
+		}
+		onLoad(function(){freeAssemblyChange();});
+	</script>
+
+	Сборка:
+	<input type="radio" name="assembly_var" id="assembly_var-0" value="0" onchange="freeAssemblyChange()" onclick="freeAssemblyChange()" onkeyup="freeAssemblyChange()">
+	<label for="assembly_var-0">Стандарт</label>
+	&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="assembly_var" id="assembly_var-1" value="1" onchange="freeAssemblyChange()" onclick="freeAssemblyChange()" onkeyup="freeAssemblyChange()">
+	<label for="assembly_var-1">Бесплатная (независимо от других параметров)</label>
+	&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="assembly_var" id="assembly_var-2" value="2" onchange="freeAssemblyChange()" onclick="freeAssemblyChange()" onkeyup="freeAssemblyChange()">
+	<label for="assembly_var-2">Не требуется</label>
+	&nbsp;&nbsp;&nbsp;
+	<br><br>
+
+	<div id="block-assembly">
+		Стоимость сборки:
+		<input name="price_assembly" type="text" size="10" style="text-align: right"> руб.<br>
+		<b class="small">
+			Оставьте значение 0, чтобы стоимость сборки вычислялась в соответствии с параметрами калькулятора корзины.
+		</b>
+		<br><br>
+	</div>
+
+	Стоимость разгрузки:
+	<input name="price_unloading" type="text" size="10" style="text-align: right"> руб.<br>
+	<b class="small">
+		Оставьте значение 0, чтобы стоимость разгрузки вычислялась в соответствии с параметрами калькулятора корзины.
+	</b>
+	<br><br>
+
+	Размер:<br>
+	<input type="text" name="size" size="20"><br>
+	<b class="small">
+		Рекомендуемый формат: AxBxC (см/мм)
+	</b>
+	<br><br>
+
+	Объём:<br>
+	<input type="text" name="volume" size="10" style="text-align: right">
+	м<sup>3</sup><br>
+	<b class="small">
+		Десятичный разделитель - точка
+	</b>
+	<br><br>
+
+	Масса:<br>
+	<input type="text" name="weight" size="10" style="text-align: right">
+	кг<br>
+	<b class="small">
+		Десятичный разделитель - точка
+	</b>
+	<br><br>
+
+	<script>
+		function selectMetall(){
+			if($$$('is_metal').checked){
+				$$$('metall-no').style.display = 'none';
+				if($$$('assembly_var-0').checked){
+					$$$('metall-yes').style.display = 'block';
+				}
+			}else{
+				$$$('metall-no').style.display = 'block';
+				$$$('metall-yes').style.display = 'none';
+			}
+		}
+		onLoad(function(){selectMetall()});
+	</script>
+
+	<input type="checkbox" name="is_metal" id="is_metal" value="1" onchange="selectMetall()" onclick="selectMetall()">
+	<label for="is_metal">Металлическая мебель</label>
+	<br><br>
+
+	<div id="metall-no">
+		<input type="checkbox" name="is_hanger" id="is_hanger" value="1">
+		<label for="is_hanger">Вешалка (цена сборки фиксированная, не зависит от стоимости)</label>
+		<br><br>
+
+		<input type="checkbox" name="is_accessories" id="is_accessories" value="1">
+		<label for="is_accessories">Аксессуар (отличается стоимость доставки)</label>
+		<br><br>
+	</div>
+
+	<div id="metall-yes">
+		Серия металлической мебели:<br>
+		<select name="metall_series_id">
+			<option value="0">Нет (общая стоимость)</option>
+			<?php foreach($metallSeries as $ms) { ?>
+				<option value="<?php echo $ms['id']; ?>">
+					<?php echo $ms['name']; ?>
+					(<?php echo Catalog::priceFormat($ms['price_accembly']); ?> руб.)
+				</option>
+			<?php } ?>
+		</select>
+		<br>
+		<b class="small">Определяет стоимость сборки</b>
+		<br><br>
+	</div>
+
+
+
+	<br><br><br><br>
+
+
+	<h4>Содержание</h4>
+
+	Тайтл страницы:<br>
+	<input name="title" type="text" size="50">
+	<br><br>
+
+	Заголовок страницы (тег &lt;H1&gt;):<br>
+	<input name="h1" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	Текст описания товара:<br>
+	<ckeditor name="text" width="100%" height="300" toolbar="Full"></ckeditor>
+	<br><br>
+
+
+
+	<br><br><br><br>
+
+
+	<h4>Товар на теговых страницах и страницах категорий</h4>
+
+	Выбрано: <span id="itemslinks-count"></span><br>
+	<script>
+		onLoad(function(){oMultiselectCount.add('itemslinks', 'itemslinks-count')});
+	</script>
+	<select name="itemslinks[]" id="itemslinks" multiple style="width: 600px; height: 400px; padding: 6px;">
+		<?php foreach($categories as $c) { ?>
+			<option value="<?php echo $c['id']; ?>-0" style="color: #00F">
+				<?php echo Catalog_Categories::name($c['id']); ?>
+			</option>
+			<?php foreach($c['pages-groups'] as $pg) { ?>
+				<optgroup label="<?php echo Catalog_Categories::name($c['id']); ?> / <?php echo $pg['name']; ?>:">
+					<?php foreach($pg['pages'] as $p) { ?>
+						<option value="<?php echo $c['id']; ?>-<?php echo $p['id']; ?>">
+							<?php echo $p['name']; ?>
+						</option>
+					<?php } ?>
+				</optgroup>
+			<?php } ?>
+		<?php } ?>
+	</select>
+	<br>
+	<b class="small">
+		Удерживайте нажатым Ctrl, чтобы выделить<br>
+		несколько пунктов сразу или снять выделение
+	</b>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-back">Вернуться</a>

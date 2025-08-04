@@ -1,0 +1,34 @@
+<form action="">
+	<h3>Редактирование фотографии серии <b><?php echo $seriesInf['name']; ?></b></h3>
+
+	<br><br>
+
+	<a href="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $init['id']; ?>.<?php echo $init['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+		<img src="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $init['id']; ?>_160x120_<?php echo $init['rm']; ?>.<?php echo $init['_img_ext']; ?>" width="160" height="120" alt="" style="border: 1px solid #CCC">
+	</a>
+	<br><br>
+
+	Атрибут ALT:<br>
+	<input name="alt" type="text" size="50">
+	<br><br>
+
+	Способ масштабирования:<br>
+	<select name="rm">
+		<option value="<?php echo IMG_RESIZE_CROP?>">Обрезание краёв</option>
+		<option value="<?php echo IMG_RESIZE_ADD_MARGINS?>">Добавление полей</option>
+	</select><br>
+	<b class="small">
+		<a href="<?php echo Url::a('admin-imageresizehelp'); ?>" target="_blank">Пояснение</a>
+	</b>
+	<br><br>
+
+	<br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-photos'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-back">Вернуться</a>

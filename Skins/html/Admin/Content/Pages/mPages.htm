@@ -1,0 +1,114 @@
+<?php if($parentPage) { ?>
+	<h3>Список страниц, дочерних для страницы <b><?php echo $parentPage['name']; ?></b>:</h3>
+<?php } else { ?>
+	<h3>Список страниц верхнего уровня:</h3>
+<?php } ?>
+<br><br>
+
+<?php if($parentPage) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p' => $parentPage['parent_id']
+	)); ?>" class="but-back">Вернуться</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-content-pages-edit'), array(
+	'p' => intval($parentPage['id'])
+)); ?>" class="but-add">Добавить страницу</a>
+
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Тайтл страницы</th>
+		<th>URL</th>
+		<th class="small1">В верхнем меню</th>
+		<th class="small1">В нижнем меню</th>
+		<th class="small1">В карте сайта</th>
+		<th>Дочерние страницы</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($pages as $p) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $p['id']; ?></td>
+			<td><?php echo $p['name']; ?></td>
+			<td><?php echo short($p['title'], 50); ?></td>
+			<td class="courier">
+				<a href="<?php echo Url::a($p['id']); ?>" target="_blank">http://<?php echo $_SERVER['HTTP_HOST'] . Url::a($p['id']); ?></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+						'act' => 'setopt',
+						'itemid' => $p['id'],
+						'opt' => 'in_menu1'
+				)); ?>" class="but-opt" title="В верхнем меню">
+					<?php echo $p['in_menu1'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $p['id'],
+					'opt' => 'in_menu2'
+				)); ?>" class="but-opt" title="В нижнем меню">
+					<?php echo $p['in_menu2'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $p['id'],
+					'opt' => 'in_sitemap'
+				)); ?>" class="but-opt" title="В карте сайта">
+					<?php echo $p['in_sitemap'] ? 1 : 0?>
+				</a>
+			</td>
+			<td align="center">
+				<?php if($p['id'] != 1) { ?>
+					<a href="<?php echo Url::buildUrl(0, array(
+						'p' => $p['id']
+					)); ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($p['subcnt']); ?>
+					</a>
+				<?php } ?>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-content-pages-edit'), array(
+					'id' => $p['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<?php if(!$p['spec']) { ?>
+					<a href="<?php echo Url::buildUrl(0, $_GET, array(
+						'act' => 'del',
+						'n' => $p['id']
+					)); ?>" class="but-del" title="Удалить"></a>
+				<?php } ?>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($pages)) { ?>
+		<tr><td colspan="11">Страницы не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+
+<?php if($parentPage) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p' => $parentPage['parent_id']
+	)); ?>" class="but-back">Вернуться</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-content-pages-edit'), array(
+	'p' => intval($parentPage['id'])
+)); ?>" class="but-add">Добавить страницу</a>

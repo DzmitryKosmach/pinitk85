@@ -1,0 +1,28 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование группы товаров в серии <b><?php echo $seriesInf['name']?></b>
+		<?php } else { ?>
+			Добавление группы товаров в серии <b><?php echo $seriesInf['name']?></b>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название группы <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название группы"
+		>
+	<br><br>
+
+	<br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-groups'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+))?>" class="but-back">Вернуться</a>

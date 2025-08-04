@@ -1,0 +1,41 @@
+<form action="">
+	<h3>
+		Настройки выгрузки в Яндекс.Маркет
+	</h3>
+
+	<br><br>
+
+	URL для выгрузки каталога:
+	<?php foreach($ymlFiles as $ymlFile) { ?>
+		<br>
+		<a href="/<?php echo $ymlFile?>" target="_blank">http://<?php echo $_SERVER['HTTP_HOST'] . '/' . $ymlFile?></a>
+	<?php } ?>
+	<br><br>
+
+	<?php foreach($options as $o) { ?>
+		<?php echo $o['dsc']; ?>:<br>
+		<?php if(Catalog_Yml::$options[$o['name']] == Catalog_Yml::OPT_TEXT) { ?>
+			<input name="<?php echo $o['name']; ?>" type="text" size="80">
+
+		<?php } elseif(Catalog_Yml::$options[$o['name']] == Catalog_Yml::OPT_NUM) { ?>
+			<input name="<?php echo $o['name']; ?>" type="text" size="10" style="text-align: right">
+
+		<?php } elseif(Catalog_Yml::$options[$o['name']] == Catalog_Yml::OPT_YN) { ?>
+			<select name="<?php echo $o['name']; ?>">
+				<option value="0">Нет</option>
+				<option value="1">Да</option>
+			</select>
+		<?php } ?>
+
+		<?php if(trim($o['comment']) !== '') { ?>
+			<br>
+			<b class="small"><?php echo $o['comment']; ?></b>
+		<?php } ?>
+		<br><br>
+	<?php } ?>
+
+
+	<br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

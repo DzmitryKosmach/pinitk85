@@ -1,0 +1,41 @@
+<form action="">
+	<h3>
+		Редактирование блоков мотивации для главной страницы
+	</h3>
+
+	<br><br>
+
+	<?php for($i = 1; $i <= 3; $i++) { ?>
+		<h4>Блок <?php echo $i; ?></h4>
+
+		Заголовок <b class="red">*</b>:<br>
+		<input name="index-motivation<?php echo $i; ?>-title" type="text" size="50"
+			   required
+			   msg_required="Введите заголовок для блока <?php echo $i; ?>">
+		<br><br>
+
+		Надпись на кнопке:<br>
+		<input name="index-motivation<?php echo $i; ?>-but" type="text" size="50">
+		<br><br>
+
+		Функция кнопки:<br>
+		<select name="index-motivation<?php echo $i; ?>-but-func">
+			<option value=""> - скрыть кнопку - </option>
+			<option value="callback">Перезвоните мне</option>
+
+			<option value="<?php echo Contacts_Feedback::REASON_OTHER?>">Обратная связь</option>
+			<option value="<?php echo Contacts_Feedback::REASON_DESIGN?>">Заказать дизайн-проект</option>
+			<option value="<?php echo Contacts_Feedback::REASON_SELECTION?>">Заказать подбор мебели</option>
+			<option value="<?php echo Contacts_Feedback::REASON_LOWPRICE?>">Сообщите мне о снижении цены</option>
+			<?php /*<option value="<?php echo Contacts_Feedback::REASON_CHEAPER?>">Нашли дешевле?</option>*/?>
+		</select>
+		<br><br>
+
+		Текст:<br>
+		<ckeditor name="index-motivation<?php echo $i; ?>-text" width="100%" height="200" toolbar="Mini"></ckeditor>
+
+		<br><br><br><br>
+	<?php } ?>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

@@ -1,0 +1,404 @@
+/* orderauth */
+.order_form_div .someform .title{
+	margin-bottom:10px;
+}
+.order_form_div .ordertable{
+	float:left;
+	width:48%;
+}
+.order_form_div .ordertable.t1{
+	margin-right:4%;
+}
+
+/* person types */
+.someform.orderforma .persontypes{
+	margin-bottom:10px;
+}
+.someform.orderforma .persontypes .subtitle,
+.someform.orderforma .persontypes .label.left{
+	float:left;
+	margin-right:15px;
+}
+
+/* props */
+.someform.orderforma{
+	/*max-width:600px;*/
+	max-width: none;
+}
+.someform.orderforma .subtitle{
+	width:100%;
+	font-weight:bold;
+}
+.someform.orderforma .subtitle .small {
+	font-weight:normal;
+	font-size: 80%;
+}
+.someform.orderforma h4,
+.someform.orderforma .h4{
+	display:block;
+	padding:10px 25px;
+	font-weight:normal;
+	background-color:#F2F2F2;
+}
+.someform.orderforma .body{
+	padding:10px 25px;
+	border-right:1px solid #F2F2F2;
+	border-bottom:1px solid #F2F2F2;
+	border-left:1px solid #F2F2F2;
+}
+.someform.orderforma .body .line{
+	margin-top:10px;
+}
+.someform.orderforma .body .line.choseprofile{
+	width:100%;
+}
+.someform.orderforma .body .line.f_location .default{
+	margin-bottom:5px;
+}
+.someform.orderforma .body .line.f_location select{
+	margin-top:5px;
+}
+.someform.orderforma .body .line.f_checkbox label{
+	font-weight:bold;
+}
+.someform.orderforma .body .line .nm{
+	margin-bottom:5px;
+	font-weight:bold;
+}
+.someform.orderforma .body .line .vl{
+	position:relative;
+}
+.someform.orderforma .body .line .vl .description{
+	color:#666;
+}
+.someform.orderforma .body .line .vl .description .arrow{
+	display:none;
+}
+.someform.orderforma .body .line.f_text .vl .description,
+.someform.orderforma .body .line.f_textarea .vl .description{
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:100%;
+	display:none;
+	z-index:100;
+}
+.someform.orderforma .body .line.f_text .vl .description .in,
+.someform.orderforma .body .line.f_textarea .vl .description .in{
+	width:100%;
+	margin-top:11px;
+	padding:5px 10px;
+	background-color:#fff;
+	border:1px solid #EE8131;
+}
+.someform.orderforma .body .line.f_text .vl .description .arrow,
+.someform.orderforma .body .line.f_textarea .vl .description .arrow{
+	position:absolute;
+	top:5px;
+	right:20%;
+	display:block;
+	width:14px;
+	height:7px;
+	background-position:0px -946px;
+}
+.someform.orderforma .separator{
+	float:left;
+	width:100%;
+}
+
+/* delivery & paysystem */
+.someform.orderforma .delivery,
+.someform.orderforma .delivery .item,
+.someform.orderforma .paysystem,
+.someform.orderforma .paysystem .item{
+	margin-bottom:15px;
+}
+.someform.orderforma .delivery .item .img,
+.someform.orderforma .paysystem .item .img{
+	display: block;
+	margin-right:15px;
+	cursor:pointer;
+}
+.someform.orderforma .delivery .item .img span,
+.someform.orderforma .paysystem .item .img span{
+	display:block;
+	width:100px;
+	height:60px;
+	background-repeat:no-repeat;
+	background-position:center;
+}
+.someform.orderforma .delivery .item .data .note,
+.someform.orderforma .paysystem .item .data .note{
+	color:#666;
+}
+.someform.orderforma .delivery .item .data strong,
+.someform.orderforma .paysystem .item .data strong{
+	cursor:pointer;
+}
+
+.someform.orderforma .orderbtn{
+	float:right;
+}
+
+/* summary */
+.someform.orderforma .summary .body{
+	width:100%;
+	overflow-x:auto;
+	overflow-y:hidden;
+	-webkit-overflow-scrolling:touch;
+	overflow-scrolling:touch;
+}
+.cart-table,
+.someform.orderforma .summary .body .products{
+	width:100%;
+}
+.cart-table th,
+.cart-table td,
+.someform.orderforma .summary .body .products th,
+.someform.orderforma .summary .body .products td{
+	padding:5px 10px;
+	border:1px solid #F2F2F2;
+}
+
+/* neoways */
+.cart-step1-left,
+.cart-step2-left,
+.cart-step3-left,
+.order-view-left {
+	display: block;
+	box-sizing: border-box;
+	float: left;
+	width: 50%;
+	margin-bottom: 20px;
+}
+.cart-step1-right,
+.cart-step2-right,
+.cart-step3-right,
+.order-view-right {
+	display: block;
+	box-sizing: border-box;
+	float: left;
+	width: 50%;
+	margin-bottom: 20px;
+	padding-left: 20px;
+}
+@media screen and (max-width:885px){
+	.cart-step1-left,
+	.cart-step2-left,
+	.cart-step3-left,
+	.order-view-left {
+		float: none;
+		width: auto;
+	}
+	.cart-step2-left
+	.cart-step3-left,
+	.order-view-left {
+		margin-bottom: 0;
+	}
+	.cart-step1-right {
+		display: none;
+	}
+	.cart-step2-right
+	.cart-step3-right,
+	.order-view-right {
+		float: none;
+		width: auto;
+		padding-left: 0;
+	}
+}
+
+.cart-table tr.no-borders th,
+.cart-table tr.no-borders td,
+.someform.orderforma .summary .body .products tr.no-borders th,
+.someform.orderforma .summary .body .products tr.no-borders td {
+	border: 0;
+}
+.cart-table tr.equal th,
+.cart-table tr.equal td,
+.someform.orderforma .summary .body .products tr.equal th,
+.someform.orderforma .summary .body .products tr.equal td {
+	background: #AFA;
+}
+.cart-table .nowrap,
+.someform.orderforma .summary .body .products .nowrap {
+	white-space: nowrap;
+}
+.cart-table .right,
+.someform.orderforma .summary .body .products .right {
+	text-align: right;
+}
+.cart-table .itemname,
+.someform.orderforma .summary .body .products .itemname {
+	font-weight: bold;
+	line-height: 100%;
+}
+.cart-table .itemname .pic,
+.someform.orderforma .summary .body .products .itemname .pic {
+	display: block;
+	float: left;
+	width: 30px;
+}
+.cart-table .itemname .text,
+.someform.orderforma .summary .body .products .itemname .text {
+	display: block;
+	padding-left: 40px;
+}
+.cart-table .itemname span,
+.someform.orderforma .summary .body .products .itemname span {
+	font-size: 70%;
+	font-weight: normal;
+}
+.cart-table .material,
+.someform.orderforma .summary .body .products .material {
+	white-space: nowrap;
+	line-height: 100%;
+}
+.cart-table .material .image,
+.cart-table .material .name,
+.someform.orderforma .summary .body .products .material .image,
+.someform.orderforma .summary .body .products .material .name {
+	display: inline-block;
+	vertical-align: middle;
+}
+.cart-table .material .name,
+.someform.orderforma .summary .body .products .material .name {
+	font-size: 10px;
+}
+.cart-table .quantity input,
+.someform.orderforma .summary .body .products .quantity input {
+	width: 36px;
+}
+.cart-table .remove,
+.someform.orderforma .summary .body .products .remove {
+	display: inline-block;
+	vertical-align: middle;
+	width: 9px;
+	height: 9px;
+	background: url('/Skins/img/user/cart-item-remove.gif') no-repeat left top;
+	margin-bottom: 4px;
+}
+.cart-table .remove:hover,
+.someform.orderforma .summary .body .products .remove:hover {
+	background-position: left bottom;
+}
+
+.someform.orderforma .recalc {
+	display: inline;
+	padding: 0;
+	margin: 0;
+	font-family: Opensans,Arial,Helvetica,sans-serif;
+	color: #214496;
+	text-decoration: underline;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+.someform.orderforma .recalc:hover {
+	text-decoration: none;
+}
+
+.order-total {
+
+}
+.order-total .price {
+	float: left;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+.order-total .price-old {
+	float: left;
+	margin-left: 15px;
+	margin-bottom: 5px;
+	text-decoration: line-through;
+}
+
+
+
+
+/* Ползунок для выбора числа в диапазоне */
+.range-block .range-title {
+	padding: 0;
+	font-size: 16px;
+}
+.range-block input.text {
+	width: 46px;
+	height: 26px;
+	margin-left: 21px;
+	line-height: 26px;
+	padding: 0 8px;
+	text-align: right;
+}
+.range-block .units {
+	display: inline-block;
+	vertical-align: top;
+	padding: 5px 0 0 7px;
+	font-size: 14px;
+}
+.range-block .range-element {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	width: 250px;
+	height: 37px;
+}
+.range-block .range-element input {
+	display: inline-block;
+	vertical-align: top;
+	width: 100%;
+	margin: 0;
+}
+.range-block .range-element .min,
+.range-block .range-element .max {
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	font-size: 14px;
+}
+.range-block .range-element .max {
+	left: auto;
+	right: 0;
+}
+
+
+/* neoways-end */
+
+
+
+
+
+.someform.orderforma .summary .body .products .img{
+	margin-right:15px;
+}
+.someform.orderforma .summary .body .products .img img{
+	min-width: 50px;
+	min-height: 50px;
+}
+.someform.orderforma .summary .body .products .img span{
+	display:block;
+	width:100px;
+	height:60px;
+	background-repeat:no-repeat;
+	background-position:center;
+}
+.someform.orderforma .summary .body .order_pay .right{
+	float:right;
+}
+.someform.orderforma .summary .body .order_pay table{
+	margin-top:10px;
+}
+.someform.orderforma .summary .body .order_pay table th,
+.someform.orderforma .summary .body .order_pay table td{
+	padding:5px 10px;
+}
+.someform.orderforma .summary .body .order_pay table td.price{
+	font-size:16px;
+	font-weight:bold;
+}
+
+@media screen and (max-width:875px){
+	body.adaptive .order_form_div .ordertable{
+		width:100%;
+		margin-bottom:25px;
+	}
+}

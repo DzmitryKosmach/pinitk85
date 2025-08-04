@@ -1,0 +1,25 @@
+<form action="">
+	<h3>Редактирование благодарственного письма клиента</h3>
+
+	<br><br>
+
+	<a href="<?=Config::pathRel('images') . Clients_Letters::$imagePath . $init['id']?>.<?=$init['_img_ext']?>" target="_blank" onclick="return hs.expand(this)">
+		<img src="<?=Config::pathRel('images') . Clients_Letters::$imagePath . $init['id']?>_120x170_0.<?=$init['_img_ext']?>" width="120" height="170" alt="" style="border: 1px solid #CCC">
+	</a>
+	<br><br>
+
+	<input name="in_index" id="in_index" type="checkbox" value="1">
+	<label for="in_index">Показать письмо на главной странице сайта</label>
+	<br><br>
+
+	Примечание:<br>
+	<input name="comment" type="text" size="100">
+	<br><br>
+
+	<br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?=Url::a('admin-clients-letters')?>" class="but-back">Вернуться</a>

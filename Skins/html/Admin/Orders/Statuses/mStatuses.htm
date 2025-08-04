@@ -1,0 +1,50 @@
+<h3>Статусы заказов:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-orders-statuses-edit'); ?>" class="but-add">
+	Добавить статус
+</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Цвет</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($statuses as $s) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $s['id']?></td>
+			<td><?php echo $s['name']?></td>
+			<td>
+				<b style="color: <?php echo $s['color']?>"><?php echo mb_strtoupper($s['color']); ?></b>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-orders-statuses-edit'), array(
+					'id'	=> $s['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $s['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($statuses)) { ?>
+		<tr><td colspan="6">Статусы не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-orders-statuses-edit'); ?>" class="but-add">
+	Добавить статус
+</a>

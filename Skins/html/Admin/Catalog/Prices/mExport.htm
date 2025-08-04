@@ -1,0 +1,317 @@
+<script>
+	var series = [];
+
+	<?php foreach($seriesByCat as $cId => $seriesBySupp) { ?>
+		series[<?php echo $cId?>] = [];
+		<?php foreach($seriesBySupp as $suppId => $series) { ?>
+			<?php
+			foreach($series as $n => &$s){
+				$s = $n . '::' . $s;
+			}
+			unset($s);
+			?>
+			series[<?php echo $cId?>][<?php echo $suppId?>] = '<?php echo str_replace('\'', '\\\'', implode('//', $series)); ?>';
+		<?php } ?>
+	<?php } ?>
+
+	function showSeries(){
+		var catId = parseInt($$$('cat').value);
+		var suppId = parseInt($$$('supplier').value);
+
+		if(typeof(series[catId]) != 'undefined'){
+			if(suppId && typeof(series[catId][suppId]) != 'undefined'){
+				// Серии по категории и поставщику
+				setSelectOptions(
+					$$$('series'),
+					'0:: - все серии - //' + series[catId][suppId],
+					0
+				);
+			}else{
+				// Серии по категории
+				var s = [];
+				for(var i in series[catId]){
+					s.push(series[catId][i]);
+				}
+				setSelectOptions(
+					$$$('series'),
+					'0:: - все серии - //' + s.join('//'),
+					0
+				);
+			}
+		}else{
+			// Нет серий
+			setSelectOptions(
+				$$$('series'),
+				'0:: - все серии - ',
+				0
+			);
+		}
+		calcItems();
+	}
+
+
+	function calcItems(){
+		$$$('options').style.display = 'none';
+		$$$('submit-button').disabled = true;
+		$$$('items-cnt').innerHTML = '...';
+		$$$('items-cnt-outer').className = '';
+
+		var url = '<?php echo Url::a('admin-catalog-export'); ?>?calc=1';
+		url += '&category_id=' + parseInt($$$('cat').value);
+		url += '&supplier_id=' + parseInt($$$('supplier').value);
+		url += '&series_id=' + parseInt($$$('series').value);
+
+		AJAX.lookup(
+			url,
+			function(itemsCnt){
+				itemsCnt = parseInt(itemsCnt);
+				$$$('items-cnt').innerHTML = itemsCnt;
+
+				if(itemsCnt){
+					$$$('options').style.display = 'block';
+					$$$('items-cnt-outer').className = 'blue';
+					$$$('submit-button').disabled = false;
+				}else{
+					$$$('items-cnt-outer').className = 'red';
+				}
+			}
+		);
+	}
+	onLoad(function(){
+		calcItems();
+	});
+
+
+	function seriesExtraChange(){
+		if($$$('options-series-<?php echo Catalog_Prices::FLD_SERIES_EXTRA?>').checked){
+			$$$('series-extra-formula-block').style.color = '';
+			$$$('series-extra-formula').disabled = false;
+		}else{
+			$$$('series-extra-formula-block').style.color = '#666';
+			$$$('series-extra-formula').checked = false;
+			$$$('series-extra-formula').disabled = true;
+		}
+	}
+	onLoad(function(){
+		seriesExtraChange();
+	});
+
+
+	function showHideItemsBlock(){
+		if($$$('items').checked){
+			$$$('items-block').style.display = 'block';
+		}else{
+			$$$('items-block').style.display = 'none';
+		}
+	}
+	onLoad(function(){
+		showHideItemsBlock();
+	});
+
+
+</script>
+
+<form action="">
+	<h3>Экспорт товаров:</h3>
+
+	<br><br>
+
+	Категория:<br>
+	<select name="category_id" id="cat" onchange="showSeries()">
+		<option value="0"> - все категории - </option>
+		<?php foreach($catsIds as $cId) { ?>
+			<option value="<?php echo $cId; ?>"><?php echo Catalog_Categories::name($cId); ?></option>';
+		<?php } ?>
+	</select>
+	<br><br>
+
+	Серия:<br>
+	<select name="series_id" id="series" onchange="calcItems()">
+		<option value="0"> - все серии - </option>
+	</select>
+	<br><br>
+
+	Поставщик:<br>
+	<select name="supplier_id" id="supplier" onchange="showSeries()">
+		<option value="0"> - все поставщики - </option>
+		<?php foreach($suppliers as $sId => $sName) { ?>
+			<option value="<?php echo $sId?>"><?php echo $sName?></option>
+		<?php } ?>
+	</select>
+	<br><br><br><br>
+
+	<b id="items-cnt-outer" class="blue">
+		Найдено товаров по запросу:
+		<span id="items-cnt"></span>
+	</b>
+	<br><br>
+
+	<div id="options" style="display: none">
+		<h4>Экспортируемые данные</h4>
+		<strong>Серии:</strong><br>
+
+		<div style="color: #666; padding-top: 5px">
+			<input type="checkbox" checked disabled>
+			ID
+		</div>
+		<div style="color: #666; padding-top: 5px">
+			<input type="checkbox" checked disabled>
+			Категория
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_SUPPLIER?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_SUPPLIER?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_SUPPLIER?>">
+				Поставщик
+			</label>
+			<div style="padding-left: 23px;">
+				<b class="small">
+					Если это поле будет изменено перед импортом прайса, то оно должно в точности совпадать с названием одного из поставщиков, содержащихся в базе сайта.
+				</b>
+			</div>
+		</div>
+		<div style="color: #666; padding-top: 5px">
+			<input type="checkbox" checked disabled>
+			Название
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_EXTRA?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_EXTRA?>" onchange="seriesExtraChange()">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_EXTRA?>">
+				Наценка
+			</label>
+			<div style="padding-left: 23px;">
+				<b class="small">
+					Реальное значение имеет только собственная наценка товаров.<br>
+					Чтобы изменении наценки на всю серию оказало эффект при импорте прайса, используйте следующую опцию.
+				</b>
+			</div>
+		</div>
+		<div id="series-extra-formula-block" style="padding-left: 20px;">
+			<input type="checkbox" name="series-extra-formula" value="1" id="series-extra-formula">
+			<label for="series-extra-formula">
+				Связать наценку серии с вых.ценой товаров формулой (только для товаров, наценка которых совпадает с наценкой серии)
+			</label>
+			<div style="padding-left: 23px;">
+				<b class="small">
+					Не работает, если в свойствах серии уставновлена опция &laquo;При импорте прайсов для каждого товара: Вычисляется наценка&raquo;
+				</b>
+			</div>
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_DISCOUNT?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_DISCOUNT?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_DISCOUNT?>">
+				Скидка
+			</label>
+			<div style="padding-left: 23px;">
+				<b class="small">
+					Серия не имеет собственной скидки, скидка относится только к товарам.<br>
+					При экспорте прайса в этом поле всегда будет пусто, однако при импорте, если значение поля задано, указанная скидка присвоится всем товарам серии.
+				</b>
+			</div>
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_CHARACTERS?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_CHARACTERS?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_CHARACTERS?>">
+				Характеристики серии
+			</label>
+		</div>
+		<?php /*<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_TITLE?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_TITLE?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_TITLE?>">
+				Тайтл страницы серии
+			</label>
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_HEADER?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_HEADER?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_HEADER?>">
+				Заголвок H1 страницы серии
+			</label>
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_DSCR?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_DSCR?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_DSCR?>">
+				Мета-тэг describtion
+			</label>
+		</div>
+		<div style="padding-top: 5px">
+			<input type="checkbox" name="options[series][]" value="<?php echo Catalog_Prices::FLD_SERIES_KWRD?>" id="options-series-<?php echo Catalog_Prices::FLD_SERIES_KWRD?>">
+			<label for="options-series-<?php echo Catalog_Prices::FLD_SERIES_KWRD?>">
+				Мета-тэг keywords
+			</label>
+		</div>*/?>
+		<br><br>
+
+
+
+
+		<input type="checkbox" name="items" value="1" id="items" onchange="showHideItemsBlock()">
+		<label for="items">
+			<strong>Товары:</strong>
+		</label>
+		<br>
+		<div id="items-block">
+			<div style="color: #666; padding-top: 5px">
+				<input type="checkbox" checked disabled>
+				ID
+			</div>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_GROUP?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_GROUP?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_GROUP?>">
+					Группа
+				</label>
+			</div>
+			<div style="color: #666; padding-top: 5px">
+				<input type="checkbox" checked disabled>
+				Название
+			</div>
+			<div style="color: #666; padding-top: 5px">
+				<input type="checkbox" checked disabled>
+				Артикул
+			</div>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_SIZE?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_SIZE?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_SIZE?>">
+					Размер
+				</label>
+			</div>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_VOLUME?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_VOLUME?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_VOLUME?>">
+					Объём
+				</label>
+			</div>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_WEIGHT?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_WEIGHT?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_WEIGHT?>">
+					Масса
+				</label>
+			</div>
+			<?php /*<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_DESCRIPTION?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_DESCRIPTION?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_DESCRIPTION?>">
+					Описание
+				</label>
+			</div>*/?>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_PRICES?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_PRICES?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_PRICES?>">
+					Цены (вход, выход, наценка)
+				</label>
+				<div style="padding-left: 23px;">
+					<b class="small">
+						Выходная цена без учёта скидки
+					</b>
+				</div>
+			</div>
+			<div style="padding-top: 5px">
+				<input type="checkbox" name="options[items][]" value="<?php echo Catalog_Prices::FLD_ITEMS_DISCOUNT?>" id="options-items-<?php echo Catalog_Prices::FLD_ITEMS_DISCOUNT?>">
+				<label for="options-items-<?php echo Catalog_Prices::FLD_ITEMS_DISCOUNT?>">
+					Скидка
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<br><br>
+
+	<input type="submit" class="submit" id="submit-button" value="Экспортировать" disabled>
+</form>

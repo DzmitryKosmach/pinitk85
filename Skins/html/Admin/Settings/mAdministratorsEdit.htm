@@ -1,0 +1,41 @@
+<form action="">
+    <h3>
+        <?php if($aId) { ?>
+        	Редактирование учётной записи администратора
+        <?php } else { ?>
+	        Добавление администратора
+        <?php } ?>
+    </h3>
+
+
+    <br><br>
+
+    Логин: <b class="red">*</b>:<br>
+    <input name="login" type="text" size="50" required msg_required="Вы не ввели логин администратора">
+	<br><br>
+
+	<?php if($aId) { ?>
+		Новый пароль:<br>
+		<input name="pass_new" type="text" size="50">
+	<?php } else { ?>
+		Пароль:<br>
+		<input name="pass_new" type="text" size="50" required msg_required="Вы не ввели пароль администратора">
+	<?php } ?>
+	<br><br>
+
+	<?php if($current['id'] == 1) { ?>
+		Права доступа:<br>
+		<?php foreach(Administrators::$rights as $r => $dsc) { ?>
+			<input type="checkbox" name="rights[<?php echo $r?>]" id="rights-<?php echo $r?>" value="1">
+			<label for="rights-<?php echo $r?>"><?php echo $dsc?></label><br>
+		<?php } ?>
+		<br><br>
+	<?php } ?>
+
+	<br><br>
+
+    <input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-settings-administrators')?>" class="but-back">Вернуться</a>

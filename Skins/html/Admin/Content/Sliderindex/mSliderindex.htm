@@ -1,0 +1,61 @@
+<h3>Слайдер на главной странице:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-content-sliderindex-edit'); ?>" class="but-add">Добавить картинку</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Картинка</th>
+		<th>Параметр ALT</th>
+		<th>URL ссылки</th>
+		<th class="small1">Картинка активна</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php $h = intval(Options::name('index-slider-height')); ?>
+
+	<?php foreach($slides as $s) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $s['id']; ?></td>
+			<td>
+				<a href="<?php echo Config::pathRel('images') . Slider_Index::$imagePath . $s['id']; ?>.<?php echo $s['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?php echo Config::pathRel('images') . Slider_Index::$imagePath . $s['id']; ?>_198x0<?php //=round($h/5)?>_1.<?php echo $s['_img_ext']; ?>" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td>
+				<?php echo $s['alt']; ?>
+			</td>
+			<td>
+				<a href="<?php echo $s['link']; ?>" target="_blank"><?php echo $s['link']; ?></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array('act' => 'setopt', 'itemid' => $s['id'], 'opt' => 'active')); ?>"
+				   class="but-opt" title="Картинка активна">
+					<?php echo $s['active'] ? 1 : 0; ?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::a('admin-content-sliderindex-edit')?>id_<?php echo $s['id']; ?>/" class="but-edit"
+				   title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $s['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($slides)) { ?>
+		<tr><td colspan="8">Картинки не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-content-sliderindex-edit'); ?>" class="but-add">Добавить картинку</a>

@@ -1,0 +1,773 @@
+/* Общие элементы */
+.flash-block-ok,
+.notetext {
+    border: 1px solid #c8d315;
+    background: #ecf0b1;
+    padding: 15px;
+    margin: 0 0 10px 0
+}
+
+.flash-block-error,
+.errortext {
+    border: 1px solid #ee7f01;
+    background: #facc98;
+    padding: 15px;
+    margin: 0 0 10px 0
+}
+
+/* Ошибки в формах */
+.form-errors {
+    position: relative;
+    top: 10px;
+    margin: 0 10px 30px 10px;
+    border: 1px solid #ee7f01;
+    background: #facc98;
+    padding: 15px;
+	border-radius: 7px;
+	box-shadow: #AAA 5px 5px 10px
+}
+
+.form-field-error {
+    border: 1px solid red
+}
+
+input[type=checkbox], input[type=radio] {
+    border: none
+}
+
+body {
+    margin: 0;
+    color: #000;
+    background-color: #FFF
+}
+
+div, td {
+    font-family: Tahoma, serif;
+    font-size: 12px
+}
+
+input {
+    font-family: Tahoma, serif;
+    font-size: 11px
+}
+
+a {
+    color: #00F;
+    text-decoration: underline
+}
+
+a:hover {
+    text-decoration: none
+}
+
+a img {
+    border: none
+}
+
+form {
+    padding: 0;
+    margin: 0
+}
+
+.courier {
+    font-family: 'Courier New', serif;
+}
+
+div.cl {
+    clear: both
+}
+
+a.red,
+span.red {
+    color: #F00
+}
+a.green {
+    color: #090
+}
+a.small {
+    font-size: 10px
+}
+b.black {
+    color: #000
+}
+b.red {
+    color: #F00!important;
+}
+b.green {
+    color: #090!important;
+}
+b.blue {
+    color: #00F!important;
+}
+b.small {
+    color: #888;
+    font-size: 10px;
+    font-weight: normal
+}
+b.small * {
+	font-size: inherit;
+}
+
+b.small b {
+    font-weight: bold
+}
+.grey {
+	color: #888;
+}
+
+.small {
+    font-size: 10px
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0
+}
+
+h4 {
+	display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+	padding: 0;
+}
+
+.nobr {
+    white-space: nowrap
+}
+
+.small1 {
+    font-size: 10px;
+    font-weight: normal
+}
+
+font.grey {
+    color: #AAA
+}
+
+/* Форма авторизации */
+.login {
+    margin-top: 250px;
+}
+
+#login-error {
+    width: 320px;
+    margin: 0 auto 15px auto;
+}
+
+#login-form {
+    display: block;
+    width: 320px;
+    margin: auto;
+    padding: 15px;
+    background: #DDF;
+    border: 1px solid #BBF;
+    font-family: Arial;
+    font-size: 14px;
+    color: #000;
+    border-radius: 9px;
+    box-shadow: #AAA 0 5px 10px
+}
+
+#login-form h2 {
+    font-size: 16px;
+    margin: -15px -15px 15px -15px;
+    padding: 15px;
+    background: #9090c8;
+    color: #FFF;
+    border-radius: 8px 8px 0 0;
+}
+
+#login-form label {
+    display: block;
+    float: left;
+    width: 70px;
+    line-height: 26px;
+}
+
+#login-form input.text {
+    width: 240px;
+    margin: 0 0 15px 0
+}
+
+#login-form input.submit {
+    display: block;
+    float: right;
+    margin: 0 4px 0 0;
+    width: 100px;
+    font-size: 16px
+}
+
+#topmenu {
+    padding: 0 10px;
+    background: #DDF;
+    border-bottom: 1px solid #BBF;
+    box-shadow: #AAA 0 5px 10px
+}
+
+#topmenu h1 {
+    float: left;
+    line-height: 20px;
+    font-size: 16px;
+    margin: 0;
+    padding: 10px 0;
+    font-weight: normal
+}
+
+#topmenu h1 b {
+    font-size: 18px
+}
+
+#topmenu a {
+    display: block;
+    line-height: 16px;
+    margin: 4px;
+    padding: 8px 10px;
+    border-radius: 7px;
+}
+
+#topmenu a.sel {
+    background: #9090c8;
+    color: #FFF
+}
+
+#topmenu a:hover {
+    background: #FFF;
+    color: #00F
+}
+
+#main_tab {
+    width: 100%;
+    border: 0;
+    border-collapse: collapse;
+    margin: 10px 0
+}
+
+#main_left {
+    width: 200px;
+    vertical-align: top;
+    padding: 20px 20px 200px 20px;
+    background: #EEE;
+    border: 1px solid #E5E5E5;
+    border-left: 0;
+    border-top: 1px solid #F5F5F5;;
+    box-shadow: #AAA 5px 5px 10px
+}
+
+#menu {
+    line-height: 15px
+}
+
+#menu a {
+    display: block;
+    padding: 10px;
+    margin: 0 -10px;
+    border-radius: 7px;
+}
+
+#menu a.sel {
+    background: #FFF
+}
+
+#menu a:hover {
+    background: #F5F5F5;
+    border: 1px solid #FFF;
+    padding: 9px
+}
+
+#main_center {
+    vertical-align: top;
+    padding: 10px 10px 10px 20px
+}
+
+#bottom {
+    padding: 10px;
+    background: #EEF;
+    border-bottom: 1px solid #CCF;
+    border-top: 1px solid #d2d2d9;
+    font-size: 11px;
+    text-align: right;
+    box-shadow: #AAA 0 5px 10px
+}
+
+.admin_table {
+    border: 1px solid #CCC;
+    border-collapse: collapse
+}
+
+.admin_table th {
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #CCC;
+    font-weight: bold;
+    text-align: center;
+    background: #ddddff
+}
+
+.admin_table td {
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #CCC;
+}
+
+.admin_table tr:nth-child(2n+1) td {
+    background: #F3F3F3
+}
+
+.admin_table tr:hover td {
+    background: #ddffdf
+}
+
+.admin_table tr.custom_bg td {
+    background: transparent !important
+}
+
+.admin_table tr.red td {
+    background: #ffdddd !important
+}
+
+.admin_table tr.green td {
+    background: #f2ffdd !important
+}
+
+.admin_table td table {
+}
+
+.admin_table td table td {
+    padding: 2px;
+    background: transparent
+}
+
+.admin_table td table tr.grey td {
+    background: transparent
+}
+
+table.simple {
+    border: 0;
+    border-collapse: collapse
+}
+
+table.simple td {
+    padding: 0;
+	background: #fff!important;
+}
+table.simple.padding5 td {
+	padding: 5px 5px 0 0;
+}
+table.smalltext th,
+table.smalltext td {
+	font-size: 11px;
+}
+
+div.block_ok {
+    border: 1px solid #c8d315;
+    background: #ecf0b1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 7px;
+    box-shadow: #AAA 5px 5px 10px
+}
+
+div.block_error {
+    border: 1px solid #ee7f01;
+    background: #facc98;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 7px;
+    box-shadow: #AAA 5px 5px 10px
+}
+
+input.err, select.err, textarea.err {
+    border: 1px solid red
+}
+
+input.submit {
+    width: 300px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: bold
+}
+
+div.preview {
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 25px;
+    margin: 11px 0 5px 0
+}
+
+div.preview div.info {
+    padding-left: 5px;
+    height: 47px;
+    overflow: hidden
+}
+
+div.preview div.info_nopic {
+    padding-left: 0;
+    height: 53px;
+    overflow: hidden
+}
+
+div.preview div.ctrl {
+    background: #EEE;
+    padding: 3px;
+    line-height: 22px
+}
+
+
+div.pages {
+	text-align: center;
+	color: #000;
+	margin: 10px 0
+}
+div.pages a,
+div.pages strong {
+	display: inline-block;
+	padding: 0 10px;
+}
+div.pages a {
+    color: red;
+    text-decoration: none
+}
+div.pages a:hover {
+    background: red;
+    color: #FFF
+}
+
+
+/* Хитрость, чтобы не трогая php-код отобразить в блоке переключения страницы ссылку "Показать все" */
+.pages-show-all {
+	display: none;
+}
+.pages-show-all-lnk {
+	display: none!important;
+}
+.pages-show-all ~ div.pages .pages-show-all-lnk {
+	display: inline!important;
+}
+
+
+
+.dragSort-on td {
+    background: #ffd373 !important;
+    opacity: .3;
+}
+
+.dragSort-pull,
+.dragSort-on td.dragSort-pull {
+    width: 30px;
+    cursor: move;
+	background-image: url('/Skins/img/admin/move.gif')!important;
+	background-repeat: no-repeat!important;
+	background-position: center center!important;
+}
+.dragSort-pull:after {
+	content: '';
+	display: block;
+	width: 30px;
+	height: 0;
+}
+
+#dragSort-shadow {
+    box-shadow: #888 0 0 5px;
+}
+
+.but-edit,
+.but-config,
+.but-del,
+.but-del2,
+.but-view,
+.but-xls,
+.but-opt-on,
+.but-opt-off,
+.but-add,
+.but-back {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto auto auto;
+    position: relative;
+
+    transition: top 50ms ease-out;
+}
+
+.but-edit:hover,
+.but-config:hover,
+.but-del:hover,
+.but-del2:hover,
+.but-view:hover,
+.but-xls:hover,
+.but-opt-on:hover,
+.but-opt-off:hover,
+.but-add:hover,
+.but-back:hover {
+    top: -2px;
+}
+.but-opt-on.loading,
+.but-opt-off.loading {
+	opacity: 0.5;
+}
+
+.but-edit:active,
+.but-config:active,
+.but-del:active,
+.but-del2:active,
+.but-view:active,
+.but-xls:active,
+.but-add:active {
+    left: 4px;
+}
+
+.but-back:active {
+    left: -4px;
+}
+
+.but-edit {
+    background: url('/Skins/img/admin/icon-edit.png') no-repeat
+}
+
+.but-config {
+	background: url('/Skins/img/admin/icon-config.png') no-repeat
+}
+
+.but-del, .but-del2 {
+    background: url('/Skins/img/admin/icon-del.png') no-repeat
+}
+
+.but-opt-on {
+    background: url('/Skins/img/admin/icon-on.png') no-repeat
+}
+
+.but-opt-off {
+    background: url('/Skins/img/admin/icon-off.png') no-repeat
+}
+
+.but-view {
+	display: inline-block;
+	width: auto;
+	line-height: 24px;
+	padding-right: 24px;
+	color: inherit;
+	text-decoration: none;
+	background: url('/Skins/img/admin/icon-view.png') no-repeat right top
+}
+
+.but-xls {
+	display: inline-block;
+	width: auto;
+	line-height: 24px;
+	padding-right: 24px;
+	color: inherit;
+	text-decoration: none;
+	background: url('/Skins/img/admin/icon-xls.png') no-repeat right top
+}
+
+.but-add, .but-back, .but-del2 {
+    display: inline-block;
+    width: auto;
+    line-height: 24px;
+    padding-left: 30px;
+    margin: 10px 30px 10px 0;
+    font-size: 14px;
+    text-decoration: none
+}
+
+.but-add {
+    background: url('/Skins/img/admin/icon-add.png') no-repeat;
+}
+
+.but-back {
+    color: #000;
+    background: url('/Skins/img/admin/icon-back.png') no-repeat;
+}
+
+.generate_lnk {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.search {
+    display: inline-block;
+    padding: 15px 0 0 55px;
+    background: #EEE url('/Skins/img/admin/icon-search-form.png') 10px 20px no-repeat;
+    border: 1px solid #E5E5E5;
+    margin: 0 0 30px 0;
+    box-shadow: #AAA 5px 5px 10px;
+    border-radius: 7px;
+}
+.search table {
+    border: 0;
+    border-collapse: collapse
+}
+.search td {
+    vertical-align: top;
+    padding: 0 15px 15px 0
+}
+.search input.submit {
+	width: auto;
+	padding: 0 20px;
+}
+
+
+
+
+
+.pseudoframe {
+	display: block;
+	width: 500px;
+	height: 300px;
+	overflow: auto;
+	padding: 10px;
+	background: #FFF;
+	border: 1px inset #666;
+}
+
+
+
+
+
+/* Точки товаров на фотографии серии */
+.items-on-photo {
+	position: relative;
+	float: left;
+}
+.items-on-photo .item {
+	position: absolute;
+	height: 24px;
+	overflow: hidden;
+	line-height: 24px;
+	padding: 0 5px 0 28px;
+	font-size: 11px;
+	color: #000;
+	background: rgba(255,255,255, 0.8) url('/Skins/img/user/item-on-photo.png') no-repeat left top;
+	cursor: move;
+}
+.items-on-photo .item:hover {
+	background-position: left bottom;
+	background-color: rgba(255,255,255, 0.3)
+}
+
+
+
+
+
+
+
+
+
+.link-xls,
+.link-pdf {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+}
+.link-xls {
+	background: url('/Skins/img/user/icon-xls.png') no-repeat;
+}
+.link-pdf {
+	background: url('/Skins/img/user/icon-pdf.png') no-repeat;
+}
+
+
+
+
+/* Разворачивающиеся куски формы */
+input.form-part-ctrl {
+	display: none;
+}
+input.form-part-ctrl + label {
+	display: block;
+	width: 500px;
+	position: relative;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+	padding: 0 0 0 20px;
+	cursor: pointer;
+}
+input.form-part-ctrl + label:hover {
+	color: #00F;
+}
+input.form-part-ctrl + label:before {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -6px;
+	width: 11px;
+	height: 11px;
+	background: url('/Skins/img/admin/form-part-ctrl.gif') no-repeat left top;
+}
+input.form-part-ctrl + label + .form-part {
+	display: none;
+}
+input.form-part-ctrl:checked + label + .form-part {
+	display: block;
+}
+input.form-part-ctrl:checked + label:before {
+	background-position: left bottom;
+}
+
+/*
+---====================================---
+*/
+.m-0 {
+    margin: 0 !important;
+}
+.p-0 {
+    margin: 0 !important;
+}
+
+.m-10 {
+    margin: 10px;
+}
+.m-16 {
+    margin: 16px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+.mt-16 {
+    margin-top: 16px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mb-16 {
+    margin-bottom: 16px;
+}
+
+.my-10 {
+    margin: 10px 0 10px 0;
+}
+.my-16 {
+    margin: 16px 0 16px 0;
+}
+
+.p-10 {
+    padding: 10px;
+}
+.p-16 {
+    padding: 16px;
+}
+
+
+.file-list li {
+    margin: 6px 0 16px 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+}
+.file-list .success {
+    color: green;
+}
+.file-list .error {
+    color: red;
+}
+.upload-preview {
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+}

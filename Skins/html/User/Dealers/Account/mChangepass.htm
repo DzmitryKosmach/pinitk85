@@ -1,0 +1,62 @@
+<div class="content-text">
+	<?php if(trim($pageInf['header'])) { ?>
+		<h1><?php echo $pageInf['header']?></h1>
+	<?php } ?>
+	<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+	<div class="cl"></div>
+
+	<div class="content-white" style="margin-top: 30px; margin-bottom:40px">
+		<form action="" method="post" class="form" style="max-width: 460px">
+			<table class="form-table">
+				<tr>
+					<td class="label required">
+						Старый пароль:
+					</td>
+					<td>
+						<input name="pass_old" type="password" class="text"
+							   maxlength="100"
+							   msg_maxlen="Длина пароля не должна превышать 100 символов"
+							   required
+							   msg_required="Введите старый пароль"
+							>
+					</td>
+				</tr>
+				<tr>
+					<td class="label required">
+						Новый пароль:
+					</td>
+					<td>
+						<input name="pass" type="password" class="text"
+							   maxlength="100"
+							   msg_maxlen="Длина пароля не должна превышать 100 символов"
+							   required
+							   msg_required="Введите новый пароль"
+							>
+					</td>
+				</tr>
+				<tr>
+					<td class="label required">
+						Повторите пароль:
+					</td>
+					<td>
+						<input name="pass2" type="password" class="text"
+							   maxlength="100"
+							   msg_maxlen="Длина пароля не должна превышать 100 символов"
+							   required
+							   msg_required="Введите повтор нового пароля"
+							>
+					</td>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<button type="submit" class="button button-orange">Сохранить</button>
+						<br><br><br>
+						<a href="<?php echo Url::a('dealer'); ?>">Вернуться в кабинет</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,476 @@
+﻿Changelog:
+
+v. 9.064 - 2025.06.03
+
+* Improved compatibility with very old versions of Bitrix.
+
+------------------------------------------------------------------------
+
+v. 9.063 - 2025.06.02
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.062 - 2025.05.31
+
+* The privacy policy has been updated on the /antibot/index.php page.
+* This privacy policy can be disabled in the config if not needed.
+* If you were setting cookies for boosting via /antibot/index.php, you should now do it via /antibot/cookie.php.
+
+------------------------------------------------------------------------
+
+v. 9.061 - 2025.05.25
+
+* The SxGeoCity.dat city database has been updated.
+* The image CAPTCHA has been changed, new description: https://antibot.cloud/FAQ/tpl-txt-styles.html
+
+------------------------------------------------------------------------
+
+v. 9.060 - 2025.05.22
+
+* Other minor fixes.
+
+------------------------------------------------------------------------
+
+v. 9.059 - 2025.05.20
+
+* Geo databases updated.
+* Other minor fixes.
+* Random CAPTCHA display.
+* CAPTCHA code updated (improved bot protection).
+
+------------------------------------------------------------------------
+
+v. 9.058 - 2025.03.03
+
+* Geo databases updated.
+* Other minor fixes.
+
+------------------------------------------------------------------------
+
+v. 9.057 - 2025.02.13
+
+* Other minor fixes.
+
+------------------------------------------------------------------------
+
+v. 9.056 - 2025.02.02
+
+* Geo databases updated.
+* Other minor fixes.
+
+------------------------------------------------------------------------
+
+v. 9.055 - 2025.01.23
+
+Fixed an XSS vulnerability (the ability to inject JavaScript or HTML code) in the login form.
+
+------------------------------------------------------------------------
+
+v. 9.053 - 2025.01.01
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.052 - 2024.12.04
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.051 - 2024.11.30
+
+* Fixed a class name conflict if SxGeo is already present on the site (error: Cannot declare class SxGeo, because the name is already in use).
+* Added a new setting in the config to revalidate using CAPTCHA if the condition is met: LOCAL + empty referrer.
+* Other minor fixes.
+
+------------------------------------------------------------------------
+
+v. 9.050 - 2024.11.04
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.049 - 2024.10.30
+
+* The Mail.RU_Bot is no longer added automatically during database installation.
+* City detection for IPv4 has been added (SxGeoCity database).
+* A feature to create city-based rules has been added to the 5th rules table.
+
+------------------------------------------------------------------------
+
+v. 9.048 - 2024.10.09
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.047 - 2024.09.30
+
+* Fixed an error that was logged with the text: H1 Hash Error 
+(incompatibility in modern browser versions in certain situations).
+
+------------------------------------------------------------------------
+
+v. 9.046 - 2024.09.07
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.045 - 2024.07.04
+
+* Geo databases updated.
+* Added the ability to switch to a Russian cloud server (in the config).
+
+------------------------------------------------------------------------
+
+v. 9.044 - 2024.06.25
+
+* Geo databases updated.
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.043 - 2024.05.06
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.042 - 2024.04.30
+
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.041 - 2024.04.26
+
+* Fixed a bug with some admin pages not working on LiteSpeed.
+
+------------------------------------------------------------------------
+
+v. 9.040 - 2024.04.25
+
+* Fixed the conflict between allow by timezone and cookie storage in the database.
+
+------------------------------------------------------------------------
+
+v. 9.039 - 2024.04.24
+
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.038 - 2024.04.23
+
+* Optimized geo databases, reduced size by 10%, increased performance.
+* Added headers to prevent caching of check/blocking pages for Progressive Web Apps (PWA).
+* Other optimizations and enhancements.
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.037 - 2024.04.12
+
+* Added the option to choose authorization storage in cookies or in the database.
+
+------------------------------------------------------------------------
+
+v. 9.036 - 2024.03.04
+
+* Fixed a rare bug related to samesite in line 20 of func.php
+* Fixes and improvements in the Checklist.
+* Geo databases updated.
+
+------------------------------------------------------------------------
+
+v. 9.035 - 2024.03.04
+
+* Updated GEO databases.
+* Added the ability to run cron from the admin panel.
+* Corrections in the Check List.
+
+------------------------------------------------------------------------
+
+v. 9.034 - 2024.02.22
+
+* Improved auto-detection of IPv6 server.
+* Fixed PHP errors and loops in the Checklist.
+* Enhanced some auto-configurations of the installer.
+
+------------------------------------------------------------------------
+
+v. 9.033 - 2024.02.04
+
+* Updated GEO databases.
+
+------------------------------------------------------------------------
+
+v. 9.032 - 2024.01.16
+
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.031 - 2024.01.12
+
+* Geo databases updated (major update).
+* Added option in the config under "PHP errors" to not alter system settings for error display and logging.
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.030 - 2023.12.18
+
+* Fixed a 500 error in the admin panel when disabling the script in the configuration when using LiteSpeed server and the script is connected via .htaccess.
+
+------------------------------------------------------------------------
+
+v. 9.029 - 2023.12.08
+
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.028 - 2023.12.02
+
+* Added a new parameter to the config: https://antibot.cloud/FAQ/check-ab-url.html
+
+------------------------------------------------------------------------
+
+v. 9.027 - 2023.12.01
+
+* Updated GEO databases.
+* Minor fixes and improvements.
+
+------------------------------------------------------------------------
+
+v. 9.026 - 2023.11.22
+
+* Refined rare incompatibility with PHP 5.6 (encountered on timeweb).
+* Optimized and sped up the script's performance.
+* Updated FAQ links.
+
+------------------------------------------------------------------------
+
+v. 9.025 - 2023.11.10
+
+* Fixed: PHP Deprecated:  Automatic conversion of false to array...
+
+------------------------------------------------------------------------
+
+v. 9.024 - 2023.11.10
+
+* Updated GEO databases.
+* Added a new column to the statistics: SQL errors (number of SQL errors in the antibot's operation).
+* Reworked the operation of counters; it should count more accurately under high loads.
+* Fixed: PHP Notice: Undefined index: REQUEST_METHOD...
+* In the Check List, the search for the script connection point of Antibot has been redesigned.
+* The Check List has been improved to run on hosting with restrictions.
+
+------------------------------------------------------------------------
+
+v. 9.023 - 2023.10.31
+
+* Updated GEO databases.
+* Added statistics on the percentage of visitors with ad blockers (section: Statistics).
+* Fixed editing of "PHP handler" on Windows.
+* Changed the admin panel authorization; it will log out after the update, so it is important to log in again and complete the update process.
+
+------------------------------------------------------------------------
+
+v. 9.022 - 2023.10.24
+
+* An error in the checklist has been fixed: imeException: SplFileInfo::isDir(): open_basedir restriction in effect
+* The list of conditions and situations checked in the checklist has been expanded.
+
+------------------------------------------------------------------------
+
+v. 9.021 - 2023.10.22
+
+* In the Check List, compatibility with some versions of PHP has been fixed and searching within .htaccess has been improved.
+
+------------------------------------------------------------------------
+
+v. 9.020 - 2023.10.22
+
+When saving templates (tpl.txt and error.txt) through the admin panel, the newline character is now always Unix-style and is not dependent on the operating system and browser.
+Enhancement and expansion of the functionality and information in the Check List.
+
+------------------------------------------------------------------------
+
+v. 9.019 - 2023.10.14
+
+* Fixed errors in the backup section (due to some database names not being deleted).
+* Added the ability to block by TimeZone in the 5th table.
+* Added an additional type of buttons: ReCAPTCHA v2 (without additional buttons).
+* Added an additional type of buttons: ReCAPTCHA v2 + login button.
+* Some text changes on the button and check page. Removed:
+$pt['Antispam:'] = 'Антиспам:';
+$pt['Choose a similar color.'] = 'Выберите похожий цвет.';
+$pt['Choose a similar picture.'] = 'Выберите похожую картинку.';
+ Добавлены:
+$pt['If you are human, click on the similar image'] = 'Если вы человек, нажмите на похожую картинку';
+$pt['If you are human, click on the similar color'] = 'Если вы человек, нажмите на похожий цвет';
+$pt['Confirm that you are human:'] = 'Подтвердите, что вы человек:';
+$pt['Go to website'] = 'Перейти на сайт';
+
+------------------------------------------------------------------------
+
+v. 9.018 - 2023.10.02
+
+* Fixed the error Call to undefined function shell_exec().
+* Added logging of the blocking reason for FAKE according to the 3rd table of rules.
+* Minor errors in the Checklist have been corrected.
+* The ability to block all hosting or bad IP addresses (in the config).
+
+------------------------------------------------------------------------
+
+v. 9.017 - 2023.10.01
+
+* New parameters have been added to the Check list to verify the correct operation of the Antibot.
+
+------------------------------------------------------------------------
+
+v. 9.016 - 2023.09.29
+
+* Minor errors on the "Check list" page have been fixed.
+* The operation of the whois page has been corrected.
+* The error occurring when launching the website through CLI has been fixed.
+
+------------------------------------------------------------------------
+
+v. 9.015 - 2023.09.27
+
+* Fixed an error in checklist.php: read of 8192 bytes failed with errno=21 Is a directory.
+* Request logs are now not retained for more than a year; older logs are automatically deleted.
+* Updated the links to the instructions.
+
+------------------------------------------------------------------------
+
+v. 9.014 - 2023.09.19
+
+* Corrections to the checklist.
+
+------------------------------------------------------------------------
+
+v. 9.013 - 2023.09.18
+
+* New checks have been added to the checklist.
+* Fixed the processing of the page URL with duplicated values of the character: /
+
+------------------------------------------------------------------------
+
+v. 9.012 - 2023.09.14
+
+* An additional setting in the config: specifying the path to the PHP handler.
+* A checklist has been added to verify the correct installation of the script.
+
+------------------------------------------------------------------------
+
+v. 9.011 - 2023.09.10
+
+* New settings have been added to the config: Cookie SameSite, Block Iframe, IP re-block period.
+* Set the desired value in the new config field: IP Block Duration 2.
+* Errors fixed when launching on Windows 11 (tested on Open Server Panel).
+* Cookies for inflating behavioral metrics (Secret GET variable) now also apply to subdomains.
+* Paths to the directory where the Antibot is installed have been hidden (partially).
+* Compatibility with PHP 5.6 and 8.3 has been fixed.
+* The situation where a check reappears when an "allow" is present by the referrer has been corrected.
+* Header: Expires and Cache-Control are now present by default in all scripts.
+* The Cron task for deleting old log entries and clearing the ptr cache now doesn't need to be set up.
+
+------------------------------------------------------------------------
+
+v. 9.010 - 2023.07.20
+
+* The JS redirect function window.location.replace has been replaced with window.location.href.
+* Corrections have been made to the texts and translations in the admin panel.
+
+------------------------------------------------------------------------
+
+v. 9.009 - 2023.07.18
+
+* The blockage by fake referrer has been moved, it now triggers after all the rules but before the Last Rule.
+
+------------------------------------------------------------------------
+
+v. 9.008 - 2023.07.15
+
+* The Whois page has been updated, which now displays the history of IP requests into the cloud.
+
+------------------------------------------------------------------------
+
+v. 9.007 - 2023.07.12
+
+* The import of the log has been fixed.
+* An error on Wordpress has been fixed: Cannot modify header information...
+* If a visitor has cookies disabled, they will be notified to enable them.
+* If a visitor has JavaScript disabled, they will be notified to enable it.
+
+------------------------------------------------------------------------
+
+v. 9.006 - 2023.07.09
+
+* The ability to block by fake referrers (without scheme or path) has been added to the config.
+* The "I'm not a robot" button is better protected from bot detection.
+* Minor changes in the block page: https://antibot.cloud/FAQ/error-txt.html
+* The block page template has been changed.
+
+------------------------------------------------------------------------
+
+v. 9.005 - 2023.07.06
+
+* For GOODIP logs, a description has been added as to which rule the permit was triggered by.
+* Fixed: GRAY 3 tables were triggered as ALLOW.
+
+------------------------------------------------------------------------
+
+v. 9.004 - 2023.07.04
+
+* The code for vertical alignment has been further improved in the tpl.txt and error.txt templates.
+* The saving of utm_referrer after temporary blocking has been fixed.
+
+------------------------------------------------------------------------
+
+v. 9.003 - 2023.07.02
+
+* Error corrected: Undefined array key "unresponsive"...
+* If the cloud subscription has expired, the script turns itself OFF. Then you can turn it ON in the config.
+* Added the ability to enable Antibot only during specified hours, rather than constantly.
+* In the tpl.txt and error.txt templates, vertical alignment has been added.
+
+------------------------------------------------------------------------
+
+v. 9.002 - 2023.06.30
+
+* Fixed the admin panel logout issue (the "Log out" link now works).
+* A new "Without JavaScript" icon is in the log, marking non-browser bots.
+
+------------------------------------------------------------------------
+
+v. 9.001 - 2023.06.28
+
+* All links and references to Antibot have been removed (links, JS scripts, server headers, directory names, and cookies).
+* The visitor's browser no longer refers to external domains, your PHP scripts are referring to them instead.
+* The number of JS queries has been reduced, overall speed has been improved.
+* New settings in the config.
+* Additional data in the log (time of operation for referring to the cloud, ipv6 to ipv4 connection).
+* Recaptcha 3 also works on local check, not just cloud.
+* Local check filtration has been slightly improved.
+* When the Antibot subscription ends, it is automatically disabled rather than blocking access to the site.
+* uid - the visitor's unique id has become more persistent.
+* Removed: re.php, upd.php, gray.php, upd8to9.php from the Antibot directory.
+* If you press the button incorrectly - an IP ban for 10 seconds, unless a longer duration is specified in the configuration.
+
+------------------------------------------------------------------------
+
+Changelog of old versions:
+
+https://antibot.cloud/static/update/changelog8.txt
+https://antibot.cloud/static/update/changelog7.txt
+https://antibot.cloud/static/update/changelog6.txt

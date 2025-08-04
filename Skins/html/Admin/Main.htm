@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $PAGE['title']; ?></title>
+	<meta name="keywords" content="<?php echo $PAGE['kwrd']; ?>">
+	<meta name="description" content="<?php echo $PAGE['dscr']; ?>">
+
+	<link rel="stylesheet" href="/Skins/css/admin.css">
+
+	<script src="/Js/prefixfree.min.js"></script>
+	<script src="/Js/main.js"></script>
+	<script src="/Js/visual.js"></script>
+	<script src="/Js/uploadImages/UI.js"></script>
+
+	<script src="/Js/admin.js"></script>
+	<script src="/Js/dragSort.js"></script>
+	<script src="/Js/yandex.translate.js"></script>
+
+	<!-- Скрипт открытия картинок -->
+	<link href="/Js/HighSlide/highslide.css" rel="stylesheet">
+	<script src="/Js/HighSlide/highslide-with-gallery.js"></script>
+	<script type="text/javascript">
+		hs.graphicsDir = '/Js/HighSlide/graphics/';
+		hs.align = 'center';
+		hs.dimmingOpacity = 0.75;
+		hs.outlineType = 'rounded-white';
+		hs.wrapperClassName = 'controls-in-heading';
+		if(hs.addSlideshow) hs.addSlideshow({
+			interval: 5000,
+			useControls: true,
+			overlayOptions: {
+				opacity: 1,
+				position: 'top right',
+				hideOnMouseOut: false
+			}
+		});
+	</script>
+	<!-- Конец скрипта -->
+
+	<link rel="icon" href="/Skins/img/admin.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/Skins/img/admin.ico" type="image/x-icon">
+</head>
+
+<body>
+
+<div id="topmenu">
+	<h1>Управление сайтом: <b><?php echo $_SERVER['HTTP_HOST']; ?></b></h1>
+
+	<div style="float: right">
+		<table>
+			<tr>
+				<?php if(Administrators::checkRights(Administrators::R_PAGES) || Administrators::checkRights(Administrators::R_NEWS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-content'); ?>" <?php if(Admin::CONTENT == $adminMenu): ?>class="sel"<?php endif?>>
+							Наполнение страниц
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_CATALOG) || Administrators::checkRights(Administrators::R_SUPPLIERS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-catalog'); ?>" <?php if(Admin::CATALOG == $adminMenu): ?>class="sel"<?php endif?>>
+							Каталог
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_ORDERS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-orders'); ?>" <?php if(Admin::ORDERS == $adminMenu): ?>class="sel"<?php endif?>>
+							Заказы
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_DEALERS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-dealers'); ?>" <?php if(Admin::DEALERS == $adminMenu): ?>class="sel"<?php endif?>>
+							Дилеры
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_CLIENTS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-clients'); ?>" <?php if(Admin::CLIENTS == $adminMenu): ?>class="sel"<?php endif?>>
+							Проекты и письма клиентов
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_REVIEWS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-reviews'); ?>" <?php if(Admin::REVIEWS == $adminMenu): ?>class="sel"<?php endif?>>
+							Отзывы
+						</a>
+					</td>
+				<?php } ?>
+				<?php if(Administrators::checkRights(Administrators::R_SETTINGS)) { ?>
+					<td>
+						<a href="<?php echo Url::a('admin-settings'); ?>" <?php if(Admin::SETTINGS == $adminMenu): ?>class="sel"<?php endif?>>
+							Настройки
+						</a>
+					</td>
+				<?php } ?>
+				<td>
+					<a href="<?php echo Url::a('admin-content'); ?>?logout=1">
+						Выход
+					</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="cl"></div>
+</div>
+
+<table id="main_tab">
+	<tr>
+		<?php if(Admin::CONTENT == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<b>Наполнение страниц:</b><br><br>
+					<?php if(Administrators::checkRights(Administrators::R_PAGES)) { ?>
+						<a href="<?php echo Url::a('admin-content-pages'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-pages') === 0) { ?>class="sel"<?php } ?>>
+							Тексты и заголовки страниц
+						</a>
+					<?php } ?>
+
+					<?php if(Administrators::checkRights(Administrators::R_NEWS)) { ?>
+						<a href="<?php echo Url::a('admin-content-news'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-news') === 0) { ?>class="sel"<?php } ?>>
+							Новости
+						</a>
+						<a href="<?php echo Url::a('admin-content-articles'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-articles') === 0) { ?>class="sel"<?php } ?>>
+							Статьи
+						</a>
+					<?php } ?>
+
+					<?php if(Administrators::checkRights(Administrators::R_PAGES)) { ?>
+						<br><br>
+						<a href="<?php echo Url::a('admin-content-http-headers'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-http-headers') === 0) { ?>class="sel"<?php } ?>>
+							Настройка редиректов и ответов 404
+						</a>
+
+						<br><br><br><br>
+						<b>Слайдер на главной странице:</b><br><br>
+						<a href="<?php echo Url::a('admin-content-sliderindex'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-sliderindex') === 0) { ?>class="sel"<?php } ?>>
+							Кадры в слайдере
+						</a>
+						<?php /*<a href="<?php echo Url::a('admin-options'); ?>?id=15&mode=<?php echo Options::MODE_TEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Высота слайдера
+						</a>*/?>
+
+
+						<br><br><br><br>
+						<b>Опции:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-options'); ?>?id=5&mode=<?php echo Options::MODE_TEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Телефон в шапке сайта
+						</a>
+						<br><br>
+
+						<a href="<?php echo Url::a('admin-content-benefits'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-benefits') === 0) { ?>class="sel"<?php } ?>>
+							Блоки &laquo;Преимущества&raquo; на главной
+						</a>
+						<a href="<?php echo Url::a('admin-content-motivation'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-motivation') === 0) { ?>class="sel"<?php } ?>>
+							Блоки мотивации на главной
+						</a>
+						<a href="<?php echo Url::a('admin-options'); ?>?id=1&mode=<?php echo Options::MODE_HTML?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Текст в футере
+						</a>
+						<br><br>
+
+						<a href="<?php echo Url::a('admin-options'); ?>?id=2&mode=<?php echo Options::MODE_BIGTEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Скрипты и счётчики в теге &lt;HEAD&gt;
+						</a>
+						<a href="<?php echo Url::a('admin-options'); ?>?id=3&mode=<?php echo Options::MODE_BIGTEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Скрипты и счётчики в футере
+						</a>
+						<br><br>
+
+						<a href="<?php echo Url::a('admin-content-seriesacts'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-seriesacts') === 0) { ?>class="sel"<?php } ?>>
+							Блоки действий справа на стр. серий
+						</a>
+						<a href="<?php echo Url::a('admin-content-seriesinfo'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-content-seriesinfo') === 0) { ?>class="sel"<?php } ?>>
+							Инфо-блоки внизу на стр. серий
+						</a>
+						<a href="<?php echo Url::a('admin-options'); ?>?id=37&mode=<?php echo Options::MODE_HTML?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Текст акции &laquo;Нашли дешевле?&raquo;
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::CATALOG == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<b>Каталог:</b><br><br>
+
+					<?php if(Administrators::checkRights(Administrators::R_CATALOG)) { ?>
+						<a href="<?php echo Url::a('admin-catalog-categories'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-categories') === 0) { ?>class="sel"<?php } ?>>
+							Категории каталога
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-series'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-series') === 0 && mb_strpos($PAGE['alias'], 'admin-catalog-series-linkages') !== 0) { ?>class="sel"<?php } ?>>
+							Серии мебели
+						</a>
+						<br><br>
+
+						<b>Дополнительно:</b><br><br>
+					<?php } ?>
+
+					<?php if(Administrators::checkRights(Administrators::R_SUPPLIERS)) { ?>
+						<a href="<?php echo Url::a('admin-catalog-suppliers'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-suppliers') === 0) { ?>class="sel"<?php } ?>>
+							Поставщики
+						</a>
+					<?php } ?>
+
+					<?php if(Administrators::checkRights(Administrators::R_CATALOG)) { ?>
+						<a href="<?php echo Url::a('admin-catalog-materials'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-materials') === 0) { ?>class="sel"<?php } ?>>
+							Материалы
+						</a>
+						<?php /*<a href="<?php echo Url::a('admin-catalog-filters'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-filters') === 0) { ?>class="sel"<?php } ?>>
+							Поисковые фильтры
+						</a>*/?>
+						<a href="<?php echo Url::a('admin-catalog-series-linkages'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-series-linkages') === 0 && mb_strpos($PAGE['alias'], 'admin-catalog-series-linkages-auto') !== 0) { ?>class="sel"<?php } ?>>
+							Связи между сериями
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-series-linkages-auto'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-series-linkages-auto') === 0) { ?>class="sel"<?php } ?> style="margin-left: 15px;">
+							Автоперелинковка
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-metallseries'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-metallseries') === 0) { ?>class="sel"<?php } ?>>
+							Серии металлической мебели
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-markers'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-markers') === 0) { ?>class="sel"<?php } ?>>
+							Маркеры (уголки)
+						</a>
+						<br><br>
+
+						<b>Работа с прайсами:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-catalog-export'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-export') === 0) { ?>class="sel"<?php } ?>>
+							Экспорт прайсов
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-import'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-import') === 0) { ?>class="sel"<?php } ?>>
+							Импорт прайсов
+						</a>
+						<br><br>
+
+						<b>Опции:</b><br><br>
+
+						<?php /*<a href="<?php echo Url::a('admin-options'); ?>?id=4&mode=<?php echo Options::MODE_TEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET)); ?>&menu=<?php echo $adminMenu?>">
+							Курс у.е. (<?php echo Catalog::priceFormat(Catalog_Series::usdCourse()); ?> руб.)
+						</a>*/?>
+						<a href="<?php echo Url::a('admin-catalog-usdcourse'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-usdcourse') === 0) { ?>class="sel"<?php } ?>>
+							Курсы у.е.
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-discounts'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-discounts') === 0) { ?>class="sel"<?php } ?>>
+							Массовая настройка скидок
+						</a>
+						<a href="<?php echo Url::a('admin-catalog-yml'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-catalog-yml') === 0) { ?>class="sel"<?php } ?>>
+							Настройки выгрузки в Яндекс.Маркет
+						</a>
+					<?php } ?>
+
+					<?php if(Administrators::checkRights(Administrators::R_ORDERS)) { ?>
+						<a href="<?php echo Url::a('admin-orders-options'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-orders-options') === 0) { ?>class="sel"<?php } ?>>
+							Калькулятор корзины
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::ORDERS == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<?php if(Administrators::checkRights(Administrators::R_ORDERS)) { ?>
+						<b>Оформленные заказы:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-orders'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-orders') === 0 && mb_strpos($PAGE['alias'], 'admin-orders-') === false) { ?>class="sel"<?php } ?>>
+							Оформленные заказы
+						</a>
+
+						<a href="<?php echo Url::a('admin-orders-statuses'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-orders-statuses') === 0) { ?>class="sel"<?php } ?>>
+							Статусы заказов
+						</a>
+
+						<a href="<?php echo Url::a('admin-orders-options'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-orders-options') === 0) { ?>class="sel"<?php } ?>>
+							Калькулятор корзины
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::DEALERS == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<?php if(Administrators::checkRights(Administrators::R_DEALERS)) { ?>
+						<b>Дилеры и КП:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-dealers'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-dealers') === 0 && mb_strpos($PAGE['alias'], 'admin-dealers-offers') === false) { ?>class="sel"<?php } ?>>
+							Дилеры
+						</a>
+						<a href="<?php echo Url::a('admin-dealers-offers'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-dealers-offers') === 0) { ?>class="sel"<?php } ?>>
+							Коммерческие предложения
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::CLIENTS == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<?php if(Administrators::checkRights(Administrators::R_CLIENTS)) { ?>
+						<b>Наши проекты:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-clients-projects'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-clients-projects') === 0) { ?>class="sel"<?php } ?>>
+							Наши проекты
+						</a>
+						<a href="<?php echo Url::a('admin-clients-letters'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-clients-letters') === 0) { ?>class="sel"<?php } ?>>
+							Письма клиентов
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::REVIEWS == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<?php if(Administrators::checkRights(Administrators::R_REVIEWS)) { ?>
+						<b>Отзывы:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-reviews'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-reviews') === 0) { ?>class="sel"<?php } ?>>
+							Отзывы посетителей
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(Admin::SETTINGS == $adminMenu) { ?>
+			<td id="main_left">
+				<div id="menu">
+					<?php if(Administrators::checkRights(Administrators::R_SETTINGS)) { ?>
+						<b>Настройки:</b><br><br>
+
+						<a href="<?php echo Url::a('admin-settings-administrators'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-settings-administrators') === 0) { ?>class="sel"<?php } ?>>
+							Администраторы
+						</a>
+						<a href="<?php echo Url::a('admin-settings-emails'); ?>" <?php if(mb_strpos($PAGE['alias'], 'admin-settings-emails') === 0) { ?>class="sel"<?php } ?>>
+							Шаблоны E-mail уведомлений
+						</a>
+					<?php } ?>
+				</div>
+				<br><br><br><br><br><br>
+				<img src="/Skins/img/blank.gif" width="200" height="1" alt="">
+			</td>
+
+
+		<?php } elseif(0 == $adminMenu) { ?>
+			<?php
+			// todo: Здесь должен быть аналогичный код левого меню для другого раздела админки
+			// todo: Либо, если раздел админки простой и левое меню не требуется, то здесь можно ничего не писать
+			?>
+		<?php } ?>
+
+		<td id="main_center">
+			<?php echo Pages::flashRelease(); ?>
+			<?php echo $CONTENT; ?>
+		</td>
+	</tr>
+</table>
+
+<div id="bottom">
+
+</div>
+
+</body>
+</html>

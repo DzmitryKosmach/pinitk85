@@ -1,0 +1,40 @@
+<form action="">
+
+    <h3>
+        Редактирование шаблона E-mail уведомления <b>&laquo;<?php echo $tpl['name']; ?>&raquo;</b>
+    </h3>
+
+    <br><br>
+
+	<?php if($tpl['desc']) { ?>
+		<div class="courier">
+			<b>Комментарий:</b><br>
+			<?php echo $tpl['desc']; ?>
+			<br><br><br>
+		</div>
+	<?php } ?>
+
+
+	Поле "От кого":<br>
+    <input name="from_name" type="text" size="50">
+	<br><br>
+
+	E-mail отправителя:<br>
+	<input name="from" type="text" size="50">
+	<br><br>
+
+	Тема письма:<br>
+	<input name="subj" type="text" size="50">
+	<br><br>
+
+	Текст письма (тело письма):<br>
+	<ckeditor name="body" width="100%" height="500" toolbar="Full"></ckeditor>
+	<br><br>
+
+
+    <input type="submit" class="submit" value="Сохранить">
+</form>
+<br>
+
+
+<a href="<?php echo Url::a('admin-settings-emails')?>" class="but-back">Вернуться</a>

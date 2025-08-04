@@ -1,0 +1,141 @@
+<h3>Товары в серии <b><?php echo $seriesInf['name']; ?></b></h3>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-crossitems'), array(
+	's'	=> $seriesInf['id']
+)); ?>">Товары из других серий (<?php echo $crossItemsCnt?>)</a>
+<br><br>
+
+<?php /*Товары отображаются группами, порядок следования групп настраивается отдельно<br>
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-groups'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> mItems::retURL()
+)); ?>">Настроить группы (<?php echo count($groups); ?>)</a>
+<br><br>*/?>
+
+<a href="<?php echo mItems::retURL(); ?>" class="but-back">Вернуться</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-edit'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> mItems::retURL()
+)); ?>" class="but-add">
+	Добавить товар
+</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>IDs</th>
+		<th>Картинка</th>
+		<th>Группа</th>
+		<th>Название, артикул</th>
+		<?php /*<th>URL</th>*/?>
+		<th class="small1">
+			Выход. цена<br>
+			(со скидкой и наценкой)
+		</th>
+		<?php /*<th class="small1">Входит в базовый комплект серии</th>*/?>
+		<th class="small1">в Яндекс.Маркет</th>
+		<?php /*<th class="small1">Не отображать на<br>стр. категорий</th>*/?>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($items as $i){ ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $i['id']; ?></td>
+			<td>
+				<?php if($i['_img_ext']){ ?>
+					<a href="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath . $i['id']; ?>.<?php echo $i['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath . $i['id']; ?>_80x60_1.<?php echo $i['_img_ext']; ?>" width="80" height="60" alt="" style="border: 1px solid #CCC">
+					</a>
+				<?php } ?>
+			</td>
+			<td>
+				<?php if(isset($groups[$i['group_id']])){ ?>
+					<?php echo $groups[$i['group_id']]; ?>
+				<?php } else { ?>
+					<em>Без группы</em>
+				<?php } ?>
+			</td>
+			<td>
+				<?php echo $i['name']; ?>
+				<?php echo $i['art']; ?>
+			</td>
+			<?php /*<td class="courier">
+				<a href="<?php echo Catalog_Items::a($seriesInf, $i); ?>" target="_blank">
+					http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Items::a($seriesInf, $i); ?>
+				</a>
+			</td>*/?>
+			<td style="white-space: nowrap;">
+				<b class="green">
+					<?php if($i['price_min'] == $i['price_max']){ ?>
+						<?php echo Catalog::priceFormat($i['price_min']); ?> руб.
+					<?php } else { ?>
+						от <?php echo Catalog::priceFormat($i['price_min']); ?> до <?php echo Catalog::priceFormat($i['price_max']); ?> руб.
+					<?php } ?>
+				</b><br>
+				<b class="small">
+					Скидка: <?php echo Catalog::num2percent($i['discount'], Catalog::PC_DECREASE); ?>%<br>
+					Наценка: <?php echo Catalog::num2percent($i['extra_charge'], Catalog::PC_INCREASE); ?>%<br>
+				</b>
+			</td>
+			<?php /*<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $i['id'],
+					'opt' => 'in_series_set'
+				)); ?>" class="but-opt" title="Входит в базовый комплект серии">
+					<?php echo $i['in_series_set'] ? 1 : 0?>
+				</a>
+			</td>*/?>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act'	=> 'setopt',
+					'itemid'=> $i['id'],
+					'opt'	=> 'in_ym'
+				)); ?>" class="but-opt" title="Включить товар в файл выгрузки в Яндекс.Маркет">
+					<?php echo $i['in_ym'] ? 1 : 0?>
+				</a>
+			</td>
+			<?php /*<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act'	=> 'setopt',
+					'itemid'=> $i['id'],
+					'opt'	=> 'items_links_exclude'
+				)); ?>" class="but-opt" title="Не отображать товар на страницах категорий">
+					<?php echo $i['items_links_exclude'] ? 1 : 0?>
+				</a>
+			</td>*/?>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-edit'), array(
+					'id'	=> $i['id'],
+					'ret'	=> mItems::retURL()
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $i['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($items)){ ?>
+		<tr><td colspan="10">Товары не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo mItems::retURL(); ?>" class="but-back">Вернуться</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-edit'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> mItems::retURL()
+)); ?>" class="but-add">
+	Добавить товар
+</a>

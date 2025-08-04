@@ -1,0 +1,28 @@
+<h3>Шаблоны E-mail уведомлений</h3>
+
+<br><br>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Шаблон</th>
+		<th>От кого</th>
+		<th>Тема письма</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($emails as $e) { ?>
+		<tr>
+			<td><?php echo $e['id']; ?></td>
+			<td><?php echo $e['name']; ?></td>
+			<td>
+				<?php echo $e['from_name']; ?><br>
+				&lt;<?php echo $e['from']; ?>&gt;
+			</td>
+			<td><?php echo $e['subj']; ?></td>
+			<td>
+				<a href="<?php echo Url::a('admin-settings-emails-edit')?>id_<?php echo $e['id']; ?>/" class="but-edit" title="Редактировать"></a>
+			</td>
+		</tr>
+	<?php } ?>
+</table>

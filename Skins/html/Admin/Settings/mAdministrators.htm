@@ -1,0 +1,58 @@
+<h3>Администраторы сайта</h3>
+
+<br><br>
+
+<a href="<?php echo Url::a('admin-settings-administrators-edit'); ?>" class="but-add">Добавить</a>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Логин</th>
+		<th>Последний вход</th>
+		<th>Права доступа</th>
+		<th>Активность</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php
+    foreach($administrators as $a) { ?>
+		<tr>
+			<td><?php echo $a['id']; ?></td>
+			<td><?php echo $a['login']; ?></td>
+			<td>
+				<?php echo date('Y-m-d H:i', $a['last_enter']); ?>
+			</td>
+			<td class="small1">
+				<?php foreach(array_keys($a['rights']) as $r) { ?>
+					<?php echo Administrators::$rights[$r]; ?><br>
+				<?php } ?>
+			</td>
+			<td style="text-align: center;">
+				<?php if($current['id'] == 1 || $current['id'] == $a['id']) { ?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-settings-administrators-stat'), array(
+						'aid'	=> $a['id']
+					)); ?>" class="but-view" title="Просмотр активности администратора"></a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td>
+				<?php if($current['id'] == 1 || $current['id'] == $a['id']) { ?>
+					<a href="<?php echo Url::a('admin-settings-administrators-edit'); ?>id_<?php echo $a['id']; ?>/" class="but-edit" title="Редактировать"></a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td>
+				<?php if($current['id'] == 1 && $a['id'] != 1) { ?>
+					<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $a['id'])); ?>" class="but-del" title="Удалить"></a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+		</tr>
+	<?php } ?>
+</table>
+
+<a href="<?php echo Url::a('admin-settings-administrators-edit'); ?>" class="but-add">Добавить</a>

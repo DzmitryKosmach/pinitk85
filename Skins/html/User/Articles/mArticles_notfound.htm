@@ -1,0 +1,9 @@
+<div class="content-text">
+	<?php if(trim($pageInf['header'])) { ?>
+		<h1><?php echo $pageInf['header']; ?></h1>
+	<?php } ?>
+	<?php echo Pages::msgErr('Запрошенная статья не найдена')?>
+
+	<br><br><br>
+	<a href="<?php echo Url::a('articles'); ?>">&larr; Все статьи</a>
+</div>

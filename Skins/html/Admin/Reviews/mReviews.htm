@@ -1,0 +1,140 @@
+<h3>Отзывы посетителей сайта:</h3>
+<br><br>
+
+<form class="search" action="<?php echo Url::a('admin-reviews'); ?>" method="get">
+	<table style="min-width: 400px;">
+		<tr>
+			<td>
+				Показать отзывы:<br>
+				<select name="object">
+					<option value="">
+						- Все -
+					</option>
+					<option value="<?php echo Reviews::OBJ_SITE?>" <?php if(trim($_GET['object']) === Reviews::OBJ_SITE) { ?>selected<?php } ?>>
+						О сайте
+					</option>
+					<option value="<?php echo Reviews::OBJ_SERIES?>" <?php if(trim($_GET['object']) === Reviews::OBJ_SERIES) { ?>selected<?php } ?>>
+						О сериях мебели
+					</option>
+				</select>
+				<br><br>
+
+				<input type="submit" class="submit" value="Найти">
+			</td>
+			<?php if(trim($_GET['object']) === Reviews::OBJ_SERIES && intval($_GET['object_id'])) { ?>
+				<?php $sId = intval($_GET['object_id']); ?>
+				<td>
+					Показаны отзывы о серии<br>
+					<a href="<?php echo Catalog_Series::a($series[$sId]); ?>" target="_blank">
+						<?php echo $series[$sId]['name']; ?>
+					</a>
+				</td>
+			<?php } ?>
+		</tr>
+	</table>
+</form>
+<br><br>
+
+<?php $retUrl = Url::buildUrl(0, $_GET); ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-reviews-edit'), array(
+	'ret'	=> $retUrl
+)); ?>" class="but-add">
+	Добавить отзыв
+</a>
+
+<?php echo $toggle; ?>
+
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<!--<th>Картинка</th>-->
+		<th>Дата / Автор / Отзыв</th>
+		<th>Объект отзыва</th>
+		<th>IP автора</th>
+		<th class="small1">Показать на сайте</th>
+		<th class="small1">Учитывать оценку для серии</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($reviews as $r) { ?>
+		<tr>
+			<td><?php echo $r['id']; ?></td>
+			<!--<td>
+				<?php /*if($r['_img_ext']) { */?>
+					<a href="<?php /*echo Config::pathRel('images') . Reviews::$imagePath . $r['id']; */?>.<?php /*echo $r['_img_ext']; */?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php /*echo Config::pathRel('images') . Reviews::$imagePath . $r['id']; */?>_72x72_0.<?php /*echo $r['_img_ext']; */?>" width="72" height="72" alt="" style="border: 1px solid #CCC">
+					</a>
+				<?php /*} else { */?>
+					<img src="/Skins/img/blank.gif" width="72" height="72" alt="" style="border: 1px solid #CCC">
+				<?php /*} */?>
+			</td>-->
+			<td>
+				<strong><?php echo $r['name']; ?> (<?php echo date('d.m.Y', MySQL::fromDate($r['date'])); ?>)</strong><br>
+				<?php echo nl2br($r['text']); ?><br>
+				<?php if($r['object'] === Reviews::OBJ_SERIES) { ?>
+					<b class="red">Оценка: <?php echo $r['rate']; ?></b>
+				<?php } ?>
+			</td>
+			<td>
+				<?php if($r['object'] === Reviews::OBJ_SITE) { ?>
+					<b class="blue">Сайт</b>
+				<?php } elseif($r['object'] === Reviews::OBJ_SERIES) { ?>
+					<b class="green">Серия&nbsp;мебели</b><br>
+					<a href="<?php echo Catalog_Series::a($series[$r['object_id']]); ?>" target="_blank">
+						<?php echo $series[$r['object_id']]['name']; ?>
+					</a>
+				<?php } ?>
+			</td>
+            <td>
+                <?php echo $r['ip']; ?>
+            </td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $r['id'],
+					'opt' => 'approved'
+				)); ?>" class="but-opt" title="Показать отзыв на сайте">
+					<?php echo $r['approved'] ? 1 : 0?>
+				</a>
+			</td>
+			<td>
+				<?php if($r['object'] === Reviews::OBJ_SERIES) { ?>
+					<a href="<?php echo Url::buildUrl(0, array(
+						'act' => 'setopt',
+						'itemid' => $r['id'],
+						'opt' => 'rate_allow'
+					)); ?>" class="but-opt" title="Учитывать эту оценку в расчёте общей оценки для серии">
+						<?php echo $r['rate_allow'] ? 1 : 0?>
+					</a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-reviews-edit'), array(
+					'id'	=> $r['id'],
+					'ret'	=> $retUrl
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $r['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($reviews)) { ?>
+		<tr><td colspan="7">Отзывы не найдены</td></tr>
+	<?php } ?>
+
+</table>
+
+<?php echo $toggle?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-reviews-edit'), array(
+	'ret'	=> $retUrl
+)); ?>" class="but-add">
+	Добавить отзыв
+</a>

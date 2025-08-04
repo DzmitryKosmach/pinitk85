@@ -1,0 +1,25 @@
+<?php if($pgNum != 1 || $pgCount != 1) { ?>
+	<div class="pages">
+	    <?php if($pgNum > 1) { ?>
+		    <a href="<?php echo Pages::toggleUrl($pgNum - 1); ?>"><b>&laquo;</b></a>&nbsp;
+	    	<?php if($from != 1) { ?>
+			    <a href="<?php echo Pages::toggleUrl(1); ?>"><b>(1)</b></a>&nbsp;
+		    <?php } ?>
+	    <?php } ?>
+
+	    <?php for($i = $from; $i <= $to; $i++) { ?>
+		    <?php if($i == $pgNum) { ?>
+			    <strong><?php echo$i?></strong>&nbsp;
+		    <?php } else { ?>
+			    <a href="<?php echo Pages::toggleUrl($i); ?>"><?php echo $i; ?></a>&nbsp;
+		    <?php } ?>
+	    <?php } ?>
+
+	    <?php if($pgNum != $pgCount) { ?>
+		    <?php if($pgCount != $to) { ?>
+			    <a href="<?php echo Pages::toggleUrl($pgCount); ?>"><b>(<?php echo $pgCount; ?>)</b></a>&nbsp;
+		    <?php } ?>
+		    <a href="<?php echo Pages::toggleUrl($pgNum + 1); ?>"><b>&raquo;</b></a>&nbsp;
+	    <?php } ?>
+	</div>
+<?php } ?>

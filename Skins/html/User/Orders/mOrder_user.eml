@@ -1,0 +1,41 @@
+<table border="1">
+	<tr>
+		<th align="left">Контактная информация</th>
+		<th>&nbsp;</th>
+	</tr>
+	<tr>
+		<td>Ф.И.О.:</td>
+		<td><?php echo $user['fio']; ?></td>
+	<tr>
+		<td>Телефон:</td>
+		<td><?php echo $user['phone']; ?></td>
+	</tr>
+
+	<?php if($paymethod !== Orders::PAYMETHOD_NO) { ?>
+		<tr>
+			<td>E-mail:</td>
+			<td><?php echo $user['email']; ?></td>
+		</tr>
+
+		<tr>
+			<th align="left"><br>Адрес доставки</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<td>Город:</td>
+			<td><?php echo $user['city']; ?></td>
+		</tr>
+		<tr>
+			<td>Адрес:</td>
+			<td><?php echo $user['address']; ?></td>
+		</tr>
+
+		<tr>
+			<th align="left"><br>Дополнительные данные</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<td colspan="2"><?php echo nl2br($user['info'])?></td>
+		</tr>
+	<?php } ?>
+</table>

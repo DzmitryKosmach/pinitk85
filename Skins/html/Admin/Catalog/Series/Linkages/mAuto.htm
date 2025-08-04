@@ -1,0 +1,125 @@
+<form action="">
+	<h3>Автоматическая перелинковка серий</h3>
+	<br>
+	В данном разделе можно автоматически заполнить блок связей между сериями, равномерно распределив<br>
+	акцепторов (ссылки на серии) между донорами (сериями, на страницах которых будут эти ссылки).
+	<br><br>
+	Для более точной настройки необходимо вручную выбрать акцепторов в разделе редактирования серии (блок &laquo;Связь с другими сериями&raquo;).
+
+	<br><br><br>
+
+	<h4>Настройки</h4>
+
+	<b class="red">!!!</b> Заполняемый блок связей <b class="red">*</b>:<br>
+	<select name="linkage_id">
+		<?php foreach($linkages as $l) { ?>
+			<option value="<?php echo $l['id']?>"><?php echo $l['name']?></option>
+		<?php } ?>
+	</select>
+	<br><br>
+
+	Макс. к-во серий в блоке <b class="red">*</b>:
+	<input name="max_series" type="text" size="5" style="text-align: right"
+		   required
+		   msg_required="Укажите макс. к-во серий в блоке связей"
+		>
+
+	<br><br><br><br>
+
+	<script>
+		function priceGroupingSwitch(){
+			$$$('price-cnt-block').style.display = $$$('autofill-price-grouping').checked ? 'inline' : 'none';
+		}
+		onLoad(function(){priceGroupingSwitch()});
+
+		function autoFill(){
+			var cat = $$$('autofill-category').value;
+			var priceGrouping = $$$('autofill-price-grouping').checked ? 1 : 0;
+			var priceCroupingCnt = $$$('autofill-price-cnt').value;
+
+			$$$('autofill-loading').style.display = 'inline-block';
+			AJAX.lookup(
+				'<?php echo Url::buildUrl(0); ?>' +
+					'?category-id='		+ encodeURIComponent(cat) +
+					'&price-grouping='	+ encodeURIComponent(priceGrouping) +
+					'&price-cnt='		+ encodeURIComponent(priceCroupingCnt),
+				function(urls){
+					$$$('autofill-loading').style.display = 'none';
+					$$$('donors').value = urls;
+					$$$('acceptors').value = urls;
+					resizeTextareas();
+				}
+			);
+		}
+
+		function resizeTextareas(){
+			var s1 = $$$('donors').value.match(/^.*(\r\n|\n|$)/gim).length;
+			var s2 = $$$('acceptors').value.match(/^.*(\r\n|\n|$)/gim).length;
+			var rowsCnt = Math.max(s1, s2) + 5;
+			$$$('donors').rows = rowsCnt;
+			$$$('acceptors').rows = rowsCnt;
+		}
+	</script>
+
+
+	<h4>Доноры и акцепторы</h4>
+	<b class="small">
+		Доноры - страницы серий, на которых будет заполняться блок связей, акцепторы - ссылки на страницы серий, которыми этот блок будет заполняться.
+		<br><br>
+		В левом текстовом поле необходимо указать список URL'ов доноров, в правом - акцепторов (каждый URL с новой строки).<br>
+		Прежние ссылки в блоке связей на страницах доноров будут удалены, и затем акцепторы будут заново равномерно распределены между донорами.
+		<br><br>
+		Также списки ссылок можно разделить на несколько групп: в этом случае доноры первой группы будут распределены между акцепторами первой группы<br>
+		доноры второй - между акцепторами второй и т.д.<br>
+		Для разделения групп между ними следует ввести строку с двумя (или более) дефисами &laquo;--&raquo;, после которых может также следовать комментарий.<br>
+		Количество групп доноров и акцепторов должно быть равным.
+	</b>
+	<br><br>
+
+	<div class="block_info" style="width: 94%">
+		<strong>Автозаполнение</strong><br>
+		Категория:
+		<select name="autofill_category" id="autofill-category" style="max-width: 200px; margin-right: 20px;">
+			<?php foreach($catsIds as $catId) { ?>
+				<option value="<?php echo $catId?>">
+					<?php echo Catalog_Categories::name($catId); ?>
+				</option>
+			<?php } ?>
+		</select>
+
+		<input type="checkbox" name="autofill_price_grouping" id="autofill-price-grouping" value="1" onchange="priceGroupingSwitch()" onclick="priceGroupingSwitch()" onkeyup="priceGroupingSwitch()">
+		<label for="autofill-price-grouping"> Сгруппировать по ценам</label>
+		<span id="price-cnt-block">
+			, по
+			<input type="text" name="autofill_price_cnt" id="autofill-price-cnt" size="8" style="text-align: right">
+			серий в группе
+		</span>
+
+		<input type="button" class="submit" value="Ok" style="width: auto; padding: 0 20px; margin-left: 20px;" onclick="autoFill()">
+
+		<div id="autofill-loading" style="display: none; margin-left: 40px;">
+			<img src="/Skins/img/admin/loading2.gif" width="16" height="16" alt="" style="vertical-align: middle">
+			Загрузка...
+		</div>
+
+		<br>
+		<b class="small">После автоматического заполнения списков доноров и акцепторов вы также можете отредактировать их вручную.</b>
+	</div>
+
+	<table class="simple padding5" style="width: 100%">
+		<tr>
+			<td style="width: 50%">
+				<strong>Доноры:</strong><br>
+				<textarea name="donors" id="donors" style="width: 95%; min-height: 300px; white-space: nowrap" onchange="resizeTextareas()" onkeyup="resizeTextareas()"></textarea>
+			</td>
+			<td>
+				<strong>Акцепторы:</strong><br>
+				<textarea name="acceptors" id="acceptors" style="width: 95%; min-height: 300px; white-space: nowrap" onchange="resizeTextareas()" onkeyup="resizeTextareas()"></textarea>
+			</td>
+		</tr>
+	</table>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Применить">
+</form>

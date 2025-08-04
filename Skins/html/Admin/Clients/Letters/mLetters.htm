@@ -1,0 +1,87 @@
+<script src="/Js/uploadImages/UI.js"></script>
+
+<h3>Благодарственные письма клиентов:</h3>
+<br><br>
+
+<h4>Добавить скан письма</h4>
+
+<form action="" enctype="multipart/form-data">
+	<input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif,image/*">
+	<b class="small" id="image-comment">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 3200x2400 пикс.
+	</b>
+	<script>
+		UploadImages.create(
+			$$$('image'),
+			'',
+			$$$('image-comment').innerHTML
+		);
+		removeElement($$$('image-comment'));
+	</script><br><br>
+
+	Примечание:<br>
+	<input name="comment" type="text" size="100">
+	<br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+
+<br><br><br><br><br><br>
+
+<h4>Благодарственные письма клиентов</h4>
+
+<br>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'DESC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Скан письма</th>
+		<th>Примечание</th>
+		<th class="small1">На главной стр.</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($letters as $l) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $l['id']; ?></td>
+			<td>
+				<a href="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']; ?>.<?php echo $l['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']; ?>_120x170_0.<?php echo $l['_img_ext']; ?>" width="120" height="170" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td><?php echo $l['comment']; ?></td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $l['id'],
+					'opt' => 'in_index'
+				)); ?>" class="but-opt" title="Показать письмо на главной странице">
+					<?php echo $l['in_index'] ? 1 : 0; ?>
+				</a>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-clients-letters-edit'), array(
+					'id'	=> $l['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $l['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($letters)) { ?>
+		<tr><td colspan="7">Сканы писем не загружены.</td></tr>
+	<?php } ?>
+
+</table>

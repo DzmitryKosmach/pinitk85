@@ -1,0 +1,38 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование курса валют
+		<?php } else { ?>
+			Добавление курса валют
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название курса валют"
+		>
+	<br><br>
+
+	Значение курса <b class="red">*</b>:<br>
+	1 у.е. =
+	<input name="course" type="text" style="width: 60px; text-align: right"
+		   required
+		   msg_required="Укажите значение курса"
+		   pattern="[0-9]+(\.[0-9]{1,<?php echo Catalog::PRICES_DECIMAL?>})?"
+		   msg_pattern="Некорректно указано значение курса"
+		>
+	руб.<br>
+	<b class="small">
+		Десятичный разделитель - точка
+	</b>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-usdcourse'); ?>" class="but-back">Вернуться</a>

@@ -1,0 +1,26 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование названия характеристики в сериях категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>
+		<?else { ?>
+			Добавление названия характеристики в сериях категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название характеристики <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название группы"
+		>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-options'), array(
+	'c'	=> $categoryInf['id']
+)); ?>" class="but-back">Вернуться</a>

@@ -1,0 +1,88 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование новости
+		<?php } else { ?>
+			Добавление новости
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Заголовок новости <b class="red">*</b>:<br>
+	<input name="n_title" id="n_title" type="text" size="70"
+		   required
+		   msg_required="Введите заголовок новости">
+	<a href="javascript:void(0)"
+		onclick="oTranslate.intoCallback($$$('n_title').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+		class="generate_lnk"
+		>
+		&dArr; Перевод
+	</a>
+	<br><br>
+
+	Дата публикации:<br>
+	<input type="date" name="date"><br>
+	<b class="small">
+		Формат: дд.мм.гггг
+	</b>
+	<br><br>
+
+	Псевдо-адрес страницы (URL) <b class="red">*</b>:<br>
+	<div style="float: left; line-height: 21px; font-weight: bold">http://<?php echo $_SERVER['HTTP_HOST'] . Url::a(News::NEWS_PAGE_ID); ?></div>
+	<input name="url" id="url" type="text" size="50"
+		   required
+		   msg_required="Введите URL страницы новости"
+		   pattern="[a-z0-9\-]+"
+		   msg_pattern="URL должен содержать только буквы, числа и '-' (дефис)">
+	<a href="javascript:void(0)" onclick="makeURL($$$('n_title'), $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a><br><br>
+
+	Картинка новости <b class="red">*</b>:<br>
+	<?php if($init['_img_ext']) { ?>
+	<a href="<?php echo Config::pathRel('images') . News::$imagePath . $init['id']; ?>.<?php echo $init['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+		<img src="<?php echo Config::pathRel('images') . News::$imagePath . $init['id']; ?>_200x0_1.<?php echo $init['_img_ext']; ?>" width="200" alt="" style="border: 1px solid #CCC">
+	</a><br>
+	<?php } ?>
+	<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+	<b class="small">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 3200x2400 пикс.
+	</b>
+	<br><br>
+
+	Краткий текст (анонс):<br>
+	<textarea name="brief" style="width: 500px; height: 100px"></textarea>
+	<br><br>
+
+
+
+	<br><br><br><br>
+
+
+
+	<h4>Содержание</h4>
+
+	Тайтл страницы:<br>
+	<input name="title" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	Текст новости:<br>
+	<ckeditor name="text" width="100%" height="600" toolbar="Full"></ckeditor>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-content-news'); ?>" class="but-back">Вернуться</a>

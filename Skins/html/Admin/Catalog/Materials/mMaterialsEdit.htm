@@ -1,0 +1,68 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			<?php if($parentMat) { ?>
+				Редактирование подварианта материала <b><?php echo $parentMat['name']?></b> (уровень вложенности <?php echo $matDeepLevel?>)
+			<?php } else { ?>
+				Редактирование материала
+			<?php } ?>
+		<?php } else { ?>
+			<?php if($parentMat) { ?>
+				Добавление подварианта для материала <b><?php echo $parentMat['name']?></b> (уровень вложенности <?php echo $matDeepLevel?>)
+			<?php } else { ?>
+				Добавление материала
+			<?php } ?>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="70"
+		   required
+		   msg_required="Введите название материала">
+	<br><br>
+
+	Картинка материала:<br>
+	<?php if($init['_img_ext']) { ?>
+		<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $init['id']?>.<?php echo $init['_img_ext']?>" target="_blank" onclick="return hs.expand(this)">
+			<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $init['id']?>_20x20_0.<?php echo $init['_img_ext']?>" width="20" height="20" alt="" style="border: 1px solid #CCC">
+		</a><br>
+		<input type="checkbox" name="image-del" id="image-del" value="1">
+		<label for="image-del">Удалить</label>
+		<br>
+	<?php } ?>
+	<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+	<b class="small">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 3200x2400 пикс.<br>
+		Картинка не обязательна, если материал содержит подварианты - в этом случае будет использоваться картинка 1-го подварианта.
+	</b>
+	<br><br><br>
+
+	<?php if(!$parentMat) { ?>
+		Поставщик:<br>
+		<select name="supplier_id">
+			<option value="0"> - Нет - </option>
+			<?php foreach($suppliers as $sId => $sName) { ?>
+				<option value="<?php echo $sId?>"><?php echo $sName?></option>
+			<?php } ?>
+		</select>
+		<br><br>
+	<?php } ?>
+
+	<?php if($matDeepLevel < Catalog_Materials::MAX_DEEP_LEVEL) { ?>
+		<input name="has_sub" id="has_sub" type="checkbox" value="1">
+		<label for="has_sub">Материал содержит подварианты (макс. уровень вложенности - <?php echo Catalog_Materials::MAX_DEEP_LEVEL?>)</label>
+		<br><br>
+	<?php } ?>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-materials'), array(
+	'p' => intval($parentMat['id'])
+)); ?>" class="but-back">Вернуться</a>

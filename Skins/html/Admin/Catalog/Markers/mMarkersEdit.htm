@@ -1,0 +1,100 @@
+<style type="text/css">
+	@import url(http://fonts.googleapis.com/css?family=Exo+2:400,500,300);
+	.series-marker {
+		display: block;
+		position: relative;
+		width: 100px;
+		height: 90px;
+		margin-top: 5px;
+		background: 0 0 no-repeat;
+	}
+	.series-marker-text {
+		position: absolute;
+		left: -55px;
+		top: -0px;
+		width: 110px;
+		text-align: center;
+		line-height: 15px;
+		font-family: "Exo 2", 'Trebuchet MS', serif;
+		font-size: 16px;
+		transform-origin: 50% 0;
+		transform: rotate(-45deg);
+	}
+	.series-marker-text.shadow {
+		text-shadow: 0 1px 1px rgba(0,0,0, 0.7);
+	}
+</style>
+
+<script>
+	var colors = AJAX.jsonDecode('<?php echo toJson(Catalog_Markers::$colors); ?>');
+	//alert(print_r(colors));
+	function markerPreview(){
+		var text = trim($$$('text').value);
+		var padding = parseInt($$$('padding').value); if(isNaN(padding)) padding = 0;
+		var color = trim($$$('color').value);
+
+		$$$('preview').style.backgroundImage = 'url(\'' + colors[color]['file'] + '\')';
+
+		$$$('preview-text').style.color = colors[color]['color'];
+		$$$('preview-text').style.paddingTop = padding + 'px';
+
+		$$$('preview-text').className = 'series-marker-text';
+		if(colors[color]['shadow'] == true){
+			$$$('preview-text').className += ' shadow';
+		}
+
+		while(text.indexOf('//') !== -1){
+			text = text.replace('//', '<br>');
+		}
+		$$$('preview-text').innerHTML = text;
+	}
+	onLoad(function(){markerPreview()});
+</script>
+
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование маркера (уголка) для серий
+		<?php } else { ?>
+			Добавление маркера (уголка) для серий
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Надпись:<br>
+	<input name="text" id="text" type="text" size="50" onchange="markerPreview()" onclick="markerPreview()" onkeyup="markerPreview()"><br>
+	<b class="small">
+		Используйте двойной слеш // , чтобы указать место переноса строки
+	</b>
+	<br><br>
+
+	Смещение надписи от верхнего угла:
+	<input name="padding" id="padding" type="text" size="3" style="text-align: right" onchange="markerPreview()" onclick="markerPreview()" onkeyup="markerPreview()">
+	px
+	<br><br>
+
+	Цвет:<br>
+	<select name="color" id="color" onchange="markerPreview()" onclick="markerPreview()" onkeyup="markerPreview()">
+		<?php foreach(Catalog_Markers::$colors as $c => $info) { ?>
+			<option value="<?php echo $c?>"><?php echo $info['name']; ?></option>
+		<?php } ?>
+	</select>
+	<br><br>
+
+	Предпросмотр:<br>
+	<div>
+		<div id="preview" class="series-marker">
+			<div id="preview-text" class="series-marker-text shadow">
+
+			</div>
+		</div>
+	</div>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-markers'); ?>" class="but-back">Вернуться</a>

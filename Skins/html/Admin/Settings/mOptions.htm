@@ -1,0 +1,23 @@
+<form action="">
+    <h3><?php echo $opt['dsc']; ?></h3>
+	<b class="small"><?php echo $opt['comment']; ?></b>
+    <br><br>
+
+	<?php if(intval($_GET['mode']) == Options::MODE_TEXT) { ?>
+		<input name="value" type="text" size="50">
+
+	<?php } elseif(intval($_GET['mode']) == Options::MODE_BIGTEXT) { ?>
+		<textarea name="value" style="width: 700px; height: 400px"></textarea>
+
+	<?php } elseif(intval($_GET['mode']) == Options::MODE_HTML) { ?>
+		<ckeditor name="value" width="100%" height="300" toolbar="Full"></ckeditor>
+
+	<?php } ?>
+
+	<br><br>
+    <input type="submit" class="submit" value="Сохранить">
+</form>
+<br>
+
+
+<a href="<?php echo $_GET['ret']; ?>" class="but-back">Вернуться</a>

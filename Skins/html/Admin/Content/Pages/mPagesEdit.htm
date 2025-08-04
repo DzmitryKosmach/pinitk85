@@ -1,0 +1,113 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование страницы
+		<?php } else { ?>
+			Создание новой страницы
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" id="name" type="text" size="50"
+		   required
+		   msg_required="Введите название страницы">
+	<?php if(!intval($init['spec'])) { ?>
+		<a href="javascript:void(0)"
+			onclick="oTranslate.intoCallback($$$('name').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+			class="generate_lnk"
+			>
+			&dArr; Перевод
+		</a>
+	<?php } ?>
+	<br><br>
+
+	<?php if(!intval($init['spec'])) { ?>
+		Псевдо-адрес страницы (URL) <b class="red">*</b>:<br>
+		<div style="float: left; line-height: 21px; font-weight: bold">http://<?php echo $_SERVER['HTTP_HOST'] . ($parentId ? Url::a($parentId) : '/'); ?></div>
+		<input name="url" id="url" type="text" size="50"
+			   required
+			   msg_required="Введите URL страницы"
+			   pattern="[A-Za-z0-9\-]+"
+			   msg_pattern="URL страницы должен содержать только буквы, числа и '-' (дефис)">
+		<a href="javascript:void(0)" onclick="makeURL($$$('name'), $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a><br><br>
+	<?php } ?>
+
+	<?php /*<script>
+		function inMenu1Change(){
+			$$$('in_menu1-block').style.display = $$$('in_menu1').checked ? 'block' : 'none';
+		}
+		onLoad(function(){
+			inMenu1Change();
+		});
+	</script>*/?>
+
+	<input name="in_menu1" id="in_menu1" type="checkbox" value="1"<?/* onchange="inMenu1Change()" onclick="inMenu1Change()" onkeyup="inMenu1Change()"*/?>>
+	<label for="in_menu1">Показать страницу в верхнем меню</label>
+	<br><br>
+	<?php /*<div id="in_menu1-block" style="padding-left: 25px;">
+		<input name="in_menu1_hightlight" id="in_menu1_hightlight" type="checkbox" value="1">
+		<label for="in_menu1_hightlight">Выделить пункт в верхнем меню</label>
+		<br><br>
+	</div>*/?>
+
+	<input name="in_menu2" id="in_menu2" type="checkbox" value="1">
+	<label for="in_menu2">Показать страницу в нижнем меню</label>
+	<br><br>
+
+	<input name="in_sitemap" id="in_sitemap" type="checkbox" value="1">
+	<label for="in_sitemap">Показать страницу в карте сайта</label>
+	<br><br>
+
+
+	<br><br><br><br>
+
+
+
+
+
+
+	<h4>Содержание</h4>
+
+	Тайтл страницы:<br>
+	<input name="title" type="text" size="50">
+	<br><br>
+
+	Заголовок:<br>
+	<input name="header" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	<input name="seo_hide" id="seo_hide" type="checkbox" value="1">
+	<label for="seo_hide">Скрыть от индексации ссылки в тексте страницы скриптом SEO-Hide</label>
+	<br><br>
+
+	Текст страницы:<br>
+	<?php if(intval($init['id'])) { ?>
+		<b class="small">
+			В тексте главной страницы можно использовать специальную метку <b>%benefits%</b> - она будет<br>
+			автоматически заменена на 4 блока &laquo;Наши преимущества&raquo;
+		</b>
+		<br>
+	<?php } ?>
+	<ckeditor name="text" width="100%" height="600" toolbar="Full"></ckeditor>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-content-pages'), array(
+	'p'	=> $parentId
+)); ?>" class="but-back">Вернуться</a>

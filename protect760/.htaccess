@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+RewriteEngine off
+</IfModule>
+
+<IfModule mod_php.c>
+php_flag engine on
+php_value auto_prepend_file none
+</IfModule>
+<IfModule mod_php5.c>
+php_flag engine on
+php_value auto_prepend_file none
+</IfModule>
+<IfModule mod_php7.c>
+php_flag engine on
+php_value auto_prepend_file none
+</IfModule>
+<IfModule mod_php8.c>
+php_flag engine on
+php_value auto_prepend_file none
+</IfModule>
+
+DirectoryIndex index.html

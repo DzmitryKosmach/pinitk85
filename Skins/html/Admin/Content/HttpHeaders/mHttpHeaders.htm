@@ -1,0 +1,39 @@
+<form action="">
+	<h3>
+		Настройка автоматических редиректов (с кодом ответа 301) и ошибок (код 404)
+	</h3>
+
+	<br><br>
+
+	Каждая команда - редирект или ошибка - с новой строки.
+	<br><br>
+	Для настройки редиректа нужно указать URL, <strong>с которого</strong> происходит редирект, и URL, <strong>на который</strong> происходит редирект,
+	разделив их знаком &laquo;=&raquo; (&quot;равно&quot;)<br>
+	Пример:<br>
+	<span class="courier">
+		http://<?php echo $_SERVER['HTTP_HOST']; ?>/catalog/stoly/ = http://<?php echo $_SERVER['HTTP_HOST']; ?>/catalog/stoly-i-stulya/
+	</span>
+	<br><br>
+
+	Для того, чтобы по определённому адресу возвращалась ошибка 404, нужно указать URL, знак &laquo;=&raquo; (&quot;равно&quot;) и число &laquo;404&raquo;<br>
+	Пример:<br>
+	<span class="courier">
+		http://<?php echo $_SERVER['HTTP_HOST']; ?>/catalog/stoly/ = 404
+	</span>
+	<br><br>
+
+	ВАЖНО: Каждая команда срабатывает не только для URL'а слева от знака &laquo;=&raquo;, но также и для адресов, начинающихся с указанного URL.<br>
+	Например, если указано:<br>
+	<span class="courier">
+		http://<?php echo $_SERVER['HTTP_HOST']; ?>/catalog/stoly/ = 404
+	</span>
+	<br>
+	То для всех подразделов этой страницы также будет выдаваться &laquo;ошибка 404&raquo;, т.е. отдельно здесь перечислять их не нужно
+	<br><br>
+
+	<textarea name="headers" style="width: 100%; height: 600px;"></textarea>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

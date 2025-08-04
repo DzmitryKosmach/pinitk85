@@ -1,0 +1,148 @@
+﻿<?php echo CssCopmress::load('news')?>
+<?php echo CssCopmress::load('catalog')?>
+
+<?php echo JsCopmress::load('index')?>
+<?php echo JsCopmress::load('news')?>
+<?php echo JsCopmress::load('catalog')?>
+
+<div id="content" class="content">
+	<div class="centering">
+		<div class="centeringin clearfix">
+			<?php if(count($slides)) { ?>
+				<div class="aroundjssorslider1">
+					<div id="jssor_slider1" style="position:relative;top:0;left:0;width:990px;height:402px;">
+						<div data-u="slides" class="slides" style="cursor:move;position:absolute;left:0;top:0;width:990px;height:402px;overflow:hidden;">
+							<?php foreach($slides as $s) { ?>
+								<div class="item" id="bx_slider_<?php echo $s['id']?>">
+									<a href="<?php echo $s['link']?>">
+										<div class="banner">
+											<img id="image" src="<?php echo Config::pathRel('images') . Slider_Index::$imagePath . $s['id']?>.<?php echo $s['_img_ext']?>" alt="<?php echo hsch($s['alt'])?>">
+										</div>
+									</a>
+								</div>
+							<?php } ?>
+						</div>
+						<span data-u="arrowleft" class="prev" style="width:65px;height:65px;top:123px;left:0;">
+							<span>
+								<i class="icon pngicons"></i>
+							</span>
+						</span>
+						<span data-u="arrowright" class="next" style="width:65px;height:65px;top:123px;right:0">
+							<span>
+								<i class="icon pngicons"></i>
+							</span>
+						</span>
+						<div data-u="navigator" class="navi">
+							<div data-u="prototype" style="position:absolute;width:17px;height:17px;"></div>
+						</div>
+					</div>
+				</div>
+				<script>
+					var RSGOPRO_change_speed = 2000;
+					var RSGOPRO_change_delay = 8000;
+				</script>
+			<?php } ?>
+
+
+			<div class="mainsections clearfix">
+			<?php
+	if($_SERVER['REQUEST_URI'] == '/'){
+	echo '<h1 style="font-weight: normal; margin: 5px 0 20px 0; margin-left: 10px;">' . $pageInf['header'] . '</h1>';
+	}?>
+				<ul>
+					<?php foreach($categories as $c1) { ?>
+						<li class="section" id="bx_category_<?php echo $c1['id']?>">
+							<a href="<?php echo Catalog_Categories::a($c1['id'])?>">
+								<img src="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c1['id']?>_212x159_0.<?php echo $c1['_img_ext']?>" alt="<?php echo hsch($c1['name'])?>">
+							</a>
+							<a class="parent" href="<?php echo Catalog_Categories::a($c1['id'])?>">
+								<?php echo $c1['name']?>
+							</a>
+							<?php if(is_array($c1['sub']) && count($c1['sub'])) { ?>
+								<ul class="subsections" id="<?php echo $c1['id']?>">
+									<?php foreach($c1['sub'] as $c2) {?>
+										<li>
+											<a href="<?php echo Catalog_Categories::a($c2['id'])?>">
+												<?php echo $c2['name']?>
+											</a>
+										</li>
+									<?php } ?>
+								</ul>
+							<?php } ?>
+						</li>
+					<?php } ?>
+				</ul>
+			</div>
+
+			<div class="presscentermainn clearfix">
+				<div class="in clearfix">
+					<?php if(count($news)) {?>
+						<?php foreach($news as $n){?>
+							<div class="item <?php if($n === count($news)-1) { ?>last<?php } ?>" id="bx_news_<?php echo $n['id']?>">
+								<div class="img">
+									<a href="<?php echo News::a($n['id'])?>">
+										<img src="<?php echo Config::pathRel('images') . News::$imagePath . $n['id']?>_214x0_1.<?php echo $n['_img_ext']?>" alt="<?php echo hsch($n['n_title'])?>">
+									</a>
+								</div>
+								<div class="data">
+									<a class="name" href="<?php echo News::a($n['id'])?>">
+										<?php echo $n['n_title']?>
+									</a>
+									|
+									<a class="blockname" href="<?php echo Url::a(News::NEWS_PAGE_ID)?>" title="Новости">
+										Новости
+									</a>
+								</div>
+							</div>
+						<?php } ?>
+					<?php } ?>
+				</div>
+			</div>
+
+			<div class="sorter_and_name clearfix">
+				<p class="name">Лучшие товары</p>
+			</div>
+			<?php if(count($seriesPromo)) { ?>
+				<div id="ajaxpages_main" class="ajaxpages_main">
+					<div class="showcase clearfix columns5" id="showcaseview">
+						<?php foreach($seriesPromo as $sn => $s) {?>
+							<?php include(_ROOT . Catalog_Series::$tpl) ?>
+						<?php } ?>
+					</div>
+					<?php /*<div class="ajaxpages">
+						<a rel="nofollow" href="#" data-ajaxurl="/" data-ajaxpagesid="ajaxpages_main" data-navpagenomer="1" data-navpagecount="16" data-navnum="2">
+							<i class="animashka"></i>
+							<span>Загрузить еще</span>
+						</a>
+					</div>*/ ?>
+				</div>
+			<?php } ?>
+		</div>
+	</div>
+</div>
+
+
+<div class="index-benefits">
+	<h2>Преимущества работы с нами</h2>
+	<div class="centering">
+		<?php for($i = 1; $i <= 8; $i++) { ?>
+		<div class="block">
+			<div class="benefit-main-img-block">
+				<?php if(Options::name('head-benefit' . $i . '-url')) { ?>
+				<a href="<?php echo Options::name('head-benefit' . $i . '-url')?>" class="benefit-main-img"></a>
+				<?php } else { ?>
+				<div class="benefit-main-img"></div>
+				<?php } ?>
+			</div>
+			<?php if(Options::name('head-benefit' . $i . '-img')) { ?>
+			<img src="/Skins/img/user/<?php echo Options::name('head-benefit' . $i . '-img')?>">
+			<?php } ?>
+			<span class="text">
+				<?php echo Options::name('head-benefit' . $i )?>
+			</span>
+		</div>
+		<?php } ?>
+	</div>
+</div>
+
+<div class="spacer"><img src="/Skins/img/blank.gif" width="10" alt=""></div>

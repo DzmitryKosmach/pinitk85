@@ -1,0 +1,60 @@
+<h3>Курсы валют</h3>
+<br><br>
+
+<form action="<?php echo Url::buildUrl(0); ?>" method="post">
+	<strong>Общий курс валюты:</strong>
+	<br><br>
+	1 у.е. = <input type="text" name="course_glob" value="<?php echo abs(Options::name('global-usd-course')); ?>" style="width: 40px; text-align: right">
+	руб.
+	&nbsp;&nbsp;&nbsp;
+	<input type="submit" value="Сохранить">
+</form>
+<br><br><br>
+
+
+<strong>Дополнительные курс валют:</strong>
+<br>
+
+<a href="<?php echo Url::a('admin-catalog-usdcourse-edit'); ?>" class="but-add">
+	Добавить
+</a>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Курс</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($usdCourses as $c) { ?>
+		<tr>
+			<td><?php echo $c['id']; ?></td>
+			<td><?php echo $c['name']; ?></td>
+			<td>
+				1 у.е. =
+				<strong><?php echo Catalog::priceFormat($c['course']); ?></strong>
+				руб.
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-usdcourse-edit'), array(
+					'id'	=> $c['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $c['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($usdCourses)) { ?>
+		<tr><td colspan="5">Доп. курсы валют не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-catalog-usdcourse-edit'); ?>" class="but-add">
+	Добавить
+</a>

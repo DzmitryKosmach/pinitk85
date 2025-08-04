@@ -1,0 +1,74 @@
+<h3>Блоки для связи между сериями:</h3>
+<b class="small">
+	Речь идёт о блоках &laquo;С этой серией рекомендуется&raquo;, &laquo;Похожие товары&raquo; и т.п.<br>
+	На страницах серий будут отображаться перечисленные блоки с различными сериями в них.
+</b>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-series-linkages-edit'); ?>" class="but-add">
+	Добавить блок
+</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Цвет заголовка</th>
+		<th class="small1">В правой колонке</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($linkages as $l) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $l['id']?></td>
+			<td><?php echo $l['name']?></td>
+			<td>
+				<b style="color: <?php echo $l['color_name']?>"><?php echo mb_strtoupper($l['color_name']); ?></b>
+			</td>
+
+			<td>
+				<?php if(intval($l['sidecol'])) { ?>
+					<a href="<?php echo Url::buildUrl(0, array(
+						'act'	=> 'setopt',
+						'itemid'=> $l['id'],
+						'opt'	=> 'sidecol',
+						'msg'	=> 'Отображение блока в правой колонке выключено'
+					)); ?>" class="but-opt-on" title="Блок в правой колонке: Да"></a>
+				<?php } else { ?>
+					<a href="<?php echo Url::buildUrl(0, array(
+						'act'	=> 'setopt',
+						'itemid'=> $l['id'],
+						'opt'	=> 'sidecol',
+						'msg'	=> 'Отображение блока в правой колонке включено'
+					)); ?>" class="but-opt-off" title="Блок в правой колонке: Нет"></a>
+				<?php } ?>
+
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-linkages-edit'), array(
+					'id'	=> $l['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $l['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($linkages)) { ?>
+		<tr><td colspan="7">Блоки связей не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-catalog-series-linkages-edit'); ?>" class="but-add">
+	Добавить блок
+</a>

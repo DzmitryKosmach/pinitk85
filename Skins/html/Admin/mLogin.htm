@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Доступ ограничен.</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="<?=$PAGE['kwrd']?>">
+    <meta name="description" content="<?=$PAGE['dscr']?>">
+    <meta name="robots" content="noindex,nofollow">
+
+    <link rel="stylesheet" type="text/css" href="/Skins/css/admin.css"/>
+
+    <link rel="icon" href="/Skins/img/admin.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/Skins/img/admin.ico" type="image/x-icon">
+
+</head>
+<body class="login">
+
+<div id="login-error" class="block_error"></div>
+
+<form method="post" id="login-form">
+
+    <h2>Авторизация</h2>
+
+    <label for="login">Логин:</label>
+    <input type="text" name="login" id="login" class="text" required msg_required="Вы не ввели имя пользователя">
+
+    <div class="cl"></div>
+
+    <label for="pass">Пароль:</label>
+    <input type="password" name="pass" id="pass" class="text" required msg_required="Вы не ввели пароль">
+
+    <div class="cl"></div>
+
+    <input type="hidden" name="back_url" value="<?php echo isset($_GET['back_url']) && trim($_GET['back_url']) ? $_GET['back_url'] : ''; ?>">
+
+    <input type="submit" class="submit" value="Войти">
+
+    <div class="cl"></div>
+</form>
+
+</body>
+</html>

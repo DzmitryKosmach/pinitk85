@@ -1,0 +1,188 @@
+<?php if($parentCat) { ?>
+	<h3>Подкатегории каталога в категории <b><?php echo Catalog_Categories::name($parentCat['id']); ?></b>:</h3>
+<?php } else { ?>
+	<h3>Категории каталога верхнего уровня:</h3>
+<?php } ?>
+<br><br>
+
+<?php if($parentCat) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p'	=> $parentCat['parent_id']
+	)); ?>" class="but-back">
+		Вернуться
+	</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-edit'), array(
+	'p'	=> intval($parentCat['id'])
+)); ?>" class="but-add">
+	Добавить категорию
+</a>
+
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<?php /*if(!$parentCat):*/?>
+			<th>Картинка</th>
+		<?php /*endif*/?>
+		<th>Название</th>
+		<th>URL</th>
+		<th class="small1">Группы товаров в сериях</th>
+		<th class="small1">Характеристики серий</th>
+		<th class="small1">Серии</th>
+		<th class="small1" title="Настройка отображения элементов серий прямо на странице категории" style="text-decoration: underline">
+			Отображаемые<br>группы/товары
+		</th>
+		<th class="small1">Группы теговых страниц</th>
+		<?php if($catsDeepLevel < Catalog_Categories::MAX_DEEP_LEVEL) { ?>
+			<th class="small1">Подкат.</th>
+		<?php } ?>
+		<th class="small1">Заголовки<br>и метатеги<br>серий и товаров</th>
+		<?php if(!$parentCat) { ?>
+			<th class="small1">На главной стр.</th>
+		<?php } ?>
+		<th class="small1">Файл для Яндекс.Маркет</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($categories as $c) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $c['id']; ?></td>
+			<?php /*if(!$parentCat):*/?>
+				<td style="text-align: center">
+					<a href="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>.<?php echo $c['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>_42x32_0.<?php echo $c['_img_ext']; ?>" alt="" style="border: 1px solid #CCC">
+					</a>
+				</td>
+			<?php /*endif*/?>
+			<td><?php echo $c['name']; ?></td>
+			<td class="courier">
+				<?php if(!$parentCat && isset($domains[$c['domain_id']])) { ?>
+					<a href="http://<?php echo $domains[$c['domain_id']]; ?>/" target="_blank" class="green">
+						http://<?php echo $domains[$c['domain_id']]; ?>/
+					</a>
+				<?php } else { ?>
+					<a href="<?php echo Catalog_Categories::a($c['id']); ?>" target="_blank">
+						<?php echo Catalog_Categories::a($c['id']); ?>
+					</a>
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<?php if(!$c['has_subcats']) { ?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-itemsgroups'), array('c' => $c['id'])); ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($c['items_groups_cnt']); ?>
+					</a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<?php if(!$c['has_subcats']) { ?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-options'), array('c' => $c['id'])); ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($c['opts4series_cnt']); ?>
+					</a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<?php if(!$c['has_subcats']) { ?>
+					<a href="<?php echo Url::a('admin-catalog-series'); ?>?category_id=<?php echo $c['id']; ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($c['series_cnt']); ?>
+					</a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<?php if(!$c['has_subcats']) { ?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-itemslinks'), array('c' => $c['id'])); ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($c['items_links_groups']); ?> / <?php echo intval($c['items_links_items']); ?>
+					</a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<?php /*if(!$c['has_subcats']):*/?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups'), array('c' => $c['id'])); ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($c['groups_cnt']); ?>
+					</a>
+				<?php /*else { ?>
+					&nbsp;
+				<?endif*/?>
+			</td>
+			<?php if($catsDeepLevel < Catalog_Categories::MAX_DEEP_LEVEL) { ?>
+				<td style="text-align: center">
+					<?php if($c['has_subcats']) { ?>
+						<a href="<?php echo Url::buildUrl(0, array('p' => $c['id'])); ?>" class="but-view" title="Перейти к списку">
+							<?php echo intval($c['sub_cnt']); ?>
+						</a>
+					<?php } elseif(intval($c['sub_cnt'])) { ?>
+						<div class="grey" title="Категория &quot;<?php echo hsch($c['name']); ?>&quot; содержит серии, но ранее для неё было создано несколько подкатегорий (сейчас они недостпуны через сайт)"><?php echo intval($c['sub_cnt']); ?></div>
+					<?php } ?>
+				</td>
+			<?php } ?>
+			<td>
+				<?php if(!$c['has_subcats']) { ?>
+					<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-meta'), array(
+						'id'	=> $c['id']
+					)); ?>" class="but-config" title="Настроить"></a>
+				<?php } else { ?>
+					&nbsp;
+				<?php } ?>
+			</td>
+			<?php if(!$parentCat) { ?>
+				<td>
+					<a href="<?php echo Url::buildUrl(0, array(
+						'act' => 'setopt',
+						'itemid' => $c['id'],
+						'opt' => 'in_index'
+					)); ?>" class="but-opt" title="Показать серии категории на главной странице">
+						<?php echo $c['in_index'] ? 1 : 0?>
+					</a>
+				</td>
+			<?php } ?>
+			<td>
+				<?php echo $ymlFiles[$c['yml_file_id']]; ?>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-edit'), array(
+					'id'	=> $c['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $c['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($categories)) { ?>
+		<tr><td colspan="<?php echo (14 + ($catsDeepLevel < Catalog_Categories::MAX_DEEP_LEVEL ? 1 : 0) + (!$parentCat ? 1 : 0)); ?>">Категории не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+
+<?php if($parentCat) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p'	=> $parentCat['parent_id']
+	)); ?>" class="but-back">
+		Вернуться
+	</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-edit'), array(
+	'p'	=> intval($parentCat['id'])
+)); ?>" class="but-add">
+	Добавить категорию
+</a>

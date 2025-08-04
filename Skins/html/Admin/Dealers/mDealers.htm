@@ -1,0 +1,81 @@
+<h3>Список дилеров магазина:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-dealers-edit'); ?>" class="but-add">
+	Добавить дилера
+</a>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Дата регистрации, Имя</th>
+		<th>Логин / Пароль</th>
+		<th>E-mail</th>
+		<th>Примечание</th>
+		<th>Статус</th>
+		<th class="small1">Показать входные цены</th>
+		<th class="small1">Коммерч. предложения</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+	<?php foreach($dealers as $d) { ?>
+		<tr>
+			<td><?php echo $d['id']; ?></td>
+			<td>
+				<?php echo date('d.m.Y - H:i', MySQL::fromDateTime($d['regdate'])); ?><br>
+				<?php echo $d['name']; ?>
+			</td>
+			<td>
+				<?php echo $d['login']; ?> / <?php echo $d['pass']; ?>
+			</td>
+			<td>
+				<a href="mailto:<?php echo $d['email']; ?>"><?php echo $d['email']; ?></a>
+			</td>
+			<td>
+				<?php echo nl2br($d['notes']); ?>
+			</td>
+			<td>
+				<?php if($d['status'] === Dealers::STATUS_OK) { ?>
+					<b class="blue">Активен</b>
+				<?php } else/*if($d['status'] === Dealers::STATUS_BANNED)*/ { ?>
+					<b class="red">Заблокирован</b>
+				<?php } ?>
+			</td>
+
+			<td style="text-align: center">
+				<?php if($d['show_in_price']) { ?>
+					<b class="blue">Да</b>
+				<?php } else { ?>
+					Нет
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-dealers-offers'), array(
+					'dealer'	=> $d['id']
+				)); ?>" target="_blank" class="but-view" title="Коммерческие предложения дилера">
+					<?php echo intval($d['offers']); ?>
+				</a>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-dealers-edit'), array(
+					'id'	=> $d['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $d['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($dealers)) { ?>
+		<tr><td colspan="10">Дилеры не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<?php echo $toggle; ?>
+
+<a href="<?php echo Url::a('admin-dealers-edit'); ?>" class="but-add">
+	Добавить дилера
+</a>

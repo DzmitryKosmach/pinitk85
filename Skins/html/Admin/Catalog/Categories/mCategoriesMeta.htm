@@ -1,0 +1,224 @@
+<form action="">
+	<h3>
+		Настройка параметров генерации заголовков и метатегов серий и товаров в категории <b><?php echo Catalog_Categories::name($catInf['id']); ?></b>
+	</h3>
+	<br>
+	<b class="small">
+		Тайтлы страниц, заголовки H1 и мататеги можно указывать для каждой серии или товара отдельно,<br>
+		или же можно настроить их автоматическую генерацию в данном разделе.<br>
+		<strong>Важно: заголовки и метатеги, указанные отдельно для серии/товара приоритетнее сгенерированных автоматически!</strong>
+		<br><br>
+		Автоматическая генерация параметров страниц осуществляется в соответствии с шаблонами, которые вы можете настроить.<br>
+		В шаблонах можно использовать специальные обозначения, на место которых будут автоматически подставляться параметры<br>
+		конкретных серий/товаров. Возможные обозначения и соответствующие им параметры описаны ниже.
+	</b>
+
+	<br><br><br>
+
+	<script>
+		var focusedFld = false;
+
+		function focused(fld){
+			focusedFld = fld;
+		}
+
+		function autoFillSeries(lnk){
+			if(!focusedFld || focusedFld.id.indexOf('series-') !== 0){
+				alert('Кликните на одном из полей с шаблонами заголовков/метатегов серий, а затем - на эту подсказку.');
+				return;
+			}
+			focusedFld.value += trim(lnk.innerHTML);
+		}
+
+		function autoFillItems(lnk){
+			if(!focusedFld || focusedFld.id.indexOf('items-') !== 0){
+				alert('Кликните на одном из полей с шаблонами заголовков/метатегов товаров, а затем - на эту подсказку.');
+				return;
+			}
+			focusedFld.value += trim(lnk.innerHTML);
+		}
+
+		function autoFillPages(lnk){
+			if(!focusedFld || focusedFld.id.indexOf('pages-') !== 0){
+				alert('Кликните на одном из полей с шаблонами заголовков/метатегов теговых страниц, а затем - на эту подсказку.');
+				return;
+			}
+			focusedFld.value += trim(lnk.innerHTML);
+		}
+	</script>
+
+
+
+	<h4>Праметры фотографий серий</h4>
+
+	<b class="small">
+		Параметры фотографий - alt и title, - если они не заданы (в свойствах самой фотографии), формируются автоматически<br>
+		из названия категории и серии.<br>
+		Здесь можно указать часть фразы, предшествующую названиям категории и серии, чтобы фраза была полноценной.
+	</b>
+	<br><br>
+
+	Приставка перед ALT фото серии на стр. категории в списке серий:<br>
+	<input name="prefix_photo_alt1" type="text" size="50">
+	<br><br>
+
+	Приставка перед TITLE фото серии на стр. категории в списке серий:<br>
+	<input name="prefix_photo_title1" type="text" size="50">
+	<br><br>
+
+	<br><br>
+
+
+	<h4>Страницы серий</h4>
+
+	<b class="small">
+		Для генерации заголовков и метатегов страниц серий используются следующие обозначения:<br>
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[catname]
+		</a> - название категории;<br>
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[name]
+		</a> - название серии;<br>
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[price]
+		</a> - цена коплекта серии;<br>
+		<?php /*
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[filter-ID]
+		</a> - значение фильтра с указанным ID (вместо ID число) для данной серии (см. <a href="<?php echo Url::a('admin-catalog-filters'); ?>">поисковые фильтры</a>);<br>
+		*/?>
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[items-X]
+		</a> - названия (с артикулами) первых X товаров, входящих в базовый комплект серии, через запятую (если X = 0, отобразятся все товары);<br>
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[materials-X]
+		</a> - названия первых X материалов, связанных с серией, через запятую (если X = 0, отобразятся все материалы).
+	</b>
+	<br><br>
+
+	Шаблон тайтла страницы:<br>
+	<input name="pattern_series_title" id="series-title" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон заголовка страницы (тег &lt;H1&gt;):<br>
+	<input name="pattern_series_h1" id="series-h1" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга description (описание):<br>
+	<input name="pattern_series_dscr" id="series-dscr" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга keywords (ключевые слова):<br>
+	<input name="pattern_series_kwrd" id="series-kwrd" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	<br><br>
+
+
+
+
+
+	<h4>Страницы товаров</h4>
+
+	<b class="small">
+		Для генерации заголовков и метатегов страниц товаров используются следующие обозначения:<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[catname]
+		</a> - название категории каталога;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[series-name]
+		</a> - название серии товара;<br>
+		<?php /*
+		<a href="javascript:void(0)" onclick="autoFillSeries(this); return false;">
+			[series-filter-ID]
+		</a> - значение фильтра с указанным ID (вместо ID число) для серии товара (см. <a href="<?php echo Url::a('admin-catalog-filters'); ?>">поисковые фильтры</a>);<br>
+		*/?>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[name]
+		</a> - название товара;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[art]
+		</a> - артикул;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[size]
+		</a> - размер;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[price-min]
+		</a> - минимальная цена товара;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[price-max]
+		</a> - максимальная цена товара;<br>
+		<a href="javascript:void(0)" onclick="autoFillItems(this); return false;">
+			[materials-X]
+		</a> - названия первых X материалов, связанных с товаром, через запятую (если X = 0, отобразятся все материалы).
+	</b>
+	<br><br>
+
+	Шаблон тайтла страницы:<br>
+	<input name="pattern_items_title" id="items-title" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон заголовка страницы (тег &lt;H1&gt;):<br>
+	<input name="pattern_items_h1" id="items-h1" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга description (описание):<br>
+	<input name="pattern_items_dscr" id="items-dscr" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга keywords (ключевые слова):<br>
+	<input name="pattern_items_kwrd" id="items-kwrd" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон текста описания товара:<br>
+	<textarea name="pattern_items_text" id="items-text" type="text" onfocus="focused(this)" style="width: 500px; height: 80px;"></textarea>
+	<br><br>
+
+	<br><br>
+
+
+
+
+
+	<h4>Теговые страницы</h4>
+
+	<b class="small">
+		Для генерации заголовков и метатегов теговых страниц используются следующие обозначения:<br>
+		<a href="javascript:void(0)" onclick="autoFillPages(this); return false;">
+			[name]
+		</a> - название теговой страницы;<br>
+		<a href="javascript:void(0)" onclick="autoFillPages(this); return false;">
+			[price-min]
+		</a> - минимальная поисковая цена серии, входящей в эту теговую страницу.
+	</b>
+	<br><br>
+
+	Шаблон тайтла страницы:<br>
+	<input name="pattern_page_title" id="pages-title" type="text" size="100" onfocus="focused(this)"><br>
+	Место тайтла, где должен автоматически вставляться номер страницы списка серий, нужно обозначить так:<br>
+	<span class="courier">... {Страница %%%} ...</span><br>
+	Т.е. на первой странице списка всё, что в фигурных скобках, будет скрыто, а на 2-й и далее - оно будет отоображаться, а %%% заменится на номер страницы
+	<br><br>
+
+	Шаблон заголовка страницы (тег &lt;H1&gt;):<br>
+	<input name="pattern_page_h1" id="pages-h1" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга description (описание):<br>
+	<input name="pattern_page_dscr" id="pages-dscr" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+	Шаблон мета-тэга keywords (ключевые слова):<br>
+	<input name="pattern_page_kwrd" id="pages-kwrd" type="text" size="100" onfocus="focused(this)">
+	<br><br>
+
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories'), array(
+	'p'	=> $catInf['parent_id']
+)); ?>" class="but-back">Вернуться</a>

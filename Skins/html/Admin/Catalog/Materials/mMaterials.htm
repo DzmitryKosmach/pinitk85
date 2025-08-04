@@ -1,0 +1,138 @@
+<?php if($parentMat) { ?>
+	<h3>Подварианты для материала <b><?php echo $parentMat['name']; ?></b> (уровень вложенности <?php echo $matsDeepLevel?>):</h3>
+<?php } else { ?>
+	<h3>Материалы верхнего уровня:</h3>
+<?php } ?>
+<br><br>
+
+<?php if(!$parentMat) { ?>
+	<form action="<?php echo Url::a('admin-catalog-materials'); ?>" method="get">
+		Поиск по поставщику:
+		<select name="supplier_id">
+			<option value=""> - Любой поставщик - </option>
+			<option value="0" <?php if(trim($_GET['supplier_id']) !== '' && intval($_GET['supplier_id']) == 0) { ?>selected<?php } ?>>
+				- Без поставщика -
+			</option>
+			<?php foreach($suppliers as $sId => $sName) { ?>
+				<option value="<?php echo $sId?>" <?php if(intval($_GET['supplier_id']) == $sId) { ?>selected<?php } ?>><?php echo $sName?></option>
+			<?php } ?>
+		</select>
+		<input type="submit" value="Ok">
+	</form>
+<?php } ?>
+
+<?php if($parentMat) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p' => intval($parentMat['parent_id'])
+	)); ?>" class="but-back">
+		Вернуться
+	</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-materials-edit'), array(
+	'p'	=> intval($parentMat['id'])
+)); ?>" class="but-add">
+	Добавить <?php echo ($parentMat ? 'подвариант' : 'материал'); ?>
+</a>
+
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Картинка</th>
+		<th>Название</th>
+		<?php if(!$parentMat) { ?>
+			<th>Поставщик</th>
+			<th class="small1">Серии с данным материалом</th>
+		<?php } ?>
+		<?php if($matsDeepLevel < Catalog_Materials::MAX_DEEP_LEVEL) { ?>
+			<th>Подварианты</th>
+		<?php } ?>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($materials as $m) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $m['id']; ?></td>
+			<td style="text-align: center;">
+				<?php if($m['_img_ext']) { ?>
+					<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id']; ?>.<?php echo $m['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id']; ?>_20x20_0.<?php echo $m['_img_ext']; ?>" width="20" height="20" alt="" style="border: 1px solid #CCC">
+					</a>
+				<?php } ?>
+			</td>
+			<td><?php echo $m['name']; ?></td>
+
+			<?php if(!$parentMat) { ?>
+				<td>
+					<?php if(isset($suppliers[$m['supplier_id']])) { ?>
+						<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), array(
+							'id'	=> $m['supplier_id'],
+						)); ?>" target="_blank">
+							<?php echo $suppliers[$m['supplier_id']]; ?>
+						</a>
+					<?php } else { ?>
+						&nbsp;
+					<?php } ?>
+				</td>
+				<td align="center">
+					<a href="<?php echo Url::a('admin-catalog-series'); ?>?material_id=<?php echo $m['id']; ?>" class="but-view" title="Перейти к списку">
+						<?php echo intval($m['series_cnt']); ?>
+					</a>
+				</td>
+			<?php } ?>
+
+			<?php if($matsDeepLevel < Catalog_Materials::MAX_DEEP_LEVEL) { ?>
+				<td align="center">
+					<?php if($m['has_sub']) { ?>
+						<a href="<?php echo Url::buildUrl(0, array(
+							'p'	=> $m['id']
+						)); ?>" class="but-view" title="Перейти к списку">
+							<?php echo intval($m['sub_cnt']); ?>
+						</a>
+					<?php } else { ?>
+						&nbsp;
+					<?php } ?>
+				</td>
+			<?php } ?>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-materials-edit'), array(
+					'id'	=> $m['id'],
+                    'supplier' => $m['supplier_id'],
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $m['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($materials)) { ?>
+		<tr><td colspan="<?php echo (6 + (!$parentMat ? 2 : 0) + ($matsDeepLevel < Catalog_Materials::MAX_DEEP_LEVEL ? 1 : 0)); ?>">
+			Материалы не найдены.
+		</td></tr>
+	<?php } ?>
+</table>
+
+
+<?php if($parentMat) { ?>
+	<a href="<?php echo Url::buildUrl(0, array(
+		'p' => intval($parentMat['parent_id'])
+	)); ?>" class="but-back">
+		Вернуться
+	</a>
+<?php } ?>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-materials-edit'), array(
+	'p'	=> intval($parentMat['id'])
+)); ?>" class="but-add">
+	Добавить <?php echo ($parentMat ? 'подвариант' : 'материал'); ?>
+</a>

@@ -1,0 +1,255 @@
+<form action="">
+	<h3>
+		Опции калькулятора корзины
+	</h3>
+
+	<br><br>
+
+	<style type="text/css">
+		.admin_table td {
+			vertical-align: top;
+		}
+	</style>
+
+	<h4>Доставка</h4>
+
+	<table class="admin_table">
+		<tr>
+			<th>&nbsp;</th>
+			<th>Обычная мебель</th>
+			<th>
+				Аксессуары<br>
+				<b class="small">
+					(Опции применяются, когда<br>
+					в заказе из неметаллической<br>
+					мебели только аксессуары)
+				</b>
+			</th>
+			<th>Металлическая мебель</th>
+		</tr>
+		<tr>
+			<th>
+				Бесплатно
+			</th>
+			<td>
+				При заказе от:<br>
+				<input name="office-delivery-free" type="text" size="15" style="text-align: right">
+				руб.
+				<br>
+				<b class="small">0 - нет бесплатной доставки</b>
+			</td>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				При заказе от:<br>
+				<input name="metal-delivery-free" type="text" size="15" style="text-align: right">
+				руб.
+				<br>
+				<b class="small">0 - нет бесплатной доставки</b>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				По Москве
+			</th>
+			<td>
+				Стоимость:<br>
+				<input name="office-delivery-msk" type="text" size="15" style="text-align: right">
+				руб.
+				<br><br>
+
+				Сниженная стоимость:<br>
+				<input name="office-delivery-msk-lower" type="text" size="7" style="text-align: right">
+				при заказе от
+				<input name="office-delivery-msk-lower-from" type="text" size="7" style="text-align: right">
+				<br><br>
+
+				Если сумма заказа достаточная для<br>
+				бесплатной доставки, но в заказе<br>
+				есть товар со скидкой:<br>
+				<input name="office-delivery-msk-if-discount" type="text" size="15" style="text-align: right">
+				руб.
+			</td>
+			<td>
+				Стоимость:<br>
+				<input name="accessories-delivery-msk" type="text" size="15" style="text-align: right">
+				руб.
+			</td>
+			<td>
+				Стоимость:<br>
+				<input name="metal-delivery-msk" type="text" size="15" style="text-align: right">
+				руб.
+			</td>
+		</tr>
+		<tr>
+			<th>
+				За МКАД
+			</th>
+			<td>
+				Стоимость за 1 км:<br>
+				<input name="office-delivery-outmsk" type="text" size="15" style="text-align: right">
+				руб/км
+				<br>
+				<b class="small">Умножается на 2 для учёта обратного пути</b>
+			</td>
+			<td>
+				Стоимость:<br>
+				<input name="accessories-delivery-outmsk-fixed" type="text" size="7" style="text-align: right">
+				+
+				<input name="accessories-delivery-outmsk" type="text" size="7" style="text-align: right">
+				руб/км
+				<br>
+				<b class="small">
+					Цена за км умножается на 2 для учёта<br>
+					обратного пути
+				</b>
+			</td>
+			<td>
+				Стоимость за 1 км:<br>
+				<input name="metal-delivery-outmsk" type="text" size="15" style="text-align: right">
+				руб/км
+				<br>
+				<b class="small">Умножается на 2 для учёта обратного пути</b>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Самовывоз
+			</th>
+			<td colspan="3">
+				Мин. сумма заказа:<br>
+				<input name="pickup-min-sum" type="text" size="15" style="text-align: right">
+				руб.
+			</td>
+		</tr>
+		<tr>
+			<th>
+				До транспортной<br>компании
+			</th>
+			<td colspan="3">
+				Рассчитывается как по Москве
+			</td>
+		</tr>
+	</table>
+
+	<br><br><br><br>
+
+
+
+
+	<h4>Разгрузка</h4>
+
+	<table class="admin_table">
+		<tr>
+			<th>Обычная мебель</th>
+			<th>Металлическая мебель</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<td rowspan="<?php echo count(Orders_Options::$metallUnloadingWeights)?>">
+				Стоимость за 1 кг на 1 этаж:<br>
+				<input name="office-unloading-by-floor-kg" type="text" size="15" style="text-align: right">
+				руб.
+				<br><br>
+
+				При этом:<br>
+				не менее
+				<input name="office-unloading-min" type="text" size="7" style="text-align: right">
+				и не более
+				<input name="office-unloading-max" type="text" size="7" style="text-align: right">
+				руб.
+				<br><br>
+				<b class="small">
+					При наличии лифта разгрузка обычной мебели<br>
+					считается как для 1-го этажа
+				</b>
+			</td>
+			<?php if(count(Orders_Options::$metallUnloadingWeights)) { ?>
+				<?php $w = Orders_Options::$metallUnloadingWeights[0]; ?>
+				<td>
+					<input name="<?php echo $w['options'][0]; ?>" type="text" size="7" style="text-align: right">
+					+
+					<input name="<?php echo $w['options'][1]; ?>" type="text" size="7" style="text-align: right">
+					за этаж
+				</td>
+				<th>
+					от <?php echo $w['from']; ?> <?php echo ($w['to'] < 1000000000 ? 'до ' . $w['to'] : '')?> кг
+				</th>
+			<?php } ?>
+		</tr>
+		<?php if(count(Orders_Options::$metallUnloadingWeights) > 1) { ?>
+			<?php foreach(Orders_Options::$metallUnloadingWeights as $wn => $w) { ?>
+				<?php if($wn == 0) continue; ?>
+				<tr>
+					<td>
+						<input name="<?php echo $w['options'][0]; ?>" type="text" size="7" style="text-align: right">
+						+
+						<input name="<?php echo $w['options'][1]; ?>" type="text" size="7" style="text-align: right">
+						за этаж
+					</td>
+					<th>
+						от <?php echo $w['from']; ?> <?php echo ($w['to'] < 1000000000 ? 'до ' . $w['to'] : '')?> кг
+					</th>
+				</tr>
+			<?php } ?>
+		<?php } ?>
+	</table>
+
+	<br><br><br><br>
+
+
+
+
+	<h4>Сбока</h4>
+
+	<table class="admin_table">
+		<tr>
+			<th>Обычная мебель</th>
+			<th>Металлическая мебель</th>
+		</tr>
+		<tr>
+			<td>
+				Стоимость составляет:<br>
+				<input name="office-assembly-percent" type="text" size="7" style="text-align: right">
+				% от суммы заказа, но не менее
+				<input name="office-assembly-min" type="text" size="7" style="text-align: right">
+				руб.
+
+				<br><br>
+				Сборка вешалки:<br>
+				<input name="office-assembly-hanger-price" type="text" size="15" style="text-align: right">
+				руб.
+			</td>
+			<td>
+				Стоимость для 1-го модуля,<br>
+				если не указана серия:<br>
+				<input name="metal-assembly-default" type="text" size="15" style="text-align: right">
+				руб.
+				<br><br>
+				<a href="<?php echo Url::a('admin-catalog-metallseries')?>">
+					Настроить стоимость сборки<br>
+					для серий металл. мебели
+				</a>
+			</td>
+		</tr>
+	</table>
+
+	<br><br><br><br>
+
+
+
+
+	<h4>Вывоз мусора</h4>
+
+	Стоимость:<br>
+	<input name="garbage" type="text" size="15" style="text-align: right">
+	руб.
+
+	<br><br><br><br>
+
+
+
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

@@ -1,0 +1,8 @@
+{
+    "require": {
+        "phpoffice/phpspreadsheet": "^2.0",
+        "psr/http-message": "1.1",
+        "maennchen/zipstream-php": "2.4.0",
+        "symfony/mailer": "^7.0"
+    }
+}

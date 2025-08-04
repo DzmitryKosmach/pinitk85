@@ -1,0 +1,41 @@
+<?php if($pgNum != 1 || $pgCount != 1) { ?>
+	<div id="paginator">
+		<div class="clear"></div>
+		<div class="navi clearfix">
+			<div class="navigation">
+				<?php if($pgNum > 1) { ?>
+					<a class="left arrow" href="<?php echo Pages::toggleUrl($pgNum - 1); ?>">
+						<i class="icon pngicons"></i>
+					</a>
+				<?php } else { ?>
+					<span class="left arrow">
+						<i class="icon pngicons"></i>
+					</span>
+				<?php } ?>
+
+				<?php for($i = $from; $i <= $to; $i++) { ?>
+					<?php if($i == $pgNum && $_GET['page'] != 'all') { ?>
+						<span class="current"><?php echo $i?></span>
+					<?php } else { ?>
+						<a href="<?php echo Pages::toggleUrl($i); ?>"><?php echo $i; ?></a>
+					<?php } ?>
+				<?php } ?>
+
+				<a class="all" href="<?php echo Url::buildUrl(0, $_GET, array(
+					'page'	=> null,
+					'onpage'=> -1
+				)); ?>">Все</a>
+
+				<?php if($pgNum != $pgCount) { ?>
+					<a class="right arrow" href="<?php echo Pages::toggleUrl($pgNum + 1); ?>">
+						<i class="icon pngicons"></i>
+					</a>
+				<?php } else { ?>
+					<span class="right arrow">
+						<i class="icon pngicons"></i>
+					</span>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+<?php } ?>

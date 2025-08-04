@@ -1,0 +1,9 @@
+<div class="content-text">
+	<?php if(trim($pageInf['header'])) { ?>
+		<h1><?php echo $pageInf['header']; ?></h1>
+	<?php } ?>
+	<?php echo Pages::msgErr('Запрошенная новость не найдена'); ?>
+
+	<br><br><br>
+	<a href="<?php Url::a('news'); ?>">&larr; Все новости</a>
+</div>

@@ -1,0 +1,9 @@
+<div class="content-text">
+	<?php if(trim($pageInf['header'])) { ?>
+		<h1><?php echo $pageInf['header']; ?></h1>
+	<?php } ?>
+	<?php echo Pages::msgErr('Запрошенный проект не найден'); ?>
+
+	<br><br><br>
+	<a href="<?php echo Url::a('projects'); ?>">&larr; Все проекты</a>
+</div>

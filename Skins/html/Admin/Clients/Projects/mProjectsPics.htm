@@ -1,0 +1,101 @@
+<script src="/Js/uploadImages/UI.js"></script>
+
+<h3>Фотографии/Схемы проекта <b><?=$projectInf['name']?></b>:</h3>
+<br><br>
+
+<h4>Добавить фотографию/схему</h4>
+
+<form action="" enctype="multipart/form-data">
+	<input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif,image/*">
+	<b class="small" id="image-comment">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 3200x2400 пикс.
+	</b>
+	<script>
+		UploadImages.create(
+			$$$('image'),
+			'',
+			$$$('image-comment').innerHTML
+		);
+		removeElement($$$('image-comment'));
+	</script><br><br>
+
+	Атрибут ALT:<br>
+	<input name="alt" type="text" size="50">
+	<br><br>
+
+	Тип изображения:<br>
+	<select name="type">
+		<option value="<?=Clients_Projects_Pics::TYPE_PHOTO?>">Фотография проекта</option>
+		<option value="<?=Clients_Projects_Pics::TYPE_SCHEME?>">Схема проекта</option>
+	</select>
+	<br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+
+
+
+
+
+<br><br><br><br><br><br>
+
+
+
+
+<h4>Фотографии/Схемы проекта</h4>
+
+<br>
+
+
+<script>
+	dragTableUrl = '<?=Url::buildUrl(0)?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Изображение</th>
+		<th>Атрибут ALT</th>
+		<th>Тип</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?foreach($pics as $p):?>
+		<tr>
+			<td class="dragSort-id"><?=$p['id']?></td>
+			<td>
+				<a href="<?=Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id']?>.<?=$p['_img_ext']?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?=Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id']?>_165x86_0.<?=$p['_img_ext']?>" width="165" height="86" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td><?=$p['alt']?></td>
+			<td>
+				<?if($p['type'] == Clients_Projects_Pics::TYPE_PHOTO):?>
+					Фотография
+				<?else/*if($p['type'] == Projects_Pics::TYPE_SCHEME)*/:?>
+					Схема
+				<?endif?>
+			</td>
+
+			<td>
+				<a href="<?=Url::buildUrl(Url::a('admin-clients-projects-pics-edit'), array(
+					'id'	=> $p['id']
+				))?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?=Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $p['id']))?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?endforeach?>
+
+	<?if(!count($pics)):?>
+		<tr><td colspan="7">Фотографии/Схемы не загружены.</td></tr>
+	<?endif?>
+
+</table>
+
+<a href="<?=Url::a('admin-clients-projects')?>" class="but-back">Вернуться</a>

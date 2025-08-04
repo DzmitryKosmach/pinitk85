@@ -1,0 +1,236 @@
+<script src="/Js/uploadImages/UI.js"></script>
+
+<h3>Фотографии серии <b><?php echo $seriesInf['name']; ?></b>:</h3>
+<br><br>
+
+<h4>Добавить фотографию</h4>
+
+<form action="" enctype="multipart/form-data">
+    <div class="my-16">
+        <label for="image"></label>
+        <input type="file" name="image[]" id="image" multiple accept="image/jpeg,image/png,image/*">
+        <div class="small mt-10" id="image-comment">
+            Форматы: JPG или PNG.<br>
+            Максимальный размер: 3200x2400 пикс.
+        </div>
+    </div>
+
+    <div class="my-16">
+        <ul class="file-list" id="fileList"></ul>
+        <input type="hidden" name="uploadedImages" id="uploadedImages">
+    </div>
+
+	<script>
+        /*
+		UploadImages.create(
+			$$$('image'),
+			'',
+			$$$('image-comment').innerHTML
+		);
+		removeElement($$$('image-comment'));
+         */
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageField = document.getElementById('image');
+            const uploadedImages = document.getElementById('uploadedImages');
+            const fileList = document.getElementById('fileList');
+            const submitButton = document.getElementById('submit-button');
+
+            const errorImage = "/Skins/img/admin/icon-del.png";
+            const loadingImage = "/Skins/img/admin/loading.gif";
+
+
+            let uploadedImagesCount = 0;
+            let imagesCount = 0;
+
+            // Функция для блокировки кнопки
+            function disableSubmitButton() {
+                submitButton.disabled = true;
+                submitButton.style.cursor = 'not-allowed';
+                imageField.disabled = true;
+            }
+
+            // Функция для разблокировки кнопки
+            function enableSubmitButton() {
+                submitButton.disabled = false;
+                submitButton.style.cursor = 'pointer';
+                imageField.disabled = false;
+            }
+
+            document.getElementById('image').onchange = function () {
+                let files = document.getElementById('image').files;
+
+                if (files.length <= 0) {
+                    return;
+                }
+
+                imagesCount = files.length;
+                fileList.innerHTML = '';
+
+                disableButtonWhileUploading(files);
+            };
+
+
+            const uploadFile = async (file, number) => {
+
+                let previewBlock = document.createElement('div');
+                let infoBlock = document.createElement('div');
+                let filenameBlock = document.createElement('span');
+                let previewImage = document.createElement('img');
+                let helper = document.createElement('span');
+                const br = document.createElement('br');
+
+                helper.innerHTML = '';
+                helper.classList.add('small');
+
+                previewBlock.classList.add('upload-preview');
+                previewImage.src = loadingImage;
+                previewImage.width = 32;
+                previewImage.height = 32;
+                previewBlock.appendChild(previewImage)
+
+                const li = document.createElement('li');
+                li.id = "image" + number;
+                filenameBlock.textContent = file.name;
+                helper.innerHTML = 'загружается...';
+
+                infoBlock.id = "block" + number;
+                previewBlock.id = "preview" + number;
+
+                infoBlock.appendChild(filenameBlock);
+                infoBlock.appendChild(br);
+                infoBlock.appendChild(helper);
+
+                li.appendChild(previewBlock);
+                li.appendChild(infoBlock);
+                fileList.appendChild(li);
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/upload-images/?type=json&UInum=' + number, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success === '1') {
+                            filenameBlock.textContent = file.name;
+                            helper.innerHTML = 'загружен';
+                            li.classList.add('success');
+
+                            previewImage.width = 80;
+                            previewImage.height = 60;
+                            previewImage.src = data.preview ? data.preview : data.link;
+
+                            uploadedImages.value += data.link + ',';
+                        } else {
+                            filenameBlock.textContent = file.name + " - ошибка!";
+                            helper.innerHTML = data.message;
+
+                            previewImage.width = 24;
+                            previewImage.height = 24;
+                            previewImage.src = errorImage;
+
+                            li.classList.add('error');
+                            console.error('Error uploading file:' + data.message);
+                        }
+                        uploadedImagesCount++;
+                        if (uploadedImagesCount >= imagesCount ) {
+                            enableSubmitButton();
+                        }
+                    })
+                    .catch(error => {
+                        li.textContent = file.name + " - ошибка";
+                        helper.innerHTML = error;
+                        previewImage.width = 24;
+                        previewImage.height = 24;
+                        previewImage.src = errorImage;
+                        li.classList.add('error');
+                        console.error('Error uploading file:', error);
+                    });
+            }
+
+            async function disableButtonWhileUploading(files) {
+                disableSubmitButton();
+                for (let i = 0; i < files.length; i++) {
+                    await uploadFile(files[i], i+1)
+                }
+            }
+        });
+
+
+	</script>
+
+<!--
+	<label>Атрибут ALT:<br>
+	<input name="alt" type="text" size="50">
+	<br><br>
+-->
+
+    <div class="mt-16 mb-16">
+        <label for="rm">Способ масштабирования:</label><br>
+        <select name="rm" id="rm">
+            <option value="<?php echo IMG_RESIZE_CROP; ?>">Обрезание краёв</option>
+            <option value="<?php echo IMG_RESIZE_ADD_MARGINS; ?>">Добавление полей</option>
+        </select><br>
+        <span class="small" style="font-size: 10px">
+            <a href="<?php echo Url::a('admin-imageresizehelp'); ?>" target="_blank">Пояснение</a>. Применяется ко всем фотографиям!
+        </span>
+    </div>
+
+	<input type="submit" class="submit" value="Сохранить" id="submit-button">
+
+</form>
+
+<p><br><br></p>
+
+
+<h4>Фотографии серии</h4>
+
+<br>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Фото</th>
+		<th>Атрибут ALT</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($photos as $p) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $p['id']; ?></td>
+			<td>
+				<a href="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $p['id']; ?>.<?php echo $p['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?php echo Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $p['id']; ?>_80x60_<?php echo $p['rm']; ?>.<?php echo $p['_img_ext']; ?>" width="80" height="60" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td><?php echo $p['alt']; ?></td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-photos-edit'), array(
+					'id'	=> $p['id'],
+					'ret'	=> mPhotos::retURL()
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $p['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($photos)) { ?>
+		<tr><td colspan="6">Фотографии не загружены.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo mPhotos::retURL(); ?>" class="but-back">Вернуться</a>

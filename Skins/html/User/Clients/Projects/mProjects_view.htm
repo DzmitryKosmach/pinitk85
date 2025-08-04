@@ -1,0 +1,53 @@
+<div class="content-text">
+	<div class="projects-view">
+		<h1><?php echo $projectInf['name']?></h1>
+
+		<div class="info">
+			<?php if(count($photos)) { ?>
+				<div class="photo">
+					<a href="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $photos[0]['id']?>_0x0_1_wm.<?php echo $photos[0]['_img_ext']?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+						<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $photos[0]['id']?>_290x255_0_wm.<?php echo $photos[0]['_img_ext']?>" width="290" height="255" alt="<?php echo hsch($photos[0]['alt'])?>">
+					</a>
+				</div>
+			<?php } ?>
+
+			<?php echo News::date(MySQL::fromDate($projectInf['date']), false)?>
+			<br><br>
+
+			<span class="b"><?php echo $projectInf['city']?></span>
+			<br><br>
+
+			<?php echo $projectInf['text']?>
+			<div class="cl"></div>
+		</div>
+
+		<?php if(count($schemes)) { ?>
+			<h2>Планы проекта</h2>
+			<div class="schemes">
+				<?php foreach($schemes as $s) { ?>
+					<a href="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $s['id']?>.<?php echo $s['_img_ext']?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+						<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $s['id']?>_197x153_1.<?php echo $s['_img_ext']?>" width="197" height="153" alt="<?php echo hsch($s['alt'])?>">
+					</a>
+				<?php } ?>
+				<div class="cl"></div>
+			</div>
+		<?php } ?>
+
+		<?php if(count($photos) > 1) { ?>
+			<h2>Фотографии проекта</h2>
+			<div class="photos">
+				<?php foreach($photos as $pn => $p) { ?>
+					<? if($pn == 0) continue; ?>
+					<a href="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id']?>_0x0_1_wm.<?php echo $p['_img_ext']?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+						<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id']?>_197x153_0_wm.<?php echo $p['_img_ext']?>" width="197" height="153" alt="<?php echo hsch($p['alt'])?>">
+					</a>
+				<?php } ?>
+				<div class="cl"></div>
+			</div>
+		<?php } ?>
+
+		<br><br><br>
+		<a href="<?php echo Url::a('projects')?>">&larr; Все проекты</a>
+		<br><br><br>
+	</div>
+</div>

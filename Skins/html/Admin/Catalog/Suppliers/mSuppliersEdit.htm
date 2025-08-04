@@ -1,0 +1,72 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование поставщика
+		<?php } else { ?>
+			Добавление поставщика
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название поставщика"
+		>
+	<br><br>
+
+	Описание условий работы:<br>
+	<ckeditor name="description" width="100%" height="150" toolbar="Mini"></ckeditor>
+	<br><br>
+
+	Контактное лицо:<br>
+	<input name="fio" type="text" size="50">
+	<br><br>
+
+	Телефон(ы):<br>
+	<input name="phone" type="text" size="50">
+	<br><br>
+
+	E-mail:<br>
+	<input name="email" type="text" size="50">
+	<br><br>
+
+	Схема проезда:<br>
+	<?php if($init['_img_ext']) { ?>
+		<a href="<?php echo Config::pathRel('images') . Catalog_Suppliers::$imagePath . $init['id']; ?>.<?php echo $init['_img_ext']; ?>" target="_blank">
+			Открыть / Скачать
+		</a>
+		<br><br>
+	<?php } ?>
+	<input type="file" name="file">
+	<br><br>
+
+
+	<br><br><br><br>
+
+
+	<h4>Дополнительно</h4>
+
+	Условия скидки:<br>
+	<ckeditor name="discount" width="100%" height="150" toolbar="Mini"></ckeditor>
+	<br><br>
+
+	Условия доставки:<br>
+	<ckeditor name="delivery" width="100%" height="150" toolbar="Mini"></ckeditor>
+	<br><br>
+
+	Условия сборки:<br>
+	<ckeditor name="assembly" width="100%" height="150" toolbar="Mini"></ckeditor>
+	<br><br>
+
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-suppliers'); ?>" class="but-back">Вернуться</a>

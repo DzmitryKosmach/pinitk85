@@ -1,0 +1,30 @@
+<form action="">
+	<h3>Редактирование фотографии/схемы проекта <b><?php echo $projectInf['name']; ?></b></h3>
+
+	<br><br>
+
+	<a href="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $init['id']; ?>.<?php echo $init['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+		<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $init['id']; ?>_165x86_0.<?php echo $init['_img_ext']; ?>" width="165" height="86" alt="" style="border: 1px solid #CCC">
+	</a>
+	<br><br>
+
+	Атрибут ALT:<br>
+	<input name="alt" type="text" size="50">
+	<br><br>
+
+	Тип изображения:<br>
+	<select name="type">
+		<option value="<?php echo Clients_Projects_Pics::TYPE_PHOTO; ?>">Фотография проекта</option>
+		<option value="<?php echo Clients_Projects_Pics::TYPE_SCHEME; ?>">Схема проекта</option>
+	</select>
+	<br><br>
+
+	<br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-clients-projects-pics'), array(
+	'p'		=> $projectInf['id']
+)); ?>" class="but-back">Вернуться</a>

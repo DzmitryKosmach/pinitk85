@@ -1,0 +1,67 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование поискового фильтра для серий
+		<?php } else { ?>
+			Добавление поискового фильтра для серий
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="70"
+		   required
+		   msg_required="Введите название фильтра">
+	<br><br>
+
+	Вид фильтра:
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="type" id="type-checkbox" value="<?php echoCatalog_Filters::TYPE_CHECKBOX?>">
+	<label for="type-checkbox">Выбор нескольких вариантов (галочки)</label>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="type" id="type-radio" value="<?php echoCatalog_Filters::TYPE_RADIO?>">
+	<label for="type-radio">Выбор одного варианта (кружки с точками)</label>
+	<br><br>
+
+	<input name="in_series_list" id="in_series_list" type="checkbox" value="1">
+	<label for="in_series_list">
+		Значения фильтра, связанные с конкретными сериями, отображаются в списке эти серий
+	</label>
+	<br><br>
+
+	<script>
+		function displayChange(){
+			$$$('opened-block').style.display = $$$('display').checked ? 'block' : 'none';
+		}
+		onLoad(function(){
+			displayChange();
+		});
+	</script>
+
+	<input name="display" id="display" type="checkbox" value="1" onchange="displayChange()" onclick="displayChange()" onkeyup="displayChange()">
+	<label for="display">
+		Показать фильтр пользователям в боковой колонке
+	</label><br>
+	<b class="small">
+		Выключите эту опцию, чтобы фильтр не отображался на сайте, а был доступен только для настройки теговых страниц
+	</b>
+	<br><br>
+
+	<div id="opened-block">
+		<input name="opened" id="opened" type="checkbox" value="1">
+		<label for="opened">
+			Развернуть варианты значений фильтра в кбоковой колонке на странице категории
+		</label>
+		<br><br>
+	</div>
+
+	<br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echoUrl::a('admin-catalog-filters'); ?>" class="but-back">Вернуться</a>

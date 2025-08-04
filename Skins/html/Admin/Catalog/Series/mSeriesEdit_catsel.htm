@@ -1,0 +1,23 @@
+<form action="<?php echo Url::a('admin-catalog-series-edit'); ?>" method="get">
+	<h3>Добавление серии мебели</h3>
+	<br><br>
+
+	Выберите категорию, подходящую для добавления серии <b class="red">*</b>:<br>
+	<select name="category_id" style="max-width: 700px">
+		<?php foreach($catsIds as $catId) { ?>
+			<option value="<?php echo $catId?>">
+				<?php echo Catalog_Categories::name($catId); ?>
+			</option>
+		<?php } ?>
+	</select>
+	<br><br>
+
+	<br>
+
+	<input type="submit" class="submit" value="Далее &rarr;">
+
+	<input type="hidden" name="ret" value="<?php echo trim($_GET['ret']); ?>">
+</form>
+<br><br>
+
+<a href="<?php echo mSeriesEdit::retURL(); ?>" class="but-back">Вернуться</a>

@@ -1,0 +1,40 @@
+<h3>Отображение в серии <b>&laquo;<?php echo $seriesInf['name']; ?>&raquo;</b> товаров из других серий:</h3>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+	's'	=> $seriesInf['id']
+)); ?>" class="but-back">
+	Вернуться
+</a>
+
+<table class="admin_table">
+	<tr>
+		<th>Группа</th>
+		<th class="small1">
+			Отображаемые<br>
+			товары из других серий
+		</th>
+	</tr>
+
+	<?php foreach($groups as $g){ ?>
+		<tr>
+			<td><?php echo$g['name']?></td>
+
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-series-crossitems-group'), array(
+					's' => $seriesInf['id'],
+					'g'	=> $g['id']
+				)); ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($g['cross_items']); ?>
+				</a>
+			</td>
+		</tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+	's'	=> $seriesInf['id']
+)); ?>" class="but-back">
+	Вернуться
+</a>

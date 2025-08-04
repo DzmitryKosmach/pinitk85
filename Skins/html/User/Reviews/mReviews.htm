@@ -1,0 +1,157 @@
+<div class="content-text" style="padding-top: 20px;">
+	<?php if(!$ajaxForm) { ?>
+
+		<?php if(trim($pageInf['header'])) { ?>
+			<h1><?php echo $pageInf['header']?></h1>
+		<?php } ?>
+		<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+		<div class="cl"></div>
+	<?php } ?>
+
+	<div class="content-white">
+		<?php if(!$ajaxForm) { ?>
+			<div class="reviews">
+				<div>
+					<?php foreach($reviews as $r) { ?>
+						<div class="reviews-item">
+							<?php if($r['_img_ext']) { ?>
+								<div class="photo" style="background-image: url('<?php echo Config::pathRel('images') . Reviews::$imagePath . $r['id']?>_72x72_0.<?php echo $r['_img_ext']?>');"></div>
+							<?php } else { ?>
+								<div class="photo"></div>
+							<?php } ?>
+							<div class="name">
+								<?php echo $r['name']?>
+								<span class="date">(<?php echo date('d.m.Y', MySQL::fromDate($r['date']))?>)</span>
+							</div>
+							<div class="text">
+								«<?php echo nl2br($r['text'])?>»
+							</div>
+							<div class="cl"></div>
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+
+			<?php echo $toggle; ?>
+
+			<br><br><br>
+
+			<a name="new"></a>
+			<h2>Написать отзыв</h2>
+
+			<div id="form-errors" class="form-errors"></div>
+			<script>
+				onLoad(function(){
+					if($$$('form-errors') && $$$('form-errors').style.display != 'none'){
+						D.location.href = '#new';
+					}
+				});
+			</script>
+
+		<?php } else { ?>
+			<div id="form-errors" class="form-errors"></div>
+		<?php } ?>
+		<div class="content kdiv">
+		<form action="<?php echo Url::a('reviews') . ($ajaxForm ? '?ajax=1' : '')?>" method="post" class="form kf">
+			<table class="form-table kfor">
+				<tr>
+					<td class="label required ktd">
+						Ваше имя
+					</td>
+					<td class="kinp">
+						<input type="text" name="name" class="text ki"
+							   maxlength="192"
+							   msg_maxlen="Имя не должно превышать 192 символа"
+							   required
+							   msg_required="Вы не ввели ваше имя">
+					</td>
+				</tr>
+				<tr>
+					<td class="label required ktd">
+						E-mail
+					</td>
+					<td class="kinp">
+						<input type="email" name="email" class="text ki"
+							   maxlength="1000"
+							   msg_maxlen="E-mail не должен превышать 1000 символов"
+							   required
+							   msg_required="Вы не ввели ваш E-mail"
+							>
+					</td>
+				</tr>
+
+				<?php if($object === Reviews::OBJ_SERIES) { ?>
+					<tr>
+						<td class="label required">
+							Ваша оценка
+						</td>
+						<td class="rate-radio">
+							<input type="radio" name="rate" id="rate-5" value="5">
+							<label for="rate-5">&nbsp;</label>
+							<input type="radio" name="rate" id="rate-4" value="4">
+							<label for="rate-4">&nbsp;</label>
+							<input type="radio" name="rate" id="rate-3" value="3">
+							<label for="rate-3">&nbsp;</label>
+							<input type="radio" name="rate" id="rate-2" value="2">
+							<label for="rate-2">&nbsp;</label>
+							<input type="radio" name="rate" id="rate-1" value="1">
+							<label for="rate-1">&nbsp;</label>
+						</td>
+					</tr>
+				<?php } ?>
+
+				<tr>
+					<td class="label ktd">Текст отзыва</td>
+					<td colspan="2" class="kinp">
+						<textarea class="text" name="text" id="text" style="height: 120px;width: 100%;"
+								  maxlength="5000"
+								  msg_maxlen="Текст сообщения не должен превышать 5000 символов"
+							></textarea>
+						<?php if(!$ajaxForm) { ?>
+							<br>
+							<span>Осталось знаков: <span id="text-counter">5000</span></span>
+							<script>
+								charsCounter.add(
+									$$$('text'),
+									$$$('text-counter'),
+									5000
+								);
+							</script>
+						<?php } ?>
+					</td>
+				</tr>
+				<tr>
+					<td></td><td>
+						<?php /*if(!$ajaxForm) { ?>
+							<div style="float: right;   padding: 10px;">
+								<recaptcha>
+							</div>
+						<?endif*/?>
+						<div class="captcha-item" style="margin-left:10px;" id="captcha_multi_mode-form"></div>
+						<input type="hidden" name="object">
+						<input type="hidden" name="object_id">
+						<div class="cl"></div>
+					</td>
+
+				</tr>
+				<tr><td colspan="2"><button type="submit" class="button button-orange" style="
+        box-sizing: border-box;
+    background-color: #393939 !important;
+    cursor: pointer;
+    color: #FFF;
+    text-decoration: none;
+    -khtml-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    padding: 11px 14px;
+    float: right;
+    margin-right: 10px;
+">Отправить отзыв</button></td></tr>
+			</table>
+		</form>
+		</div>
+	</div>
+</div>

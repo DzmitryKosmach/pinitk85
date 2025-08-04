@@ -1,0 +1,71 @@
+<h3>Маркеры (уголка) для выделения серий:</h3>
+
+<a href="<?php echo Url::a('admin-catalog-markers-edit'); ?>" class="but-add">
+	Добавить
+</a>
+
+<style type="text/css">
+	@import url(http://fonts.googleapis.com/css?family=Exo+2:400,500,300);
+	.series-marker {
+		display: block;
+		position: relative;
+		width: 100px;
+		height: 90px;
+		background: 0 0 no-repeat;
+	}
+	.series-marker-text {
+		position: absolute;
+		left: -55px;
+		top: -0px;
+		width: 110px;
+		text-align: center;
+		line-height: 15px;
+		font-family: "Exo 2", 'Trebuchet MS', serif;
+		font-size: 16px;
+		transform-origin: 50% 0;
+		transform: rotate(-45deg);
+	}
+	.series-marker-text.shadow {
+		text-shadow: 0 1px 1px rgba(0,0,0, 0.7);
+	}
+</style>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Вид маркера</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($markers as $m) { ?>
+		<tr>
+			<td><?php echo $m['id']; ?></td>
+			<td>
+				<div class="series-marker" style="background-image: url('<?php echo Catalog_Markers::$colors[$m['color']]['file']; ?>');">
+					<div class="series-marker-text <?php if(Catalog_Markers::$colors[$m['color']]['shadow']) { ?>shadow<?php } ?>" style="color: <?php echo Catalog_Markers::$colors[$m['color']]['color']; ?>; padding-top: <?php echo $m['padding']; ?>px">
+						<?php echo Catalog_Markers::formatText($m['text']); ?>
+					</div>
+				</div>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-markers-edit'), array(
+					'id'	=> $m['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $m['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($markers)) { ?>
+		<tr><td colspan="4">Маркеры не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-catalog-markers-edit'); ?>" class="but-add">
+	Добавить
+</a>

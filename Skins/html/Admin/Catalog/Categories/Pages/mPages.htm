@@ -1,0 +1,78 @@
+<h3>Теговые страницы в группе <strong>&laquo;<?php echo $groupInf['name']; ?>&raquo;</strong> в категории <strong>&laquo;<?php echo Catalog_Categories::name($categoryInf['id']); ?>&raquo;</strong>:</h3>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups'), array(
+	'c'	=> intval($categoryInf['id'])
+)); ?>" class="but-back">
+	Вернуться
+</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-pages-edit'), array(
+	'g'	=> intval($groupInf['id'])
+)); ?>" class="but-add">
+	Добавить страницу
+</a>
+
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Тег</th>
+		<th>URL</th>
+		<th class="small1" title="Настройка отображения элементов серий прямо на теговой странице" style="text-decoration: underline">
+			Отображаемые<br>группы/товары
+		</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($pages as $p) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $p['id']; ?></td>
+			<td><?php echo $p['name']; ?></td>
+			<td class="courier">
+				<a href="<?php echo Catalog_Pages::a($p['id']); ?>" target="_blank">
+					http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Pages::a($p['id']); ?>
+				</a>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-itemslinks'), array('p' => $p['id'])); ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($p['items_links_groups']); ?> / <?php echo intval($p['items_links_items']); ?>
+				</a>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-pages-edit'), array(
+					'id'	=> $p['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $p['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($pages)) { ?>
+		<tr><td colspan="7">Теговые страницы не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups'), array(
+	'c'	=> intval($categoryInf['id'])
+)); ?>" class="but-back">
+	Вернуться
+</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-categories-groups-pages-edit'), array(
+	'g'	=> intval($groupInf['id'])
+)); ?>" class="but-add">
+	Добавить страницу
+</a>

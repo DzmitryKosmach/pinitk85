@@ -1,0 +1,169 @@
+/* search form */
+.searchinhead{
+	min-height:40px;
+	margin-left:250px;
+	border:1px solid #f2f2f2;
+}
+.searchinhead form{
+	width:100%;
+	/*overflow:hidden;*/
+}
+.searchinhead .icon1{
+	display:block;
+	float:left;
+	width:15px;
+	height:16px;
+	margin:12px 11px 0 11px;
+	background-position:0 -54px;
+}
+.searchinhead .aroundtext{
+	position: relative;
+	width:100%;
+	margin-right:44px;
+	margin-left:40px;
+	padding-right:88px;
+}
+.searchinhead .aroundtext .text{
+	display:block;
+	width:100%;
+	padding:10px 5px 10px 0;
+	background:transparent;
+	border:none;
+	box-shadow:none;
+}
+.searchinhead .aroundtext .text:focus{
+	border:none;
+}
+
+#search-input-search-res {
+	display: none;
+	position: absolute;
+	z-index: 5000;
+	left: -41px;
+	top: 40px;
+	box-sizing: border-box;
+	width: 0;
+	padding: 5px 45px 5px 7px;
+	overflow: hidden;
+	/*background: #FFF;*/
+	transition: height 100ms;
+	/*box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);*/
+}
+/*#search-input-search-res div {
+	line-height: 24px;
+	margin: 0 -40px 0 0;
+	padding: 0 0 0 33px;
+	white-space: nowrap;
+	overflow: hidden;
+	cursor: pointer;
+}
+#search-input-search-res div.checked {
+	background: #DDD;
+}*/
+
+.searchinhead .icon2{
+	display:block;
+	float:right;
+	width:16px;
+	height:14px;
+	margin:13px 13px 0 13px;
+	background-position:0 -70px;
+}
+/* search.title -> results */
+.title-search-result{
+	display:none;
+	margin-top:-3px;
+	padding-right:1px;
+	border-collapse:collapse;
+	border:none;
+	background-color:#fff;
+	overflow:hidden;
+	z-index:205;
+}
+.stitle{
+	padding:15px 0;
+	text-align:left;
+	background-color:#fff;
+	border:1px solid #F2F2F2;
+}
+.stitle .title{
+	margin:20px 20px 0 20px;
+	padding-bottom:8px;
+	color:#ee8131;
+	border-bottom:1px solid #F2F2F2;
+}
+.stitle .title.first{
+	margin-top:0;
+}
+.stitle .iblock .item{
+	display:block;
+	padding:6px 20px;
+}
+.stitle .iblock .item:hover{
+	color:#fff;
+	background-color:#899CC7;
+}
+/* simple items */
+
+/* products */
+.stitle .iblock .catitem .inner{
+	background:url('/Skins/img/user/search-title/dashed1.png') 0 bottom repeat;
+}
+.stitle .iblock .catitem:hover  .inner{
+	background:url('/Skins/img/user/search-title/dashed2.png') 0 bottom repeat;
+}
+.stitle .iblock .catitem .pic{
+	display:inline-block;
+	width:22px;
+	margin-right:10px;
+	text-align:center;
+}
+.stitle .iblock .catitem img{
+	margin-bottom:1px;
+}
+.stitle.twolines .iblock .catitem .inner{
+	background:none;
+}
+.stitle.twolines .iblock .catitem .name{
+	margin-right:5px;
+}
+.stitle.twolines .iblock .catitem .pic{
+	margin-right:5px;
+}
+.stitle.twolines .iblock .catitem .prs{
+	float:left;
+}
+.stitle .iblock .catitem .name,
+.stitle .iblock .catitem .prs{
+	display:block;
+}
+.stitle .iblock .catitem .name,
+.stitle .iblock .catitem .prs{
+	position:relative;
+	background-color:#fff;
+}
+.stitle .iblock .catitem:hover .name,
+.stitle .iblock .catitem:hover .prs{
+	background-color:#899CC7;
+}
+.stitle .iblock .catitem .name{
+	float:left;
+}
+.stitle .iblock .catitem .name{
+	padding-right:2px;
+}
+.stitle .iblock .catitem .prs{
+	float:right;
+	padding-left:2px;
+	color:#000;
+}
+.stitle .iblock .catitem:hover .prs{
+	color:#fff;
+}
+
+@media screen and (max-width:605px){
+	body.adaptive .searchinhead{
+		margin-top:5px;
+		margin-left:0;
+	}
+}

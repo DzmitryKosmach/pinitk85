@@ -1,0 +1,66 @@
+<h3>Статьи на сайте:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-content-articles-edit')?>" class="but-add">Добавить статью</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0)?>';
+	dragTableDirect = 'DESC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Картинка</th>
+		<th>Дата / Заголовок</th>
+		<th>URL</th>
+		<th class="small1">В карте сайта</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($articles as $a) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $a['id']; ?></td>
+			<td>
+				<a href="<?php echo Config::pathRel('images') . Articles::$imagePath . $a['id']; ?>.<?php echo $a['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?php echo Config::pathRel('images') . Articles::$imagePath . $a['id']; ?>_100x0_1.<?php echo $a['_img_ext']; ?>" width="100" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td>
+				<strong><?php echo News::date(MySQL::fromDate($a['date']), false)?></strong><br>
+				<?php echo $a['a_title']; ?>
+			</td>
+			<td class="courier">
+				<a href="<?php echo Articles::a($a['id'])?>" target="_blank">http://<?php echo $_SERVER['HTTP_HOST'] . Articles::a($a['id'])?></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $a['id'],
+					'opt' => 'in_sitemap'
+				))?>" class="but-opt" title="В карте сайта">
+					<?php echo $a['in_sitemap'] ? 1 : 0; ?>
+				</a>
+			</td>
+
+			<td>
+				<a href="<?php
+				echo Url::buildUrl(Url::a('admin-content-articles-edit'), array(
+					'id'	=> $a['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $a['id']))?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($articles)) { ?>
+		<tr><td colspan="8">Статей нет.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-content-articles-edit'); ?>" class="but-add">Добавить статью</a>

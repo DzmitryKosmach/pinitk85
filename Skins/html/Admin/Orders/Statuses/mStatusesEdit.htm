@@ -1,0 +1,34 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование статуса заказов
+		<?php } else { ?>
+			Добавление статуса заказов
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название статуса"
+		>
+	<br><br>
+
+	Цвет <b class="red">*</b>:
+	<input name="color" type="color"
+		   required
+		   msg_required="Введите цвет статуса"
+		><br>
+	<b class="small">
+		Укажите цвет в <a href="http://ru.wikipedia.org/wiki/Цвета_HTML" target="_blank">шестнадцатиричном формате</a>, например: #FF0000
+	</b>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-orders-statuses'); ?>" class="but-back">Вернуться</a>

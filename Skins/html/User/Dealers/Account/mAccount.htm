@@ -1,0 +1,102 @@
+<?php if(trim($pageInf['header'])) { ?>
+	<h1><?php echo $pageInf['header']?></h1>
+<?php } ?>
+<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+<div class="cl"></div>
+
+<div class="content-white" style="margin-top: 30px; margin-bottom:40px">
+<h3>Аккаунт</h3>
+
+<table class="cart-table" style="width: auto;">
+	<tr>
+		<td style="width: 120px">
+			Дата регистрации:
+		</td>
+		<td>
+			<?php echo date('d.m.Y', MySQL::fromDateTime($dealer['regdate']))?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Имя / Название:
+		</td>
+		<td>
+			<?php echo $dealer['name']?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Логин:
+		</td>
+		<td>
+			<?php echo $dealer['login']?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			E-mail:
+		</td>
+		<td>
+			<?php echo $dealer['email']?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Пароль:
+		</td>
+		<td>
+			<a href="<?php echo Url::a('dealer-changepass')?>">Сменить пароль</a>
+		</td>
+	</tr>
+</table>
+<br>
+(Для изменения учётных данных аккаунта обратитесь к администрации сайта)
+<br><br><br><br>
+
+
+<h3>Коммерческие предложения</h3>
+
+<table class="cart-table">
+	<tr>
+		<th>№</th>
+		<th>Дата / Время оформления</th>
+		<th>К-во товаров</th>
+		<th>Сумма</th>
+		<th>Скачать</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+	<?php foreach($offers as $o) { ?>
+		<tr>
+			<td>
+				<?php echo $o['id']?>
+			</td>
+			<td>
+				<?php echo date('d.m.Y в H:i', MySql::fromDateTime($o['date']))?>
+			</td>
+			<td class="amount right">
+				<?php echo $o['amount']?>
+			</td>
+			<td style="text-align: right;">
+				<?php echo Catalog::priceFormat($o['price_out'] + $o['price_options'])?> р.
+			</td>
+			<td style="text-align: center;">
+				<a href="<?php echo Url::a('dealer')?>?id=<?php echo $o['id']?>&download=<?php echo Dealers_Offers::FORMAT_XLS?>" class="link-xls" title="Скачать в формате XLS"></a>
+				<a href="<?php echo Url::a('dealer')?>?id=<?php echo $o['id']?>&download=<?php echo Dealers_Offers::FORMAT_PDF?>" class="link-pdf" title="Скачать в формате PDF"></a>
+			</td>
+			<td style="text-align: right; white-space: nowrap">
+				<?php if($o['saved']) { ?>
+					<b class="blue">Сохранено и отправлено администратору</b>
+				<?php } else { ?>
+					<a href="<?php echo Url::a('dealer')?>?edit=<?php echo $o['id']?>">Редатировать</a>
+					|
+					<a href="<?php echo Url::a('dealer')?>?save=<?php echo $o['id']?>">Сохранить и отправить администратору</a>
+				<?php } ?>
+			</td>
+			<td style="text-align: right; padding-right: 11px">
+				<a href="<?php echo Url::a('dealer')?>?del=<?php echo $o['id']?>" onclick="return window.confirm('Подтвердите удаление коммерческого предложения');" class="red">Удалить</a>
+			</td>
+		</tr>
+	<?php } ?>
+</table>
+</div>

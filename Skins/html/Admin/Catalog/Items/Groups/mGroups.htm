@@ -1,0 +1,82 @@
+<h3>Группы товаров в серии <b><?php echo $seriesInf['name']?></b>:</h3>
+<br><br>
+
+Поиск по цене в серии происходит по товарам группы: <b><?php echo ($seriesInf['price_search_group_id'] ? $groups[$seriesInf['price_search_group_id']]['name'] : '<em>Без группы</em>'); ?></b>
+<br><br>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-back">Вернуться</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-groups-edit'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-add">
+	Добавить группу
+</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'ASC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Группа</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($groups as $g){ ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $g['id']?></td>
+			<td><?php echo $g['name']?></td>
+
+			<td>
+				<?php if($g['id'] == $seriesInf['price_search_group_id']){ ?>
+					<a href="<?php echo Url::buildUrl(0, $_GET, array(
+						'act'	=> 'search-group',
+						'on'	=> 0,
+						'gid'	=> $g['id'],
+					)); ?>" class="but-opt-on" title="Поиск по цене в серии происходит по товарам ЭТОЙ группы"></a>
+				<?php } else { ?>
+					<a href="<?php echo Url::buildUrl(0, $_GET, array(
+						'act'	=> 'search-group',
+						'on'	=> 1,
+						'gid'	=> $g['id'],
+					)); ?>" class="but-opt-off" title="Поиск по цене в серии происходит по товарам НЕ ЭТОЙ группы"></a>
+				<?php } ?>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-groups-edit'), array(
+					'id'	=> $g['id'],
+					'ret'	=> $_GET['ret']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $g['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($groups)){ ?>
+		<tr><td colspan="6">Группы не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-back">Вернуться</a>
+
+<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-items-groups-edit'), array(
+	's'		=> $seriesInf['id'],
+	'ret'	=> $_GET['ret']
+)); ?>" class="but-add">
+	Добавить группу
+</a>

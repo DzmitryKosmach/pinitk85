@@ -1,0 +1,1 @@
+<?php $ab_config['disable'] = 1;

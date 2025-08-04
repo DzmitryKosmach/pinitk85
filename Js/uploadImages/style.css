@@ -1,0 +1,322 @@
+/* Основной внешний блок */
+.uploadImages {
+    float: left;
+    position: relative;
+    background: #EEE;
+    border: 1px solid #AAA;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    padding: 10px;
+    margin: 3px 0;
+    min-width: 280px;
+}
+
+.uploadImages-drag {
+    background: #edf5ff;
+    border: 1px solid #AAA
+}
+
+/* Стиль блока, когда в него собираются опустить файл */
+
+/******************************************************************************/
+/****************************** ПРЕВЮШКА КАРТИНКИ *****************************/
+/******************************************************************************/
+/* Внешний блок превьюшки */
+.uploadImages-preview-area {
+    position: relative;
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin: 0 10px 0 0;
+}
+
+/* Блоки для загруженной и незагруженной картинки */
+.uploadImages-preview, .uploadImages-preview-no {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background: #FFF;
+    box-shadow: #000 0 0 5px;
+    -webkit-box-shadow: #000 0 0 5px;
+    -moz-box-shadow: #000 0 0 5px;
+    -ms-box-shadow: #000 0 0 5px;
+
+    /* По-умолчанию превьюшка полностью прозрачна и ниже основного слоя */
+    z-index: -1;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 0);
+}
+
+.uploadImages-preview-area .visible {
+    /* С доп. классом  .visible превьюшка становится непрозрачной и поднимается выше других слоёв */
+    z-index: 9;
+    opacity: 1;
+    -moz-opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity = 100);
+}
+
+/* Фон для блока незагруженной превьюшки */
+.uploadImages-preview-no {
+    background: url('/Js/uploadImages/img/no-preview.gif') no-repeat;
+
+}
+
+/* Ссылка для увеличения превьюшки в новом окне */
+.uploadImages-preview-link {
+    display: block;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+}
+
+/* Удаление превьюшки */
+.uploadImages-preview-del {
+    display: block;
+    position: absolute;
+    left: 45px;
+    top: -7px;
+    width: 10px;
+    height: 12px;
+    overflow: hidden;
+}
+
+/* Превьюшка раздвигается при наведении мышки */
+.uploadImages-preview:hover {
+    left: -15px;
+    top: -15px;
+    width: 80px;
+    height: 80px
+}
+
+.uploadImages-preview:hover .uploadImages-preview-link {
+    width: 80px;
+    height: 80px
+}
+
+.uploadImages-preview:hover .uploadImages-preview-link img {
+    width: 80px;
+    height: 80px
+}
+
+.uploadImages-preview:hover .uploadImages-preview-del {
+    left: 63px;
+    top: -6px;
+    width: 22px;
+    height: 25px
+}
+
+.uploadImages-preview:hover .uploadImages-preview-del img {
+    width: 22px;
+    height: 23px
+}
+
+/* Анимация для блока превьюшки - анимация для смены загруженной/незагруженной картинки + анимация для наведения мышки */
+.uploadImages-preview {
+    /* Для основного блока с превьюшкой надо указать оба типа анимации - раздвижение и плавное появление/исчезание */
+    transition: opacity 200ms, z-index 200ms, left 100ms, top 100ms, width 100ms, height 100ms;
+    -o-transition: opacity 200ms, z-index 200ms, left 100ms, top 100ms, width 100ms, height 100ms;
+    -webkit-transition: opacity 200ms, z-index 200ms, left 100ms, top 100ms, width 100ms, height 100ms;
+    -moz-transition: -moz-opacity 200ms, z-index 200ms, left 100ms, top 100ms, width 100ms, height 100ms;
+    -ms-transition: opacity 200ms, z-index 200ms, left 100ms, top 100ms, width 100ms, height 100ms;
+}
+
+.uploadImages-preview-no {
+    /* Плавное появление/исчезание для блока отсутствия превьюшки */
+    transition: opacity 200ms, z-index 200ms;
+    -o-transition: opacity 200ms, z-index 200ms;
+    -webkit-transition: opacity 200ms, z-index 200ms;
+    -moz-transition: -moz-opacity 200ms, z-index 200ms;
+    -ms-transition: opacity 200ms, z-index 200ms;
+}
+
+.uploadImages-preview-del {
+    /* Движение кнопки удаления при развижении превьюшки */
+    transition: left 100ms, top 100ms, width 100ms, height 100ms;
+    -o-transition: left 100ms, top 100ms, width 100ms, height 100ms;
+    -webkit-transition: left 100ms, top 100ms, width 100ms, height 100ms;
+    -moz-transition: left 100ms, top 100ms, width 100ms, height 100ms;
+    -ms-transition: left 100ms, top 100ms, width 100ms, height 100ms;
+}
+
+.uploadImages-preview-link, .uploadImages-preview-link img, .uploadImages-preview-del img {
+    /* Движения внутренних элементов при раздвижении превьюшки */
+    transition: width 100ms, height 100ms;
+    -o-transition: width 100ms, height 100ms;
+    -webkit-transition: width 100ms, height 100ms;
+    -moz-transition: width 100ms, height 100ms;
+    -ms-transition: width 100ms, height 100ms;
+}
+
+/* Правая часть блока */
+.uploadImages-right {
+    float: left
+}
+
+/* Поле для выбороа файла */
+.uploadImages-field {
+    float: left;
+    margin: 0 5px 0 0
+}
+
+/* Подсказка */
+.uploadImages-tip {
+    float: left;
+    position: relative;
+    background: #668eff;
+    color: #FFF;
+    font-size: 11px;
+    font-weight: bold;
+    border: 2px solid #FFF;
+    border-radius: 9px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    -ms-border-radius: 9px;
+    box-shadow: #3b5fc6 0 0 2px 1px;
+    -webkit-box-shadow: #3b5fc6 0 0 2px 1px;
+    -moz-box-shadow: #3b5fc6 0 0 2px 1px;
+    -ms-box-shadow: #3b5fc6 0 0 2px 1px;
+
+    width: 10px;
+    height: 14px;
+    line-height: 14px;
+    padding: 0 0 0 5px;
+    cursor: default;
+}
+
+.uploadImages-tip-baloon {
+    position: absolute;
+    left: 12px;
+    top: -2px;
+    width: 0;
+    height: 150px;
+    overflow: hidden;
+
+    transition: width 200ms;
+    -o-transition: width 200ms;
+    -webkit-transition: width 200ms;
+    -moz-transition: width 200ms;
+    -ms-transition: width 200ms;
+}
+
+.uploadImages-tip:hover .uploadImages-tip-baloon {
+    width: 440px
+}
+
+.uploadImages-tip-baloon-text {
+    position: absolute;
+    left: 29px;
+    top: 0;
+    min-width: 200px;
+    max-width: 400px;
+    border: 1px solid #cfcfcf;
+    border-radius: 9px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    -ms-border-radius: 9px;
+    box-shadow: #666 0 2px 5px;
+    -webkit-box-shadow: #666 0 2px 5px;
+    -moz-box-shadow: #666 0 2px 5px;
+    -ms-box-shadow: #666 0 2px 5px;
+
+    background: #fffcd2;
+    padding: 6px 9px;
+    white-space: nowrap;
+    color: #000;
+    font-weight: normal;
+
+}
+
+.uploadImages-tip-baloon-tail1 {
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-top: 1px solid #cfcfcf;
+}
+
+.uploadImages-tip-baloon-tail2 {
+    position: absolute;
+    left: 0;
+    top: -7px;
+    width: 40px;
+    height: 10px;
+    background: #fffcd2;
+    border-bottom: 1px solid #cfcfcf;
+
+    transform: rotate(10deg);
+    -o-transform: rotate(10deg);
+    -webkit-transform: rotate(10deg);
+    -moz-transform: rotate(10deg);
+    -ms-transform: rotate(10deg);
+    box-shadow: #333 5px 1px 5px;
+    -webkit-box-shadow: #333 5px 1px 5px;
+    -moz-box-shadow: #333 5px 1px 5px;
+    -ms-box-shadow: #333 5px 1px 5px;
+}
+
+/* Статус */
+.uploadImages-status div {
+    display: none;
+
+    /*opacity: 0; -moz-opacity: 0; filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+     transition: opacity 200ms;
+     -o-transition: opacity 200ms;
+     -webkit-transition: opacity 200ms;
+     -moz-transition: -moz-opacity 200ms;
+     -ms-transition: opacity 200ms;*/
+}
+
+.uploadImages-status .visible {
+    display: block;
+}
+
+.uploadImages-status-default {
+    margin: 2px 0 0 0;
+    font-size: 10px;
+}
+
+.uploadImages-status-deleted {
+    margin: 5px 0 0 0;
+    font-size: 10px;
+    color: red
+}
+
+.uploadImages-status-loading {
+    width: 220px;
+    height: 19px;
+    margin: 7px 0 0 0;
+    background: url('/Js/uploadImages/img/loading.gif') no-repeat
+}
+
+.uploadImages-status-error {
+    margin: 2px 0 0 0;
+    font-size: 10px;
+    color: red;
+    max-width: 220px;
+}
+
+.uploadImages-status-success {
+    margin: 5px 0 0 0;
+    font-size: 10px;
+    color: #00F;
+}
+
+/* Iframe для отправки формы */
+.uploadImages-iframe {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+}
+
+/* Временная форма для отправки файла во фрейм */
+.uploadImages-tmpForm {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+}

@@ -1,0 +1,71 @@
+<h3>Поставщики:</h3>
+<b class="small">Список и описания поставщиков - это информация для внутреннего пользования, для администрации сайта, обычным посетителям она не видна.</b>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-suppliers-edit'); ?>" class="but-add">
+	Добавить поставщика
+</a>
+
+<table class="admin_table">
+	<tr>
+		<th>ID</th>
+		<th>Название</th>
+		<th>Контакты</th>
+		<th class="small1">Серии</th>
+		<th class="small1">Материалы</th>
+		<th>Подробности</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($suppliers as $s) { ?>
+		<tr>
+			<td><?php echo $s['id']; ?></td>
+			<td><?php echo $s['name']; ?></td>
+			<td>
+				<?php echo $s['fio']; ?><br>
+				<?php echo $s['phone']; ?><br>
+				<?php echo $s['email']; ?><br>
+				<?php if($s['_img_ext']) { ?>
+					<strong>Схема проезда:</strong>
+					<a href="<?php echo Config::pathRel('images') . Catalog_Suppliers::$imagePath . $s['id']; ?>.<?php echo $s['_img_ext']; ?>" target="_blank">
+						Открыть / Скачать
+					</a>
+				<?php } ?>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::a('admin-catalog-series'); ?>?supplier_id=<?php echo $s['id']; ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($s['series_cnt']); ?>
+				</a>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::a('admin-catalog-materials'); ?>?supplier_id=<?php echo $s['id']; ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($s['materials_cnt']); ?>
+				</a>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), array(
+					'id'	=> $s['id']
+				)); ?>" target="_blank" class="but-view" title="Подробности"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-edit'), array(
+					'id'	=> $s['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $s['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($suppliers)) { ?>
+		<tr><td colspan="8">Поставщики не созданы.</td></tr>
+	<?php } ?>
+
+</table>
+
+
+<a href="<?php echo Url::a('admin-catalog-suppliers-edit'); ?>" class="but-add">
+	Добавить поставщика
+</a>

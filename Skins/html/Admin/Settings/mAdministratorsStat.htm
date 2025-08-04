@@ -1,0 +1,59 @@
+<h3>Статистика активности администратора <strong><?php echo $admin['login']; ?></strong>:</h3>
+
+<br><br>
+
+<a href="<?php echo Url::a('admin-settings-administrators'); ?>" class="but-back">Вернуться</a>
+
+<table class="admin_table">
+	<tr>
+		<th>Длительность сессии</th>
+		<th>Начало</th>
+		<th>Конец</th>
+		<th>IP</th>
+	</tr>
+
+	<?php
+    $total = [];
+    $last = '';
+
+    foreach($stat as $i => $s) {
+        $start = MySQL::fromDateTime($s['time_start']);
+        $end = MySQL::fromDateTime($s['time_end']);
+        $time = Administrators_Stat::sessionDuration(
+            MySQL::fromDateTime($s['time_start']),
+            MySQL::fromDateTime($s['time_end'])
+        );
+
+        if(!isset($total[ date('d.m.Y', $start) ])) {
+            $total[ date('d.m.Y', $start) ] = MySQL::fromDateTime($s['time_end']) - MySQL::fromDateTime($s['time_start']);
+        } else {
+            $total[ date('d.m.Y', $start) ] += MySQL::fromDateTime($s['time_end']) - MySQL::fromDateTime($s['time_start']);
+        }
+    ?>
+        <?php
+        if ($last <> date('d.m.Y', $start)) {
+            if ($i > 0) {
+        ?>
+            <tr>
+                <td colspan="4" align="right" style="background-color: #dcdcdc"><?php echo Administrators_Stat::sessionDurationTotal($total[$last]); ?></td>
+            </tr>
+        <?php
+            }
+            $last = date('d.m.Y', $start);
+        }
+        ?>
+		<tr>
+			<td>
+				<?php echo $time; ?>
+			</td>
+			<td><?php echo date('d.m.Y / H:i:s', $start); ?></td>
+			<td><?php echo date('d.m.Y / H:i:s', $end) ?></td>
+			<td>
+				<?php echo long2ip($s['ip']); ?>
+			</td>
+		</tr>
+	<?php }
+    ?>
+</table>
+
+<a href="<?php echo Url::a('admin-settings-administrators'); ?>" class="but-back">Вернуться</a>

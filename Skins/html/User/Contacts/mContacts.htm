@@ -1,0 +1,356 @@
+﻿<?php if(!$ajaxForm) { ?>
+	<div id="title" class="title">
+		<div class="centering">
+			<div class="centeringin clearfix">
+				<?php if(count($breadcrumbs)) { ?>
+					<?php $bcLast = array_pop($breadcrumbs); ?>
+					<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+						<?php $position = 0; ?>
+						<?php foreach($breadcrumbs as $bc) { ?>
+							<?php $position = $position + 1 ?>
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+								<a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
+									itemid="<?php echo $bc['url']; ?>"
+									itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
+							    <meta itemprop="position" content="<?php echo $position?>" />
+							</li>
+							<li><span> / </span></li>
+						<?php } ?>
+						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+							<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
+								<span itemprop="name"><?php echo $bcLast['name']; ?></span>
+							</span>
+					    	<meta itemprop="position" content="<?php echo $position + 1?>" />
+						</li>
+					</ul>
+				<?php } ?>
+				<?php if(trim($pageInf['header'])) { ?>
+					<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+	<div id="content" class="content">
+		<div class="centering">
+			<div class="centeringin clearfix">
+				<?php } else { ?>
+				<script src="/Js/core/all-core.js"></script>
+<?php } ?>
+
+<div>
+	<?php if(!$ajaxForm) { ?>
+		<?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
+			<div class="contact__wrapper">
+				<div class="contact__text"><?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?></div>
+				<div class="cl"></div>
+				<?php if(!$ajaxForm) { ?>
+				<div class="shema">
+					<p><b>Схема проезда:</b></p>
+					<div>
+						<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;width=800&amp;height=600&amp;lang=ru_RU&amp;scroll=true"></script>
+					</div>
+				</div>
+				<?php } ?>
+			</div>
+			<a id="form"></a>
+		<?php } ?>
+
+		<?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
+			<div>
+				<?php echo Options::name('found-cheaper')?>
+				<div class="cl"></div>
+				<br><br><br>
+			</div>
+			<a class="form"></a>
+		<?php } ?>
+
+		<script>
+			onLoad(function(){
+				if($$$('form-errors') && $$$('form-errors').style.display != 'none'){
+					D.location.href = '#form';
+				}
+			});
+		</script>
+
+	<?php } else { ?>
+		<?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
+			<?php $fc = trim(Options::name('found-cheaper')); ?>
+			<?php if($fc !== '' && $fc !== '&nbsp;') { ?>
+				<div>
+					<?php echo Options::name('found-cheaper')?>
+					<div class="cl"></div>
+					<br><br>
+				</div>
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
+
+    <?php if(!$ajaxForm) { ?>
+    <div style="margin-top: 20px;"><br></div>
+
+    <h2>Адреса пунктов выдачи заказов</h2>
+
+    <div id="points">
+        <?php
+        $city = '';
+        $letter = '';
+        $i = 0;
+        $itemNumber = 0;
+        foreach ($points as $c => $point) {
+            $itemNumber++;
+            ?>
+            <?php if($city != $c) {
+                ?>
+                <?php if($i == 0) { ?><div class="item"><?php } ?>
+                <div>
+                    <?php if (mb_substr($c, 0, 1) !== $letter) { ?><p class="letter"><b><?php echo mb_substr($c, 0, 1); ?></b></p><?php $letter = mb_substr($c, 0, 1); } ?>
+                    <div class="toggle-container">
+                        <a href="#" class="toggle-link" data-target="#contentBlock<?php echo $itemNumber; ?>"><?php echo $c; ?></a>
+                        <div class="content-block" id="contentBlock<?php echo $itemNumber; ?>">
+                        <?php foreach ($point as $p) { ?>
+                            <p><?php echo $p; ?></p>
+                        <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            <?php if($i == 101) { ?></div><?php } ?>
+            <?php
+            $city = $c;
+            } ?>
+        <?php
+            $i++;
+            if ($i > 101) {
+                $i = 0;
+            }
+        } ?>
+        <?php if ($i < 100) { echo "</div>"; } ?>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleLinks = document.querySelectorAll('.toggle-link');
+
+            toggleLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    // Получаем целевой блок из атрибута data-target
+                    const targetBlockId = this.getAttribute('data-target');
+                    const targetBlock = document.querySelector(targetBlockId);
+
+                    document.querySelectorAll('.toggle-link.bold').forEach(block => {
+                            block.classList.remove('bold');
+                    });
+
+
+                    // Переключаем жирный текст ссылки
+                    link.classList.toggle('bold');
+
+                    // Скрываем все блоки, которые были открыты для других ссылок
+                    document.querySelectorAll('.content-block.show').forEach(block => {
+                        if (block !== targetBlock) {
+                            block.classList.remove('show');
+                        }
+                    });
+
+                    // Переключаем класс 'show' для целевого блока
+                    targetBlock.classList.toggle('show');
+                });
+            });
+        });
+
+    </script>
+
+    <div style="margin-top: 20px;"><br></div>
+
+        <h2>Есть вопросы? Напишите нам!</h2>
+        <p><br><br></p>
+    <?php } ?>
+
+	<div id="form-errors" class="errortext"></div>
+	<div class="someform clearfix">
+		<?php if($ajaxForm) { ?><form id="contacts-form1"><?php } else { ?><form id="contacts-form"><?php } ?>
+			<?php if($ajaxForm) { ?>
+				<input type="hidden" name="XMLHttpRequest" value="1">
+			<script>
+				function _processform_contacts(){
+					var obForm = top.BX('contacts-form1');
+					top.BX.bind(
+						obForm,
+						'submit',
+						function(){
+							BX.ajax.submitComponentForm(this, 'contacts-form1', true);
+						}
+					);
+					top.BX.removeCustomEvent('onAjaxSuccess', _processform_contacts);
+				}
+				if(top.BX('contacts-form1')){
+					_processform_contacts();
+				}else{
+					top.BX.addCustomEvent('onAjaxSuccess', _processform_contacts);
+				}
+			</script>
+
+			<script>
+				grecaptcha.render('captcha_contacts-form1', {'sitekey' : '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
+			</script>
+			<?php } ?>
+			<div class="line clearfix">
+				<input type="text" name="name" value="" placeholder="Ваше имя*:"
+					   maxlength="100"
+					   msg_maxlen="Имя не должно превышать 100 символов"
+					   required
+					   msg_required="Вы не ввели ваше имя"
+					>
+			</div>
+			<div class="line clearfix">
+				<input type="text" name="email" value="" placeholder="Ваш E-mail:"
+					   maxlength="1000"
+					   msg_maxlen="E-mail не должен превышать 1000 символов"
+					>
+			</div>
+			<div class="line clearfix">
+				<input class="maskPhone" type="text" name="phone" value="" placeholder="Номер телефона:"
+					   maxlength="20"
+					   required
+					   msg_maxlen="Номер телефона не должен превышать 20 символов"
+					>
+			</div>
+			<div class="line clearfix">
+				<textarea name="text" placeholder="Текст сообщения:"
+						  maxlength="5000"
+						  msg_maxlen="Текст сообщения не должен превышать 5000 символов"
+					></textarea>
+			</div>
+			<div class="line clearfix">
+				<?php if($ajaxForm) { ?> <div class="captcha-item" id="captcha_contacts-form1"></div>
+				<?php } else { ?><div class="captcha-item" id="captcha_contacts-form"></div><?php } ?>
+                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
+                <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>">
+			</div>
+
+<?php
+header('Content-Type: text/html; charset=utf-8');
+$asdkapcha1 = mt_rand(11, 20);
+$asdkapcha2 = mt_rand(1, 10);
+$asdkapcha3 = mt_rand(1, 2);
+if ($asdkapcha3 == 1) $asdkapcha3 = "+";
+if ($asdkapcha3 == 2) $asdkapcha3 = "-";
+$randkapcha = $asdkapcha1.$asdkapcha3.$asdkapcha2;
+$randkapchasrav = $asdkapcha1.','.$asdkapcha3.','.$asdkapcha2;
+
+if (isset($_POST["butkapcha"])) {
+    $randkapchasravall = explode(',', $_POST["randkapchasrav"]);
+    if ($randkapchasravall[1] == "+") $randkapchasravalls = $randkapchasravall[0] + $randkapchasravall[2];
+    if ($randkapchasravall[1] == "-") $randkapchasravalls = $randkapchasravall[0] - $randkapchasravall[2];
+}
+/*
+        <div class="line clearfix">
+            Сколько будет: <?php echo $randkapcha;? >?
+            <input type="text" required   name="randkapcha" />
+            <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
+        </div>
+
+ */
+?>
+			<div class="line buttons clearfix">
+				<input class="btn btn1" type="submit" name="submit" value="Отправить">
+			</div>
+		</form>
+
+	</div>
+</div>
+</div>
+<?php if(!$ajaxForm) { ?>
+			</div>
+		</div>
+	</div>
+<?php } ?>
+
+<style>
+
+.cookie_notice {
+	display: none;
+	position: fixed;
+	z-index: 9999999;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	font-size: 15px;
+	font-family: Verdana, sans-serif;
+	color: #FFF;
+	background: #337AB7;
+	padding: 10px 20px;
+	border-top: 4px solid #BFE2FF;
+}
+/* Оформление кнопок */
+.cookie_btn {
+	display: inline-block;
+	margin: 10px 6px 4px 6px;
+	text-decoration: none;
+	position: relative;
+	font-size: 13px;
+	padding: 4px 12px;
+	color: #FFF;
+	font-weight: bold;
+	text-transform: uppercase;
+	background: #337AB7;
+	border: 2px solid #BFE2FF;
+}
+.cookie_btn:hover {
+	color: #FFF;
+}
+.cookie_btn:after,
+.cookie_btn:before {
+	position: absolute;
+	height: 2px;
+	left: 50%;
+	background: #FFF;
+	bottom: -6px;
+	content: "";
+	transition: all 280ms ease-in-out;
+	width: 0;
+}
+.cookie_btn:before {
+	top: -6px;
+}
+.cookie_btn:hover:after,
+.cookie_btn:hover:before {
+	width: 100%;
+	left: 0;
+}
+</style>
+
+<div class="cookie_notice">
+    Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей (данные об IP-адресе, местоположении и др.) для обеспечения работоспособности и улучшения качества обслуживания. Продолжая использовать наш сайт, вы автоматически соглашаетесь с использованием данных технологий.
+    <div>
+        <a class="cookie_btn" id="cookie_close" href="#close">Ок</a>
+
+    </div>
+</div>
+
+<script>
+// функция возвращает cookie с именем name, если есть, если нет, то undefined
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	));
+	return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+let cookiecook = getCookie("cookiecook"),
+cookiewin = document.getElementsByClassName('cookie_notice')[0];
+// проверяем, есть ли у нас cookie, с которой мы не показываем окно и если нет, запускаем показ
+if (cookiecook != "no") {
+	// показываем
+	cookiewin.style.display="block";
+	// закрываем по клику
+	document.getElementById("cookie_close").addEventListener("click", function(){
+		cookiewin.style.display="none";
+		// записываем cookie на 1 день, с которой мы не показываем окно
+		let date = new Date;
+		date.setDate(date.getDate() + 1);
+		document.cookie = "cookiecook=no; path=/; expires=" + date.toUTCString();
+	});
+}
+</script>

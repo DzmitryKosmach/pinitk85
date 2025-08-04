@@ -1,0 +1,38 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование блока связей между сериями
+		<?php } else { ?>
+			Добавление блока связей между сериями
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название блока"
+		>
+	<br><br>
+
+	Цвет заголовка <b class="red">*</b>:
+	<input name="color_name" type="color"
+		   required
+		   msg_required="Введите цвет заголовка блока"
+		><br>
+	<b class="small">
+		Укажите цвет в <a href="http://ru.wikipedia.org/wiki/Цвета_HTML" target="_blank">шестнадцатиричном формате</a>, например: #FF0000
+	</b>
+	<br><br>
+
+	<input name="sidecol" id="sidecol" type="checkbox" value="1">
+	<label for="sidecol">Отобразить блок в правой колонке на страницах серий</label>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-catalog-series-linkages'); ?>" class="but-back">Вернуться</a>

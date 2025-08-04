@@ -1,0 +1,60 @@
+<h3>Сведения о поставщике</h3>
+<br><br>
+
+<h4>Основные параметры</h4>
+
+<strong>Наименование производителя:</strong><br>
+<?php echo $supplier['name']; ?>
+<br><br>
+
+<strong>Условия работы:</strong><br>
+<?php echo $supplier['description']; ?>
+<br><br>
+
+<strong>Контактное лицо:</strong><br>
+<?php echo $supplier['fio']; ?>
+<br><br>
+
+<strong>Телефон(ы):</strong><br>
+<?php echo $supplier['phone']; ?>
+<br><br>
+
+<strong>E-mail:</strong><br>
+<?php echo $supplier['email']; ?>
+<br><br>
+
+<?php if($supplier['_img_ext']) { ?>
+	<strong>Схема проезда:</strong><br>
+	<a href="<?php echo Config::pathRel('images') . Catalog_Suppliers::$imagePath . $supplier['id']; ?>.<?php echo $supplier['_img_ext']; ?>" target="_blank">
+		Открыть / Скачать
+	</a>
+	<br><br>
+<?php } ?>
+
+
+<br><br><br><br>
+
+<h4>Дополнительно</h4>
+
+<strong>Условия скидки:</strong><br>
+<?php if(trim($supplier['discount']) !== '') { ?>
+	<?php echo $supplier['discount']; ?>
+<?php } else { ?>
+	<em>Нет</em>
+<?php } ?>
+<br><br>
+
+<strong>Условия доставки:</strong><br>
+<?php if(trim($supplier['delivery']) !== '') { ?>
+	<?php echo $supplier['delivery']; ?>
+<?php } else { ?>
+	<em>Нет</em>
+<?php } ?>
+<br><br>
+
+<strong>Условия сборки:</strong><br>
+<?php if(trim($supplier['assembly']) !== '') { ?>
+	<?php echo $supplier['assembly']; ?>
+<?php } else { ?>
+	<em>Нет</em>
+<?php } ?>

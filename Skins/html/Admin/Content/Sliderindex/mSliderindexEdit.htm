@@ -1,0 +1,48 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование картинки в слайдере на главной странице
+		<?php } else { ?>
+			Добавление картинки в слайдер на главной странице
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<?php $h = intval(Options::name('index-slider-height')); ?>
+
+	Картинка <b class="red">*</b>:<br>
+	<?php if($init['_img_ext']) { ?>
+		<a href="<?php echo Config::pathRel('images') . Slider_Index::$imagePath . $init['id']?>.<?php echo $init['_img_ext']?>" target="_blank" onclick="return hs.expand(this)">
+			<img src="<?php echo Config::pathRel('images') . Slider_Index::$imagePath . $init['id']?>_198x0<?php //=round($h/5)?>_1.<?php echo $init['_img_ext']?>" alt="" style="border: 1px solid #CCC">
+		</a><br>
+	<?php } ?>
+	<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+	<b class="small">
+		Форматы: JPG, GIF, PNG.<br>
+		Рекомендуемый размер: 990x406<?php //=$h?> пикс.<br>
+		Максимальный размер: 3200x2400 пикс.<br>
+		<?php /*<a href="<?php echo Url::a('admin-options')?>?id=15&mode=<?php echo Options::MODE_TEXT?>&ret=<?php echo urlencode(Url::buildUrl(0, $_GET))?>&menu=<?php echo Admin::CONTENT?>">Настроить высоту слайдера</a>*/?>
+	</b>
+	<br><br>
+
+	Параметр ALT картинки:<br>
+	<input name="alt" type="text" size="50">
+	<br><br>
+
+	URL ссылки:<br>
+	<input name="link" type="text" size="50"><br>
+	<b class="small">Оставьте пустым, чтобы картинка не была ссылкой</b>
+	<br><br>
+
+	<input name="active" id="active" type="checkbox" value="1">
+	<label for="active">Картинка активна</label>
+	<br><br>
+
+	<br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo Url::a('admin-content-sliderindex')?>" class="but-back">Вернуться</a>

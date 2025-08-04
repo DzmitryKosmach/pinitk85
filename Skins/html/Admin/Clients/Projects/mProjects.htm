@@ -1,0 +1,83 @@
+<h3>Наши проекты:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-clients-projects-edit'); ?>" class="but-add">
+	Добавить проект
+</a>
+
+<script>
+	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableDirect = 'DESC';
+</script>
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Фото</th>
+		<th>Название / Город</th>
+		<th>URL</th>
+		<th class="small1">На главной стр.</th>
+		<th class="small1">Фотографии / Схемы</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($projects as $p) { ?>
+		<tr>
+			<td class="dragSort-id"><?php echo $p['id']; ?></td>
+			<td>
+				<?php if($p['1st_photo']) { ?>
+					<a href="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['1st_photo']['id']; ?>.<?php echo $p['1st_photo']['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['1st_photo']['id']; ?>_165x86_0.<?php echo $p['1st_photo']['_img_ext']; ?>" width="165" height="86" alt="" style="border: 1px solid #CCC">
+					</a>
+				<?php } ?>
+			</td>
+			<td>
+				<?php echo News::date(MySQL::fromDate($p['date']), false); ?><br>
+				<strong><?php echo $p['name']; ?></strong><br>
+				<?php echo $p['city']; ?>
+			</td>
+			<td class="courier">
+				<a href="<?php echo Clients_Projects::a($p['id']); ?>" target="_blank">
+					http://<?php echo $_SERVER['HTTP_HOST'] . Clients_Projects::a($p['id']); ?>
+				</a>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act' => 'setopt',
+					'itemid' => $p['id'],
+					'opt' => 'in_index'
+				)); ?>" class="but-opt" title="Показать проект на главной странице">
+					<?php echo $p['in_index'] ? 1 : 0?>
+				</a>
+			</td>
+			<td style="text-align: center">
+				<a href="<?php echo Url::buildUrl(Url::a('admin-clients-projects-pics'), array(
+					'p'		=> $p['id']
+				)); ?>" class="but-view" title="Перейти к списку">
+					<?php echo intval($p['images_cnt']); ?>
+				</a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-clients-projects-edit'), array(
+					'id'	=> $p['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $p['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+			<td class="dragSort-pull"></td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($projects)) { ?>
+		<tr><td colspan="9">
+			Проекты не созданы
+		</td></tr>
+	<?php } ?>
+</table>
+
+<a href="<?php echo Url::a('admin-clients-projects-edit'); ?>" class="but-add">
+	Добавить проект
+</a>

@@ -1,0 +1,270 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование <?php if($parentId) { ?>под<?php } ?>категории каталога
+		<?php } else { ?>
+			Добавление <?php if($parentId) { ?>под<?php } ?>категории каталога
+		<?php } ?>
+		<?php if($parentId) { ?>
+			в категории <b><?=Catalog_Categories::name($parentId)?></b>
+		<?php } else { ?>
+			верхнего уровня
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	<?php if(!$parentId) { ?>
+		Перенести категорию на поддомен:<br>
+		<select name="domain_id">
+			<option value="0"><?=_HOST?></option>
+			<?php foreach($domains as $id => $d) { ?>
+				<option value="<?=$id?>"><?=$d?></option>
+			<?php } ?>
+		</select>
+		<br><br>
+	<?php } ?>
+
+	Родительская категория:<br>
+	<select name="parent_id" style="max-width: 700px">
+		<option value="0"> - верхний уровень - </option>
+		<?php
+		// Рекурсивно выводим всё дерево категорий
+		function showTree($catTree, $currentCat = 0, $level = 1){
+			if($level >= Catalog_Categories::MAX_DEEP_LEVEL) return;
+
+			foreach($catTree as $c){
+				if($currentCat == $c['id']) continue;
+
+				print '<option value="' . $c['id'] . '">' . Catalog_Categories::name($c['id']) . '</option>';
+				if(count($c['sub'])){
+					showTree($c['sub'], $currentCat, $level + 1);
+				}
+			}
+		}
+		showTree($catTree, $init['id']);
+		?>
+	</select>
+	<br><br>
+
+	Название <b class="red">*</b>:<br>
+	<input name="name" id="name" type="text" size="50"
+		   required
+		   msg_required="Введите название категории"
+		>
+	<a href="javascript:void(0)"
+		onclick="oTranslate.intoCallback($$$('name').value, function(tr){makeURL(tr, $$$('url'))}); return false;"
+		class="generate_lnk"
+		>
+		&dArr; Перевод
+	</a>
+	<br><br>
+
+	<?php /*if(!$parentId):*/?>
+		Картинка категории <b class="red">*</b>:<br>
+		<?php if(intval($init['id']) && $init['_img_ext']) { ?>
+			<img src="<?=Config::pathRel('images') . Catalog_Categories::$imagePath . $init['id']?>_212x159_0.<?=$init['_img_ext']?>" width="212" height="159" alt="" style="border: 1px solid #CCC">
+			<br>
+		<?php } ?>
+		<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+		<b class="small">
+			Форматы: JPG, GIF, PNG.<br>
+			Рекомендуемый размер: 212x159 пикс.<br>
+			Максимальный размер: 3200x2400 пикс.
+		</b>
+		<br><br>
+	<?php /*endif*/?>
+
+
+	Псевдо-адрес страницы категории (URL) <b class="red">*</b>:<br>
+	<div style="float: left; line-height: 21px; font-weight: bold">http://<?=$_SERVER['HTTP_HOST'] . ($parentId ? Catalog_Categories::a($parentId) : Url::a(/*'catalog'*/'index'))?></div>
+	<input name="url" id="url" type="text" size="50"
+		   required
+		   msg_required="Введите URL страницы категории"
+		   pattern="[A-Za-z0-9\-]+"
+		   msg_pattern="URL страницы категории должен содержать только буквы, числа и '-' (дефис)">
+	<a href="javascript:void(0)" onclick="makeURL($$$('name'), $$$('url')); return false;" class="generate_lnk">&lArr; Сгенерировать</a>
+	<div class="cl"></div>
+	<br><br>
+
+	<script>
+		function changeHasSubcats(){
+			if(!$$$('has_subcats-0') || $$$('has_subcats-0').checked){
+				$$$('filters').style.display = 'block';
+			}else{
+				$$$('filters').style.display = 'none';
+			}
+		}
+		onLoad(function(){
+			changeHasSubcats();
+		});
+	</script>
+
+	<?php if($catDeepLevel < Catalog_Categories::MAX_DEEP_LEVEL) { ?>
+		Категория содержит:
+		<input type="radio" name="has_subcats" id="has_subcats-0" value="0" onchange="changeHasSubcats()">
+		<label for="has_subcats-0">Серии</label>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="radio" name="has_subcats" id="has_subcats-1" value="1" onchange="changeHasSubcats()">
+		<label for="has_subcats-1">Подкатегории</label>
+		<br><br><br>
+	<?php } ?>
+
+	<?php if(!$parentId) { ?>
+		<input name="in_index" id="in_index" type="checkbox" value="1">
+		<label for="in_index">
+			Показать серии категории (или её подкатегорий) на главной странице сайта
+		</label>
+		<br><br>
+
+		<input name="use_noindex" id="use_noindex" type="checkbox" value="1">
+		<label for="use_noindex">
+			Закрыть ссылки на серию от индексации через &lt;noindex&gt;
+		</label>
+		<br><br>
+
+		<input name="use_nofollow" id="use_nofollow" type="checkbox" value="1">
+		<label for="use_nofollow">
+			Закрыть ссылки на серию от индексации через rel=&quot;nofollow&quot;
+		</label>
+		<br><br>
+	<?php } ?>
+
+	Выгрузка в файл для Яндекс.Маркета:<br>
+	<select name="yml_file_id">
+		<?php foreach($ymlFiles as $fId => $fName) { ?>
+			<option value="<?=$fId?>"><?=$fName?></option>
+		<?php } ?>
+	</select>
+	<br><br>
+
+
+
+	<div id="filters">
+		<br><br><br><br>
+
+		<h4>Дополнительно</h4>
+
+		Надпись перед полем поиска по цене:<br>
+		<input name="price_search_title" type="text" size="20"><br>
+		<b class="small">
+			Пример: &laquo;Цена столов&raquo;
+		</b>
+		<br><br>
+
+		Подпись к цене серии:<br>
+		<input name="price_search_title_series" type="text" size="20"><br>
+		<b class="small">
+			Отображается перед мин. ценой из группы, когда серии выводятся на страницу списком.<br>
+			Пример: &laquo;Столы от&raquo;
+		</b>
+		<br><br>
+
+		<?php /*Фильтры в категории:<br><br>
+		<table class="admin_table">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Фильтр</th>
+			</tr>
+			<?php foreach($filters as $f) { ?>
+				<tr>
+					<td>
+						<input type="checkbox" name="filters[]" value="<?=$f['id']?>" id="filters-<?=$f['id']?>" title="<?=hsch($f['name'])?>">
+					</td>
+					<td>
+						<label for="filters-<?=$f['id']?>">
+							<?=$f['name']?>
+							<?php if(!$f['display']) { ?>
+								<em>(не отображается на сайте)</em>
+							<?php } ?>
+						</label>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+		<br><br>*/?>
+
+		Информация о доставке и сборке для страниц серий:<br>
+		<ckeditor name="series_info" width="80%" height="300" toolbar="Mini"></ckeditor><br>
+		<b class="small">
+			Отображается на страницах серий категории.<br>
+			В тексте описания условий доставки и сборки можно использовать два специальных обозначения:<br>
+			[name] - будет автоматически заменено на название серии;<br>
+			%d% - будет автоматически заменено на стоимость ДОСТАВКИ для данного товара(-ов);<br>
+			%a% - будет автоматически заменено на стоимость СБОРКИ для данного товара(-ов);<br>
+			%F% - будет автоматически заменено на стоимость РАЗГРУЗКИ для данного товара(-ов).
+		</b>
+		<br><br>
+	</div>
+
+	<br><br><br><br>
+
+	<h4>Содержание</h4>
+
+	Тайтл страницы:<br>
+	<input name="title" type="text" size="100"><br>
+	<b class="small">
+		Место тайтла, где должен автоматически вставляться номер страницы списка серий, нужно обозначить так:<br>
+		<span class="courier">... {Страница %%%} ...</span><br>
+		Т.е. на первой странице списка всё, что в фигурных скобках, будет скрыто, а на 2-й и далее - оно будет отоображаться, а %%% заменится на номер страницы
+	</b>
+	<br><br>
+
+	Заголовок страницы (тег &lt;H1&gt;):<br>
+	<input name="h1" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	Текст описания:<br>
+	<ckeditor name="text" width="100%" height="400" toolbar="Full"></ckeditor>
+	<br><br>
+
+	<br><br><br><br>
+
+	<h4>Параметры подраздела &laquo;Распродажа&raquo;</h4>
+
+	Текст на кнопке:<br>
+	<textarea name="discounts_button" style="width: 300px; height: 40px;"></textarea>
+	<br><br>
+
+	Тайтл страницы:<br>
+	<input name="discounts_title" type="text" size="100"><br>
+	<b class="small">
+		Место тайтла, где должен автоматически вставляться номер страницы списка серий, нужно обозначить так:<br>
+		<span class="courier">... {Страница %%%} ...</span><br>
+		Т.е. на первой странице списка всё, что в фигурных скобках, будет скрыто, а на 2-й и далее - оно будет отоображаться, а %%% заменится на номер страницы
+	</b>
+	<br><br>
+
+	Заголовок страницы (тег &lt;H1&gt;):<br>
+	<input name="discounts_h1" type="text" size="50">
+	<br><br>
+
+	Мета-тэг description (описание):<br>
+	<input name="discounts_dscr" type="text" size="100">
+	<br><br>
+
+	<?php /*Мета-тэг keywords (ключевые слова):<br>
+	<input name="discounts_kwrd" type="text" size="100">
+	<br><br>*/?>
+
+	Текст описания:<br>
+	<ckeditor name="discounts_text" width="100%" height="400" toolbar="Full"></ckeditor>
+	<br><br>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?=Url::a('admin-catalog-categories')?>p_<?=$parentId?>/" class="but-back">Вернуться</a>

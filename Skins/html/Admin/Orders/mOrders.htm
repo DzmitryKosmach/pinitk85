@@ -1,0 +1,291 @@
+<h3>Оформленные заказы:</h3>
+<br><br>
+
+<form action="<?php Url::buildUrl(0); ?>" method="get">
+	<input type="radio" name="in_archive" id="in_archive-0" value="0" <?php if(!intval($_GET['in_archive'])) { ?>checked<?php } ?>>
+	<label for="in_archive-0">Новые заказы</label>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="in_archive" id="in_archive-1" value="1" <?php if(intval($_GET['in_archive'])) { ?>checked<?php } ?>>
+	<label for="in_archive-1">Архив</label>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+
+	<input type="submit" value="Показать">
+</form>
+<br><br>
+
+<?php echo $toggle; ?>
+
+<style type="text/css">
+	.material {
+		display: table;
+		margin-left: 2px;
+	}
+	.material .image,
+	.material .name {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.material .image {
+		width: 25px;
+	}
+	.material .name {
+		font-size: 10px;
+	}
+	.material .name:first-line {
+		font-weight: bold;
+	}
+	.price,
+	.amount {
+		text-align: right;
+		white-space: nowrap;
+	}
+</style>
+
+<table class="admin_table">
+	<tr>
+		<th>Информация о заказе</th>
+		<th>Заказанные товары</th>
+	</tr>
+
+	<?php foreach($orders as $o) { ?>
+		<?php
+		$cart = $o['cart'];
+		$options = $o['options'];
+		$user = $o['user'];
+		?>
+		<tr>
+			<td style="vertical-align: top">
+				ID заказа: <strong><?php echo $o['id']; ?></strong><br>
+				Оформлен: <strong><?php echo date('d.m.Y H:i', MySQL::fromDateTime($o['date'])); ?></strong>
+				<br><br>
+				<table class="simple">
+					<tr>
+						<td>Имя:</td>
+						<td><?php echo $user['fio']; ?></td>
+					</tr>
+					<tr>
+						<td>Телефон:</td>
+						<td><?php echo $user['phone']; ?></td>
+					</tr>
+					<?php if($o['paymethod'] !== Orders::PAYMETHOD_NO) { ?>
+						<tr>
+							<td>E-mail:</td>
+							<td><?php echo $user['email']; ?></td>
+						</tr>
+						<tr>
+							<td>Город:</td>
+							<td><?php echo $user['city']; ?></td>
+						</tr>
+						<tr>
+							<td>Адрес:</td>
+							<td><?php echo $user['address']; ?></td>
+						</tr>
+					<?php } ?>
+					<tr>
+						<td>Дополнительно:</td>
+						<td><?php echo nl2br($user['info']); ?></td>
+					</tr>
+				</table>
+				<br><br>
+
+				Способ оплаты:
+				<strong><?php echo Orders::$paymethods[$o['paymethod']]; ?></strong>
+				<br><br>
+
+				<form action="<?php Url::buildUrl(0); ?>" method="get">
+					Статус:<br>
+					<select name="status">
+						<?php foreach($statuses as $s) { ?>
+							<option value="<?php echo $s['id']; ?>" style="color: <?php echo $s['color']; ?>" <?php if($o['status_id'] == $s['id']) { ?>selected<?php } ?>>
+								<?php echo $s['name']; ?>
+							</option>
+						<?php } ?>
+					</select>
+					<input type="hidden" name="order_id" value="<?php echo $o['id']; ?>">
+					<input type="submit" value="Ok">
+				</form>
+				<br>
+
+				<a href="<?php echo Url::buildUrl(0, array(
+					'act'	=> 'setopt',
+					'itemid'=> $o['id'],
+					'opt'	=> 'in_archive',
+					'msg'	=> ($o['in_archive'] ? 'Заказ перемещён в &quot;Новые заказы&quot;' : 'Заказ перемещён в &quot;Архив заказов&quot;')
+				)); ?>"
+					><?php if($o['in_archive']) { ?>В новые заказы<?php } else { ?>В архив<?php } ?></a>
+				<br><br>
+
+				<a class="red"
+				   href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $o['id'])); ?>"
+				   onclick="return window.confirm('Вы действительно хотите удалить заказ из базы сайта?')"
+					>Удалить</a>
+				<br><br>
+
+				<a href="<?php echo Orders::a($o['id']); ?>" target="_blank">Страница мониторинга заказа</a>
+			</td>
+			<td style="vertical-align: top">
+				<table class="simple smalltext">
+					<tr>
+						<th>Серия / Наименование / Артикул</th>
+						<th>Цвет</th>
+						<th>Размер / Масса / Объём</th>
+                        <th>К-во</th>
+                        <th>Цена (вход.)</th>
+                        <th>Цена (выход.)</th>
+						<th>Сумма</th>
+						<th>Поставщик</th>
+					</tr>
+					<?php
+					$totalWeight = 0;
+					$totalVolume = 0;
+					?>
+					<?php foreach($cart as $c) { ?>
+						<?php
+						$totalWeight += $c['item']['weight'];
+						$totalVolume += $c['item']['volume'];
+						?>
+						<tr>
+							<td>
+								<?php if($c['series']) { ?>
+									<a href="<?php echo Catalog_Series::a($c['series']); ?>" target="_blank"><?php echo $c['series']['name']; ?></a><br>
+								<?php } ?>
+								<?php /*<a href="<?php echo Catalog_Items::a($c['series'], $c['item']); ?>" target="_blank">*/?>
+									<strong><?php echo $c['item']['name']; ?> <?php echo $c['item']['art']; ?></strong>
+								<?php /*</a>*/?>
+							</td>
+							<td>
+								<?php if($c['material']) { ?>
+									<div class="material">
+										<div class="image">
+											<?php if($c['material']['_img_ext']) { ?>
+											<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+												<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_20x20_0.<?php echo $c['material']['_img_ext']; ?>" width="20" height="20" alt="">
+											</a>
+											<?php } ?>
+										</div>
+										<div class="name"><?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?></div>
+									</div>
+								<?php } else { ?>
+									&nbsp;
+								<?php } ?>
+							</td>
+							<td>
+								<?php echo $c['item']['size']; ?><br>
+								<?php echo $c['item']['weight']; ?> кг<br>
+								<?php echo $c['item']['volume']; ?> м&sup3;
+							</td>
+                            <td class="amount" style="text-align: center">
+                                <?php echo (int)$c['amount']; ?>
+                                шт
+                            </td>
+							<td class="price">
+								<?php echo Catalog::priceFormat($c['price-in']); ?>
+								р.
+							</td>
+							<td class="price">
+								<?php echo Catalog::priceFormat($c['price']); ?>
+								р.
+							</td>
+							<td class="price">
+								<?php echo Catalog::priceFormat($c['price'] * (int)$c['amount']); ?>
+								р.
+							</td>
+                            <td>
+                                <a href="<?php echo Url::buildUrl(Url::a('admin-catalog-suppliers-view'), ['id'	=> $suppliers[$c['series']['id']]['supplier_id']]);  ?>" target="_blank">
+                                    <?php echo $suppliers[$c['series']['id']]['name']; ?>
+                                </a>
+                            </td>
+						</tr>
+					<?php } ?>
+					<?php if($o['paymethod'] !== Orders::PAYMETHOD_NO) { ?>
+						<tr>
+							<td>
+								<strong>Доставка:</strong>
+							</td>
+							<td colspan="4">
+								<strong><?php echo $options[Orders_Options::DELIVERY]['info']; ?></strong>
+							</td>
+							<td colspan="2" class="price">
+								<?php echo Catalog::priceFormat($options[Orders_Options::DELIVERY]['price']); ?>
+								р.
+							</td>
+                            <td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Разгрузка:</strong>
+							</td>
+							<td colspan="4">
+								<strong><?php echo $options[Orders_Options::UNLOADING]['info']; ?></strong>
+							</td>
+							<td colspan="2" class="price">
+								<?php echo Catalog::priceFormat($options[Orders_Options::UNLOADING]['price']); ?>
+								р.
+							</td>
+                            <td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Сборка:</strong>
+							</td>
+							<td colspan="4">
+								<strong><?php echo $options[Orders_Options::ASSEMBLY]['info']; ?></strong>
+							</td>
+							<td colspan="2" class="price">
+								<?php echo Catalog::priceFormat($options[Orders_Options::ASSEMBLY]['price']); ?>
+								р.
+							</td>
+                            <td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>Вывоз мусора:</strong>
+							</td>
+							<td colspan="4">
+								<strong><?php echo $options[Orders_Options::GARBAGE]['info']; ?></strong>
+							</td>
+							<td colspan="2" class="price">
+								<?php echo Catalog::priceFormat($options[Orders_Options::GARBAGE]['price']); ?>
+								р.
+							</td>
+                            <td>&nbsp;</td>
+						</tr>
+					<?php } ?>
+					<tr>
+						<td colspan="2">
+							<strong>Итого:</strong>
+						</td>
+						<td style="white-space: nowrap;">
+							<strong><?php echo $totalWeight; ?></strong> кг<br>
+							<strong><?php echo $totalVolume; ?></strong> м&sup3;
+						</td>
+						<td colspan="2" class="price">
+							Маржа:
+							<strong>
+								<?php echo Catalog::priceFormat($o['price_out'] - $o['price_in']); ?>
+								р.
+							</strong>
+						</td>
+						<td colspan="2" class="price">
+							<strong>
+								<?php if($o['paymethod'] !== Orders::PAYMETHOD_NO) { ?>
+									<?php echo Catalog::priceFormat($o['price_out'] + $o['price_options']); ?>
+								<?php } else { ?>
+									<?php echo Catalog::priceFormat($o['price_out']); ?>
+								<?php } ?>
+								р.
+							</strong>
+						</td>
+                        <td>&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($orders)) { ?>
+		<tr><td colspan="7">Заказы не найдены.</td></tr>
+	<?php } ?>
+</table>
+
+<?php echo $toggle; ?>

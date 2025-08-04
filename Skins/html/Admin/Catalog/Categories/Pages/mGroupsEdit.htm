@@ -1,0 +1,43 @@
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование группы теговых страниц в категории <strong>&laquo;<?=Catalog_Categories::name($categoryInf['id'])?>&raquo;</strong>
+		<?php } else { ?>
+			Добавление группы теговых страниц в категории <strong>&laquo;<?=Catalog_Categories::name($categoryInf['id'])?>&raquo;</strong>
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	Название группы <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50"
+		   required
+		   msg_required="Введите название группы"
+		>
+	<br><br>
+
+	<input name="in_series_list" id="in_series_list" type="checkbox" value="1">
+	<label for="in_series_list">
+		Показать теги данной группы в сериях (в списке серий)
+	</label>
+	<br><br>
+
+	<input name="opened" id="opened" type="checkbox" value="1">
+	<label for="opened">
+		Развернуть список тегов в поисковом фильтре
+	</label>
+	<br><br>
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php
+echo Url::buildUrl(
+    Url::a('admin-catalog-categories-groups'),
+    [
+	    'c'	=> $categoryInf['id']
+    ]
+); ?>" class="but-back">Вернуться</a>

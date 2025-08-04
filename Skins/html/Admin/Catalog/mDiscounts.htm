@@ -1,0 +1,156 @@
+<form action="">
+	<h3>
+		Массовая настройка скидок на товары
+	</h3>
+
+	<br><br>
+
+	<script>
+		/**
+		 * Выбрать все пункты в мультиселекте
+		 * @param elMultiselect
+		 */
+		function selectAll(elMultiselect){
+			var options = elMultiselect.options;
+			for(var i = 0, l = options.length; i < l; i++){
+				options[i].selected = true;
+			}
+
+			if($$$(elMultiselect.id + '-count')){
+				oMultiselectCount.count(elMultiselect.id, elMultiselect.id + '-count');
+			}
+
+			if(elMultiselect.id == 'series'){
+				oDiscounts.loadItems();
+			}
+		}
+
+		/**
+		 * Массовое управлене скидками
+		 */
+		var oDiscounts = new function(){
+
+			var url = '<?php echo Url::buildUrl(0)?>?getitems=';
+
+			var elSeries, elItems;
+
+			var series = {};
+
+			onLoad(function(){
+				elSeries = $$$('series');
+				elItems = $$$('items');
+
+				var options = elSeries.options;
+				var sId, sName, cName;
+				for(var i = 0, l = options.length; i < l; i++){
+					sId = options[i].value;
+					sName = options[i].innerHTML;
+					cName = options[i].parentNode.label;
+					series[sId] = cName + ': ' + sName;
+				}
+			});
+
+			/**
+			 *
+			 */
+			this.loadItems = function(){
+				var sIds = [];
+				var options = elSeries.options;
+				for(var i = 0, l = options.length; i < l; i++){
+					if(options[i].selected){
+						sIds.push(options[i].value);
+					}
+				}
+
+				elItems.innerHTML = '<optgroup label="Загрузка..."><option value="0"></option></optgroup>';
+
+				AJAX.lookup(
+					url + encodeURIComponent(sIds.join(',')),
+					function(respond){
+						respond = AJAX.jsonDecode(respond);
+						if(respond === false) return;	// Некорректный ответ
+
+						var itemsHtml = '';
+						var item;
+						for(var sId in respond){
+							itemsHtml += '<optgroup label="' + series[sId] + '">';
+
+							for(var i = 0, l = respond[sId].length; i < l; i++){
+								item = respond[sId][i];
+								itemsHtml += '<option value="' + item.id + '">' +
+									item.name + ' ' + item.art + ' (' + item.price_min + 'р.' +
+									(item.discount > 0 ? ' / -' + item.discount + '%' : '') +
+									')' +
+									'</option>';
+							}
+
+							itemsHtml += '</optgroup>';
+						}
+						elItems.innerHTML = itemsHtml;
+					}
+				);
+			}
+		};
+
+
+	</script>
+
+	<table class="simple">
+		<tr>
+			<td style="vertical-align: top;"><h4>Выберите интересующие вас серии:</h4></td>
+			<td style="vertical-align: top;"><h4>Отметьте нужные товары:</h4></td>
+		</tr>
+		<tr>
+			<td style="vertical-align: top; padding-right: 20px">
+				Выбрано: <span id="series-count"></span>
+				<a class="small" href="javascript:void(0)" onclick="selectAll($$$('series')); return false;">(выбрать все)</a><br>
+				<script>
+					onLoad(function(){oMultiselectCount.add('series', 'series-count')});
+				</script>
+				<select id="series" multiple style="width: 280px; height: 400px" onchange="oDiscounts.loadItems()">
+					<?php foreach($seriesByCats as $cId => $series) { ?>
+						<optgroup label="<?php echo hsch(Catalog_Categories::name($cId))?>">
+							<?php foreach($series as $s) { ?>
+								<option value="<?php echo $s['id']; ?>"><?php echo $s['name']; ?></option>
+							<?php } ?>
+						</optgroup>
+					<?php } ?>
+				</select>
+				<br>
+				<b class="small">
+					Удерживайте нажатым Ctrl, чтобы выделить<br>
+					несколько пунктов сразу или снять выделение
+				</b>
+			</td>
+			<td style="vertical-align: top;">
+				Выбрано: <span id="items-count"></span>
+				<a class="small" href="javascript:void(0)" onclick="selectAll($$$('items')); return false;">(выбрать все)</a><br>
+				<script>
+					onLoad(function(){oMultiselectCount.add('items', 'items-count')});
+				</script>
+				<select name="items[]" id="items" multiple style="width: 350px; height: 400px">
+
+				</select>
+				<br>
+				<b class="small">
+					<strong>
+						Здесь отображается список товаров: Название Арт. (выход. цена / скидка)
+					</strong><br>
+					Удерживайте нажатым Ctrl, чтобы выделить<br>
+					несколько пунктов сразу или снять выделение
+				</b>
+			</td>
+		</tr>
+	</table>
+
+	<br><br>
+
+	Выбранным товарам назначить скидку:
+	<input name="discount" type="text" size="10" style="text-align: right"> %
+	<br><br>
+
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>

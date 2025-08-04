@@ -1,0 +1,119 @@
+<script>
+	function changeObj(){
+		if($$$('object').value == '<?php echo Reviews::OBJ_SERIES?>'){
+			$$$('obj-series').style.display = 'block';
+		}else{
+			$$$('obj-series').style.display = 'none';
+		}
+		changeSeriesId();
+	}
+	onLoad(function(){
+		changeObj();
+	});
+
+	function changeSeriesId(){
+		$$$('find-series').href = '<?php echo Url::a('admin-catalog-series'); ?>?id=' + $$$('object_id').value;
+	}
+	onLoad(function(){
+		changeSeriesId();
+	});
+</script>
+
+<form action="">
+	<h3>
+		<?php if(intval($init['id'])) { ?>
+			Редактирование отзыва посетителя
+		<?php } else { ?>
+			Добавление отзыва посетителя
+		<?php } ?>
+	</h3>
+
+	<br><br>
+
+	<h4>Основные параметры</h4>
+
+	Дата размещения отзыва:<br>
+	<input type="date" name="date"><br>
+	<b class="small">
+		Формат: дд.мм.гггг
+	</b>
+	<br><br>
+
+	Объект отзыва:<br>
+	<select name="object" id="object" onchange="changeObj()">
+		<option value="<?php echo Reviews::OBJ_SITE?>">О сайте</option>
+		<option value="<?php echo Reviews::OBJ_SERIES?>">О сериях мебели</option>
+	</select>
+	<br><br>
+
+	<div id="obj-series">
+		ID серии:
+		<input name="object_id" id="object_id" type="text" size="10" style="text-align: right" onchange="changeSeriesId()" onclick="changeSeriesId()" onkeyup="changeSeriesId()">
+		&nbsp;&nbsp;
+		<a id="find-series" href="<?php echo Url::a('admin-catalog-series'); ?>" target="_blank">
+			Найти серию
+		</a>
+		<br><br>
+
+		Оценка:
+		<select name="rate">
+			<option value="0">0 звёзд</option>
+			<option value="1">( * ) 1 звезда</option>
+			<option value="2">( * * ) 2 звезды</option>
+			<option value="3">( * * * ) 3 звезды</option>
+			<option value="4">( * * * * ) 4 звезды</option>
+			<option value="5">( * * * * * ) 5 звезд</option>
+		</select>
+		<br><br>
+
+		<input type="checkbox" name="rate_allow" id="rate_allow" value="1">
+		<label for="rate_allow">
+			Учитывать эту оценку в расчёте общей оценки для серии
+		</label>
+		<br><br>
+	</div>
+
+	<input type="checkbox" name="approved" id="approved" value="1">
+	<label for="approved">
+		Показать отзыв на сайте
+	</label>
+	<br><br>
+
+	<br><br><br><br>
+
+	<h4>Отзыв</h4>
+
+	Автор <b class="red">*</b>:<br>
+	<input name="name" type="text" size="50" maxlength="255"
+		   required
+		   msg_required="Введите имя автора отзыва">
+	<br><br>
+
+	E-mail автора:<br>
+	<input name="email" type="text" size="50" maxlength="192">
+	<br><br>
+
+<!--	Картинка (аватарка):<br>
+	<?php /*if($init['_img_ext']) { */?>
+		<a href="<?php /*echo Config::pathRel('images') . Reviews::$imagePath . $init['id']; */?>.<?php /*echo $init['_img_ext']; */?>" target="_blank" onclick="return hs.expand(this)">
+			<img src="<?php /*echo Config::pathRel('images') . Reviews::$imagePath . $init['id']; */?>_72x72_0.<?php /*echo $init['_img_ext']; */?>" width="72" height="72" alt="" style="border: 1px solid #CCC">
+		</a><br>
+	<?php /*} */?>
+	<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+	<b class="small">
+		Форматы: JPG, GIF, PNG.<br>
+		Максимальный размер: 300x300 пикс.
+	</b>
+	<br><br>-->
+
+	Текст отзыва:<br>
+	<textarea name="text" style="width: 500px; height: 100px"></textarea>
+
+
+	<br><br><br><br>
+
+	<input type="submit" class="submit" value="Сохранить">
+</form>
+<br><br>
+
+<a href="<?php echo mReviewsEdit::retURL(); ?>" class="but-back">Вернуться</a>

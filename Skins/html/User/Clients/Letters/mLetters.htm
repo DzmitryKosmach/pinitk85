@@ -1,0 +1,23 @@
+<?php if(trim($pageInf['header'])) { ?>
+	<h1>
+		<span style="font-size: 19px; white-space: nowrap">
+			<a href="<?php echo Url::a(Clients_Projects::PROJECTS_PAGE_ID); ?>"><?php echo $projectsHeader; ?></a>
+		</span>
+		<span style="font-size: 19px">/</span>
+		<span style="white-space: nowrap">
+			<?php echo $pageInf['header']; ?>
+		</span>
+	</h1>
+<?php } ?>
+
+<div class="letters">
+	<?php foreach($letters as $l) { ?>
+		<div class="letters-item">
+			<a href="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']?>.<?php echo $l['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+				<img src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']?>_120x170_0.<?php echo $l['_img_ext']; ?>" width="120" height="170" alt="">
+			</a>
+			<span><?php echo $l['comment']; ?></span>
+		</div>
+	<?php } ?>
+	<div class="cl"></div>
+</div>

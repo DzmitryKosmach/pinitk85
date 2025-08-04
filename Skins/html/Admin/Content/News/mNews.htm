@@ -1,0 +1,49 @@
+<h3>Новости сайта:</h3>
+<br><br>
+
+<a href="<?php echo Url::a('admin-content-news-edit'); ?>" class="but-add">Добавить новость</a>
+
+<table class="admin_table" id="dragTable">
+	<tr>
+		<th>ID</th>
+		<th>Картинка</th>
+		<th>Дата / Заголовок</th>
+		<th>URL</th>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+	</tr>
+
+	<?php foreach($news as $n) { ?>
+		<tr>
+			<td><?php echo $n['id']; ?></td>
+			<td>
+				<a href="<?php echo Config::pathRel('images') . News::$imagePath . $n['id']; ?>.<?php echo $n['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+					<img src="<?php echo Config::pathRel('images') . News::$imagePath . $n['id']; ?>_100x0_1.<?php echo $n['_img_ext']; ?>" width="100" alt="" style="border: 1px solid #CCC">
+				</a>
+			</td>
+			<td>
+				<strong><?php echo News::date(MySQL::fromDate($n['date']), false); ?></strong><br>
+				<?php echo $n['n_title']; ?>
+			</td>
+			<td class="courier">
+				<a href="<?php echo News::a($n['id']); ?>" target="_blank">http://<?php echo $_SERVER['HTTP_HOST'] . News::a($n['id']); ?></a>
+			</td>
+
+			<td>
+				<a href="<?php echo Url::buildUrl(Url::a('admin-content-news-edit'), array(
+					'id'	=> $n['id']
+				)); ?>" class="but-edit" title="Редактировать"></a>
+			</td>
+			<td>
+				<a href="<?php echo Url::buildUrl(0, $_GET, array('act' => 'del', 'n' => $n['id'])); ?>" class="but-del" title="Удалить"></a>
+			</td>
+		</tr>
+	<?php } ?>
+
+	<?php if(!count($news)) { ?>
+		<tr><td colspan="6">Новостей нет.</td></tr>
+	<?php } ?>
+
+</table>
+
+<a href="<?php echo Url::a('admin-content-news-edit'); ?>" class="but-add">Добавить новость</a>
