@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ru">
+<?php //ob_start(); ?>
+
+<head>
+	<meta charset="utf-8">
+	<?php
+	// noindex start
+		if(strpos($_SERVER['REQUEST_URI'], '/preimuschestva/') !== false ){
+		echo '
+	<meta name="robots" content="noindex, nofollow">';
+		}
+	// noindex end
+
+   if(strpos($_SERVER['REQUEST_URI'], '?price') !== false )
+	{
+    	echo '<meta name="robots" content="noindex, nofollow">';
+	}
+
+    if(strpos($_SERVER['REQUEST_URI'], 'sort') !== false )
+	{
+    	echo '<meta name="robots" content="noindex, nofollow">';
+	}
+
+    if(strpos($_SERVER['REQUEST_URI'], '/search/') !== false )
+	{
+    	echo '<meta name="robots" content="noindex, nofollow">';
+	}
+
+	if(strpos($_SERVER['REQUEST_URI'], '/sitemap/') !== false )
+	{
+		echo '<meta name="robots" content="noindex">';
+	}
+
+    ?>
+	<?php
+	function myerror () {
+		$url_without_query = strtok($_SERVER["REQUEST_URI"], '?');
+		if(preg_match('#[A-Z]+#', $url_without_query) == 1){
+			$to_url = mb_strtolower($url_without_query);
+			$query_string = strstr($_SERVER['REQUEST_URI'], '?');
+			header("HTTP/1.1 301 Moved Permanently");
+			header('Location: ' . $to_url . $query_string);
+    	die;
+		}
+	}
+  ?>
+	<?php myerror(); ?>
+
+	<title>
+		<?php echo $pageInf['title']; ?>
+	</title>
+
+	<?php if(!is_null($pageInf['dscr']) && trim($pageInf['dscr']) !== '') { ?>
+	<meta name="description" content='<?php echo $pageInf[' dscr']; ?>'>
+	<?php } ?>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#2d89ef">
+	<meta name="theme-color" content="#ffffff">
+	<?php if($pageInf['canonical']) { ?>
+	<link rel="canonical" href="<?php echo $pageInf['canonical'];?>">
+	<?php } ?>
+	<?php echo CssCopmress::load('core') ?>
+	<script>
+		if (!window.BX) window.BX = { message: function (mess) { if (typeof mess == 'object') for (var i in mess) BX.message[i] = mess[i]; return true; } };
+		(window.BX || top.BX).message({ 'JS_CORE_LOADING': 'Загрузка...', 'JS_CORE_NO_DATA': '- Нет данных -', 'JS_CORE_WINDOW_CLOSE': 'Закрыть', 'JS_CORE_WINDOW_EXPAND': 'Развернуть', 'JS_CORE_WINDOW_NARROW': 'Свернуть в окно', 'JS_CORE_WINDOW_SAVE': 'Сохранить', 'JS_CORE_WINDOW_CANCEL': 'Отменить', 'JS_CORE_H': 'ч', 'JS_CORE_M': 'м', 'JS_CORE_S': 'с', 'JSADM_AI_HIDE_EXTRA': 'Скрыть лишние', 'JSADM_AI_ALL_NOTIF': 'Показать все', 'JSADM_AUTH_REQ': 'Требуется авторизация!', 'JS_CORE_WINDOW_AUTH': 'Войти', 'JS_CORE_IMAGE_FULL': 'Полный размер' });
+		(window.BX || top.BX).message({ 'LANGUAGE_ID': 'ru', 'FORMAT_DATE': 'DD.MM.YYYY', 'FORMAT_DATETIME': 'DD.MM.YYYY HH:MI:SS', 'COOKIE_PREFIX': 'BITRIX_SM', 'SERVER_TZ_OFFSET': '10800', 'SITE_ID': 's1', 'USER_ID': '', 'SERVER_TIME': '1441796521', 'USER_TZ_OFFSET': '0', 'USER_TZ_AUTO': 'Y', 'bitrix_sessid': '33f3b8334d2ba8df2ff231d43142c136' });
+	</script>
+	<style>
+		#content {
+			line-height: 21px;
+		}
+
+		#content ul {
+			margin-left: 16px;
+		}
+
+		#content .delivery_table td {
+			border-collapse: collapse;
+			border-spacing: 2px;
+			border: 1px solid #808080;
+			padding: 20px;
+		}
+
+		#captcha_callback-left>div {
+			margin-top: -20px;
+		}
+
+		::selection {
+			background-color: #329f2d;
+			color: #fff;
+		}
+	</style>
+
+	<script src="//yandex.st/share/share.js"></script>
+
+	<?php echo JsCopmress::load('core'); ?>
+	<script>var RSDevFunc_BasketEndWord_end1 = ""; var RSDevFunc_BasketEndWord_end2 = ""; var RSDevFunc_BasketEndWord_end3 = "";</script>
+	<?php #echo JsCopmress::load('core'); ?>
+
+	<?php echo JsCopmress::load('main'); ?>
+	<script>
+		function seoHideDecode() {
+			var shift = 15;
+			var chars = 'abcdefghijklmnopqrstuvwxyz0123456789:/-_.?';
+			var charsCnt = chars.length;
+
+			var links = byTag('A');
+			for (var i = 0, l = links.length; i < l; i++) {
+				if (typeof (links[i].dataset['shcode']) != 'undefined' && links[i].dataset['shcode'] != '') {
+					links[i].href = decode(links[i].dataset['shcode']);
+					links[i].dataset['shcode'] = '';
+				}
+			}
+
+			function decode(code) {
+				code = code.toLowerCase();
+				var url = '', ch = '', n = 0;
+				for (var i = 0, l = code.length; i < l; i++) {
+					ch = code.charAt(i);
+					n = chars.indexOf(ch);
+					if (n !== -1) {
+						n -= shift;
+						if (n < 0) n += charsCnt;
+						ch = chars.charAt(n);
+					}
+					url += ch;
+				}
+				return url;
+			}
+		}
+		onLoad(function () {
+			seoHideDecode();
+		});
+	</script>
+	<?php echo JsCopmress::load('main-async', true); ?>
+
+	<script>
+		oCompare.url = '<?php echo Url::a('catalog - compare'); ?>';
+		oCart.url = '<?php echo Url::a('catalog - cart'); ?>';
+		oCart.urlBuyOneClick = '<?php echo Url::a('catalog - cart - buyoneclick'); ?>';
+		//oSearch.url = '<?php echo Url::a('catalog-search'); ?>?getpopular=';
+		oSearch.url = '<?php echo Url::a('catalog - search'); ?>?quick=';
+	</script>
+
+	<script>
+		var BX_COOKIE_PREFIX = 'BITRIX_SM_',
+			SITE_ID = 's1',
+			SITE_DIR = '/',
+			SITE_TEMPLATE_PATH = '/bitrix/templates/profurn',
+			SITE_CATALOG_PATH = 'catalog',
+			RSGoPro_Adaptive = true,
+			RSGoPro_FancyCloseDelay = 1000,
+			RSGoPro_FancyReloadPageAfterClose = false,
+			RSGoPro_OFFERS = {},
+			RSGoPro_FAVORITE = {},
+			RSGoPro_COMPARE = {},
+			RSGoPro_INBASKET = {},
+			RSGoPro_STOCK = {},
+			RSGoPro_PHONETABLET = "N";
+		// messages
+		BX.message({
+			"RSGOPRO_JS_TO_MACH_CLICK_LIKES": "Вы слишком много кликаете, отдохните немного",
+			"RSGOPRO_JS_COMPARE": "Добавить к сравнению",
+			"RSGOPRO_JS_COMPARE_IN": "Убрать из сравнения"
+		});
+	</script>
+
+	<?php echo Options::name('head-scripts'); ?>
+	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCaptchaCallback&render=explicit" async
+		defer></script>
+	<!-- Tailwind конфигурация -->
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					maxWidth: {
+						1440: "1440px",
+					},
+					colors: {
+						header: "#E7EBF2",
+						body: "#F8F8F8",
+						footer: "#E8F1FF",
+					},
+					fontFamily: {
+						sans: ["Montserrat", "sans-serif"],
+					},
+					spacing: {
+						18: "4.5rem",
+					},
+					screens: {
+						xs: "480px",
+					},
+				},
+			},
+		};
+	</script>
+</head>
+
+<body class="prop_option_line_through adaptive">
+
+	<?php
+if (APP_ENV == "production" || APP_ENV == "prod") {
+	$counters = file_get_contents(_ROOT . "/Skins/html/counters.htm");
+	echo $counters;
+}
+?>
+
+	<a id="top"></a>
+	<div id="panel"></div>
+	<div class="body">
+		<!-- body -->
+		<div class="tline"></div>
+		<div id="tpanel" class="tpanel">
+			<div class="tpanel_inner">
+				<div class="centering" style="position: relative">
+					<a href="#top" id="goto-top" title="">Наверх</a>
+					<div class="centeringin clearfix">
+						<div class="tpanel_menu clearfix mobile_hide" style="font-weight: bold">
+							<?php foreach($menuTop as $p) {?>
+							<a href="<?php echo Url::a($p['id']); ?>" style="padding-right: 18px;">
+								<?php echo $p['name']; ?>
+							</a>
+							<?php } ?>
+						</div>
+						<div class="tpanel_inner_right">
+
+							<div class="new_block">
+								<div class="catalogmenucolumn">
+									<ul class="catalogmenu clearfix">
+										<li class="parent">
+											<a href="<?php echo Url::a(Catalog::CATALOG_PAGE_ID); ?>" class="parent">
+												Каталог<span class="no_420"> товаров</span>
+												<!-- <i class="menu icon <?php if($pageInf['alias'] === 'index') {?>show<?php } ?>"></i> -->
+											</a>
+											<i
+												class="menu icon <?php if($pageInf['alias'] === 'index') {?>show<?php } ?>"></i>
+											<ul
+												class="first clearfix lvl1 <?php if($pageInf['alias'] === 'index') {?>show<?php } ?>">
+												<?php
+											foreach($catsMenu as $n => $c) {
+												$catIds = array($c['id']);
+												if(is_array($c['sub']) && count($c['sub'])){
+													foreach($c['sub'] as $c2){
+														$catIds[] = $c2['id'];
+													}
+												}
+										?>
+												<li class="first">
+													<a href="<?php echo Catalog_Categories::a($c['id']); ?>"
+														class="first <?php if(in_array(Catalog::$catId, $catIds)) {?>selected<?php } ?>">
+														<?php echo $c['name']; ?>
+														<?php if(is_array($c['sub']) && count($c['sub'])) { ?>
+														<i class="menu icon pngicons"></i>
+														<?php } ?>
+													</a>
+													<?php if(is_array($c['sub']) && count($c['sub'])) {?>
+													<ul class="lvl2">
+														<?php foreach($c['sub'] as $c2) {?>
+														<li class="sub">
+															<a href="<?php echo Catalog_Categories::a($c2['id']); ?>"
+																class="sub">
+																<?php echo $c2['name']; ?>
+																<?php if(is_array($c2['sub']) && count($c2['sub'])) { ?>
+																<i class="menu icon pngicons"></i>
+																<?php } ?>
+															</a>
+															<?php if(is_array($c2['sub']) && count($c2['sub'])) {?>
+															<ul class="lvl3">
+																<?php foreach($c2['sub'] as $c3) {?>
+																<a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
+																	class="sub">
+																	<?php echo $c3['name']; ?>
+																</a>
+																<?php } ?>
+															</ul>
+															<?php } ?>
+														</li>
+														<?php } ?>
+													</ul>
+													<?php } ?>
+												</li>
+												<?php } ?>
+											</ul>
+										</li>
+									</ul>
+								</div>
+
+								<div id="title-search" class="searchinhead nowrap">
+									<form action="<?php echo Url::a('catalog-search'); ?>" method="get">
+										<i class="icon pngicons icon2"></i>
+										<i class="icon pngicons icon1"></i>
+										<div class="aroundtext">
+											<input class="text" id="search-input" type="text" name="text"
+												value="<?php if (isset($_GET['text']) && $_GET['text']) { echo trim(hsch($_GET['text'])); } ?>"
+												size="40" autocomplete="off" placeholder="Введите название товара">
+										</div>
+										<input class="nonep" type="submit" name="s" value="Поиск">
+									</form>
+								</div>
+							</div>
+
+							<div class="new_block_right">
+								<div class="tel_rows">
+									<i class="icon pngicons iconphone mobile_hide"></i>
+									<?php $phone = Options::name('head-phones') ?>
+									<a href="tel:<?php echo preg_replace('/[^0-9+]/ius', '', $phone); ?>">
+										<?php echo $phone?>
+									</a>
+								</div>
+
+								<div class="basketinhead">
+									<?php
+								$text='';
+								$class='';
+								$cart = Catalog_Cart::total();
+								if($cart[0]) {
+									$class='not-empty';
+									$text.=$cart[0];
+									$text.=' '.Catalog_Cart::itemsAmountWord($cart[0]);
+									$text.=' на ';
+									$text.=Catalog::priceFormat(round($cart[1]));
+									$text.=' руб.';
+								} else {
+									$text.='Сейчас ваша корзина пуста';
+								} ?>
+									<a href="<?php echo Url::a('catalog-cart'); ?>" class="<?php echo $class?>">
+										<i class="icon pngicons"></i>
+										<div class="title opensansbold">Моя корзина</div>
+										<div id="basketinfo2" class="descr">
+											<?php echo $text?>
+										</div>
+									</a>
+								</div>
+							</div>
+
+							<!-- <div class="tel_rows">
+							<i class="icon pngicons iconphone mobile_hide"></i>
+							<?php $phone = Options::name('head-phones') ?>
+							<a href="tel:<?php echo preg_replace('/[^0-9+]/ius', '', $phone); ?>"><?php echo $phone?></a>
+						</div>
+
+						<div class="basketinhead">
+							<?php
+							$text='';
+							$class='';
+							$cart = Catalog_Cart::total();
+							if($cart[0]) {
+								$class='not-empty';
+								$text.=$cart[0];
+								$text.=' '.Catalog_Cart::itemsAmountWord($cart[0]);
+								$text.=' на ';
+								$text.=Catalog::priceFormat(round($cart[1]));
+								$text.=' руб.';
+							} else {
+								$text.='Сейчас ваша корзина пуста';
+							} ?>
+							<a href="<?php echo Url::a('catalog-cart'); ?>" class="<?php echo $class?>">
+								<i class="icon pngicons"></i>
+								<div class="title opensansbold">Моя корзина</div>
+								<div id="basketinfo2" class="descr">
+									<?php echo $text?>
+								</div>
+							</a>
+						</div> -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="header" class="header">
+			<div class="centering">
+				<div class="centeringin clearfix">
+					<div class="logo column1">
+						<div class="column1inner">
+							<?php if($_SERVER['REQUEST_URI'] == '/') {
+						echo '<a><img src="/Skins/img/user/logo.png" alt="OptPro"></a>';
+					} else {
+					   echo '<a href="/"><img src="/Skins/img/user/logo.png" alt="OptPro"></a>';
+					} ?>
+						</div>
+					</div>
+					<div class="phone column1 nowrap vcard">
+						<div class="column1inner tel">
+							<div class="tel_rows">
+								<i class="icon pngicons mobile_hide"></i>
+								<?php $phone = Options::name('head-phones') ?>
+								<a href="tel:<?php echo preg_replace('/[^0-9+]/ius', '', $phone); ?>">
+									<?php echo $phone?>
+								</a>
+							</div>
+							<div class="tel_rows">
+								<i class="icon callbackicon mobile_hide"></i>
+								<a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback">
+									Заказать звонок
+								</a>
+							</div>
+
+						</div>
+					</div>
+					<div class="callback column1 nowrap">
+						<div class="column1inner wrk">
+							<div class="wrk_rows">График работы:</div>
+							<div class="wrk_rows">Пн-Пт с 9:00 до 19:00</div>
+							<div class="wrk_rows">Принимаем заявки КРУГЛОСУТОЧНО!</div>
+						</div>
+					</div>
+					<div class="callback column1 nowrap">
+						<div class="column1inner adr">
+							<div class="adr_rows">Адрес: г.Москва,</div>
+							<div class="adr_rows">Наб.Космодамианская,</div>
+							<div class="adr_rows">д.4/22,к.Б,помещ.8Н.</div>
+						</div>
+					</div>
+
+					<div class="basket column1 nowrap">
+						<div class="column1inner">
+							<div class="basketinhead">
+								<?php
+								$text='';
+								$class='';
+								$cart = Catalog_Cart::total();
+								if($cart[0]) {
+									$class='not-empty';
+									$text.=$cart[0];
+									$text.=' '.Catalog_Cart::itemsAmountWord($cart[0]);
+									$text.=' на ';
+									$text.=Catalog::priceFormat(round($cart[1]));
+									$text.=' руб.';
+								} else {
+									$text.='Сейчас ваша корзина пуста';
+								} ?>
+								<a href="<?php echo Url::a('catalog-cart'); ?>" class="<?php echo $class?>">
+									<i class="icon pngicons"></i>
+									<div class="title opensansbold">Моя корзина</div>
+									<div id="basketinfo" class="descr">
+										<?php echo $text?>
+									</div>
+								</a>
+							</div>
+							<div class="rsfavorite">
+								<i class="icon pngicons"></i>
+								<div class="title opensansbold">
+									Сравнение товаров
+								</div>
+								<a id="inheadfavorite" href="/compare/">
+									<div class="descr">
+										<?php
+									$ccCount = Catalog_Compare::count();
+									if( $ccCount ) {
+										$_cc_one = "compare-items";
+										$_cc_two = "compare-items hide";
+									} else {
+										$_cc_one = "compare-items hide noitems";
+										$_cc_two = "compare-items noitems";
+									}
+									?>
+										<div class="<?php echo $_cc_one; ?>"><span>Товаров для
+												сравнения</span>&nbsp;(<span id="favorinfo">
+												<?php echo $ccCount ?>
+											</span>)</div>
+										<div class="<?php echo $_cc_two; ?>"><span>Товары в сравнение не
+												добавлены</span></div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="centering">
+				<div class="centeringin clearfix">
+					<div class="catalogmenucolumn">
+						<ul class="catalogmenu clearfix">
+							<li class="parent">
+								<a href="<?php echo Url::a(Catalog::CATALOG_PAGE_ID); ?>" class="parent">
+									Каталог товаров
+									<i class="menu icon <?php if($pageInf['alias'] === 'index') {?>show<?php } ?>"></i>
+								</a>
+								<ul
+									class="first clearfix lvl1 <?php if($pageInf['alias'] === 'index') {?>show<?php } ?>">
+									<?php
+								foreach( $catsMenu as $n => $c) {
+
+									$catIds = array($c['id']);
+
+									if(is_array($c['sub']) && count($c['sub']))
+									{
+										foreach($c['sub'] as $c2) {
+											$catIds[] = $c2['id'];
+										}
+									}
+								?>
+									<li class="first">
+										<a href="<?php echo Catalog_Categories::a($c['id']); ?>"
+											class="first <?php if(in_array(Catalog::$catId, $catIds)) {?>selected<?php } ?>">
+											<?php echo $c['name']; ?>
+											<?php if(is_array($c['sub']) && count($c['sub'])) { ?>
+											<i class="menu icon pngicons"></i>
+											<?php } ?>
+										</a>
+										<?php
+										if(is_array($c['sub']) && count($c['sub'])) {?>
+										<ul class="lvl2">
+											<?php foreach($c['sub'] as $c2) { ?>
+											<li class="sub">
+												<a href="<?php echo Catalog_Categories::a($c2['id']); ?>" class="sub">
+													<?php echo $c2['name']; ?>
+													<?php if(is_array($c2['sub']) && count($c2['sub'])) {?>
+													<i class="menu icon pngicons"></i>
+													<?php } ?>
+												</a>
+												<?php if(is_array($c2['sub']) && count($c2['sub'])) { ?>
+												<ul class="lvl3">
+													<?php foreach($c2['sub'] as $c3) { ?>
+													<a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
+														class="sub">
+														<?php echo $c3['name']; ?>
+													</a>
+													<?php } ?>
+												</ul>
+												<?php } ?>
+											</li>
+											<?php } ?>
+										</ul>
+										<?php } ?>
+									</li>
+									<?php } ?>
+								</ul>
+							</li>
+						</ul>
+
+						<ul class="catalogmenusmall clearfix">
+							<li class="parent">
+								<a href="<?php echo Url::a(Catalog::CATALOG_PAGE_ID); ?>" class="parent">
+									Каталог товаров
+									<i class="menu icon"></i>
+								</a>
+								<ul class="first clearfix lvl1 noned">
+									<?php
+									foreach($catsMenu as $n => $c) {
+
+										$catIds = array($c['id']);
+
+										if(is_array($c['sub']) && count($c['sub'])) {
+											foreach($c['sub'] as $c2){
+												$catIds[] = $c2['id'];
+											}
+										}
+									?>
+									<li class="first <?php if($n === count($catsMenu)-1) { ?>lastchild<?php } ?>">
+										<a href="<?php echo Catalog_Categories::a($c['id']); ?>"
+											class="first <?php if(in_array(Catalog::$catId, $catIds)) {?>selected<?php } ?>">
+											<?php echo $c['name']; ?>
+										</a>
+									</li>
+									<?php } ?>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div id="title-search" class="searchinhead nowrap">
+						<form action="<?php echo Url::a('catalog-search'); ?>" method="get">
+							<i class="icon pngicons icon2"></i>
+							<i class="icon pngicons icon1"></i>
+							<div class="aroundtext">
+								<input class="text" id="search-input" type="text" name="text"
+									value="<?php if (isset($_GET['text']) && $_GET['text']) { echo trim(hsch($_GET['text'])); } ?>"
+									size="40" autocomplete="off" placeholder="Введите название товара">
+							</div>
+							<input class="nonep" type="submit" name="s" value="Поиск">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<?php echo $CONTENT?>
+
+	</div>
+
+	<script>
+		RSGoPro_SetSet();
+	</script>
+	<?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
+	<div style="text-align: left; padding: 3% 12%; ">
+		<?php echo $pageInf['text'];?>
+	</div>
+	<?php } ?>
+
+	<div id="footer" class="footer">
+		<div class="centering">
+			<div class="centeringin line1 clearfix">
+				<div class="block one">
+					<div class="logo">
+						<a href="/"><img src="/Skins/img/user/logo.png" alt="OptPro"></a>
+					</div>
+					<div class="contacts clearfix vcard">
+						<div class="phone1">
+							<a class="fancyajax fancybox.ajax recall" href="<?php echo Url::a('contacts-callback'); ?>"
+								title="Заказать звонок">
+								<i class="icon pngicons"></i>
+								Заказать звонок
+							</a>
+							<div class="phone tel">
+								<a href="tel:<?php echo preg_replace('/[^0-9+]/ius', '', $phone); ?>">
+									<?php echo $phone?>
+								</a>
+							</div>
+						</div>
+						<div class="phone2 tel">
+							<a class="fancyajax fancybox.ajax feedback" href="<?php echo Url::a('contacts'); ?>"
+								title="Обратная связь">
+								<i class="icon pngicons"></i>
+								Обратная связь
+							</a>
+							<div class="phone">
+								<a href="tel:<?php echo preg_replace('/[^0-9+]/ius', '', $phone); ?>">
+									<?php echo $phone?>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="block two">
+					<div class="catmenu ellipsisnames clearfix">
+						<div class="title">
+							Товары
+						</div>
+						<?php foreach($catsMenu as $n => $c) { ?>
+						<div class="aroundlevel">
+							<div class="item depth_level1">
+								<a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+									<span>
+										<?php echo $c['name']; ?>
+									</span>
+								</a>
+							</div>
+						</div>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="block three">
+					<div class="footmenu clearfix">
+						<div class="title">
+							Дополнительно
+						</div>
+						<?php foreach($menuBottom as $p) { ?>
+						<div class="item">
+							<a href="<?php echo Url::a($p['id']); ?>">
+								<span>
+									<?php echo $p['name']; ?>
+								</span>
+							</a>
+						</div>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="block four">
+					<div class="sovservice">
+						<div style="margin-bottom:25px;">
+							<div style="margin-bottom:6px;text-transform:uppercase;">
+								Соцсети
+							</div>
+							<a target="_blank" title="WhatsApp" class="icon_social wa"
+								href="https://wa.me/79859204824"></a>
+							<a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank"
+								title="Yandex Zen" class="icon_social zen"></a>
+							<a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="icon_social vk"></a>
+							<a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok"
+								class="icon_social ok"></a>
+							<a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok"
+								class="icon_social tiktok"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line2">
+			<div class="centering">
+				<div class="centeringin clearfix">
+					<div class="sitecopy">
+						&copy;
+						<?php echo date('Y'); ?> Все права защищены. Информация сайта защищена законом об авторских
+						правах.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="fixedcomparelist">
+		<script>
+			RSGoPro_COMPARE = {}; RSGoPro_SetCompared();
+		</script>
+	</div>
+	<div id="rs_easycart" class="brown addbodypadding" style='z-index:991;'>
+		<div class="rsec rsec_headers">
+			<div class="rsec_in" style="max-width:1240px;">
+				<div class="rsec_body">
+					<div class="rsec_orlink">
+						<a class="rsec_viewed rsec_changer" href="<?php echo Url::a('catalog-recently'); ?>">
+							<i class="rsec_iconka"></i>
+							<span class="rsec_name">Недавно просмотренные</span>
+							<span class="rsec_color rsec_cnt">
+								<?php echo Catalog_Recently::count(); ?>
+							</span>
+						</a>
+					</div>
+					<div class="rsec_orlink">
+						<a class="rsec_compare rsec_changer" href="<?php echo Url::a('catalog-compare'); ?>">
+							<i class="rsec_iconka"></i>
+							<span class="rsec_name">Сравнение товаров</span>
+							<span class="rsec_color rsec_cnt" id="series-compare-cnt">
+								<?php echo Catalog_Compare::count(); ?>
+							</span>
+						</a>
+					</div>
+					<div class="rsec_orlink">
+						<a class="rsec_basket rsec_changer <?php echo $class?>"
+							href="<?php echo Url::a('catalog-cart'); ?>">
+							<i class="rsec_iconka"></i>
+							<span class="rsec_name">Товаров</span>
+							<span class="rsec_color">
+								<span class="rsec_normalCount" id="basketinfo-amount">
+									<?php echo $cart[0]; ?>
+								</span>
+							</span>
+							&nbsp;
+							<span class="rsec_name">Сумма</span>
+							<span class="rsec_color rsec_sum">
+								<span class="rsec_allSum_FORMATED" id="basketinfo-price">
+									<?php echo Catalog::priceFormat(round($cart[1])); ?> руб.
+								</span>
+							</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="xCallback">
+		<div class="xCallback__entity" onclick="kcall(); return false;">
+			<img src="/img/icons/blue-ear-phone.png" alt="">
+			Заказать звонок
+		</div>
+	</div>
+	<div class="modal modal--order-call" id="kmodal">
+		<a href="javascript:void(0);" class="modal__close modal__close--big-margin" onclick="kclose(); return false;">
+			<img src="/img/icons/modal-close.png" alt="">
+		</a>
+
+		<div id="vibiliunasnasaite" style="display:none;">
+			<p style="margin-bottom:10px">Вы у нас на сайте <span id="livetimespan"></span>. <br>Вы нашли, что искали?
+			</p>
+
+			<a class="yes" style="margin-top: 46px;"
+				onclick="ttext(&quot;Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?&quot;);blockshowhide(&quot;vibiliunasnasaite&quot;,&quot;wix_call&quot;);return false"
+				href="#">Да</a>
+			<a class="no" style="margin-top: 46px;"
+				onclick="ttext(&quot;Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?&quot;);blockshowhide(&quot;vibiliunasnasaite&quot;,&quot;wix_call&quot;);return false"
+				href="#">Нет</a>
+
+			<div style="margin-left: 45px;padding-top: 20px;clear:both">
+				Мы искренне ценим ваше время. И нам очень важно ваше мнение!
+			</div>
+		</div>
+
+		<div id="wix_call" class="modal-order-call" style="display: block;">
+			<div class="modal-order-call__caption" id="timertext">Хотите мы вам перезвоним через 15 секунд?</div>
+			<div class="modal-order-call__label">
+				<label id="design-order-phone-modal" class="label">Телефон:<sup>*</sup></label>
+			</div>
+
+			<form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
+				<div class="modal-order-call-form">
+
+					<div class="modal-order-call-form__input">
+						<input class="maskPhone" type="text" name="phone" value="" id="wi_tele233" placeholder="+7"
+							maxlength="20" required="">
+						<input type="hidden" name="name" value="жду звонка" />
+						<input type="hidden" name="XMLHttpRequest" value="1">
+					</div>
+					<div class="modal-order-call-form__button">
+						<!--<a href="#">Жду звонка</a>-->
+						<!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
+						<button type="submit" class="form_2calls_button" style="cursor: pointer;">Жду звонка</button>
+					</div>
+					<div id="yatimer" class="modal-order-call-form__timer">
+						<p>00</p>:
+						<p>15</p>,
+						<p>00</p>
+					</div>
+					<div class="modal-order-call__hint">
+						Внимание! Не забудьте указать код города
+					</div>
+					<div class="captcha-item" style="width:230px;overflow:hidden;height:34px;"
+						id="captcha_callback-left"></div>
+				</div>
+				<input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>">
+				<input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>">
+			</form>
+			<script>
+				jQuery(document).on('submit', '#form_2calls_myFormId', function () {
+					var tag = this;
+					if (jduzvonka(1)) {
+						jQuery.ajax({
+							url: jQuery(this).attr('action'),
+							type: 'POST',
+							data: jQuery(this).serialize(),
+							success: function (d) {
+								console.log(d);
+								if (d.search('{"location":') === 0) {
+									var _d = JSON.parse(d);
+									if (typeof (_d) == 'object' && _d.location) {
+										document.location.href = _d.location;
+										return false;
+									}
+								}
+								var error = jQuery(d).find('#form-errors').html();
+								if (typeof (error) != 'undefined') {
+									jQuery('#timertext').html('<span style="color:red;">' + error + '</span>');
+									return false;
+								}
+								var success = jQuery(d).find('h1').html();
+								if (success) {
+									document.location.href = '/thankyoupage/';
+									return false;
+								}
+							},
+							errors: function (data) {
+								console.log(data);
+							}
+						});
+						return false;
+					}
+					return false;
+				});
+			</script>
+
+		</div>
+
+		<div id="wix_fin" class="modal-order-call" style="display:none;">
+			<div class="modal-order-call__caption">Спасибо за обращение!</div>
+			<div class="modal-order-call-form">
+				<div class="modal-order-call-form__timer">
+					<p>00</p>:
+					<p>00</p>,
+					<p>00</p>
+				</div>
+				<div class="modal-order-call-form__end clear">
+					<a id="xop555" href="javascript:void(0);" onclick="neuspeli(); return false;">мне не
+						перезвонили!</a>
+					<span id="superjalobal" style="display:none;">Менеджер свяжется с Вами в ближайшее время!</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<link rel="stylesheet" href="/Skins/css/minn.css" type="text/css" />
+
+	<script>
+		function catchEnter(e) {
+			var lead_free = false;
+			var l = document.getElementsByClassName("form_2calls_input")[0];
+			l && (a = l.value, 1 == lead_free ? ("8" == a ? l.value = "7" : a, "495" == a ? l.value = "7495" : a, "499" == a ? l.value = "7499" : a, l.value = l.value.replace("+", "")) : ("+8" == a ? l.value = "+7" : a, "495" == a || "+495" == a ? l.value = "+7495" : a, "499" == a || "+499" == a ? l.value = "+7499" : a, "+" != a.charAt(0) ? l.value = "+" + a.replace("+", "") : a), l.value = l.value.replace(/[^\d\+.]/g, ""));
+
+			if (e.keyCode == 13) {
+				jduzvonka();
+				return false;
+			}
+		}
+
+		function saveNumber(t) {
+			localStorage.setItem('cb_phone_number', t.value);
+		}
+		function checkPhoneInput(el) {
+			if (el.value == '')
+				el.value = '+7';
+
+			moveCursorToEnd(el);
+		}
+		function moveCursorToEnd(el) {
+			if (typeof el.selectionStart == "number") {
+				el.selectionStart = el.selectionEnd = el.value.length;
+			} else if (typeof el.createTextRange != "undefined") {
+				el.focus();
+				var range = el.createTextRange();
+				range.collapse(false);
+				range.select();
+			}
+		}
+
+		function jduzvonka(k) {
+
+			var phone = jQuery('#wi_tele233').val();
+			if (phone.length > 10) {
+				jQuery('#wi_tele233').removeClass('errk');
+				/*$.ajax({
+						type: "POST",
+						url: '/mail.php',
+						data: {'phone': phone},
+						success: function(data) {
+							kclose();
+							alert('Ждите звонка!');
+						},
+						//dataType: 'json'
+					});*/
+				return true;
+			} else {
+				jQuery('#wi_tele233').addClass('errk');
+				return false;
+			}
+		}
+
+		function getCookie(name) {
+			var _return = document.cookie.match(new RegExp(
+				"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			));
+			if (!_return || !_return[1]) return false;
+			return _return[1];
+		}
+
+		function setCookie(name, value, options) {
+			options = options || {};
+
+			var expires = options.expires;
+
+			if (typeof expires == "number" && expires) {
+				var d = new Date();
+				d.setTime(d.getTime() + expires * 1000);
+				expires = options.expires = d;
+			}
+			if (expires && expires.toUTCString) {
+				options.expires = expires.toUTCString();
+			}
+
+			value = encodeURIComponent(value);
+
+			var updatedCookie = name + "=" + value;
+
+			for (var propName in options) {
+				updatedCookie += "; " + propName;
+				var propValue = options[propName];
+				if (propValue !== true) {
+					updatedCookie += "=" + propValue;
+				}
+			}
+
+			document.cookie = updatedCookie;
+		}
+
+		function kclose() {
+			$('.fancybox-skin').removeClass('rr');
+			$('.fancybox-opened').removeClass('rr');
+			$.fancybox.close();
+		}
+
+		function kcall() {
+			$.fancybox({
+				'autoScale': true,
+				'transitionIn': 'elastic',
+				'transitionOut': 'elastic',
+				'speedIn': 500,
+				'speedOut': 300,
+				'autoDimensions': true,
+				'centerOnScroll': true,
+				'hideOnOverlayClick': false,
+				'href': '#kmodal'
+			});
+
+			$('.fancybox-skin').addClass('rr');
+			$('.fancybox-opened').addClass('rr');
+		}
+
+		(function () {
+			function func() {
+				var zvonok = getCookie('zvonok');
+				//console.log(zvonok)
+				if (zvonok != 1) {
+
+					console.log('ok')
+					$.fancybox({
+						'autoScale': true,
+						'transitionIn': 'elastic',
+						'transitionOut': 'elastic',
+						'speedIn': 500,
+						'speedOut': 300,
+						'autoDimensions': true,
+						'centerOnScroll': true,
+						'hideOnOverlayClick': false,
+						'href': '#kmodal'
+					});
+					$('.fancybox-skin').addClass('rr');
+					$('.fancybox-opened').addClass('rr');
+					setCookie('zvonok', 1);
+				}
+			}
+
+			setTimeout(func, 8000);
+		})();
+	</script>
+
+	<script>
+		var onloadCaptchaCallback = function () {
+			var siteKey = '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL';
+			$('.captcha-item').each(function (index) {
+				grecaptcha.render($(this).attr('id'), {
+					'sitekey': siteKey
+				});
+			});
+		};
+	</script>
+</body>
+
+</html>

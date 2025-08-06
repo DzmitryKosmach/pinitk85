@@ -63,13 +63,13 @@ class Url extends ExtDbList
      */
     function __construct()
     {
-        if ($_SERVER['REDIRECT_URL']) {
+        if (isset($_SERVER['REDIRECT_URL']) && $_SERVER['REDIRECT_URL']) {
             self::$current = $_SERVER['REDIRECT_URL'];
             if (isset($_SERVER['REDIRECT_QUERY_STRING']) && trim($_SERVER['REDIRECT_QUERY_STRING']) !== '') {
                 self::$current .= '?' . $_SERVER['REDIRECT_QUERY_STRING'];
             }
         } else {
-            self::$current = $_SERVER['REQUEST_URI'];
+            self::$current = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
         }
 
         self::setTable(self::$tab);
@@ -229,7 +229,11 @@ class Url extends ExtDbList
         $urlParts = parse_url($url);
         $urlPath = trim($urlParts['path'], '/');
         //dp($urlPath);
-        if ($urlPath === '') {
+
+        // Убираем подпапку из пути для локальной разработки
+        $urlPath = preg_replace('/^pinitk85\//', '', $urlPath);
+
+        if ($urlPath === '' || $urlPath === 'index.php' || $urlPath === 'debug_index.php' || $urlPath === 'pinitk85') {
             // Главная страница
             $pageId = 1;
             $pagePath[] = 1;

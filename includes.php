@@ -45,18 +45,31 @@ foreach ($files as $f) {
 //print_array($_SERVER); exit;
 // ------------- NEW CODE -------------
 
-
+/**
+ * Исправляет пути к изображениям для локальной среды
+ */
+function fixImagePath($path)
+{
+    if (strpos($path, '/images/') === 0) {
+        return '/pinitk85' . $path;
+    }
+    if (strpos($path, '/Uploads/') === 0) {
+        return '/pinitk85' . $path;
+    }
+    return $path;
+}
 
 /**
  * Dump & Die
  * @param ...$vars
  * @return void
  */
-function dd(...$vars) {
-    ini_set( 'xdebug.var_display_max_depth', '20' );
-    ini_set( 'xdebug.var_display_max_children', '256' );
-    ini_set( 'xdebug.var_display_max_data', '4096' );
-    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT	, 2);
+function dd(...$vars)
+{
+    ini_set('xdebug.var_display_max_depth', '20');
+    ini_set('xdebug.var_display_max_children', '256');
+    ini_set('xdebug.var_display_max_data', '4096');
+    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
     foreach ($vars as $element) {
         echo "<pre style='background-color: #000; color: yellowgreen; font-size: 12px; font-family: \"Courier New\", Courier, monospace; padding: 6px; margin-bottom: 10px'>";
         echo "<p style='color: yellow'>Call => <b>" . $trace[0]['file'] . ": " . $trace[0]['line'] . "</b></p>";
@@ -72,8 +85,9 @@ function dd(...$vars) {
  * @param ...$vars
  * @return void
  */
-function de(...$vars) {
-    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT	, 2);
+function de(...$vars)
+{
+    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
     foreach ($vars as $element) {
         echo "<pre style='background-color: #000; color: yellowgreen; font-size: 12px; font-family: \"Courier New\", Courier, monospace; padding: 6px; margin-bottom: 10px'>";
         echo "<p style='color: yellow'>Call => <b>" . $trace[0]['file'] . ": " . $trace[0]['line'] . "</b></p>";
@@ -89,8 +103,9 @@ function de(...$vars) {
  * @param ...$vars
  * @return void
  */
-function dp(...$vars) {
-    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT	, 2);
+function dp(...$vars)
+{
+    $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
     foreach ($vars as $element) {
         echo "<pre style='background-color: #000; color: yellowgreen; font-size: 12px; font-family: \"Courier New\", Courier, monospace; padding: 6px; margin-bottom: 10px'>";
         echo "<p style='color: yellow'>Call => <b>" . $trace[0]['file'] . ": " . $trace[0]['line'] . "</b></p>";
