@@ -49,13 +49,16 @@ class Pattern
      */
     private function fixImagePaths(string $html): string
     {
-        // Заменяем все пути к изображениям
-        $html = preg_replace('/src="\/images\//', 'src="/pinitk85/images/', $html);
-        $html = preg_replace('/href="\/images\//', 'href="/pinitk85/images/', $html);
+        // Исправляем пути только в локальной среде
+        if (defined('APP_ENV') && APP_ENV === 'local') {
+            // Заменяем все пути к изображениям
+            $html = preg_replace('/src="\/images\//', 'src="/pinitk85/images/', $html);
+            $html = preg_replace('/href="\/images\//', 'href="/pinitk85/images/', $html);
 
-        // Заменяем все пути к папке Uploads
-        $html = preg_replace('/src="\/Uploads\//', 'src="/pinitk85/Uploads/', $html);
-        $html = preg_replace('/href="\/Uploads\//', 'href="/pinitk85/Uploads/', $html);
+            // Заменяем все пути к папке Uploads
+            $html = preg_replace('/src="\/Uploads\//', 'src="/pinitk85/Uploads/', $html);
+            $html = preg_replace('/href="\/Uploads\//', 'href="/pinitk85/Uploads/', $html);
+        }
 
         return $html;
     }
