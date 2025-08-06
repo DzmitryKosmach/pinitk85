@@ -1,0 +1,396 @@
+<?php echo CssCopmress::load('catalog')?>
+<?php echo JsCopmress::load('catalog')?>
+
+<?php echo CssCopmress::load('category')?>
+<?php echo JsCopmress::load('category')?>
+
+<div id="title" class="title">
+	<div class="centering">
+		<div class="centeringin clearfix">
+			<?php if(count($breadcrumbs)) { ?>
+			<?php $bcLast = array_pop($breadcrumbs); ?>
+			<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+				<?php $position = 0; ?>
+				<?php foreach($breadcrumbs as $bc) { ?>
+					<?php $position = $position + 1; ?>
+					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+						<a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope
+							itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item"><span
+								itemprop="name"><?php echo $bc['name']; ?></span></a>
+						<meta itemprop="position" content="<?php echo $position; ?>" />
+					</li>
+					<li><span> / </span></li>
+				<?php } ?>
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+					<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
+						<span itemprop="name"><?php echo $bcLast['name']; ?></span>
+					</span>
+					<meta itemprop="position" content="<?php echo $position + 1; ?>" />
+				</li>
+			</ul>
+			<?php } ?>
+			<?php if(trim($pageInf['header'])) { ?>
+				<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+			<?php } ?>
+		</div>
+	</div>
+</div>
+
+<?php if($pages) { ?>
+<div class="tags_container">
+	<div id="tags">
+		<div class="centering">
+			<div class="tag_pages">
+				<?php foreach($pages as $p) { ?>
+				<?php if($_SERVER['REQUEST_URI'] == Catalog_Pages::a($p['id'])) { ?>
+				<span class="tag_page_link active">
+					<?php echo $p['name']; ?>
+				</span>
+				<?php } else { ?>
+				<a class="tag_page_link" href="<?php echo Catalog_Pages::a($p['id']); ?>">
+					<?php echo $p['name']; ?>
+				</a>
+				<?php } ?>
+				<?php } ?>
+			</div>
+			<div class="btn_tag btn_tag_more">Показать всё</div>
+			<div class="btn_tag btn_tag_less">Свернуть</div>
+		</div>
+	</div>
+</div>
+<?php } ?>
+
+<div id="content" class="content">
+	<div class="centering">
+		<div class="centeringin clearfix">
+			<div class="catalog clearfix" id="catalog">
+				<div class="sidebar">
+					<form name="_form" action="<?php echo Catalog_Categories::a($catInf['id'], $isDiscountPage)?>" method="get" class="smartfilter">
+						<div class="around_ etr1">
+							<div class="filtren clearfix">
+								<div class="body">
+									<ul class="clearfix">
+										<li class="lvl1 number price" data-propid="1" data-propcode="BASE">
+											<a href="#" class="showchild">
+												<i class="icon pngicons"></i>
+												Интернет цена
+											</a>
+											<ul>
+												<li class="lvl2">
+													<div class="inputs">
+														<span class="from">От</span>
+														<input class="min" type="text"
+															   name="price[from]"
+															   id="arrFilter_P1_MIN"
+															   value="<?php echo (intval($_GET['price']['from']) ? intval($_GET['price']['from']) : '')?>"
+															   data-startvalue="<?php echo (intval($_GET['price']['from']) ? intval($_GET['price']['from']) : '')?>"
+															   size="9"
+															>
+														<span class="separator"></span>
+														<span class="to">До</span>
+														<input class="max" type="text"
+															   name="price[to]"
+															   id="arrFilter_P1_MAX"
+															   value="<?php echo (intval($_GET['price']['to']) ? intval($_GET['price']['to']) : '')?>"
+															   data-startvalue="<?php echo (intval($_GET['price']['to']) ? intval($_GET['price']['to']) : '')?>"
+															   size="9"
+															>
+													</div>
+													<div class="aroundslider">
+														<div id="slider-1" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+															<a class="pngicons ui-slider-handle ui-state-default ui-corner-all ui-cursor-left" href="#"></a>
+															<a class="pngicons ui-slider-handle ui-state-default ui-corner-all ui-cursor-right" href="#"></a>
+															<div class="ui-slider-range ui-widget-header"></div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</li>
+										<script>
+											$(document).ready(function(){
+												if(RSDevFunc_PHONETABLET){
+													$('#slider-1').parent().remove();
+												}else{
+													$('#slider-1').slider({
+														range:true,
+														min: <?php echo abs($minMaxPrices['min']); ?>,
+														max: <?php echo abs($minMaxPrices['max']); ?>,
+														step: 1,
+														values: [
+															<?php echo (intval($_GET['price']['from']) ? intval($_GET['price']['from']) : abs($minMaxPrices['min'])); ?>,
+															<?php echo (intval($_GET['price']['to']) ? intval($_GET['price']['to']) : abs($minMaxPrices['max'])); ?>
+														],
+														slide: function(event, ui){
+															var slider = $(this);
+															setTimeout(function(){
+																var parent = slider.parents('.lvl2');
+																parent.find('.min').val(slider.slider('values',0));
+																parent.find('.max').val(slider.slider('values',1));
+																smartFilter.keyup(BX('arrFilter_P1_MIN'));
+																parent.find('.min, .max').each(function(i){
+																	$(this).val( RSDevFunc_NumberFormat( $(this).val() ) );
+																});
+															},50);
+														}
+													});
+												}
+											});
+										</script>
+
+										<?php foreach($pagesGroups as $pg) { ?>
+											<?php
+											$opened = $pg['opened'];
+											if(!$opened){
+                                                if (isset($_GET['f'][$pg['id']])) {
+                                                    foreach ($pg['pages'] as $p) {
+                                                        if (in_array($p['id'], $_GET['f'][$pg['id']])) {
+                                                            $opened = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+											}
+											?>
+											<li class="lvl1 <?php echo ($opened ? '' : 'closed')?>" data-propid="<?php echo $pg['id']; ?>">
+												<a href="#" class="showchild">
+													<i class="icon pngicons"></i>
+													<?php echo $pg['name']; ?>
+												</a>
+												<ul>
+													<?php foreach($pg['pages'] as $p) { ?>
+														<li class="lvl2">
+															<input type="checkbox"
+																   name="f[<?php echo $pg['id']; ?>][]"
+																   id="filter-<?php echo $pg['id']; ?>-<?php echo $p['id']; ?>"
+																   value="<?php echo $p['id']; ?>"
+																   <?php if(isset($_GET['f'][$pg['id']]) && in_array($p['id'], $_GET['f'][$pg['id']])) { ?>checked<?php } ?>
+																   onclick="smartFilter.click(this)"
+																>
+															<label for="filter-<?php echo $pg['id']; ?>-<?php echo $p['id']; ?>">
+																<?php echo $p['name']; ?>
+															</label>
+														</li>
+													<?php } ?>
+												</ul>
+											</li>
+										<?php } ?>
+
+										<li class="lvl1">
+											<ul>
+												<li class="lvl2">
+													<input type="checkbox"
+														   name="instock"
+														   id="instock"
+														   value="1"
+														   <?php if(intval($_GET['instock'])) { ?>checked<?php } ?>
+														>
+													<label for="instock">
+														Только товар в наличии
+													</label>
+												</li>
+											</ul>
+										</li>
+									</ul>
+									<div class="buttons">
+										<a rel="nofollow" class="btn1 set_filter" href="#">
+											Показать
+										</a>
+										<span class="separator"></span>
+										<a rel="nofollow" class="btn3 del_filter" href="<?php echo Catalog_Categories::a($catInf['id'], $isDiscountPage); ?>">
+											Сбросить
+										</a>
+										<input class="nonep" type="submit" id="set_filter">
+									</div>
+								</div>
+								<div class="modef" id="modef" style="display:none">
+									<span class="arrow">&nbsp;</span>
+									<span class="data">
+										Выбрано:
+										<span id="modef_num">0</span>
+										<a href="#">
+											Показать
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</form>
+					<script>
+						var smartFilter = new JCSmartFilter('<?php echo Catalog_Categories::a($catInf['id'], $isDiscountPage)?>');
+					</script>
+				</div>
+				<div class="prods" id="prods">
+					<div class="mix clearfix">
+						<div class="catalogsorter" id="composite_sorter">
+							<!--'start_frame_cache_composite_sorter'-->
+							<div class="sortaou clearfix">
+								<div class="sort clearfix">
+									<span class="cool">
+										<span class="title">
+											Сортировать:
+										</span>
+										<span class="dropdown">
+											<a class="select" href="#">
+												<span class="nowrap">
+                                                    <?php
+                                                    $_GET['direction'] = isset($_GET['direction']) ? $_GET['direction'] : '';
+                                                    $_GET['sort'] = isset($_GET['sort']) ? $_GET['sort'] : '';
+                                                    ?>
+													<?php if(isset($_GET['sort']) && trim($_GET['sort']) === mCatalog::SERIES_SORT_DISCOUNT) { ?>
+														со скидкой
+														<i class="desc icon pngicons"></i>
+													<?php } elseif(isset($_GET['sort']) && trim($_GET['sort']) === mCatalog::SERIES_SORT_PRICE && trim($_GET['direction']) === mCatalog::SERIES_DIR_UP) { ?>
+														по цене
+														<i class="asc icon pngicons"></i>
+													<?php } elseif(isset($_GET['sort']) && trim($_GET['sort']) === mCatalog::SERIES_SORT_PRICE && trim($_GET['direction']) === mCatalog::SERIES_DIR_DOWN) { ?>
+														по цене
+														<i class="desc icon pngicons"></i>
+													<?php } else { ?>
+														по умолчанию
+														<i class="desc icon pngicons"></i>
+													<?php } ?>
+												</span>
+											</a>
+											<span class="dropdownin">
+												<?php
+												$link = Url::buildUrl(0, $_GET, array(
+														'sort' => null,
+														'direction' => null,
+														'page' => null
+													));
+												$link = str_replace('catalog/', '', $link);
+												?>
+												<a	href="<?php echo $link ?>"
+													<?php if(trim($_GET['sort']) !== mCatalog::SERIES_SORT_DISCOUNT && trim($_GET['sort']) !== mCatalog::SERIES_SORT_PRICE && trim($_GET['sort']) !== mCatalog::SERIES_SORT_RATE) { ?>
+														class="selected"
+													<?php } ?>
+													>
+													<span class="nowrap">
+														по умолчанию
+														<i class="desc icon pngicons"></i>
+													</span>
+												</a>
+												<?php
+												$link = Url::buildUrl(0, $_GET, array(
+														'sort' => mCatalog::SERIES_SORT_DISCOUNT,
+														'direction' => null,
+														'page' => null
+													));
+												$link = str_replace('catalog/', '', $link);
+												?>
+												<a	href="<?php echo $link ?>"
+													rel="nofollow"
+													<?php if(trim($_GET['sort']) === mCatalog::SERIES_SORT_DISCOUNT) { ?>
+														class="selected"
+													<?php } ?>
+													>
+													<span class="nowrap">
+														со скидкой
+														<i class="desc icon pngicons"></i>
+													</span>
+												</a>
+												<?php
+												$link = Url::buildUrl(0, $_GET, array(
+														'sort' => mCatalog::SERIES_SORT_PRICE,
+														'direction' => mCatalog::SERIES_DIR_UP,
+														'page' => null
+													));
+												$link = str_replace('catalog/', '', $link);
+												?>
+												<a	href="<?php echo  $link ?>"
+													rel="nofollow"
+													<?php if(trim($_GET['sort']) === mCatalog::SERIES_SORT_PRICE && trim($_GET['direction']) === mCatalog::SERIES_DIR_UP) { ?>
+														class="selected"
+													<?php } ?>
+													>
+													<span class="nowrap">
+														по цене
+														<i class="asc icon pngicons"></i>
+													</span>
+												</a>
+												<?php
+												$link = Url::buildUrl(0, $_GET, array(
+														'sort' => mCatalog::SERIES_SORT_PRICE,
+														'direction' => mCatalog::SERIES_DIR_DOWN,
+														'page' => null
+													));
+												$link = str_replace('catalog/', '', $link);
+												?>
+												<a	href="<?php echo  $link ?>"
+													rel="nofollow"
+													<?php if(trim($_GET['sort']) === mCatalog::SERIES_SORT_PRICE && trim($_GET['direction']) === mCatalog::SERIES_DIR_DOWN) { ?>
+														class="selected"
+													<?php } ?>
+													>
+													<span class="nowrap">
+														по цене
+														<i class="desc icon pngicons"></i>
+													</span>
+												</a>
+											</span>
+										</span>
+									</span>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<!--'end_frame_cache_composite_sorter'-->
+						</div>
+					</div>
+
+					<div id="ajaxpages_gmci" class="ajaxpages_gmci">
+						<!-- showcase -->
+						<div class="showcase clearfix" id="showcaseview">
+							<?php if($pageWithSeries) { ?>
+								<?php if(count($series)) { ?>
+									<?php foreach($series as $sn => $s) { ?>
+										<?php include(_ROOT . Catalog_Series::$tpl)?>
+									<?php } ?>
+								<?php } else { ?>
+									<?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
+								<?php } ?>
+							<?php } else { ?>
+								<?php if(count($items)) { ?>
+									<?php echo CssCopmress::load('series')?>
+									<?php echo JsCopmress::load('series')?>
+									<div class="catalog-items">
+										<script>
+											oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
+										</script>
+										<?php foreach($items as $in => $i) { ?>
+											<?php
+											$seriesInf = array(
+												'id'			=> $i['series_id'],
+												'category_id'	=> $i['category_id'],
+												'url'			=> $i['s_url']
+											);
+											?>
+											<?php include(_ROOT . Catalog_Items::$tpl)?>
+										<?php } ?>
+									</div>
+								<?php } else { ?>
+									<?php echo Pages::msgErr('По вашему запросу товары не найдены.')?>
+								<?php } ?>
+							<?php } ?>
+						</div>
+						<!-- showcase -->
+					</div>
+
+					<div class="paginator-show-all"></div>
+					<?php echo $toggle; ?>
+				</div>
+			</div>
+		</div>
+
+		<?php if(!Pages::isMobile() && $catInf && trim($catInf['text']) !== '') { ?>
+			<div style="padding-top: 30px">
+				<?php if($tagPageInfo['text']) { ?>
+					<?php echo $tagPageInfo['text']; ?>
+				<?php } else { ?>
+					<?php echo $catInf['text']; ?>
+				<?php } ?>
+
+				<div class="cl"></div>
+			</div>
+		<?php } ?>
+	</div>
+</div>

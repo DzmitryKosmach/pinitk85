@@ -35,10 +35,29 @@ class Pattern
 
         $this->html = ob_get_contents();
 
+        // Автоматически исправляем пути к изображениям для локальной среды
+        $this->html = $this->fixImagePaths($this->html);
+
         // Работает некорректно
         //$this->html = $this->sanitize($this->html);
 
         ob_end_clean();
+    }
+
+    /**
+     * Исправляет пути к изображениям для локальной среды
+     */
+    private function fixImagePaths(string $html): string
+    {
+        // Заменяем все пути к изображениям
+        $html = preg_replace('/src="\/images\//', 'src="/pinitk85/images/', $html);
+        $html = preg_replace('/href="\/images\//', 'href="/pinitk85/images/', $html);
+
+        // Заменяем все пути к папке Uploads
+        $html = preg_replace('/src="\/Uploads\//', 'src="/pinitk85/Uploads/', $html);
+        $html = preg_replace('/href="\/Uploads\//', 'href="/pinitk85/Uploads/', $html);
+
+        return $html;
     }
 
     private function sanitize(string $buffer): string
@@ -123,9 +142,11 @@ class Pattern
     {
         $varsCode = '';
         foreach ($vars as $n => $v) {
-            $varsCode .= '$' . $n . ' = unserialize(\'' . str_replace(array('\\', '\''),
-                    array('\\\\', '\\\''),
-                    serialize($v)) . '\');' . _N;
+            $varsCode .= '$' . $n . ' = unserialize(\'' . str_replace(
+                array('\\', '\''),
+                array('\\\\', '\\\''),
+                serialize($v)
+            ) . '\');' . _N;
         }
         return $varsCode;
     }

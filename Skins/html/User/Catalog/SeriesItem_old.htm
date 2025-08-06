@@ -1,0 +1,112 @@
+
+<div class="js-element simple propvision1">
+	<div class="inner">
+		<div class="padd">
+			<?php if(!empty($s['marker'])) { ?>
+			<div class="text-block">
+				<span class="marker" style="
+					color: <?php echo  $s['marker']['color']; ?>;
+					<?php if($s['marker']['shadow']) { ?> text-shadow: 0 1px 1px rgba(0,0,0, 0.7); <?php } ?>
+				">
+					<?php echo $s['marker']['text'] ?>
+				</span>
+			</div>
+			<?php } ?>
+			<div class="name">
+				<a href="<?php echo Catalog_Series::a($s)?>" target="_blank">
+					<?php echo $s['name']?>
+				</a>
+			</div>
+			<div class="pic">
+				<a href="<?php echo Catalog_Series::a($s)?>" target="_blank">
+					<img
+						src="<?php echo Catalog::photoUrl(
+							Catalog_Series_Photos::$imagePath,
+							$s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
+						)?>"
+						title="<?php echo hsch(
+							mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
+						)?>"
+						alt="<?php echo hsch(
+							mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
+						)?>"
+						>
+				</a>
+			</div>
+		</div>
+		<div class="soloprice">
+			<span class="price gen">
+				<?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) {?>
+					<?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от')?>
+					<?php echo Catalog::priceFormat(floor($s['price_search_min']))?>
+					руб.
+				<?php } elseif(abs($s['price_min'])) {?>
+					от
+					<?php echo Catalog::priceFormat(floor($s['price_min']))?>
+					руб.
+				<?php } ?>
+			</span>
+		</div>
+		<div class="popup padd">
+			<div class="favorishare">
+				<?php /*<div class="share">
+					<span id="detailYaShare_<?php echo $s['id']?>"></span>
+					<script>
+						new Ya.share({
+							link: 'http://<?php echo $_SERVER['HTTP_HOST'] . Catalog_Series::a($s)?>',
+							title: '<?php echo str_replace('\'', '\\\'', $s['name'])?>',
+							image: 'http://<?php echo $_SERVER['HTTP_HOST'] . Config::pathRel('images') . Catalog_Series_Photos::$imagePath . $s['1st_photo']['id'] . '.' . $s['1st_photo']['_img_ext']?>',
+							element: 'detailYaShare_<?php echo $s['id']?>',
+							elementStyle: {
+								'type': 'none',
+								'border': false,
+								'text': 'Поделиться...',
+								'quickServices': ['vkontakte','facebook','twitter']
+							}
+						});
+					</script>
+				</div>*/?>
+				<?php
+				$mats = array();
+				foreach($s['materials'] as $m){
+					$mats[] = array(
+						'name'	=> $m['name'],
+						'img'	=> Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext']
+					);
+				}
+
+				if(count($mats)) { ?>
+					<div class="materials" data-preview="<?php echo hsch(toJson($mats))?>">
+						<img src="/Skins/img/user/wait.gif" width="19" height="19" alt="Подождите...">
+					</div>
+				<?php } ?>
+			</div>
+			<div class="compare">
+				<?php
+				$rnd = rand(1, 1000);	// На случай, если одна серия окажется на странице дважды, этот параметр мы вписываем в ID некоторых тегов
+				?>
+				<div
+					id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-0"
+					<?php if(Catalog_Compare::check($s['id'])) { ?>style="display: none"<?php } ?>
+					>
+					<a href="javascript:void(0)" onclick="oCompare.add(<?php echo $s['id']?>, <?php echo $rnd?>); return false;" class="add2compare1">
+						<i class="icon pngicons"></i>
+						<img style="width:20px;position: relative;top: 6px;left: 4px;" src="/Skins/img/user/sr.png" />
+					</a>
+				</div>
+				<div
+					id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-1"
+					<?php if(!Catalog_Compare::check($s['id'])) { ?>style="display: none"<?php } ?>
+					>
+					<a href="<?php echo Url::a('catalog-compare')?>" class="add2compare1 in">
+						<i class="icon pngicons"></i>
+						<img style="width:20px;position: relative;top: 6px;left: 4px;" src="/Skins/img/user/sr2.png" />
+						(<span class="series-compare-cnt"><?php echo Catalog_Compare::count()?></span>)</a>
+						<a href="javascript:void(0)" onclick="oCompare.remove(<?php echo $s['id']?>, <?php echo $rnd?>); return false;" class="dashed">
+						<img style="width:13px;position: relative;top: 2px;" src="/Skins/img/user/close.png" />
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
