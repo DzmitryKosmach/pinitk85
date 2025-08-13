@@ -1,6 +1,5 @@
 // Карусель для главной страницы
 (function () {
-    console.log("=== main-carousel.js загружен через JsCopmress ===");
 
     // Защита от повторного выполнения
     if (window.carouselInitialized) {
@@ -13,16 +12,11 @@
         const carousel = document.getElementById("carousel");
         const pagination = document.getElementById("pagination");
 
-        console.log("Проверяю элементы:");
-        console.log("- carousel:", carousel);
-        console.log("- pagination:", pagination);
-
         return { carousel, pagination };
     }
 
     // Функция инициализации карусели
     function initCarousel() {
-        console.log("Инициализирую карусель...");
 
         const { carousel, pagination } = checkElements();
 
@@ -33,14 +27,12 @@
 
         // Проверяем, не инициализирована ли уже карусель
         if (carousel.dataset.initialized === "true") {
-            console.log("Карусель уже инициализирована в этом элементе");
             return true;
         }
 
         const slides = carousel.children;
         const totalSlides = slides.length;
 
-        console.log("Найдено слайдов:", totalSlides);
 
         if (totalSlides === 0) {
             console.log("Слайды пустые, жду загрузки...");
@@ -72,8 +64,6 @@
             });
             pagination.appendChild(dot);
         }
-
-        console.log("Точки пагинации созданы");
 
         let currentIndex = 0;
         const dots = pagination.children;
@@ -128,6 +118,8 @@
 
     // Пытаемся инициализировать сразу
     if (!initCarousel()) {
+        console.log("Инициализация не удалась, жду загрузки DOM...");
+
         // Если не получилось, ждем загрузки DOM
         document.addEventListener("DOMContentLoaded", () => {
             console.log("DOM загружен, пытаюсь инициализировать карусель...");
@@ -156,5 +148,7 @@
             childList: true,
             subtree: true,
         });
+    } else {
+        console.log("Карусель инициализирована сразу!");
     }
 })();
