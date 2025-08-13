@@ -213,229 +213,34 @@
         <h2 class="text-2xl font-bold mb-8">Лучшие товары</h2>
 
         <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
-            <!-- Карточка товара -->
+            <?php if(count($seriesPromo)) { ?>
+            <?php foreach($seriesPromo as $sn => $s) { ?>
+            <?php include(_ROOT . Catalog_Series::$tpl) ?>
+            <?php } ?>
+            <?php } else { ?>
+            <!-- Fallback карточки если нет товаров в базе -->
             <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
                 <img src="/images/index/chair1.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
                 <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
                     Кресло руководителя<br />GY-330 (ГУ-330)
                 </h3>
-
                 <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
                 <div class="flex justify-between items-center mb-1">
                     <div>
                         <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
+                        <div class="font-bold text-lg leading-2 mt-[-6px]">12 467 ₽</div>
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
+                        <button><img src="/images/index/izbr_small.png" alt="В избранное" /></button>
+                        <button><img src="/images/index/srav_small.png" alt="К сравнению" /></button>
                     </div>
                 </div>
-
                 <a href="#"
                     class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair2.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair3.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair4.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair5.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair6.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair7.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
-
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
-                <img src="/images/index/chair8.jpg" alt="Кресло" class="w-full h-48 object-cover mb-4" />
-
-                <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-                    Кресло руководителя<br />GY-330 (ГУ-330)
-                </h3>
-
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">
-                            12 467 ₽
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Подробнее
-                </a>
-            </div>
+            <?php } ?>
         </div>
     </div>
 </section>
