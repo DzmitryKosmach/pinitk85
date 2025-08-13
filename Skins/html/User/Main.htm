@@ -7,17 +7,36 @@ function getImagePath($path) {
     $requestUri = $_SERVER['REQUEST_URI'] ?? '';
     
     // Если скрипт находится в подпапке (например, /pinitk85/index.php)
-    if (preg_match('#^/([^/]+)/#', $scriptName, $matches)) {
+    if (preg_match('#^/([^/]+)/index\.php#', $scriptName, $matches)) {
         return '/' . $matches[1] . $path;
     }
     
     // Если скрипт в корне, но запрос идет из подпапки
-    if (preg_match('#^/([^/]+)/#', $requestUri, $matches)) {
+    if (preg_match('#^/([^/]+)/index\.php#', $requestUri, $matches)) {
         return '/' . $matches[1] . $path;
     }
     
-    // По умолчанию - корневой путь
+    // По умолчанию - корневой путь (для сервера)
     return $path;
+}
+
+// Функция для определения ссылки на главную страницу
+function getHomeUrl() {
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    
+    // Если скрипт находится в подпапке (например, /pinitk85/index.php)
+    if (preg_match('#^/([^/]+)/index\.php#', $scriptName, $matches)) {
+        return '/' . $matches[1] . '/';
+    }
+    
+    // Если скрипт в корне, но запрос идет из подпапки
+    if (preg_match('#^/([^/]+)/index\.php#', $requestUri, $matches)) {
+        return '/' . $matches[1] . '/';
+    }
+    
+    // По умолчанию - корневой путь (для сервера)
+    return '/';
 }
 //ob_start(); 
 ?>
@@ -308,7 +327,7 @@ function getImagePath($path) {
             <!-- Левая часть -->
             <div class="flex sm:inline-block justify-between gap-4">
                 <div>
-                    <a href="#">
+                    <a href="<?php echo getHomeUrl(); ?>">
                         <img src="<?php echo getImagePath('/images/index/logo.png'); ?>" alt="Логотип"
                             class="inline-block w-[162px] h-[34px] lg:w-[340px] lg:h-[71px]" />
                     </a>
@@ -495,7 +514,8 @@ function getImagePath($path) {
     <?php } ?>
 
     <footer class="bg-footer text-black text-sm pt-8 pb-4 px-8 mb:px-4 mt-24 md:px-12">
-        <div class="md:hidden block w-full text-center"><a class="inline-block mx-auto" href="#"><img
+        <div class="md:hidden block w-full text-center"><a class="inline-block mx-auto"
+                href="<?php echo getHomeUrl(); ?>"><img
                     src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
         </div>
 
@@ -504,7 +524,7 @@ function getImagePath($path) {
         <div class="hidden max-w-1440 mx-auto md:grid gap-16 md:grid-cols-4">
             <!-- Блок 1: Компания -->
             <div>
-                <a class="hidden md:block" href="#"><img
+                <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>"><img
                         src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип"
                         class="mb-4" /></a>
 
