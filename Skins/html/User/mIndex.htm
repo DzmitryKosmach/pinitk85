@@ -65,15 +65,22 @@
             </div>
         </div>
 
-        <!-- Правая часть: carousel -->
+        <!-- Правая часть: Карусель -->
         <div class="flex-1 ml-[-32px] mr-[-32px] sm:ml-0 sm:mr-0">
-            <img src="/images/index/main.jpg" alt="Офисная мебель" class="w-full h-auto  sm:rounded shadow" />
-            <!-- Пагинация -->
-            <div class="flex justify-center mt-6 space-x-2">
-                <span class="w-2.5 h-2.5 bg-blue-600 rounded-full"></span>
-                <span class="w-2.5 h-2.5 bg-gray-300 rounded-full"></span>
-                <span class="w-2.5 h-2.5 bg-gray-300 rounded-full"></span>
+            <div class="relative rounded-none sm:rounded-lg overflow-hidden">
+                <!-- Слайды -->
+                <div id="carousel" class="flex shadow transition-transform duration-500 ease-in-out">
+                    <img src="images/index/main.jpg" alt="Слайд 1" class="min-w-full h-auto object-cover" />
+                    <img src="images/index/main.jpg" alt="Слайд 2" class="min-w-full h-auto object-cover" />
+                    <img src="images/index/main.jpg" alt="Слайд 3" class="min-w-full h-auto object-cover" />
+                </div>
             </div>
+
+            <!-- Пагинация -->
+            <div id="pagination" class="flex justify-center mt-6 space-x-2">
+                <!-- Точки будут добавлены через JS -->
+            </div>
+
         </div>
     </div>
 
@@ -110,15 +117,7 @@
     <h2 class="text-xl md:text-2xl font-semibold mb-6 md:mb-12">Раздел категорий</h2>
     <div class="text-sm md:text-lg grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
         <?php foreach($categories as $c1) { ?>
-        <a href="<?php echo Catalog_Categories::a($c1['id'])?>">
-            <div class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8">
-                <img src="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c1['id']?>_212x159_0.<?php echo $c1['_img_ext']?>"
-                    alt="<?php echo hsch($c1['name'])?>" class="w-full h-32 md:h-40 object-cover rounded-md mb-1" />
-                <div class="font-medium">
-                    <?php echo $c1['name']?>
-                </div>
-            </div>
-        </a>
+        <?php include(Config::path('skins') . '/html/Components/category_card.htm'); ?>
         <?php } ?>
     </div>
 </section>
@@ -232,12 +231,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -260,12 +259,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -288,12 +287,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -316,12 +315,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -344,12 +343,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -372,12 +371,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -400,12 +399,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -428,12 +427,12 @@
                     </div>
                     <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
                         <button><img src="/images/index/izbr_small.png" </button>
-                        <button><img src="/images/index/srav_small.png" </button>
+                            <button><img src="/images/index/srav_small.png" </button>
                     </div>
                 </div>
 
                 <a href="#"
-                   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
                     Подробнее
                 </a>
             </div>
@@ -468,16 +467,19 @@
                 <ul class="list-disc pl-6">
                     <li>столы. Обычно покупаются отдельно для работников: если площадь позволяет, тогда каждому,
                         если нет, то один длинный на всех. Также необходимы столы в кабинет руководителя и в
-                        приемную;</li>
+                        приемную;
+                    </li>
                     <li>кресла, стулья. При их выборе берутся во внимание особенности места, где они
                         располагаются.
                         Закупаются для директора, персонала, клиентов, посетителей;
                     </li>
                     <li>диваны. Их покупают не всегда. Все зависит от особенностей работы компании, от того,
-                        проводит ли она личные встречи с клиентами, от площади самого офиса;</li>
+                        проводит ли она личные встречи с клиентами, от площади самого офиса;
+                    </li>
                     <li>
                         тумбочки, шкафы, стеллажи. Они обязательны для хранения документации, отдельных частей
-                        оргтехники, личных вещей сотрудников.</li>
+                        оргтехники, личных вещей сотрудников.
+                    </li>
                 </ul>
                 <p>Офисная мебель должна сочетаться между собой, то есть, могут покупаться разные части
                     гарнитура, но обязательно выполненные в едином стиле. Важно, чтобы в итоге создалась
@@ -517,10 +519,12 @@
                     </li>
                     <li>стол желательно компьютерный, со всеми выемками и приспособлениями под мышку с
                         клавиатурой,
-                        системный блок, колонки;</li>
+                        системный блок, колонки;
+                    </li>
                     <li>шкафы и стеллажи нужно разместить так, чтобы каждому было удобно ими пользоваться, и они
                         не
-                        загромождали пространство.</li>
+                        загромождали пространство.
+                    </li>
                 </ul>
                 Высота полок подбирается в зависимости от размеров папок.
                 </p>
@@ -540,9 +544,11 @@
                     <li>удобное, регулируемое по высоте кресло с подлокотниками и высокой спинкой;</li>
                     <li>стол массивный, но в меру, чтобы человек за ним не смотрелся нелепо, не казался
                         маленьким.
-                        Лучше выбирать модели из натурального массива дерева;</li>
+                        Лучше выбирать модели из натурального массива дерева;
+                    </li>
                     <li>мебель должна быть такой, чтобы во время переговоров руководитель казался ближе к
-                        собеседнику. Не допускается слишком большое разделение.</li>
+                        собеседнику. Не допускается слишком большое разделение.
+                    </li>
                 </ul>
                 <p>Цены на офисную мебель в Москве разные, но гарнитур для кабинета руководителя обычно самый
                     дорогой, потому что он должен смотреться статусно, иметь отличное качество.
@@ -820,3 +826,5 @@
     Благотворительный фонд, БФ "Дары добра". Часть средств от продажи офисной мебели оптом перечисляются на
     благотворительность.
 </button>
+
+<?php echo JsCopmress::load('carousel'); ?>
