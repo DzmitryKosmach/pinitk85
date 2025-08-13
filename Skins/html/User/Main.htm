@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
-<?php //ob_start(); ?>
+<?php 
+// Функция для определения базового пути к изображениям
+function getImagePath($path) {
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    
+    // Если скрипт находится в подпапке (например, /pinitk85/index.php)
+    if (preg_match('#^/([^/]+)/#', $scriptName, $matches)) {
+        return '/' . $matches[1] . $path;
+    }
+    
+    // Если скрипт в корне, но запрос идет из подпапки
+    if (preg_match('#^/([^/]+)/#', $requestUri, $matches)) {
+        return '/' . $matches[1] . $path;
+    }
+    
+    // По умолчанию - корневой путь
+    return $path;
+}
+//ob_start(); 
+?>
 
 <head>
     <meta charset="utf-8">
@@ -289,7 +309,7 @@
             <div class="flex sm:inline-block justify-between gap-4">
                 <div>
                     <a href="#">
-                        <img src="images/index/logo.png" alt="Логотип"
+                        <img src="<?php echo getImagePath('/images/index/logo.png'); ?>" alt="Логотип"
                             class="inline-block w-[162px] h-[34px] lg:w-[340px] lg:h-[71px]" />
                     </a>
                 </div>
@@ -476,19 +496,22 @@
 
     <footer class="bg-footer text-black text-sm pt-8 pb-4 px-8 mb:px-4 mt-24 md:px-12">
         <div class="md:hidden block w-full text-center"><a class="inline-block mx-auto" href="#"><img
-                    src="images/index/logo-footer.png" alt="Логотип" class="mb-4" /></a></div>
+                    src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
+        </div>
 
 
         <!-- Блок основной -->
         <div class="hidden max-w-1440 mx-auto md:grid gap-16 md:grid-cols-4">
             <!-- Блок 1: Компания -->
             <div>
-                <a class="hidden md:block" href="#"><img src="images/index/logo-footer.png" alt="Логотип"
+                <a class="hidden md:block" href="#"><img
+                        src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип"
                         class="mb-4" /></a>
 
                 <div class="mt-4 space-y-1 ">
                     <p class="flex gap-4 font-semibold ">
-                        <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+                        <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон"
+                            class="w-5 h-5" />
                         <span>+7 (495)
                             920-48-24<br>8 (800) 234-90-84</span>
                     </p>
@@ -510,11 +533,13 @@
             <div>
                 <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
                 <div class="flex items-center  gap-1 mb-2">
-                    <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
+                    <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
+                        class="w-5 h-5 mr-1" />
                     <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
                 </div>
                 <div class="flex  gap-1 mb-2">
-                    <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
+                    <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email"
+                        class="w-5 h-5 mr-1" />
                     <div>
                         <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
                                 class="text-blue-600">zakaz@mebelioni.ru</a>
@@ -524,16 +549,16 @@
                         </p>
                         <div class="flex flex-wrap gap-3 mt-3">
                             <!-- Иконки соцсетей -->
-                            <a href="#"><img src="/images/index/soc_t.png" alt="Twitter"
+                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_t.png'); ?>" alt="Twitter"
                                     class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="/images/index/soc_vk.png" alt="ВКонтакте"
+                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_vk.png'); ?>"
+                                    alt="ВКонтакте" class="w-9 h-9 hover:opacity-80" /></a>
+                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_f.png'); ?>" alt="Facebook"
                                     class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="/images/index/soc_f.png" alt="Facebook"
-                                    class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="/images/index/soc_tg.png" alt="Telrgram"
-                                    class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="/images/index/soc_wt.png" alt="Whatsapp"
-                                    class="w-9 h-9 hover:opacity-80" /></a>
+                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_tg.png'); ?>"
+                                    alt="Telrgram" class="w-9 h-9 hover:opacity-80" /></a>
+                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_wt.png'); ?>"
+                                    alt="Whatsapp" class="w-9 h-9 hover:opacity-80" /></a>
 
                         </div>
                     </div>
@@ -591,7 +616,8 @@
                 <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
                 <div class="mt-4 space-y-1 ">
                     <p class="flex gap-4 font-semibold ">
-                        <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+                        <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон"
+                            class="w-5 h-5" />
                         <span>+7 (495)
                             920-48-24<br>8 (800) 234-90-84</span>
                     </p>
@@ -612,11 +638,13 @@
             <!-- Блок 2: Контакты -->
             <div class="flex flex-row-reverse justify-center text-sm mt-8">
                 <div class="flex w-[45%] gap-1 mb-2">
-                    <img src="images/index/location_f.png" alt="Местоположение" class="w-4 h-4 mr-1" />
+                    <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
+                        class="w-4 h-4 mr-1" />
                     <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
                 </div>
                 <div class="flex w-[45%] gap-1 mb-2">
-                    <img src="/images/index/mail_f.png" alt="email" class="w-4 h-4 mr-1" />
+                    <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email"
+                        class="w-4 h-4 mr-1" />
                     <div>
                         <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
                                 class="text-blue-600">zakaz@mebelioni.ru</a>
@@ -630,11 +658,16 @@
 
             <div class="flex flex-wrap gap-3 mt-1">
                 <!-- Иконки соцсетей -->
-                <a href="#"><img src="/images/index/soc_t.png" alt="Twitter" class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="/images/index/soc_vk.png" alt="ВКонтакте" class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="/images/index/soc_f.png" alt="Facebook" class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="/images/index/soc_tg.png" alt="Telrgram" class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="/images/index/soc_wt.png" alt="Whatsapp" class="w-7 h-7 hover:opacity-80" /></a>
+                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_t.png'); ?>" alt="Twitter"
+                        class="w-7 h-7 hover:opacity-80" /></a>
+                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_vk.png'); ?>" alt="ВКонтакте"
+                        class="w-7 h-7 hover:opacity-80" /></a>
+                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_f.png'); ?>" alt="Facebook"
+                        class="w-7 h-7 hover:opacity-80" /></a>
+                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_tg.png'); ?>" alt="Telrgram"
+                        class="w-7 h-7 hover:opacity-80" /></a>
+                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_wt.png'); ?>" alt="Whatsapp"
+                        class="w-7 h-7 hover:opacity-80" /></a>
 
             </div>
 
@@ -742,13 +775,13 @@
     </div>
     <div class="xCallback">
         <div class="xCallback__entity" onclick="kcall(); return false;">
-            <img src="/img/icons/blue-ear-phone.png" alt="">
+            <img src="<?php echo getImagePath('/img/icons/blue-ear-phone.png'); ?>" alt="">
             Заказать звонок
         </div>
     </div>
     <div class="modal modal--order-call" id="kmodal">
         <a href="javascript:void(0);" class="modal__close modal__close--big-margin" onclick="kclose(); return false;">
-            <img src="/img/icons/modal-close.png" alt="">
+            <img src="<?php echo getImagePath('/img/icons/modal-close.png'); ?>" alt="">
         </a>
 
         <div id="vibiliunasnasaite" style="display:none;">
@@ -857,7 +890,7 @@
             </div>
         </div>
     </div>
-    <link rel="stylesheet" href="/Skins/css/minn.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
 
     <script>
         function catchEnter(e) {
