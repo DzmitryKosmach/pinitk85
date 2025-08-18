@@ -500,7 +500,7 @@ function getHomeUrl() {
 
     <!-- Menu catalog -->
     <div class="max-w-1440 mt-2 mx-auto px-8 sm:px-6 lg:px-8 py-3">
-        <div class="flex w-full max-w-[768px] rounded-lg mb-6 bg-white">
+        <div class="flex w-full max-w-[768px] rounded-lg mb-1 bg-white">
             <!-- Внешний group для hover -->
             <div class="relative group">
                 <!-- Кнопка -->
@@ -589,42 +589,6 @@ function getHomeUrl() {
                     autocomplete="off" />
             </form>
         </div>
-
-        <!-- Хлебные крошки -->
-        <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10" itemscope
-            itemtype="http://schema.org/BreadcrumbList">
-            <?php if (!empty($breadcrumbs) && is_array($breadcrumbs)): ?>
-            <?php $bcLast = array_pop($breadcrumbs); ?>
-            <?php $position = 0; ?>
-
-            <!-- Основные крошки (ссылки) -->
-            <?php foreach ($breadcrumbs as $bc): ?>
-            <?php $position++; ?>
-            <a href="<?php echo htmlspecialchars($bc['url']); ?>" class="hover:text-gray-700"
-                title="<?php echo htmlspecialchars(hsch($bc['name'])); ?>" itemprop="itemListElement" itemscope
-                itemtype="http://schema.org/ListItem">
-                <span itemprop="name">
-                    <?php echo htmlspecialchars($bc['name']); ?>
-                </span>
-            </a>
-            <span class="mx-1" aria-hidden="true">›</span>
-            <meta itemprop="position" content="<?php echo $position; ?>" />
-            <?php endforeach; ?>
-
-            <!-- Последний элемент (без ссылки) -->
-            <span class="text-gray-700" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <span itemprop="name">
-                    <?php echo htmlspecialchars($bcLast['name']); ?>
-                </span>
-            </span>
-            <meta itemprop="position" content="<?php echo $position + 1; ?>" />
-            <?php else: ?>
-            <!-- Резервный вариант -->
-            <a href="/" class="hover:text-gray-700">Главная</a>
-            <span class="mx-1">›</span>
-            <span class="text-gray-700">Текущая страница</span>
-            <?php endif; ?>
-        </nav>
     </div>
 
 

@@ -8,44 +8,7 @@
     oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
 </script>
 
-<div id="title" class="title">
-    <div class="centering">
-        <div class="centeringin clearfix">
-            <?php if(count($breadcrumbs)) { ?>
-            <?php $bcLast = array_pop($breadcrumbs); ?>
-            <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-                <?php $position = 0; ?>
-                <?php foreach($breadcrumbs as $bc) { ?>
-                <?php $position = $position + 1; ?>
-                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    <a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope
-                        itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item"><span
-                            itemprop="name">
-                            <?php echo $bc['name']; ?>
-                        </span></a>
-                    <meta itemprop="position" content="<?php echo $position?>" />
-                </li>
-                <li><span> / </span></li>
-                <?php } ?>
-                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    <span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>"
-                        itemprop="item">
-                        <span itemprop="name">
-                            <?php echo $bcLast['name']; ?>
-                        </span>
-                    </span>
-                    <meta itemprop="position" content="<?php echo $position + 1?>" />
-                </li>
-            </ul>
-            <?php } ?>
-            <?php if(trim($pageInf['header'])) { ?>
-            <h1 class="pagetitle">
-                <?php echo $pageInf['header']; ?>
-            </h1>
-            <?php } ?>
-        </div>
-    </div>
-</div>
+
 
 <div itemscope itemtype="http://schema.org/Product" id="content" class="content">
     <meta itemprop="brand" content="<?php echo $pageInf['header']; ?>">
@@ -53,23 +16,6 @@
         content="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <div>
         <div>
-            <div class="flex w-full max-w-[768px] overflow-hidden rounded-lg mb-6">
-                <!-- Поле поиска -->
-                <input type="text" placeholder="Поиск"
-                    class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none" />
-
-                <!-- Кнопка Каталог -->
-                <button
-                    class="flex items-center gap-4 px-5 md:px-8 py-2 bg-blue-600 text-white text-base hover:bg-blue-700 transition">
-                    <span class="hidden sm:block">Каталог</span>
-                    <!-- Иконка гамбургера -->
-                    <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 1H26" stroke="#FDFDFD" />
-                        <path d="M0 7H26" stroke="#FDFDFD" />
-                        <path d="M0 13H26" stroke="#FDFDFD" />
-                    </svg>
-                </button>
-            </div>
 
             <!-- Хлебные крошки -->
             <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
@@ -272,7 +218,7 @@
 
                         <!-- Итоговая цена -->
                         <div>
-                            <?php 
+                            <?php
                             $offer_price = 0;
                             if(count($seriesSet)) {
                                 foreach($seriesSet as $i) {
