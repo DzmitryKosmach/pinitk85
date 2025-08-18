@@ -13,18 +13,21 @@
             </span>
         </div>
         <?php } ?>
-        <img src="<?php echo Catalog::photoUrl(
+
+        <a href="<?php echo Catalog_Series::a($s)?>">
+            <img src="<?php echo Catalog::photoUrl(
             Catalog_Series_Photos::$imagePath,
             $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
         )?>" alt="<?php echo hsch(
             mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
         )?>" title="<?php echo hsch(
             mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
-        )?>" class="w-full h-28 lg:h-48 object-cover rounded-md mb-4" />
+        )?>" class="w-full h-28 lg:h-48 object-cover rounded-md mb-4"/>
+        </a>
     </div>
 
     <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-        <a href="<?php echo Catalog_Series::a($s)?>" target="_blank">
+        <a href="<?php echo Catalog_Series::a($s)?>">
             <?php echo $s['name']?>
         </a>
     </h3>
@@ -35,10 +38,11 @@
         foreach($s['materials'] as $m){
             $mats[] = array(
                 'name'	=> $m['name'],
-                'img'	=> Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext']
-            );
+        'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext']
+        );
         }
         ?>
+
 
         <span
             class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px]  rounded bg-[#020202] inline-block"></span>
@@ -59,7 +63,7 @@
             <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M7.29289 8.70721C7.68342 9.09773 8.31658 9.09773 8.70711 8.70721L15.0711 2.34325C15.4616 1.95272 15.4616 1.31956 15.0711 0.929032C14.6805 0.538508 14.0474 0.538508 13.6569 0.929032L8 6.58589L2.34315 0.929032C1.95262 0.538508 1.31946 0.538508 0.928932 0.929032C0.538408 1.31956 0.538408 1.95272 0.928932 2.34325L7.29289 8.70721ZM8 8H7V8.0001H8H9V8H8Z"
-                    fill="#020202" />
+                    fill="#020202"/>
             </svg>
 
             <div class="absolute hidden group-hover:block z-10 mt-2 bg-white border rounded-lg shadow-md w-40 py-2">
@@ -101,35 +105,37 @@
             <?php
             $rnd = rand(1, 1000);	// На случай, если одна серия окажется на странице дважды, этот параметр мы вписываем в ID некоторых тегов
             ?>
-            <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-0" <?php
+            <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-0"
+            <?php
                 if(Catalog_Compare::check($s['id'])) { ?>style="display: none"
-                <?php } ?>
-                >
-                <a href="javascript:void(0)"
-                    onclick="oCompare.add(<?php echo $s['id']?>, <?php echo $rnd?>); return false;"
-                    class="add2compare1">
-                    <img src="/images/index/izbr_small.png" />
-                </a>
-            </div>
-            <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-1" <?php
+            <?php } ?>
+            >
+            <a href="javascript:void(0)"
+               onclick="oCompare.add(<?php echo $s['id']?>, <?php echo $rnd?>); return false;"
+               class="add2compare1">
+                <img src="/images/index/izbr_small.png"/>
+            </a>
+        </div>
+        <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-1"
+        <?php
                 if(!Catalog_Compare::check($s['id'])) { ?>style="display: none"
-                <?php } ?>
-                >
-                <a href="<?php echo Url::a('catalog-compare')?>" class="add2compare1 in">
-                    <img src="/images/index/srav_small.png" />
-                    (<span class="series-compare-cnt">
+        <?php } ?>
+        >
+        <a href="<?php echo Url::a('catalog-compare')?>" class="add2compare1 in">
+            <img src="/images/index/srav_small.png"/>
+            (<span class="series-compare-cnt">
                         <?php echo Catalog_Compare::count()?>
                     </span>)</a>
-                <a href="javascript:void(0)"
-                    onclick="oCompare.remove(<?php echo $s['id']?>, <?php echo $rnd?>); return false;" class="dashed">
-                    <img style="width:13px;position: relative;top: 2px;" src="/Skins/img/user/close.png" />
-                </a>
-            </div>
-        </div>
+        <a href="javascript:void(0)"
+           onclick="oCompare.remove(<?php echo $s['id']?>, <?php echo $rnd?>); return false;" class="dashed">
+            <img style="width:13px;position: relative;top: 2px;" src="/Skins/img/user/close.png"/>
+        </a>
     </div>
+</div>
+</div>
 
-    <a href="<?php echo Catalog_Series::a($s)?>" target="_blank"
-        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-        Подробнее
-    </a>
+<a href="<?php echo Catalog_Series::a($s)?>"
+   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+    Подробнее
+</a>
 </div>
