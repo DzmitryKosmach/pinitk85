@@ -214,18 +214,19 @@
 
         <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
             <?php if(count($seriesPromo)) { ?>
-            <?php foreach($seriesPromo as $sn => $s) { ?>
+            <?php $seriesPromoLimited = array_slice($seriesPromo, 0, 8); ?>
+            <?php foreach($seriesPromoLimited as $sn => $s) { ?>
             <?php include(Config::path('skins') . '/html/Components/series_card.htm'); ?>
             <?php } ?>
             <?php } else { ?>
             <!-- Fallback карточки если нет товаров в базе -->
-            <?php 
+            <?php
             $s = [
                 'name' => 'Кресло руководителя GY-330 (ГУ-330)',
                 'price_min' => 12467,
                 'price_min_old' => 13552,
                 'id' => '#'
-            ]; 
+            ];
             ?>
             <?php include(Config::path('skins') . '/html/Components/series_card.htm'); ?>
             <?php } ?>
@@ -379,69 +380,142 @@
     <div class="mt-32 md:mt-40 p-8 ml-[-32px] mr-[-32px] sm:ml-0 sm:mr-0 bg-white">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <!-- Наши клиенты -->
-            <div>
-                <h2 class="text-2xl font-bold mb-10 text-center">Наши клиенты</h2>
-                <div class="relative">
+            <div class="flex flex-col justify-between ">
+                <h2 class="text-2xl font-bold text-center mb-10">Наши клиенты</h2>
+
+                <div class="slider-container slider-7 relative w-full px-2 sm:px-24">
                     <!-- Навигация влево -->
-                    <button class="absolute left-0 top-1/2 transform -translate-y-1/2 ">
+                    <button
+                        class="slider-prev bg-white absolute left-0 top-1/2 transform -translate-y-1/2 z-20">
                         <div
-                            class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                            <img src="/images/index/Arrow_l.png" alt="Влево" />
+                            class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10">
+                            <img src="images/index/Arrow_l.png" alt="Влево" />
                         </div>
                     </button>
 
-                    <!-- Сетка логотипов -->
-                    <div
-                        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 md:gap-4 ml-8 mr-8 md:ml-24 md:mr-24">
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client1.jpg" alt="Сбер" class="object-contain h-20 mx-auto" />
-                        </div>
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client2.jpg" alt="Huawei" class="object-contain h-20 mx-auto" />
-                        </div>
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client3.jpg" alt="Роснефть" class="object-contain h-20 mx-auto" />
-                        </div>
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client4.jpg" alt="Росбанк" class="object-contain h-20 mx-auto" />
-                        </div>
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client5.jpg" alt="Сколково" class="object-contain h-20 mx-auto" />
-                        </div>
-                        <div class="p-4 border rounded-md">
-                            <img src="/images/index/client6.jpg" alt="Газпромнефть"
-                                class="object-contain h-20 mx-auto" />
+                    <div class="slider overflow-hidden">
+                        <div class="slider-track flex w-full transition-transform duration-300 space-x-4">
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8  bg-white border rounded-md">
+                                    <img src="images/index/client1.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client2.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client3.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client4.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client5.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client6.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client1.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client2.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client3.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client4.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client5.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client6.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client1.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client2.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client3.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client4.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
+                            <div class="card flex-none flex flex-col gap-4">
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client5.jpg" alt="Сбер"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                                <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
+                                    <img src="images/index/client6.jpg" alt="Huawei"
+                                         class="object-contain h-20 mx-auto" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Навигация вправо -->
-                    <button class="absolute right-0 top-1/2 transform -translate-y-1/2">
+                    <button class="slider-next bg-white absolute right-0 top-1/2 transform -translate-y-1/2">
                         <div
-                            class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                            <img src="/images/index/Arrow_r.png" alt="Вправо" />
+                            class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10">
+                            <img src="images/index/Arrow_r.png" alt="Вправо" />
                         </div>
                     </button>
                 </div>
-                <div class="text-center mt-6">
+                <div class="text-center mt-12">
                     <a href="#"
-                        class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
+                       class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
                         Смотреть всех клиентов
                     </a>
                 </div>
             </div>
 
             <!-- Благодарственные письма -->
-            <div>
+            <div class="flex flex-col justify-between ">
                 <h2 class="text-2xl font-bold text-center mb-10">Благодарственные письма</h2>
                 <div class="flex flex-wrap justify-center gap-4">
-                    <a href="#"><img src="/images/index/doc1.jpg" alt="Письмо 1"
-                            class="max-w-[220px] rounded shadow" /></a>
-                    <a href="#"><img src="/images/index/doc2.jpg" alt="Письмо 2"
-                            class="max-w-[220px] rounded shadow" /></a>
+                    <a href="#" class="ratio-[220/304]"><img src="images/index/doc1.jpg" alt="Письмо 1"
+                                                             class="max-w-[220px] h-full object-cover rounded shadow" /></a>
+                    <a href="#" class="ratio-[220/304]"><img src="images/index/doc2.jpg" alt="Письмо 2"
+                                                             class="max-w-[220px] h-full object-cover rounded shadow" /></a>
                 </div>
-                <div class="text-center mt-20">
+                <div class="text-center mt-12">
                     <a href="#"
-                        class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
+                       class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
                         Смотреть все письма
                     </a>
                 </div>
@@ -451,44 +525,167 @@
 </section>
 
 <section class="mb-24">
-    <h2 class="text-2xl font-semibold md:underline mt-20 mb-12">Наши работы</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <a href="#">
-            <div class="rounded overflow-hidden bg-white shadow hover:shadow-lg transition p-8">
-                <img src="/images/index/cat6.jpg" alt="Кабинет руководителя Персио"
-                    class="w-full h-40 object-cover rounded-md mb-1" />
-                <div class="font-medium text-gray-900">Кабинет руководителя Персио</div>
+    <h1 class="text-[21px] md:text-4xl font-semibold mb-4 md:mb-8">
+        Репутация
+    </h1>
+
+    <h2 class="text-2xl font-semibold underline md:no-underline mt-6 mb-6">
+        Наши работы
+    </h2>
+
+    <div class="slider-container slider-4 relative w-full">
+        <!-- Навигация влево -->
+        <button
+            type="button"
+            class="slider-prev absolute bg-white left-0 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-colors"
+        >
+            <img
+                src="images/index/Arrow_l.png"
+                alt="Влево"
+                class="pointer-events-none"
+            />
+        </button>
+
+        <div class="slider overflow-hidden">
+            <div
+                class="slider-track flex w-full transition-transform duration-300 space-x-4 py-6"
+            >
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat1.jpg"
+                            alt="Кабинеты руководителей"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Кабинеты руководителей</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat2.jpg"
+                            alt="Мебель для персонала"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Мебель для персонала</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat3.jpg"
+                            alt="Столы для переговоров"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Столы для переговоров</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
+
+                <a class="card flex-none" href="#">
+                    <div
+                        class="rounded h-full overflow-hidden bg-white shadow hover:shadow-lg transition p-4 lg:p-8"
+                    >
+                        <img
+                            src="images/index/cat4.jpg"
+                            alt="Стойки ресепшн"
+                            class="w-full h-40 object-cover rounded-md mb-1"
+                        />
+                        <div class="font-medium">Стойки ресепшн</div>
+                    </div>
+                </a>
             </div>
-        </a>
+        </div>
 
-        <a href="#">
-            <div class="rounded overflow-hidden bg-white shadow hover:shadow-lg transition p-8">
-                <img src="/images/index/cat6.jpg" alt="Кабинет руководителя Персио"
-                    class="w-full h-40 object-cover rounded-md mb-1" />
-                <div class="font-medium text-gray-900">Кабинет руководителя Персио</div>
-            </div>
-        </a>
-
-        <a href="#">
-            <div class="rounded overflow-hidden bg-white shadow hover:shadow-lg transition p-8">
-                <img src="/images/index/cat6.jpg" alt="Кабинет руководителя Персио"
-                    class="w-full h-40 object-cover rounded-md mb-1" />
-                <div class="font-medium text-gray-900">Кабинет руководителя Персио</div>
-            </div>
-        </a>
-
-        <a href="#">
-            <div class="rounded overflow-hidden bg-white shadow hover:shadow-lg transition p-8">
-                <img src="/images/index/cat6.jpg" alt="Кабинет руководителя Персио"
-                    class="w-full h-40 object-cover rounded-md mb-1" />
-                <div class="font-medium text-gray-900">Кабинет руководителя Персио</div>
-            </div>
-        </a>
-
-
+        <!-- Навигация вправо -->
+        <button
+            type="button"
+            class="slider-next absolute bg-white right-0 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-colors"
+        >
+            <img
+                src="images/index/Arrow_r.png"
+                alt="Вправо"
+                class="pointer-events-none"
+            />
+        </button>
     </div>
+
     <div class="text-center mt-12">
-        <button class="bg-blue-600 text-white font-semibold px-8 py-3 rounded hover:bg-blue-700 transition">
+        <button
+            class="bg-blue-600 text-white font-semibold px-8 py-3 rounded hover:bg-blue-700 transition"
+        >
             Смотреть все работы
         </button>
     </div>
@@ -564,52 +761,176 @@
     </div>
 </section>
 
-<section>
-    <div>
-        <h2 class="text-2xl font-bold mb-10 mt-40">Бренды и торговые марки</h2>
-        <div class="relative">
-            <!-- Навигация влево -->
-            <button class="absolute left-0 top-1/2 transform -translate-y-1/2 ">
-                <div
-                    class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 mb:w-18 mb:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                    <img src="/images/index/Arrow_l.png" alt="Влево" />
-                </div>
-            </button>
+<section class="mt-24">
+    <h2 class="text-2xl font-bold mb-10">Бренды и торговые марки</h2>
 
-            <!-- Сетка логотипов -->
-            <div class="flex justify-between items-center gap-4 ml-10 mr-10 sm:ml-24 sm:mr-24 md:ml-36 md:mr-36">
-                <div>
-                    <img src="/images/index/brand1.jpg" alt="Сбер" class="object-contain h-20 mx-auto" />
+    <div class="slider-container slider-7 relative w-full px-2 sm:px-24">
+        <!-- Навигация влево -->
+        <button
+            class="slider-prev bg-white absolute left-0 top-1/2 transform -translate-y-1/2 z-20"
+        >
+            <div
+                class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10"
+            >
+                <img src="images/index/Arrow_l.png" alt="Влево" />
+            </div>
+        </button>
+
+        <div class="slider overflow-hidden">
+            <div
+                class="slider-track flex w-full transition-transform duration-300 space-x-4"
+            >
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand1.jpg"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand2.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
                 </div>
-                <div>
-                    <img src="/images/index/brand2.png" alt="Сбер" class="object-contain h-20 mx-auto" />
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand3.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand4.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
                 </div>
-                <div>
-                    <img src="/images/index/brand3.png" alt="Сбер" class="object-contain h-20 mx-auto" />
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand2.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand4.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
                 </div>
-                <div class="hidden md:block">
-                    <img src="/images/index/brand4.png" alt="Сбер" class="object-contain h-20 mx-auto" />
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand5.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand4.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
                 </div>
-                <div class="hidden md:block">
-                    <img src="/images/index/brand5.png" alt="Сбер" class="object-contain h-20 mx-auto" />
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand2.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand3.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                </div>
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand5.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand1.jpg"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                </div>
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand5.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand4.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                </div>
+                <div class="card flex-none flex flex-col gap-4">
+                    <div>
+                        <img
+                            src="images/index/brand5.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
+                    <div>
+                        <img
+                            src="images/index/brand4.png"
+                            alt="Сбер"
+                            class="object-contain h-20 mx-auto"
+                        />
+                    </div>
                 </div>
             </div>
-
-            <!-- Навигация вправо -->
-            <button class="absolute right-0 top-1/2 transform -translate-y-1/2">
-                <div
-                    class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                    <img src="/images/index/Arrow_r.png" alt="Вправо" />
-                </div>
-            </button>
         </div>
 
-        <!-- Пагинация -->
-        <div class="flex justify-center mt-6 space-x-2">
-            <span class="w-2.5 h-2.5 bg-blue-600 rounded-full"></span>
-            <span class="w-2.5 h-2.5 bg-gray-300 rounded-full"></span>
-            <span class="w-2.5 h-2.5 bg-gray-300 rounded-full"></span>
-        </div>
+        <!-- Навигация вправо -->
+        <button
+            class="slider-next bg-white absolute right-0 top-1/2 transform -translate-y-1/2"
+        >
+            <div
+                class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10"
+            >
+                <img src="images/index/Arrow_r.png" alt="Вправо" />
+            </div>
+        </button>
+    </div>
+
+    <!-- Кнопка смотреть все бренды -->
+    <div class="text-center mt-6">
+        <a
+            href="#"
+            class="inline-block md:hidden border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition"
+        >
+            Смотреть все бренды
+        </a>
     </div>
 </section>
 
@@ -621,3 +942,4 @@
 </button>
 
 <?php echo JsCopmress::load('carousel'); ?>
+<?php echo JsCopmress::load('slider'); ?>

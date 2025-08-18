@@ -131,6 +131,9 @@ class JsCopmress
 			),
 			'carousel'	=> array(
 				self::getBasePath() . '/Js/new/main-carousel.js'
+			),
+			'slider'	=> array(
+				self::getBasePath() . '/Js/new/slider.js'
 			)
 		);
 	}
