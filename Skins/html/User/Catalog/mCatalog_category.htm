@@ -7,29 +7,23 @@
 
 <div>
     <div>
-        <div class="flex w-full max-w-[768px] overflow-hidden rounded-lg mb-6">
-            <!-- Поле поиска -->
-            <input type="text" placeholder="Поиск"
-                class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none" />
-
-            <!-- Кнопка Каталог -->
-            <button
-                class="flex items-center gap-4 px-5 md:px-8 py-2 bg-blue-600 text-white text-base hover:bg-blue-700 transition">
-                <span class="hidden sm:block">Каталог</span>
-                <!-- Иконка гамбургера -->
-                <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 1H26" stroke="#FDFDFD" />
-                    <path d="M0 7H26" stroke="#FDFDFD" />
-                    <path d="M0 13H26" stroke="#FDFDFD" />
-                </svg>
-            </button>
-        </div>
 
         <!-- Хлебные крошки -->
         <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
-            <a href="#" class="hover:text-gray-700">Главная</a>
+            <?php if(count($breadcrumbs)) { ?>
+            <?php $bcLast = array_pop($breadcrumbs); ?>
+            <?php $position = 0; ?>
+            <?php foreach($breadcrumbs as $bc) { ?>
+            <?php $position = $position + 1; ?>
+            <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+                <?php echo $bc['name']; ?>
+            </a>
             <span class="mx-1">›</span>
-            <a href="#" class="hover:text-gray-700 uppercase">Кабинеты руководителей</a>
+            <?php } ?>
+            <span class="text-gray-700">
+                    <?php echo $bcLast['name']; ?>
+                </span>
+            <?php } ?>
         </nav>
 
         <section class="">

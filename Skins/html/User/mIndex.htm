@@ -1,37 +1,19 @@
-<div class="flex w-full max-w-[768px] overflow-hidden rounded-lg mb-12">
-    <!-- Поле поиска -->
-    <input type="text" placeholder="Поиск"
-        class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none" />
-
-    <!-- Кнопка Каталог -->
-    <button
-        class="flex items-center gap-4 px-5 md:px-8 py-2 bg-blue-600 text-white text-base hover:bg-blue-700 transition">
-        <span class="hidden sm:block">Каталог</span>
-        <!-- Иконка гамбургера -->
-        <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 1H26" stroke="#FDFDFD" />
-            <path d="M0 7H26" stroke="#FDFDFD" />
-            <path d="M0 13H26" stroke="#FDFDFD" />
-        </svg>
-    </button>
-</div>
-
 <section>
-    <div class="mx-auto flex flex-col-reverse sm:flex-row items-center gap-2 xl:gap-24 mb-8">
+    <div class="mx-auto flex flex-col-reverse justify-between  sm:flex-row items-center gap-2 xl:gap-24 mb-8">
         <!-- Левая часть -->
-        <div class="flex-1 text-center sm:text-left">
-            <h1 class="text-2xl md:text-3xl sm:text-4xl font-bold mb-6 mt-10 sm:mt-0">
+        <div class="md:flex-1 flex-[0_0_36%] text-center sm:text-left">
+            <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 mt-10 sm:mt-0">
                 Офисная мебель по оптовым ценам от ООО Дары мебели
             </h1>
 
             <!-- Кнопки -->
             <div class="flex flex-wrap justify-center sm:justify-start gap-4 mb-8">
                 <button
-                    class="min-w-[300px] bg-blue-600 text-white font-semibold px-8 py-3 rounded hover:bg-blue-700 transition">
+                    class="min-w-[260px] bg-blue-600 text-white font-semibold px-8 py-3 rounded hover:bg-blue-700 transition">
                     Заказ дизайн-проекта
                 </button>
                 <button
-                    class="min-w-[300px] border-2 border-blue-600 text-blue-600 font-semibold px-8 py-3 rounded hover:bg-blue-50 transition">
+                    class="min-w-[260px] border-2 border-blue-600 text-blue-600 font-semibold px-8 py-3 rounded hover:bg-blue-50 transition">
                     Выезд консультанта
                 </button>
             </div>
@@ -66,7 +48,7 @@
         </div>
 
         <!-- Правая часть: Карусель -->
-        <div class="flex-1 ml-[-32px] mr-[-32px] sm:ml-0 sm:mr-0">
+        <div class="md:flex-1 flex-[0_0_56%] ml-[-32px] mr-[-32px] sm:ml-0 sm:mr-0">
             <div class="relative rounded-none sm:rounded-lg overflow-hidden">
                 <!-- Слайды -->
                 <div id="carousel" class="flex shadow transition-transform duration-500 ease-in-out">
