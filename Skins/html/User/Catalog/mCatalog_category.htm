@@ -31,25 +31,26 @@
                 <h2 class="text-2xl font-bold mb-8">Кабинеты руководителя</h2>
 
                 <!-- Табы -->
+                <div class="sticky top-0 pt-4 z-20 bg-body">
                 <div class="text-sm mb-12">
                     <?php
-    $visibleCount = 5;
-    $visiblePages = array_slice($pages, 0, $visibleCount);
-    $hiddenPages = array_slice($pages, $visibleCount);
-    ?>
+                        $visibleCount = 5;
+                        $visiblePages = array_slice($pages, 0, $visibleCount);
+                        $hiddenPages = array_slice($pages, $visibleCount);
+                    ?>
 
                     <!-- Все табы -->
                     <div id="tabsContainer" class="flex flex-wrap gap-2">
                         <?php foreach ($visiblePages as $p): ?>
                         <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
                         <?php if ($isActive): ?>
-                        <span class="flex-1 min-h-12 px-8 rounded-xl bg-white border shadow
+                        <span class="flex-1 min-h-8 px-4 lg:min-h-12 leading-3 semibold rounded-xl bg-white border shadow
                              text-center flex items-center justify-center font-medium text-gray-800">
                     <?php echo htmlspecialchars($p['name']); ?>
                 </span>
                         <?php else: ?>
                         <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                           class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 rounded-xl bg-white border shadow
+                           class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow
                           text-center flex items-center justify-center hover:bg-gray-50 transition">
                             <?php echo htmlspecialchars($p['name']); ?>
                         </a>
@@ -64,7 +65,7 @@
                         <div class="flex flex-wrap gap-2 mt-2">
                             <?php foreach ($hiddenPages as $p): ?>
                             <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                               class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 rounded-xl bg-white border shadow
+                               class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow
                               text-center flex items-center justify-center hover:bg-gray-50 transition">
                                 <?php echo htmlspecialchars($p['name']); ?>
                             </a>
@@ -84,6 +85,7 @@
                         </button>
                     </div>
                     <?php endif; ?>
+                </div>
                 </div>
 
                 <style>
@@ -130,10 +132,6 @@
                     });
                 </script>
 
-
-
-
-
                 <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
                     <?php if($pageWithSeries) { ?>
                     <?php if(count($series)) { ?>
@@ -145,8 +143,8 @@
                     <?php } ?>
                     <?php } else { ?>
                     <?php if(count($items)) { ?>
-                    <?php echo CssCopmress::load('series')?>
-                    <?php echo JsCopmress::load('series')?>
+<!--                    <?php echo CssCopmress::load('series')?>-->
+<!--                    <?php echo JsCopmress::load('series')?>-->
                     <div class="catalog-items">
                         <script>
                             oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
@@ -155,10 +153,10 @@
                         <?php
                                     $seriesInf = array(
                                         'id'            => $i['series_id'],
-                                        'category_id'   => $i['category_id'],
-                                        'url'           => $i['s_url']
-                                    );
-                                    ?>
+                        'category_id'   => $i['category_id'],
+                        'url'           => $i['s_url']
+                        );
+                        ?>
                         <?php include(_ROOT . Catalog_Items::$tpl)?>
                         <?php } ?>
                     </div>
@@ -180,7 +178,7 @@
                     <div class="flex justify-center mb-4 font-medium">
                         <button class="px-4 py-2 hover:bg-gray-200">
                             <svg width="9" height="16" viewBox="0 0 9 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M0.292793 7.29289C-0.0977311 7.68342 -0.0977311 8.31658 0.292793 8.70711L6.65675 15.0711C7.04728 15.4616 7.68044 15.4616 8.07097 15.0711C8.46149 14.6805 8.46149 14.0474 8.07097 13.6569L2.41411 8L8.07097 2.34315C8.46149 1.95262 8.46149 1.31946 8.07097 0.928932C7.68044 0.538408 7.04728 0.538408 6.65675 0.928932L0.292793 7.29289ZM1 8L1 7H0.9999L0.9999 8L0.9999 9H1L1 8Z"
                                     fill="#020202" />
@@ -196,7 +194,7 @@
                         <a href="#" class="px-4 py-2 hover:bg-gray-200">8</a>
                         <button class="px-4 py-2 hover:bg-gray-200">
                             <svg width="9" height="16" viewBox="0 0 9 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M8.70721 8.70711C9.09773 8.31658 9.09773 7.68342 8.70721 7.29289L2.34325 0.928932C1.95272 0.538408 1.31956 0.538408 0.929032 0.928932C0.538508 1.31946 0.538508 1.95262 0.929032 2.34315L6.58589 8L0.929032 13.6569C0.538508 14.0474 0.538508 14.6805 0.929032 15.0711C1.31956 15.4616 1.95272 15.4616 2.34325 15.0711L8.70721 8.70711ZM8 8V9H8.0001V8V7H8V8Z"
                                     fill="#020202" />

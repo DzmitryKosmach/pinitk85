@@ -1,23 +1,23 @@
-<main class="max-w-1440 mx-auto px-8 sm:px-6 lg:px-8 py-3">
+<div>
 	<div>
 
-        <!-- Хлебные крошки -->
-        <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
-            <?php if(count($breadcrumbs)) { ?>
-            <?php $bcLast = array_pop($breadcrumbs); ?>
-            <?php $position = 0; ?>
-            <?php foreach($breadcrumbs as $bc) { ?>
-            <?php $position = $position + 1; ?>
-            <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
-                <?php echo $bc['name']; ?>
-            </a>
-            <span class="mx-1">›</span>
-            <?php } ?>
-            <span class="text-gray-700">
-                    <?php echo $bcLast['name']; ?>
-                </span>
-            <?php } ?>
-        </nav>
+		<!-- Хлебные крошки -->
+		<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
+			<?php if(count($breadcrumbs)) { ?>
+			<?php $bcLast = array_pop($breadcrumbs); ?>
+			<?php $position = 0; ?>
+			<?php foreach($breadcrumbs as $bc) { ?>
+			<?php $position = $position + 1; ?>
+			<a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+				<?php echo $bc['name']; ?>
+			</a>
+			<span class="mx-1">›</span>
+			<?php } ?>
+			<span class="text-gray-700">
+				<?php echo $bcLast['name']; ?>
+			</span>
+			<?php } ?>
+		</nav>
 
 
 		<!-- Блок с названием и кнопками (md) -->
@@ -46,34 +46,51 @@
 		<div class="flex flex-col sm2:flex-row gap-12">
 			<div class=" sm2:w-1/2 ">
 				<div class="flex lg:flex-row flex-col-reverse  gap-4">
-					<!-- Галерея вертикальная с кнопками -->
-					<div
-						class="flex flex-row lg:flex-col justify-center items-center gap-6 max-h-[500px] overflow-hidden">
-						<!-- Стрелка вверх -->
-						<button class="text-gray-600 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
-								fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-									d="M5 15l7-7 7 7" />
-							</svg>
-						</button>
+					<!-- Галерея вертикальная (горизонтальная) с кнопками -->
+					<div class="slider-thumbnails-container">
+						<div
+							class="flex flex-row lg:flex-col justify-center items-center gap-6 max-h-[500px] overflow-hidden">
+							<!-- Кнопка "вверх / влево" -->
+							<button type="button" class="slider-prev text-gray-600 hover:text-black focus:outline-none">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
+									fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+										d="M5 15l7-7 7 7" />
+								</svg>
+							</button>
 
-						<!-- Список миниатюр -->
-						<div class="flex flex-row lg:flex-col gap-2 overflow-y-auto max-h-[400px]">
-							<img src="images/product/product_small.png" class="w-20 h-20 object-cover rounded border" />
-							<img src="images/product/product_small.png" class="w-20 h-20 object-cover rounded border" />
-							<img src="images/product/product_small.png" class="w-20 h-20 object-cover rounded border" />
-							<img src="images/product/product_small.png" class="w-20 h-20 object-cover rounded border" />
+							<!-- Слайдер с привязкой -->
+							<div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto overflow-y-hidden lg:overflow-x-hidden max-h-[500px] lg:max-h-[400px] max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y snap-mandatory scrollbar-none"
+								style="
+                      scroll-behavior: smooth;
+                      -webkit-overflow-scrolling: touch;
+                      scroll-snap-type: x mandatory;
+                      scroll-padding: 0;
+                    ">
+								<!-- Карточки с привязкой -->
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+								<img src="/images/product-one/chair.jpg"
+									class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer" />
+							</div>
+
+							<!-- Кнопка "вниз / вправо" -->
+							<button type="button" class="slider-next text-gray-600 hover:text-black focus:outline-none">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180"
+									fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+										d="M5 15l7-7 7 7" />
+								</svg>
+							</button>
 						</div>
-
-						<!-- Стрелка вниз -->
-						<button class="text-gray-600 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180" fill="none"
-								viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-									d="M5 15l7-7 7 7" />
-							</svg>
-						</button>
 					</div>
 
 					<!-- Главное изображение -->
@@ -236,7 +253,7 @@
 					<!-- Кнопки -->
 					<div class="flex flex-col sm:flex-row gap-2">
 						<button class="bg-blue-600 text-white py-2 px-12 rounded">
-                            Отложить в 1 клик со СКИДКОЙ
+							Отложить в 1 клик со СКИДКОЙ
 						</button>
 						<button class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded">
 							Нашли дешевле?
@@ -903,4 +920,6 @@
 		</div>
 	</section>
 
-</main>
+</div>
+
+<?php echo JsCopmress::load('slider-vertical'); ?>
