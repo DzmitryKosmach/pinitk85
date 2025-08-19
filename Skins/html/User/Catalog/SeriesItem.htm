@@ -1,64 +1,72 @@
 <!-- Карточка товара -->
 <div class="js-element simple propvision1 bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
     <div class="relative">
-        <?php if(!empty($s['marker'])) { ?>
+        <?php if (!empty($s['marker'])) { ?>
         <div class="text-block">
             <span
                 class="marker absolute top-[-8px] left-[-8px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
-                style="
-                color: <?php echo  $s['marker']['color']; ?>;
-                <?php if($s['marker']['shadow']) { ?>  <?php } ?>
-            ">
-                <?php echo $s['marker']['text'] ?>
+                style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
+                       /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
+                       white-space: normal;">
+
+                <?php
+                // Принудительно заменяем <br> на \n, чтобы использовать nl2br
+                $text = $s['marker']['text'];
+                $text = preg_replace('/<br\s*\/?>/', "\n", $text);
+                $text = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
+                echo nl2br($text);
+                ?>
+
             </span>
         </div>
         <?php } ?>
 
-        <a href="<?php echo Catalog_Series::a($s)?>">
+        <a href="<?php echo Catalog_Series::a($s); ?>">
             <img src="<?php echo Catalog::photoUrl(
-            Catalog_Series_Photos::$imagePath,
-            $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
-        )?>" alt="<?php echo hsch(
-            mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
-        )?>" title="<?php echo hsch(
-            mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
-        )?>" class="w-full h-28 lg:h-48 object-cover rounded-md mb-4"/>
+                Catalog_Series_Photos::$imagePath,
+                $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
+            ); ?>"
+                 alt="<?php echo hsch(
+                mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
+            ); ?>"
+                 title="<?php echo hsch(
+                mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
+            ); ?>"
+                 class="w-full h-28 lg:h-48 object-cover rounded-md mb-4"/>
         </a>
     </div>
 
     <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5 mb-1">
-        <a href="<?php echo Catalog_Series::a($s)?>">
-            <?php echo $s['name']?>
+        <a href="<?php echo Catalog_Series::a($s); ?>">
+            <?php echo htmlspecialchars($s['name']); ?>
         </a>
     </h3>
 
     <div class="flex gap-[6px] justify-start items-center mt-10 mb-3">
         <?php
-        $mats = array();
-        foreach($s['materials'] as $m){
-            $mats[] = array(
-                'name'	=> $m['name'],
+        $materials = [];
+        foreach ($s['materials'] as $m) {
+            $materials[] = [
+                'name' => $m['name'],
         'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext']
-        );
+        ];
         }
         ?>
 
+        <!-- Отображаем первые 7 цветов как квадратики -->
+        <?php $count = 0; ?>
+        <?php foreach ($materials as $m): ?>
+        <?php if ($count >= 7) break; // Ограничиваем 7 цветами ?>
+        <span
+            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
+            style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
+            title="<?php echo htmlspecialchars($m['name']); ?>">
+            </span>
+        <?php $count++; ?>
+        <?php endforeach; ?>
 
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px]  rounded bg-[#020202] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#625454] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#A69D9D] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#C37979] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#6E1313] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#411010] inline-block"></span>
-        <span
-            class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#A16886] inline-block"></span>
-
+        <!-- Если больше 7 — показываем "ещё" через hover -->
+        <?php if (count($materials) > 7): ?>
         <div class="relative group">
             <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -66,75 +74,70 @@
                     fill="#020202"/>
             </svg>
 
-            <div class="absolute hidden group-hover:block z-10 mt-2 bg-white border rounded-lg shadow-md w-40 py-2">
+            <!-- Всплывающее окно с оставшимися цветами -->
+            <div
+                class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2">
+                <?php for ($i = 7; $i < count($materials); $i++): ?>
                 <span
-                    class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#A69D9D] inline-block"></span>
-                <span
-                    class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#C37979] inline-block"></span>
-                <span
-                    class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded bg-[#6E1313] inline-block"></span>
+                    class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
+                    style="background-image: url('<?php echo htmlspecialchars($materials[$i]['img']); ?>'); background-size: cover;"
+                    title="<?php echo htmlspecialchars($materials[$i]['name']); ?>">
+                </span>
+                <?php endfor; ?>
             </div>
         </div>
+        <?php endif; ?>
     </div>
+
+    <!-- Цена -->
     <div class="flex justify-between items-center mb-1">
         <div>
             <span class="text-gray-600 text-sm line-through leading-2">
-                <?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) {?>
-                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от')?>
-                <?php echo Catalog::priceFormat(floor($s['price_search_min']))?>
-                руб.
-                <?php } elseif(abs($s['price_min'])) {?>
-                от
-                <?php echo Catalog::priceFormat(floor($s['price_min']))?>
-                руб.
-                <?php } ?>
+                <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
+                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от') ?>
+                <?php echo Catalog::priceFormat(floor($s['price_search_min'])) ?> руб.
+                <?php elseif (abs($s['price_min'])): ?>
+                от <?php echo Catalog::priceFormat(floor($s['price_min'])) ?> руб.
+                <?php endif; ?>
             </span>
             <div class="font-bold text-lg leading-2 mt-[-6px]">
-                <?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) {?>
-                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от')?>
-                <?php echo Catalog::priceFormat(floor($s['price_search_min']))?>
-                ₽
-                <?php } elseif(abs($s['price_min'])) {?>
-                от
-                <?php echo Catalog::priceFormat(floor($s['price_min']))?>
-                ₽
-                <?php } ?>
+                <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
+                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от') ?>
+                <?php echo Catalog::priceFormat(floor($s['price_search_min'])) ?> ₽
+                <?php elseif (abs($s['price_min'])): ?>
+                от <?php echo Catalog::priceFormat(floor($s['price_min'])) ?> ₽
+                <?php endif; ?>
             </div>
         </div>
+
+        <!-- Сравнение -->
         <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-            <?php
-            $rnd = rand(1, 1000);	// На случай, если одна серия окажется на странице дважды, этот параметр мы вписываем в ID некоторых тегов
-            ?>
-            <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-0"
-            <?php
-                if(Catalog_Compare::check($s['id'])) { ?>style="display: none"
-            <?php } ?>
-            >
+            <?php $rnd = rand(1, 1000); ?>
+            <div id="series-compare-<?php echo $s['id'] ?>-<?php echo $rnd ?>-0"
+            <?php if (Catalog_Compare::check($s['id'])): ?>style="display: none"<?php endif; ?>>
             <a href="javascript:void(0)"
-               onclick="oCompare.add(<?php echo $s['id']?>, <?php echo $rnd?>); return false;"
+               onclick="oCompare.add(<?php echo $s['id'] ?>, <?php echo $rnd ?>); return false;"
                class="add2compare1">
-                <img src="/images/index/izbr_small.png"/>
+                <img src="/images/index/izbr_small.png" alt="В избранное"/>
             </a>
         </div>
-        <div id="series-compare-<?php echo $s['id']?>-<?php echo $rnd?>-1"
-        <?php
-                if(!Catalog_Compare::check($s['id'])) { ?>style="display: none"
-        <?php } ?>
-        >
-        <a href="<?php echo Url::a('catalog-compare')?>" class="add2compare1 in">
-            <img src="/images/index/srav_small.png"/>
-            (<span class="series-compare-cnt">
-                        <?php echo Catalog_Compare::count()?>
-                    </span>)</a>
+        <div id="series-compare-<?php echo $s['id'] ?>-<?php echo $rnd ?>-1"
+        <?php if (!Catalog_Compare::check($s['id'])): ?>style="display: none"<?php endif; ?>>
+        <a href="<?php echo Url::a('catalog-compare') ?>" class="add2compare1 in">
+            <img src="/images/index/srav_small.png" alt="Сравнить"/>
+            (<span class="series-compare-cnt"><?php echo Catalog_Compare::count() ?></span>)
+        </a>
         <a href="javascript:void(0)"
-           onclick="oCompare.remove(<?php echo $s['id']?>, <?php echo $rnd?>); return false;" class="dashed">
-            <img style="width:13px;position: relative;top: 2px;" src="/Skins/img/user/close.png"/>
+           onclick="oCompare.remove(<?php echo $s['id'] ?>, <?php echo $rnd ?>); return false;"
+           class="dashed">
+            <img style="width:13px;position: relative;top: 2px;" src="/Skins/img/user/close.png" alt="Удалить"/>
         </a>
     </div>
 </div>
 </div>
 
-<a href="<?php echo Catalog_Series::a($s)?>"
+<!-- Кнопка "Подробнее" -->
+<a href="<?php echo Catalog_Series::a($s); ?>"
    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
     Подробнее
 </a>
