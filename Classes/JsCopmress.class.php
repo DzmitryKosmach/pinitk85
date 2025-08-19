@@ -134,6 +134,9 @@ class JsCopmress
 			),
 			'slider'	=> array(
 				self::getBasePath() . '/Js/new/slider.js'
+			),
+			'slider-vertical'	=> array(
+				self::getBasePath() . '/Js/new/vertical-horisontal-slider.js'
 			)
 		);
 	}
