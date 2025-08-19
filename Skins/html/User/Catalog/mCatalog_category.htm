@@ -31,44 +31,108 @@
                 <h2 class="text-2xl font-bold mb-8">Кабинеты руководителя</h2>
 
                 <!-- Табы -->
-                <div class="flex gap-4 lg:gap-2 flex-wrap lg:flex-nowrap text-sm mb-12">
-                    <button
-                        class="flex-1 px-8 min-h-12 rounded-xl bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)] text-center flex items-center justify-center">
-                        Хит продаж
-                    </button>
-                    <button
-                        class="flex-1 min-h-12 px-8 rounded-xl bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)] text-center flex items-center justify-center">
-                        Складская программа
-                    </button>
-                    <button
-                        class="flex-1 min-h-12 px-8 rounded-xl bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)] text-center flex items-center justify-center">
-                        Предзаказ
-                    </button>
-                    <button
-                        class="flex-1 min-h-12 px-8 rounded-xl bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)] text-center flex items-center justify-center">
-                        Эконом
-                    </button>
-                    <button
-                        class="flex-1 min-h-12 flex-shrink-0 px-4 rounded-xl bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)] text-center flex items-center justify-center">
-                        Бизнес
-                    </button>
-                    <div class="relative group">
-                        <button
-                            class="bg-blue-600 w-full min-h-12 px-4 text-white border-2 rounded-xl shadow text-sm hover:bg-blue-700 text-center flex items-center gap-1 flex items-center justify-center">
-                            Ещё
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="text-sm mb-12">
+                    <?php
+    $visibleCount = 5;
+    $visiblePages = array_slice($pages, 0, $visibleCount);
+    $hiddenPages = array_slice($pages, $visibleCount);
+    ?>
+
+                    <!-- Все табы -->
+                    <div id="tabsContainer" class="flex flex-wrap gap-2">
+                        <?php foreach ($visiblePages as $p): ?>
+                        <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
+                        <?php if ($isActive): ?>
+                        <span class="flex-1 min-h-12 px-8 rounded-xl bg-white border shadow
+                             text-center flex items-center justify-center font-medium text-gray-800">
+                    <?php echo htmlspecialchars($p['name']); ?>
+                </span>
+                        <?php else: ?>
+                        <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                           class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 rounded-xl bg-white border shadow
+                          text-center flex items-center justify-center hover:bg-gray-50 transition">
+                            <?php echo htmlspecialchars($p['name']); ?>
+                        </a>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Скрытые табы -->
+                    <?php if (!empty($hiddenPages)): ?>
+                    <div id="hiddenWrapper"
+                         class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <?php foreach ($hiddenPages as $p): ?>
+                            <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                               class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 rounded-xl bg-white border shadow
+                              text-center flex items-center justify-center hover:bg-gray-50 transition">
+                                <?php echo htmlspecialchars($p['name']); ?>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка справа -->
+                    <div class="mt-4 flex justify-end">
+                        <button id="showMoreBtn"
+                                class="attention flex items-center gap-1 min-h-8 px-6 rounded-lg bg-blue-600 text-white text-sm shadow hover:bg-blue-700 transition">
+                            <span id="btnText">Ещё</span>
+                            <svg id="btnIcon" class="w-4 h-4 transition-transform duration-300"
+                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-
-                        <div
-                            class="absolute hidden group-hover:block z-10 mt-2 bg-white border rounded-lg shadow-md w-40 py-2">
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Модули</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Дверцы</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Фурнитура</a>
-                        </div>
                     </div>
+                    <?php endif; ?>
                 </div>
+
+                <style>
+                    /* Анимация "пульс" для кнопки */
+                    @keyframes pulseAttention {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.08); }
+                    }
+                    .attention {
+                        animation: pulseAttention 1.5s infinite;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const btn = document.getElementById("showMoreBtn");
+                        const btnText = document.getElementById("btnText");
+                        const btnIcon = document.getElementById("btnIcon");
+                        const hiddenWrapper = document.getElementById("hiddenWrapper");
+
+                        if (btn && hiddenWrapper) {
+                            btn.addEventListener("click", () => {
+                                const isCollapsed = hiddenWrapper.classList.contains("max-h-0");
+
+                                if (isCollapsed) {
+                                    // раскрыть
+                                    hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+                                    hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
+                                    btnText.textContent = "Свернуть";
+                                    btn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    btn.classList.add("bg-gray-600", "hover:bg-gray-700");
+                                    btnIcon.classList.add("rotate-180");
+                                } else {
+                                    // свернуть
+                                    hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                                    hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                                    btnText.textContent = "Ещё";
+                                    btn.classList.remove("bg-gray-600", "hover:bg-gray-700");
+                                    btn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    btnIcon.classList.remove("rotate-180");
+                                }
+                            });
+                        }
+                    });
+                </script>
+
+
+
+
 
                 <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
                     <?php if($pageWithSeries) { ?>
