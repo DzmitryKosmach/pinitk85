@@ -20,25 +20,30 @@ class JsCopmress
 	const V = '?7';
 
 	/** Базовый путь для локальной разработки */
-	static function getBasePath()
-	{
-		// Определяем базовый путь автоматически
-		$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-		$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    static function getBasePath()
+    {
+        // Для beget.tech обычно сайты размещаются в подпапках
+        // Определяем по DOCUMENT_ROOT и текущему пути
+        $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+        $scriptFilename = $_SERVER['SCRIPT_FILENAME'] ?? '';
 
-		// Если скрипт находится в подпапке (например, /pinitk85/index.php)
-		if (preg_match('#^/([^/]+)/#', $scriptName, $matches)) {
-			return '/' . $matches[1];
-		}
+        // Если скрипт выполняется не из корня DOCUMENT_ROOT
+        if ($documentRoot && $scriptFilename && strpos($scriptFilename, $documentRoot) === 0) {
+            $relativePath = dirname(str_replace($documentRoot, '', $scriptFilename));
+            if ($relativePath !== '/' && $relativePath !== '.') {
+                return $relativePath;
+            }
+        }
 
-		// Если скрипт в корне, но запрос идет из подпапки
-		if (preg_match('#^/([^/]+)/#', $requestUri, $matches)) {
-			return '/' . $matches[1];
-		}
+        // Альтернативный способ через REQUEST_URI
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        if (preg_match('#^/([^/]+)/#', $requestUri, $matches)) {
+            return '/' . $matches[1];
+        }
 
-		// По умолчанию - корневой путь
-		return '';
-	}
+        // Если не нашли подпапку - возвращаем пустую строку
+        return '';
+    }
 
 	/** JS-модули и файлы, в них входящие
 	 * @var array
