@@ -60,308 +60,105 @@
             </div>
 
             <div class="flex flex-col sm2:flex-row gap-12">
-              <div class="pictures changegenimage">
-                <div class="pic">
-                  <div class="glass">
-                    <img itemprop="image" class="js_picture_glass genimage" src="/Uploads/Series/22461.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя">
+              <?php if(count($photos)) { ?>
+              <div class="sm2:w-1/2">
+                <div class="flex lg:flex-row flex-col-reverse gap-4">
+                  <!-- Галерея миниатюр с кнопками прокрутки -->
+                  <div class="slider-thumbnails-container">
+                    <div class="flex flex-row lg:flex-col justify-center items-center gap-6 max-h-[500px] overflow-hidden">
+                      <!-- Кнопка "вверх / влево" -->
+                      <button type="button"
+                              class="slider-prev text-gray-600 hover:text-black focus:outline-none"
+                              aria-label="Предыдущее изображение">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
 
-                    <div class="series-set-points" id="series-set-points" style="display: none;">
-                      <div id="series-set-point-38773" style="left: 56.3348%; top: 63.7143%;" onclick="showItemPopup2('/kabinety-rukovoditelya/perseo/38773/', 38773);  return handleOnclick(event);" onmouseover="seriesSetHoverPoint(38773, true)" onmouseout="seriesSetHoverPoint(38773, false)" class="">
-												<span>
-													Стол руководителя ПС 131 ДМ (200x90x76)												</span>
+                      <!-- Слайдер миниатюр -->
+                      <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[400px] max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
+                           style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
+                        <?php foreach($photos as $pn => $p): ?>
+                        <img
+                          src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
+                          data-bigimage="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
+                          alt="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
+                          title="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
+                          class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer transition-transform hover:scale-105"
+                          onclick="changeMainImage(this)"
+                        />
+                        <?php endforeach; ?>
                       </div>
-                      <div id="series-set-point-38774" style="left: 38.914%; top: 73.4286%;" onclick="showItemPopup2('/kabinety-rukovoditelya/perseo/38774/', 38774);  return handleOnclick(event);" onmouseover="seriesSetHoverPoint(38774, true)" onmouseout="seriesSetHoverPoint(38774, false)" class="">
-												<span>
-													Брифинг-приставка ПС 107 ДМ (130x80x76)												</span>
-                      </div>
-                      <div id="series-set-point-38782" style="left: 52.0362%; top: 37.7143%;" onclick="showItemPopup2('/kabinety-rukovoditelya/perseo/38782/', 38782);  return handleOnclick(event);" onmouseover="seriesSetHoverPoint(38782, true)" onmouseout="seriesSetHoverPoint(38782, false)" class="">
-												<span>
-													Шкаф высокий комбинированный (2 для документов со стеклянными дверями + узкий для одежды) ПС 346 ДМ (269.4x46.4x218.8)												</span>
-                      </div>
+
+                      <!-- Кнопка "вниз / вправо" -->
+                      <button type="button"
+                              class="slider-next text-gray-600 hover:text-black focus:outline-none"
+                              aria-label="Следующее изображение">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                </div>
-                <div class="zoom">
-                  <i class="icon pngicons"></i>
-                  Для увеличения картинки кликните на неё
-                </div>
-                <div class="picslider horizontal scrollp jsp jspHasScroll">
-                  <a rel="nofollow" class="scrollbtn prev page" href="#">
-                    <i class="icon pngicons"></i>
-                  </a>
-                  <a rel="nofollow" class="scrollbtn next page" href="#">
-                    <i class="icon pngicons"></i>
-                  </a>
-                  <div class="d_jscrollpane scroll horizontal-only jspScrollable" id="d_scroll_4359" style="overflow: hidden; padding: 0px; width: 217px;" tabindex="0">
 
-                    <div class="jspContainer" style="width: 217px; height: 110px;"><div class="jspPane" style="padding: 0px; width: 217px; left: -107.6px;"><div class="sliderin scrollinner" style="width: 4144px;">
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22150" href="#" data-photonum="0">
-                        <img src="/Uploads/Series/22150_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя" data-bigimage="/Uploads/Series/22150.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22449" href="#" data-photonum="1">
-                        <img src="/Uploads/Series/22449_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 2" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 2" data-bigimage="/Uploads/Series/22449.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22461 selected" href="#" data-photonum="2">
-                        <img src="/Uploads/Series/22461_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 3" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 3" data-bigimage="/Uploads/Series/22461.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22457" href="#" data-photonum="3">
-                        <img src="/Uploads/Series/22457_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 4" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 4" data-bigimage="/Uploads/Series/22457.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22151" href="#" data-photonum="4">
-                        <img src="/Uploads/Series/22151_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 5" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 5" data-bigimage="/Uploads/Series/22151.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22455" href="#" data-photonum="5">
-                        <img src="/Uploads/Series/22455_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 6" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 6" data-bigimage="/Uploads/Series/22455.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22458" href="#" data-photonum="6">
-                        <img src="/Uploads/Series/22458_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 7" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 7" data-bigimage="/Uploads/Series/22458.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22152" href="#" data-photonum="7">
-                        <img src="/Uploads/Series/22152_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 8" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 8" data-bigimage="/Uploads/Series/22152.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22154" href="#" data-photonum="8">
-                        <img src="/Uploads/Series/22154_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 9" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 9" data-bigimage="/Uploads/Series/22154.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22155" href="#" data-photonum="9">
-                        <img src="/Uploads/Series/22155_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 10" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 10" data-bigimage="/Uploads/Series/22155.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22156" href="#" data-photonum="10">
-                        <img src="/Uploads/Series/22156_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 11" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 11" data-bigimage="/Uploads/Series/22156.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22157" href="#" data-photonum="11">
-                        <img src="/Uploads/Series/22157_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 12" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 12" data-bigimage="/Uploads/Series/22157.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22158" href="#" data-photonum="12">
-                        <img src="/Uploads/Series/22158_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 13" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 13" data-bigimage="/Uploads/Series/22158.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22159" href="#" data-photonum="13">
-                        <img src="/Uploads/Series/22159_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 14" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 14" data-bigimage="/Uploads/Series/22159.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22160" href="#" data-photonum="14">
-                        <img src="/Uploads/Series/22160_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 15" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 15" data-bigimage="/Uploads/Series/22160.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22161" href="#" data-photonum="15">
-                        <img src="/Uploads/Series/22161_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 16" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 16" data-bigimage="/Uploads/Series/22161.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22162" href="#" data-photonum="16">
-                        <img src="/Uploads/Series/22162_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 17" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 17" data-bigimage="/Uploads/Series/22162.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22163" href="#" data-photonum="17">
-                        <img src="/Uploads/Series/22163_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 18" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 18" data-bigimage="/Uploads/Series/22163.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22164" href="#" data-photonum="18">
-                        <img src="/Uploads/Series/22164_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 19" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 19" data-bigimage="/Uploads/Series/22164.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22165" href="#" data-photonum="19">
-                        <img src="/Uploads/Series/22165_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 20" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 20" data-bigimage="/Uploads/Series/22165.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22166" href="#" data-photonum="20">
-                        <img src="/Uploads/Series/22166_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 21" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 21" data-bigimage="/Uploads/Series/22166.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22167" href="#" data-photonum="21">
-                        <img src="/Uploads/Series/22167_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 22" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 22" data-bigimage="/Uploads/Series/22167.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22168" href="#" data-photonum="22">
-                        <img src="/Uploads/Series/22168_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 23" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 23" data-bigimage="/Uploads/Series/22168.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22169" href="#" data-photonum="23">
-                        <img src="/Uploads/Series/22169_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 24" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 24" data-bigimage="/Uploads/Series/22169.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22170" href="#" data-photonum="24">
-                        <img src="/Uploads/Series/22170_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 25" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 25" data-bigimage="/Uploads/Series/22170.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22171" href="#" data-photonum="25">
-                        <img src="/Uploads/Series/22171_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 26" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 26" data-bigimage="/Uploads/Series/22171.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22448" href="#" data-photonum="26">
-                        <img src="/Uploads/Series/22448_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 27" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 27" data-bigimage="/Uploads/Series/22448.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22450" href="#" data-photonum="27">
-                        <img src="/Uploads/Series/22450_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 28" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 28" data-bigimage="/Uploads/Series/22450.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22451" href="#" data-photonum="28">
-                        <img src="/Uploads/Series/22451_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 29" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 29" data-bigimage="/Uploads/Series/22451.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22452" href="#" data-photonum="29">
-                        <img src="/Uploads/Series/22452_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 30" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 30" data-bigimage="/Uploads/Series/22452.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22453" href="#" data-photonum="30">
-                        <img src="/Uploads/Series/22453_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 31" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 31" data-bigimage="/Uploads/Series/22453.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22454" href="#" data-photonum="31">
-                        <img src="/Uploads/Series/22454_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 32" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 32" data-bigimage="/Uploads/Series/22454.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22456" href="#" data-photonum="32">
-                        <img src="/Uploads/Series/22456_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 33" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 33" data-bigimage="/Uploads/Series/22456.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22459" href="#" data-photonum="33">
-                        <img src="/Uploads/Series/22459_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 34" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 34" data-bigimage="/Uploads/Series/22459.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22462" href="#" data-photonum="34">
-                        <img src="/Uploads/Series/22462_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 35" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 35" data-bigimage="/Uploads/Series/22462.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22463" href="#" data-photonum="35">
-                        <img src="/Uploads/Series/22463_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 36" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 36" data-bigimage="/Uploads/Series/22463.jpg">
-                      </a>
-                      <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22464" href="#" data-photonum="36">
-                        <img src="/Uploads/Series/22464_90x90_0.jpg" alt="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 37" title="кабинеты руководителя Perseo (Персео) - мебель для кабинета руководителя - фото 37" data-bigimage="/Uploads/Series/22464.jpg">
-                      </a>
-                    </div></div><div class="jspHorizontalBar"><div class="jspCap jspCapLeft"></div><div class="jspTrack" style="width: 217px;"><div class="jspDrag" style="width: 12px; left: 5.61701px;"><div class="jspDragLeft"></div><div class="jspDragRight"></div></div></div><div class="jspCap jspCapRight"></div></div></div></div>
-                </div>
-                <div class="fancyimages noned" title="Perseo (Персео) - мебель для кабинета руководителя" style="display: none;">
-                  <div class="fancygallery">
-                    <table class="changegenimage">
-                      <tbody>
-                      <tr>
-                        <td class="image">
-                          <img class="max genimage" src="/Uploads/Series/kabinety-rukovoditelya-perseo-22154.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя" style="max-height: 593px;">
-                        </td>
-                        <td class="slider">
-                          <div class="picslider scrollp vertical jsp">
-                            <a rel="nofollow" class="scrollbtn prev pop" href="#">
-                              <i class="icon pngicons"></i>
-                            </a>
-                            <div class="popd_jscrollpane scroll vertical-only max" id="d_scroll_popup_4359" style="overflow: hidden; padding: 0px; height: 533px; width: 100px;">
-
-                              <div class="jspContainer" style="width: 100px; height: 533px;"><div class="jspPane" style="padding: 0px; top: 0px; left: 0px; width: 100px;"><div class="scrollinner">
-                                <a rel="nofollow" class="changeimage scrollitem imgoffer imgofferid22150" href="#">
-                                  <img src="/Uploads/Series/22150_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22150.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22449_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото2" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото2" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22449.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22461_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото3" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото3" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22461.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22457_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото4" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото4" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22457.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22151_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото5" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото5" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22151.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22455_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото6" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото6" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22455.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22458_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото7" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото7" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22458.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22152_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото8" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото8" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22152.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem selected" href="#">
-                                  <img src="/Uploads/Series/22154_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото9" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото9" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22154.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22155_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото10" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото10" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22155.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22156_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото11" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото11" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22156.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22157_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото12" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото12" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22157.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22158_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото13" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото13" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22158.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22159_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото14" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото14" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22159.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22160_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото15" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото15" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22160.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22161_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото16" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото16" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22161.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22162_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото17" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото17" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22162.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22163_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото18" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото18" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22163.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22164_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото19" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото19" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22164.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22165_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото20" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото20" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22165.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22166_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото21" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото21" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22166.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22167_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото22" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото22" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22167.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22168_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото23" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото23" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22168.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22169_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото24" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото24" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22169.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22170_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото25" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото25" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22170.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22171_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото26" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото26" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22171.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22448_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото27" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото27" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22448.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22450_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото28" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото28" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22450.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22451_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото29" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото29" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22451.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22452_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото30" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото30" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22452.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22453_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото31" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото31" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22453.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22454_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото32" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото32" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22454.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22456_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото33" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото33" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22456.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22459_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото34" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото34" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22459.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22462_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото35" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото35" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22462.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22463_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото36" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото36" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22463.jpg">
-                                </a>
-                                <a rel="nofollow" class="changeimage scrollitem" href="#">
-                                  <img src="/Uploads/Series/22464_90x90_0.jpg" alt="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото37" title="КАБИНЕТЫ РУКОВОДИТЕЛЯ Perseo (Персео) - мебель для кабинета руководителя - фото37" data-bigimage="/Uploads/Series/kabinety-rukovoditelya-perseo-22464.jpg">
-                                </a>
-                              </div></div></div></div>
-                            <a rel="nofollow" class="scrollbtn next pop" href="#">
-                              <i class="icon pngicons"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
+                  <!-- Основное изображение -->
+                  <div class="w-full">
+                    <?php $p = $photos[0]; ?>
+                    <img
+                      src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
+                      alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                      title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                      class="w-full rounded-xl object-cover"
+                      id="main-product-image"
+                    />
                   </div>
                 </div>
 
-                <div class="description1">
-                  <div class="text" id="text-text" style="display: block">
-                    <div id="series-text" class="text-opened"><div id="series-text-in">
-                      <div class="description">
-																		<span>
-																			</span>
-                      </div>
-                    </div></div>
-                    <a href="javascript:void(0)" id="series-text-lnk" class="description-lnk closed" onclick="showHideDescription(); return false;" style="display: none;">
-                      <span class="label-closed">Показать всё</span>
-                      <span class="label-opened">Свернуть</span>
-                    </a>
+                <!-- Описание под галереей -->
+                <div class="bg-white py-4 px-8 rounded-lg shadow-md mt-10">
+                  <div>
+                    <p class="text-lg leading-6"><?php echo $seriesInf['text']; ?></p>
+                    <a class="inline-block text-gray-600 mt-2" href="#">Читать все</a>
                   </div>
                 </div>
               </div>
+
+              <!-- JavaScript для смены изображения -->
+              <script>
+                function changeMainImage(thumb) {
+                  const mainImg = document.getElementById('main-product-image');
+                  if (mainImg && thumb.dataset.bigimage) {
+                    mainImg.src = thumb.dataset.bigimage;
+                  }
+                }
+
+                // Инициализация: клик по первой миниатюре (если нужно)
+                document.addEventListener('DOMContentLoaded', () => {
+                  const firstThumb = document.querySelector('.slider-track img');
+                  if (firstThumb && !document.getElementById('main-product-image').src.includes(firstThumb.dataset.bigimage)) {
+                    changeMainImage(firstThumb);
+                  }
+
+                  // Прокрутка миниатюр кнопками
+                  const track = document.querySelector('.slider-track');
+                  const prevBtn = document.querySelector('.slider-prev');
+                  const nextBtn = document.querySelector('.slider-next');
+                  const itemWidth = 90 + 8; // ширина изображения + gap
+
+                  prevBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+                  });
+
+                  nextBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                  });
+                });
+              </script>
+              <?php } ?>
 
                 <!-- Правая колонка: Описание и цены -->
                 <div class="sm2:w-1/2">
