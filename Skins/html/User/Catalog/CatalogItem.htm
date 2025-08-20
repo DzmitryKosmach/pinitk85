@@ -1,147 +1,206 @@
 <?php
 foreach($i['materials'] as $n => $im){
-	if(!isset($materials[$im['material_id']])){
-		unset($i['materials'][$n]);
-	}
+if(!isset($materials[$im['material_id']])){
+unset($i['materials'][$n]);
+}
 }
 $i['materials'] = array_values($i['materials']);
 
 $mActive = false;
 if(count($i['materials'])){
-	$mActiveTopId = $materials[$i['price_min_material_id']]['id'];
-	$mActive = $materials[$i['price_min_material_id']];
-	while($mActive['has_sub'] && count($mActive['sub'])){
-        $ak = array_keys($mActive['sub']);
-		$mActive = $mActive['sub'][array_shift($ak)];
-	}
-	/*$mActiveN = 1;
-	foreach($i['materials'] as $mn => $im){
-		if($im['material_id'] == $mActive['id']){
-			$mActiveN = $mn+1;
-			break;
-		}
-	}*/
+$mActiveTopId = $materials[$i['price_min_material_id']]['id'];
+$mActive = $materials[$i['price_min_material_id']];
+while($mActive['has_sub'] && count($mActive['sub'])){
+$ak = array_keys($mActive['sub']);
+$mActive = $mActive['sub'][array_shift($ak)];
+}
+/*$mActiveN = 1;
+foreach($i['materials'] as $mn => $im){
+if($im['material_id'] == $mActive['id']){
+$mActiveN = $mn+1;
+break;
+}
+}*/
 }
 ?>
 
 <form
-	class="catalog-item js-element simple propvision1"
-	id="catalog-item-<?php echo $i['id']; ?>"
-	action="<?php echo Url::a('catalog-cart'); ?>"
-	method="get"
-	onsubmit="oCart.add(this); return false;"
-	>
-	<div class="inner">
-		<div class="padd">
-			<div class="name">
-				<a
-					href="javascript:void(0)"
-					onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-					>
-					<?php echo $i['name']; ?>
-				</a><br>
-				<span class="artikul">Арт: <?php echo $i['art']; ?></span>
-			</div>
-			<div class="pic">
-				<a
-					class="image"
-					href="javascript:void(0)"
-					onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-					>
-					<?php if($i['_img_ext']) { ?>
-						<span class="item-image">
+    class="catalog-item js-element simple propvision1"
+    id="catalog-item-<?php echo $i['id']; ?>"
+    action="<?php echo Url::a('catalog-cart'); ?>"
+    method="get"
+    onsubmit="oCart.add(this); return false;"
+>
+    <div class="inner">
+        <div class="padd">
+            <div class="name">
+                <a
+                    href="javascript:void(0)"
+                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+                >
+                    <?php echo $i['name']; ?>
+                </a><br>
+                <span class="artikul">Арт: <?php echo $i['art']; ?></span>
+            </div>
+            <div class="pic">
+                <a
+                    class="image"
+                    href="javascript:void(0)"
+                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+                >
+                    <?php if($i['_img_ext']) { ?>
+                    <span class="item-image">
 							<img
-								src="<?php echo Catalog::photoUrl(
+                                src="<?php echo Catalog::photoUrl(
 									Catalog_Items::$imagePath,
 									$i['id'], 170, 140, 1, $i['_img_ext']
 								)?>"
-								alt="<?php echo hsch($i['name'] . ' ' . $i['art'])?>"
-								title="<?php echo hsch($i['name'] . ' ' . $i['art'])?>"
-							>
+                                alt="<?php echo hsch($i['name'] . ' ' . $i['art'])?>"
+                                title="<?php echo hsch($i['name'] . ' ' . $i['art'])?>"
+                            >
 						</span>
-					<?php } ?>
-				</a>
-			</div>
-		</div>
-		<div class="soloprice">
+                    <?php } ?>
+                </a>
+            </div>
+        </div>
+        <div class="soloprice">
 			<span class="price gen">
 				<?php $d = abs($i['discount']); ?>
-				<?php if($d != 1 && $d !== 0) { ?>
-					<span class="price-old" id="item1-<?php echo $i['id']; ?>-price-old">
+                <?php if($d != 1 && $d !== 0) { ?>
+                <span class="price-old" id="item1-<?php echo $i['id']; ?>-price-old">
 						<?php echo Catalog::priceFormat($i['price_min'] / $d)?>
 					</span>
-				<?php } else { ?>
-					<span class="price-old" id="item1-<?php echo $i['id']; ?>-price-old" style="display: none"></span>
-				<?php } ?>
-				<span id="item1-<?php echo $i['id']; ?>-price" <?php if(!abs($i['price_min'])) { ?>class="price-by-request"<?php } ?>>
-					<?php if(abs($i['price_min'])) { ?>
-						<?php echo Catalog::priceFormat($i['price_min'])?>
-					<?php } else { ?>
-						по запросу
-					<?php } ?>
+                <?php } else { ?>
+                <span class="price-old" id="item1-<?php echo $i['id']; ?>-price-old" style="display: none"></span>
+                <?php } ?>
+                <span id="item1-<?php echo $i['id']; ?>-price" <?php if(!abs($i['price_min'])) { ?>
+                class="price-by-request"<?php } ?>>
+                <?php if(abs($i['price_min'])) { ?>
+                <?php echo Catalog::priceFormat($i['price_min'])?>
+                <?php } else { ?>
+                по запросу
+                <?php } ?>
 				</span>
-				руб.
-			</span>
-		</div>
-		<div class="size">
-			<?php if(trim($i['size']) !== '') { ?>
-				Размеры: <?php echo $i['size']; ?>
-			<?php } else { ?>
-				&nbsp;
-			<?php } ?>
-		</div>
-		<div class="popup padd" style="display: block!important;">
-			<div class="favorishare">
-				<?php if(count($i['materials'])) { ?>
-					<script>
-						oMaterials.items2mats[<?php echo $i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($i['materials']))?>');
-					</script>
-					<a
-						href="javascript:void(0)"
-						id="item1-<?php echo $i['id']; ?>-materials-preview"
-						class="materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
-						onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-						>
-						<?php foreach($i['materials'] as $mn => $im) { ?>
-							<?php $m = $materials[$im['material_id']]; ?>
-							<div id="item1-<?php echo $i['id']; ?>-m-<?php echo $m['id']; ?>" <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
-								<?php if($m['image']['ext']) { ?>
-									<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
-								<?php } ?>
-							</div>
-						<?php } ?>
-					</a>
-				<?php } ?>
-			</div>
-			<div class="compare" style="float: left; margin-top: 0;">
-				<div class="add2basketform">
-					<span class="quantity">
-						<a
-							class="minus"
-							href="javascript:void(0)"
-							onclick="oCart.amountMinus(this); return false;"
-							>-</a>
-						<input type="text" name="amount" value="1">
-						<span class="js-measurename">шт</span>
-						<a
-							class="plus"
-							href="javascript:void(0)"
-							onclick="oCart.amountPlus(this); return false;"
-							>+</a>
-						<input type="hidden" name="add" value="<?php echo $i['id']; ?>">
-						<input type="hidden" name="material_id" id="item1-<?php echo $i['id']; ?>-material" value="<?php echo ($mActive ? $mActive['id'] : 0)?>">
-					</span>
-					<button
-						type="submit"
-						class="button-buy submit <?php if(Catalog_Cart::isItemInCart($i['id'])) { ?>in-cart<?php } ?>"
-						<?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-						title="<?php echo (Catalog_Cart::isItemInCart($i['id']) ? 'В корзине' : 'Добавить в корзину')?>"
-						>
-						<i class="icon pngicons"></i>
-					</button>
-					<i class="tick icon pngicons"></i>
-				</div>
-			</div>
-		</div>
-	</div>
+            руб.
+            </span>
+        </div>
+        <div class="size">
+            <?php if(trim($i['size']) !== '') { ?>
+            Размеры: <?php echo $i['size']; ?>
+            <?php } else { ?>
+            &nbsp;
+            <?php } ?>
+        </div>
+        <div class="popup padd" style="display: block!important;">
+            <div class="favorishare">
+                <?php if(count($i['materials'])) { ?>
+                <script>
+                    oMaterials.items2mats[<?php
+                    echo
+                    $i['id'];
+                        ?
+                    >]
+                    = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($i['materials'])
+                    )
+                        ?
+                    >
+                    ');
+                </script>
+                <a
+                    href="javascript:void(0)"
+                    id="item1-<?php echo $i['id']; ?>-materials-preview"
+                    class="materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
+                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+                >
+                    <?php foreach($i['materials'] as $mn => $im) { ?>
+                    <?php $m = $materials[$im['material_id']]; ?>
+                    <div id="item1-<?php echo $i['id']; ?>-m-<?php echo $m['id']; ?>"
+                    <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
+                    <?php if($m['image']['ext']) { ?>
+                    <img
+                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>"
+                        width="20" height="20" alt="">
+                    <?php } ?>
+            </div>
+            <?php } ?>
+            </a>
+            <?php } ?>
+        </div>
+        <div class="compare" style="float: left; margin-top: 0;">
+            <div class="add2basketform">
+    <span class="quantity">
+        <button type="button"
+                class="minus inline-flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded text-xl font-bold"
+                onclick="changeAmount(this, -1)">
+            −
+        </button>
+        <input type="text"
+               name="amount[<?php echo $i['id']; ?>]"
+               id="item2-<?php echo $i['id']; ?>-amount"
+               value="<?php echo $i['in_series_set_amount']; ?>"
+               class="w-16 text-center border border-gray-300 mx-1"
+               readonly
+               onchange="seriesSetPrice()"
+               onkeyup="seriesSetPrice()">
+        <span class="js-measurename">шт.</span>
+        <button type="button"
+                class="plus inline-flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded text-xl font-bold"
+                onclick="changeAmount(this, 1)">
+            +
+        </button>
+        <input type="hidden" name="material_id[<?php echo $i['id']; ?>]" id="item2-<?php echo $i['id']; ?>-material"
+               value="<?php echo ($mActive ? $mActive['id'] : 0)?>">
+        <input type="hidden" name="add[]" value="<?php echo $i['id']; ?>">
+    </span>
+            </div>
+        </div>
+    </div>
+    </div>
 </form>
+
+<script>
+    // Функция изменения основного изображения
+    function changeMainImage(thumb) {
+        const mainImg = document.querySelector('.w-full.rounded-xl.object-cover'); // основное изображение
+        if (mainImg && thumb.dataset.bigimage) {
+            mainImg.src = thumb.dataset.bigimage;
+        }
+    }
+
+    // Функция изменения количества
+    function changeAmount(button, delta) {
+        const input = button.parentElement.querySelector('input[type="text"]');
+        let amount = parseInt(input.value) || 0;
+        amount = Math.max(0, amount + delta); // не даём уйти в минус
+        input.value = amount;
+        seriesSetPrice(); // пересчитываем сумму
+    }
+
+    // Пересчёт общей суммы комплекта
+    function seriesSetPrice() {
+        let total = 0;
+        document.querySelectorAll('#series-set-table tbody tr').forEach(row => {
+            const input = row.querySelector('input[id^="item2-"][id$="-amount"]');
+            const priceSpan = row.querySelector('span[id^="item2-"][id$="-price"]');
+            if (!input || !priceSpan) return;
+
+            const amount = parseInt(input.value) || 0;
+            const priceText = priceSpan.textContent.trim();
+            // Удаляем всё, кроме цифр и точки/запятой
+            const price = parseFloat(priceText.replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+
+            total += price * amount;
+        });
+
+        // Обновляем итоговую цену
+        const totalElement = document.querySelector('#series-set-price');
+        if (totalElement) {
+            totalElement.textContent = total.toLocaleString('ru-RU') + ' ₽';
+        }
+    }
+
+    // Вызов при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function () {
+        seriesSetPrice(); // инициализация суммы
+    });
+</script>

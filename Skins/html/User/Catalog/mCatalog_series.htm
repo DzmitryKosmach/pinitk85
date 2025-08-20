@@ -171,71 +171,129 @@
                         </div>
 
                         <!-- Список товаров -->
-                        <div class="space-y-2">
-                            <?php if(count($seriesSet)) { ?>
-                            <?php foreach($seriesSet as $in => $i) { ?>
-                            <div class="flex flex-col gap-[6px]">
-                                <div class="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p class="flex flex-col text-sm">
-                                            <?php echo $i['name']; ?>
-                                            <span class="text-xs">(
-                                                <?php echo $i['size']; ?>)
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex flex-col">
-                                            <?php $d = abs($i['discount']); ?>
-                                            <?php if($d != 1 && $d !== 0) { ?>
-                                            <p class="text-xs text-gray-500 line-through">
-                                                <?php echo Catalog::priceFormat($i['price_min'] / $d)?> ₽
-                                            </p>
-                                            <?php } ?>
-                                            <p class="font-bold text-lg text-black whitespace-nowrap leading-5">
-                                                <?php if(abs($i['price_min'])) { ?>
-                                                <?php echo Catalog::priceFormat($i['price_min'])?> ₽
-                                                <?php } else { ?>
-                                                по запросу
+                        <div class="ajaxpages_gmci">
+                            <div class="artables table clearfix">
+                                <div class="arproducts space-y-2">
+                                    <?php
+			$seriesOrig = $seriesInf;
+			$seriesSetItemsIds = array();
+			$offer_price = 0;
+			?>
+                                    <?php foreach($seriesSet as $in => $i) { ?>
+                                    <?php
+				$seriesSetItemsIds[] = $i['id'];
+				$seriesInf = ($i['series_id'] == $seriesOrig['id'] ? $seriesOrig : $crossSeries[$i['series_id']]);
+				$offer_price += (str_replace(" ", '', Catalog::priceFormat($i['price_min'])) * $i['in_series_set_amount']);
+				?>
+
+                                    <div id="series-set-row-<?php echo $i['id']; ?>"
+                                         onmouseover="seriesSetHoverTable(<?php echo $i['id']; ?>, true)"
+                                         onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)"
+                                    <?php if($in >= 3) { ?>style="display: none"<?php } ?>
+                                    class="flex flex-col gap-[6px] p-3 rounded-lg border border-gray-200 hover:shadow-sm transition"
+                                    >
+                                    <div class="flex flex-row justify-between items-center">
+                                        <div>
+                                            <p class="flex flex-col text-sm font-medium cursor-pointer"
+                                               onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;">
+                                                <?php echo $i['name']; ?> <?php echo $i['art']; ?>
+                                                <?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?>
+                                                <span class="text-xs text-gray-500">(<?php echo $i['size']; ?>)</span>
                                                 <?php } ?>
                                             </p>
                                         </div>
-                                        <div class="w-4 h-4 bg-[#4E3B31] rounded"></div>
-                                        <div class="flex items-center gap-2">
-                                            <button class="text-4xl mb-2">-</button>
-                                            <span class="text-sm">
-                                                <?php echo $i['in_series_set_amount']; ?> шт.
-                                            </span>
-                                            <button class="text-3xl">+</button>
+
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex flex-col items-end">
+                                                <?php $d = abs($i['discount']); ?>
+                                                <?php if($d != 1 && $d !== 0) { ?>
+                                                <p class="text-xs text-gray-400 line-through">
+                                                    <?php echo Catalog::priceFormat($i['price_min'] / $d)?> ₽
+                                                </p>
+                                                <?php } ?>
+                                                <p id="item2-<?php echo $i['id']; ?>-price" class="font-bold text-lg text-black whitespace-nowrap leading-5 <?php if(!abs($i['price_min'])) { ?>opacity-60<?php } ?>">
+                                                    <?php if(abs($i['price_min'])) { ?>
+                                                    <?php echo Catalog::priceFormat($i['price_min'])?> ₽
+                                                    <?php } else { ?>
+                                                    по запросу
+                                                    <?php } ?>
+                                                </p>
+                                            </div>
+
+                                            <?php
+							foreach($i['materials'] as $n => $im){
+                                            if(!isset($materials[$im['material_id']])){
+                                            unset($i['materials'][$n]);
+                                            }
+                                            }
+                                            $i['materials'] = array_values($i['materials']);
+                                            $mActive = false;
+                                            if(count($i['materials'])) {
+                                            $mActive = $materials[$i['price_min_material_id']];
+                                            $mActiveName = array($mActive['name']);
+                                            while($mActive['has_sub'] && count($mActive['sub'])){
+                                            $ak = array_keys($mActive['sub']);
+                                            $mActive = $mActive['sub'][array_shift($ak)];
+                                            $mActiveName[] = $mActive['name'];
+                                            }
+                                            }
+                                            ?>
+
+                                            <?php if($mActive && $mActive['image']['ext']) { ?>
+                                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_21x21_0.<?php echo $mActive['image']['ext']; ?>"
+                                                 width="24" height="24"
+                                                 class="rounded-full border cursor-pointer"
+                                                 title="<?php echo hsch(implode(' / ', $mActiveName))?>">
+                                            <?php } elseif($mActive) { ?>
+                                            <span class="text-xs text-gray-600 cursor-pointer">
+									<?php echo implode(' / ', $mActiveName)?>
+								</span>
+                                            <?php } ?>
+
+                                            <div class="flex items-center gap-2">
+                                                <a href="javascript:void(0)" class="px-2 text-xl text-gray-600" onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">-</a>
+                                                <input type="text"
+                                                       name="amount[<?php echo $i['id']; ?>]"
+                                                       id="item2-<?php echo $i['id']; ?>-amount"
+                                                       value="<?php echo $i['in_series_set_amount']; ?>"
+                                                       class="w-12 text-center border rounded"
+                                                       onchange="seriesSetPrice()" onkeyup="seriesSetPrice()" onclick="seriesSetPrice()">
+                                                <span class="text-sm text-gray-500">шт</span>
+                                                <a href="javascript:void(0)" class="px-2 text-xl text-gray-600" onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">+</a>
+
+                                                <input type="hidden" name="material_id[<?php echo $i['id']; ?>]" id="item2-<?php echo $i['id']; ?>-material" value="<?php echo ($mActive ? $mActive['id'] : 0)?>">
+                                                <input type="hidden" name="add[]" value="<?php echo $i['id']; ?>">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="w-full h-[1px] bg-gray-200"></div>
                                 </div>
-                                <div class="w-full gap-2 h-[1px] bg-gray-300"></div>
+                                <?php } ?>
+
+                                <button class="text-sm text-gray-400 underline" onclick="setShowAll(this)">
+                                    Показать все
+                                </button>
                             </div>
-                            <?php } ?>
-                            <?php } ?>
-                            <button class="text-sm text-gray-400 underline">
-                                Показать все
-                            </button>
+                        </div>
+                        <script>RSGoPro_DetectTable();</script>
+                    </div>
+
+
+                    <!-- Итоговая цена -->
+                        <div>
+                            <p id="series-set-price-old" class="text-xs text-gray-500 line-through">
+                                <!--will replace by JS-->
+                            </p>
+                            <div id="series-set-price" class="text-3xl font-bold text-black">
+                                <!--will replace by JS-->
+                            </div>
                         </div>
 
-                        <!-- Итоговая цена -->
-                        <div>
-                            <?php
-                            $offer_price = 0;
-                            if(count($seriesSet)) {
-                                foreach($seriesSet as $i) {
-                                    $offer_price += (str_replace(" ", '', Catalog::priceFormat($i['price_min'])) * $i['in_series_set_amount']);
-                                }
-                            }
-                            ?>
-                            <p class="text-xs text-gray-500 line-through">
-                                <?php echo Catalog::priceFormat($offer_price); ?> ₽
-                            </p>
-                            <div class="text-3xl font-bold text-black">
-                                <?php echo Catalog::priceFormat($offer_price); ?> ₽
-                            </div>
-                        </div>
+                    <script>
+                        onLoad(function(){
+                            seriesSetPrice();
+                        });
+                    </script>
 
                         <!-- Кнопки -->
                         <div class="flex flex-col sm:flex-row gap-2">
