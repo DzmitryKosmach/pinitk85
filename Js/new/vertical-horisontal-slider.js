@@ -1,3 +1,13 @@
+// Добавляем стили для скрытия скроллбара
+(function hideScrollbar() {
+    const style = document.createElement("style");
+    style.textContent = `
+      .slider-track::-webkit-scrollbar { display: none; }
+      .slider-track { scrollbar-width: none; -ms-overflow-style: none; }
+    `;
+    document.head.appendChild(style);
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".slider-thumbnails-container");
     const track = container.querySelector(".slider-track");
