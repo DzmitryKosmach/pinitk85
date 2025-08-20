@@ -137,7 +137,11 @@ class JsCopmress
 			),
 			'slider-vertical'	=> array(
 				self::getBasePath() . '/Js/new/vertical-horisontal-slider.js'
-			)
+			),
+      'series-set-price.js'	=> array(
+        self::getBasePath() . '/Js/new/series-set-price.js'
+      )
+
 		);
 	}
 
