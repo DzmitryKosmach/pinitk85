@@ -411,443 +411,399 @@
         </div>
 
         <!-- Верхние вкладки -->
-        <div class="flex flex-wrap gap-3 mt-10 mb-6">
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Характеристики
-            </button>
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Ком. Пред
-            </button>
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Комплекты
-            </button>
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Скачать
-            </button>
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Вопросы
-            </button>
-            <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                Отзывы
-            </button>
+  <div class="elementdetail" id="options-block">
+    <!-- Кнопки-вкладки -->
+    <div class="flex flex-wrap gap-3 mt-10 mb-6">
+      <?php if (count($options)) { ?>
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('options')">
+        Характеристики
+      </button>
+      <?php } ?>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('delivery')">
+        Доставка и оплата
+      </button>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('commercial')">
+        Ком. Пред
+      </button>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('sets')">
+        Комплекты
+      </button>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('download')">
+        Скачать
+      </button>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('questions')">
+        Вопросы
+      </button>
+
+      <button
+        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+        onclick="showTab('reviews')">
+        Отзывы
+      </button>
+    </div>
+
+    <!-- Контент вкладок -->
+    <div class="description1">
+
+      <!-- Характеристики -->
+      <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+        <?php if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') { ?>
+        <span>Срок доставки:</span>
+        <?php echo htmlspecialchars($seriesInf['delivery_time']); ?>
+        <br>
+        <?php } ?>
+        <?php foreach ($options as $o) { ?>
+        <span><?php echo htmlspecialchars($o['name']); ?>:</span>
+        <?php echo htmlspecialchars($o['value']); ?>
+        <br>
+        <?php } ?>
+      </div>
+
+      <!-- Доставка и оплата -->
+      <div class="text" id="tab-delivery" style="display: none;">
+        <?php
+            $t = $catInf['series_info'];
+            $t = str_replace('[name]', htmlspecialchars($seriesInf['name']), $t);
+            $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
+        $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
+        $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
+        echo $t;
+        ?>
+      </div>
+
+      <!-- Ком. Пред (пример пустого контента) -->
+      <div class="text" id="tab-commercial" style="display: none;">
+        Здесь будет коммерческое предложение.
+      </div>
+
+      <!-- Комплекты -->
+      <div class="text" id="tab-sets" style="display: none;">
+        Подробная информация о комплектах.
+      </div>
+
+      <!-- Скачать -->
+      <div class="text" id="tab-download" style="display: none;">
+        Файлы для скачивания: паспорт, сертификаты, чертежи.
+      </div>
+
+      <!-- Вопросы -->
+      <div class="text" id="tab-questions" style="display: none;">
+        <a name="review"></a>
+        <h3>Задать вопрос</h3>
+        <p>Форма для отправки вопроса по товару.</p>
+      </div>
+
+      <!-- Отзывы -->
+      <div class="text" id="tab-reviews" style="display: none;">
+        <h3>Отзывы покупателей</h3>
+        <p>Отзывы и рейтинги пользователей.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Показываем нужную вкладку
+    function showTab(tabName) {
+      // Скрываем все
+      document.querySelectorAll('.description1 .text').forEach(div => {
+        div.style.display = 'none';
+      });
+
+      // Показываем выбранную
+      document.getElementById('tab-' + tabName).style.display = 'block';
+    }
+
+    // По умолчанию открываем "Характеристики" или "Доставку"
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if (count($options)) { ?>
+        showTab('options');
+        <?php } else { ?>
+        showTab('delivery');
+        <?php } ?>
+    });
+  </script>
+
+        <hr class="mb-6 border-gray-300 mt-12" />
+
+  <?php
+// Базовый URL
+$baseUrl = 'http://pinitk85.beget.tech';
+
+// Данные для карточек (можно вынести в настройки или БД)
+$benefits = [
+    [
+        'url' => '/preimuschestva/nizkie-tseny-i-skidki/',
+  'icon' => '/images/product/rub.png',
+  'title' => 'Самые низкие цены!',
+  'text' => 'Индивидуальный подход к каждому заказчику. Минимальные цены, дополнительные скидки. Удобная оплата, с НДС и без, договор.'
+  ],
+  [
+  'url' => '/preimuschestva/garantiya-ot-proizvoditelya/',
+  'icon' => '/images/product/user.png',
+  'title' => 'Гарантия от производителя!',
+  'text' => 'Мебель только лучших фабрик, поставщиков и производителей России и зарубежья.'
+  ],
+  [
+  'url' => '/preimuschestva/nashi-sotrudniki-professionaly-svoego-dela/',
+  'icon' => '/images/product/rule.png',
+  'title' => 'Вызвать специалиста в офис или получить консультацию эксперта!',
+  'text' => 'Предоставим каталоги и образцы, дизайн проект и расстановку Вашей офисной мебели.'
+  ],
+  [
+  'url' => '/preimuschestva/prostota-vybora/',
+  'icon' => '/images/product/busket.png',
+  'title' => 'Как уточнить и сделать покупку!',
+  'text' => 'На нашем сайте не надо регистрироваться, чтобы отправить заказ в корзину для уточнения информации достаточно оставить имя и телефон. Подарки при оформлении через сайт.'
+  ]
+  ];
+  ?>
+
+  <section>
+    <!-- Почему у нас -->
+    <h2 class="text-2xl font-bold mt-28 mb-12">Почему стоит заказать у нас</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium">
+      <?php foreach ($benefits as $item): ?>
+      <a href="<?php echo $baseUrl . $item['url']; ?>"
+         class="flex items-start gap-2 bg-white p-3 shadow rounded no-underline text-current hover:no-underline"
+         target="_blank"
+      >
+        <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
+          <img src="<?php echo $item['icon']; ?>"
+               class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
+               alt="<?php echo htmlspecialchars($item['title']); ?>" />
         </div>
+        <p class="text-lg font-medium">
+          <?php echo htmlspecialchars($item['title']); ?>
+          <span class="block font-normal"><?php echo htmlspecialchars($item['text']); ?></span>
+        </p>
+      </a>
+      <?php endforeach; ?>
+    </div>
+  </section>
 
-        <hr class="mb-6 border-gray-300" />
 
-        <!-- Заголовок и фильтры -->
-        <div class="mb-4">
-            <h2 class="text-base font-medium mb-3">
-                Элементы мебели Perseo (Персей) -<br />
-                мебель для кабинета руководителя
-            </h2>
-            <div class="flex flex-wrap gap-3">
-                <button class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                    Все
-                </button>
-                <button class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                    Столы
-                </button>
-                <button
-                    class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm border-2 border-blue-600 text-blue-600">
-                    Приставки
-                </button>
-                <button class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                    Тумбы
-                </button>
-                <button class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50">
-                    Шкафы
-                </button>
-                <div class="relative group">
-                    <button
-                        class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 flex items-center gap-1 border">
-                        Ещё
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+  <?php if (count($itemsGroups)) { ?>
+  <section class="series-items mt-20">
+    <div >
+      <!-- Заголовок -->
+      <h2 class="text-2xl font-bold mb-6">
+        Элементы мебели
+        <span class="text-gray-500 font-normal">"<?php echo htmlspecialchars($seriesInf['name']); ?>"</span>
+      </h2>
 
-                    <div
-                        class="absolute hidden group-hover:block z-10 mt-2 bg-white border rounded-lg shadow-md w-40 py-2">
-                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Модули</a>
-                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Дверцы</a>
-                        <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Фурнитура</a>
-                    </div>
-                </div>
-            </div>
+      <!<!-- Меню групп (вкладки) -->
+      <?php if (count($itemsGroups) > 1) { ?>
+      <div class="sticky top-0 bg-white z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
+        <div class="flex flex-wrap gap-3">
+          <!-- Кнопка "Наверх" -->
+          <a
+            href="#top"
+            onclick="document.getElementById('items-end').scrollIntoView(); return false;"
+            class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition"
+          >
+            Наверх
+          </a>
+
+          <?php foreach ($itemsGroups as $g) {
+                $groupId = (int)$g['id'];
+                $groupName = htmlspecialchars(trim($g['name']) !== '' ? $g['name'] : 'Разное');
+            ?>
+          <a
+            href="#group-<?php echo $groupId; ?>"
+            onclick="return oItemsScroll.navTo(this.href)"
+            id="menu-group-<?php echo $groupId; ?>"
+            class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link"
+            data-target="group-<?php echo $groupId; ?>"
+          >
+            <?php echo $groupName; ?>
+          </a>
+          <?php } ?>
         </div>
+      </div>
+      <?php } ?>
 
-        <div>
-            <h2 class="text-2xl font-bold mt-28 mb-12">Почему стоит заказать у нас</h2>
-            <!-- Карточка товара -->
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col max-w-[340px]">
-                <img src="/images/product/pristavka.png" alt="Кресло" class="w-full h-48 object-contain mb-4" />
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const links = document.querySelectorAll('.group-tab-link');
+          const sections = [];
 
-                <p class="text-gray-400">Арт: ПС 346 ДМ</p>
+          // Собираем все ссылки и соответствующие блоки
+          links.forEach(link => {
+            const targetId = link.getAttribute('data-target');
+            const section = document.getElementById(targetId);
+            if (section) {
+              sections.push({ link, element: section });
+            }
+          });
 
-                <h3 class="font-medium text-[21px] leading-7 mb-1">
-                    Брифинг-приставка
-                </h3>
+          // Функция: сбросить все стили
+          const resetStyles = () => {
+            links.forEach(link => {
+              link.className = 'min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link';
+            });
+          };
 
-                <p class="text-gray-400 mt-3">Ш/В/Д: 56x34x120</p>
+          // Функция: установить стиль активной вкладки
+          const setActive = (link) => {
+            link.className = 'min-w-[120px] px-4 py-1 rounded-lg shadow text-sm border-2 border-blue-600 text-blue-600 text-center transition';
+          };
 
-                <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                <div class="flex justify-between items-center mb-1">
-                    <div>
-                        <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                        <div class="font-bold text-lg leading-2 mt-[-6px]">12 467 ₽</div>
-                    </div>
-                    <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                        <button><img src="/images/index/izbr_small.png" </button>
-                            <button><img src="/images/index/srav_small.png" </button>
-                    </div>
-                </div>
+          // Наблюдатель за видимостью секций
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                resetStyles();
+                const activeLink = sections.find(s => s.element === entry.target)?.link;
+                if (activeLink) {
+                  setActive(activeLink);
+                }
+              }
+            });
+          }, {
+            rootMargin: '-100px 0px 0px 0px', // коррекция, если есть фиксированный хедер
+            threshold: 0.3
+          });
 
-                <a href="#"
-                    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                    Отложить
-                </a>
+          // Наблюдаем за каждой секцией
+          sections.forEach(s => observer.observe(s.element));
+        });
+      </script>
+
+      <!-- Контейнер групп -->
+      <div class="groups-tabs">
+        <?php $seriesOrig = $seriesInf; ?>
+        <?php foreach ($itemsGroups as $g) {
+                    $groupId = (int)$g['id'];
+                    $groupName = trim($g['name']) !== '' ? $g['name'] : 'Разное';
+                ?>
+        <!-- Якорь для прокрутки -->
+        <a id="group-<?php echo $groupId; ?>" class="items-scroll-point"></a>
+
+        <!-- Заголовок группы -->
+        <?php if ($g['h2']) { ?>
+        <h3 class="text-xl font-semibold mb-6 text-gray-800 mt-8">
+          <?php echo htmlspecialchars($groupName); ?>
+          <span class="font-normal text-gray-500">"<?php echo htmlspecialchars($seriesOrig['name']); ?>"</span>
+        </h3>
+        <?php } else { ?>
+        <h4 class="text-lg font-medium mb-5 text-gray-700 border-t pt-6 mt-6">
+          <?php echo htmlspecialchars($groupName); ?>
+        </h4>
+        <?php } ?>
+
+        <!-- Сетка карточек -->
+        <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" id="group-grid-<?php echo $groupId; ?>">
+          <?php foreach ($g['items'] as $item) { ?>
+          <?php
+                            $seriesInf = ($item['series_id'] == $seriesOrig['id'])
+                                ? $seriesOrig
+                                : ($crossSeries[$item['series_id']] ?? $seriesOrig);
+                            ?>
+
+          <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+            <!-- Изображение -->
+            <?php if (!empty($item['_img_ext'])): ?>
+            <a
+              href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"
+            >
+            <img
+              src="<?php echo Catalog::photoUrl(
+                                            Catalog_Items::$imagePath,
+                                            $item['id'], 170, 140, 1, $item['_img_ext']
+                                        ); ?>"
+              alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
+              class="w-full h-48 object-contain mb-4"
+            /></a>
+            <?php else: ?>
+            <div class="w-full h-48 bg-gray-100 mb-4 flex items-center justify-center">
+              <span class="text-gray-400 text-sm">Нет фото</span>
             </div>
+            <?php endif; ?>
+
+            <!-- Артикул -->
+            <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
+
+            <!-- Название -->
+            <h3 class="font-medium text-[18px] lg:text-[21px] leading-7 mb-1 line-clamp-2 h-14">
+              <?php echo htmlspecialchars($item['name']); ?>
+            </h3>
+
+            <!-- Габариты -->
+            <?php if (!empty($item['size'])): ?>
+            <p class="text-gray-400 text-sm mt-2">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
+            <?php endif; ?>
+
+            <!-- Цвет (заглушка) -->
+            <span class="w-4 h-4 rounded bg-black inline-block mb-3 mt-2"></span>
+
+            <!-- Цена -->
+            <div class="flex flex-wrap justify-between items-center mt-auto">
+              <div>
+                <?php $discount = abs($item['discount'] ?? 0); ?>
+                <?php if ($discount > 0 && $discount != 1): ?>
+                <div class="text-gray-600 text-sm line-through">
+                  <?php echo Catalog::priceFormat($item['price_min'] / $discount); ?> ₽
+                </div>
+                <?php endif; ?>
+                <div class="font-bold text-lg">
+                  <?php if ($item['price_min'] > 0): ?>
+                  <?php echo Catalog::priceFormat($item['price_min']); ?> ₽
+                  <?php else: ?>
+                  по запросу
+                  <?php endif; ?>
+                </div>
+              </div>
+
+              <!-- Кнопки: избранное, сравнение -->
+              <div class="flex gap-3 my-2">
+                <button title="В избранное" class="hover:scale-110 transition">
+                  <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5 opacity-70 hover:opacity-100" />
+                </button>
+                <button title="Сравнить" class="hover:scale-110 transition">
+                  <img src="/images/index/srav_small.png" alt="Сравнение" class="w-5 h-5 opacity-70 hover:opacity-100" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Кнопка -->
+            <a
+              href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"
+              class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+            >
+              Отложить
+            </a>
+          </div>
+          <?php } ?>
         </div>
+        <?php } ?>
+        <?php $seriesInf = $seriesOrig; ?>
+      </div>
 
-        <section>
-            <!-- Почему у нас -->
-            <h2 class="text-2xl font-bold mt-28 mb-12">Почему стоит заказать у нас</h2>
-
-            <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium">
-                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-                        <img src="/images/product/user.png" class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5" alt="" />
-                    </div>
-                    <p class="text-lg font-medium">Гарантия от производителя!
-                        <span class="block font-normal">Мебель только лучших фабрик, поставщиков и производителей России
-                            и
-                            зарубежья.</span>
-                    </p>
-
-                </div>
-                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-                        <img src="/images/product/rub.png" class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5" alt="" />
-                    </div>
-                    <p class="text-lg font-medium">Гарантия от производителя!
-                        <span class="block font-normal">Мебель только лучших фабрик, поставщиков и производителей России
-                            и
-                            зарубежья.</span>
-                    </p>
-                </div>
-                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-                        <img src="/images/product/rule.png" class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5" alt="" />
-                    </div>
-                    <p class="text-lg font-medium">Гарантия от производителя!
-                        <span class="block font-normal">Мебель только лучших фабрик, поставщиков и производителей России
-                            и
-                            зарубежья.</span>
-                    </p>
-                </div>
-                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-                        <img src="/images/product/busket.png" class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5" alt="" />
-                    </div>
-                    <p class="text-lg font-medium">Гарантия от производителя!
-                        <span class="block font-normal">Мебель только лучших фабрик, поставщиков и производителей России
-                            и
-                            зарубежья.</span>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <!-- В комплекте -->
-            <h2 class="text-2xl font-bold mt-28 mb-12">В комплекте</h2>
+      <!-- Якорь внизу -->
+      <a id="items-end"></a>
+    </div>
+  </section>
+  <?php } ?>
 
 
-            <div class="relative grid grid-cols-2 sm:grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Навигация влево -->
-                <button class="absolute bg-white left-0 top-1/2 transform -translate-y-1/2 ">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="images/index/Arrow_l.png" alt="Влево" />
-                    </div>
-                </button>
-
-                <!-- Карточки товаров -->
-                <?php if(count($seriesSet)) { ?>
-                <?php foreach($seriesSet as $in => $i) { ?>
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col max-w-[340px]">
-                    <?php if($i['_img_ext']) { ?>
-                    <img src="<?php echo Catalog::photoUrl(
-                        Catalog_Items::$imagePath,
-                        $i['id'], 170, 140, 1, $i['_img_ext']
-                    )?>" alt="<?php echo hsch($i['name'] . ' ' . $i['art'])?>"
-                        class="w-full h-48 object-contain mb-4" />
-                    <?php } ?>
-
-                    <p class="text-gray-400">Арт:
-                        <?php echo $i['art']; ?>
-                    </p>
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        <?php echo $i['name']; ?>
-                    </h3>
-
-                    <p class="text-gray-400 mt-3">Ш/В/Д:
-                        <?php echo $i['size']; ?>
-                    </p>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <?php $d = abs($i['discount']); ?>
-                            <?php if($d != 1 && $d !== 0) { ?>
-                            <span class="text-gray-600 text-sm line-through leading-2">
-                                <?php echo Catalog::priceFormat($i['price_min'] / $d)?> руб.
-                            </span>
-                            <?php } ?>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                <?php if(abs($i['price_min'])) { ?>
-                                <?php echo Catalog::priceFormat($i['price_min'])?> ₽
-                                <?php } else { ?>
-                                по запросу
-                                <?php } ?>
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" /></button>
-                            <button><img src="/images/index/srav_small.png" /></button>
-                        </div>
-                    </div>
-
-                    <a href="<?php echo Catalog_Items::a($seriesInf, $i)?>"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-                <?php } ?>
-                <?php } ?>
-
-                <!-- Навигация вправо -->
-                <button class="absolute bg-white right-0 top-1/2 transform -translate-y-1/2">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="/images/index/Arrow_r.png" alt="Вправо" />
-                    </div>
-                </button>
-            </div>
-
-        </section>
-
-
-        <section>
-            <!-- С этим покупают -->
-            <h2 class="text-2xl font-bold mt-28 mb-12">С этим покупают</h2>
-
-            <div class="relative grid grid-cols-1 sm:grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Навигация влево -->
-                <button class="absolute bg-white left-0 top-1/2 transform -translate-y-1/2 ">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="/images/index/Arrow_l.png" alt="Влево" />
-                    </div>
-                </button>
-
-                <!-- Карточки товаров -->
-                <?php if(count($linkages)) { ?>
-                <?php foreach($linkages as $ln => $l) { ?>
-                <?php foreach($l['series'] as $s) { ?>
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col">
-                    <?php if($s['1st_photo']['_img_ext']) { ?>
-                    <img src="<?php echo Catalog::photoUrl(
-                        Catalog_Series_Photos::$imagePath,
-                        $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
-                    )?>" alt="<?php echo hsch($s['name'])?>" class="w-full h-48 object-contain mb-4" />
-                    <?php } ?>
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        <?php echo $s['name']; ?>
-                    </h3>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) { ?>
-                            <span class="text-gray-600 text-sm line-through leading-2">
-                                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от')?>
-                                <?php echo Catalog::priceFormat(floor($s['price_search_min']))?> руб.
-                            </span>
-                            <?php } ?>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                <?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) { ?>
-                                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от')?>
-                                <?php echo Catalog::priceFormat(floor($s['price_search_min']))?> ₽
-                                <?php } elseif(abs($s['price_min'])) { ?>
-                                от
-                                <?php echo Catalog::priceFormat(floor($s['price_min']))?> ₽
-                                <?php } ?>
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" /></button>
-                            <button><img src="/images/index/srav_small.png" /></button>
-                        </div>
-                    </div>
-
-                    <a href="<?php echo Catalog_Series::a($s)?>"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-                <?php } ?>
-                <?php } ?>
-                <?php } ?>
-
-                <!-- Навигация вправо -->
-                <button class="absolute bg-white right-0 top-1/2 transform -translate-y-1/2">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="/images/index/Arrow_r.png" alt="Вправо" />
-                    </div>
-                </button>
-            </div>
-        </section>
-
-        <section>
-            <!-- Мы рекомендуем -->
-            <h2 class="text-2xl font-bold mt-28 mb-12">Мы рекомендуем</h2>
-
-            <div class="relative grid grid-cols-1 sm:grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Навигация влево -->
-                <button class="absolute bg-white left-0 top-1/2 transform -translate-y-1/2 ">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="/images/index/Arrow_l.png" alt="Влево" />
-                    </div>
-                </button>
-
-                <!-- Карточка товара -->
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col">
-                    <img src="/images/index/chair1.jpg" alt="Кресло" class="w-full h-48 object-contain mb-4" />
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        Кресло руководителя<br />GY-330 (ГУ-330)
-                    </h3>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                12 467 ₽
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" </button>
-                                <button><img src="/images/index/srav_small.png" </button>
-                        </div>
-                    </div>
-
-                    <a href="#"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-
-                <!-- Карточка товара -->
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col">
-                    <img src="/images/index/chair2.jpg" alt="Кресло" class="w-full h-48 object-contain mb-4" />
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        Кресло руководителя<br />GY-330 (ГУ-330)
-                    </h3>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                12 467 ₽
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" </button>
-                                <button><img src="/images/index/srav_small.png" </button>
-                        </div>
-                    </div>
-
-                    <a href="#"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-
-                <!-- Карточка товара -->
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col">
-                    <img src="/images/index/chair3.jpg" alt="Кресло" class="w-full h-48 object-contain mb-4" />
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        Кресло руководителя<br />GY-330 (ГУ-330)
-                    </h3>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                12 467 ₽
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" </button>
-                                <button><img src="/images/index/srav_small.png" </button>
-                        </div>
-                    </div>
-
-                    <a href="#"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-
-                <!-- Карточка товара -->
-                <div class="hidden bg-white rounded-lg shadow p-6 lg:flex flex-col">
-                    <img src="/images/index/chair4.jpg" alt="Кресло" class="w-full h-48 object-contain mb-4" />
-
-                    <h3 class="font-medium text-[21px] leading-7 mb-1">
-                        Кресло руководителя<br />GY-330 (ГУ-330)
-                    </h3>
-
-                    <span class="w-4 h-4 rounded bg-black inline-block mb-3"></span>
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <span class="text-gray-600 text-sm line-through leading-2">13 552 руб.</span>
-                            <div class="font-bold text-lg leading-2 mt-[-6px]">
-                                12 467 ₽
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button><img src="/images/index/izbr_small.png" </button>
-                                <button><img src="/images/index/srav_small.png" </button>
-                        </div>
-                    </div>
-
-                    <a href="#"
-                        class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-                        Отложить
-                    </a>
-                </div>
-
-
-                <!-- Навигация вправо -->
-                <button class="absolute bg-white right-0 top-1/2 transform -translate-y-1/2">
-                    <div
-                        class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] z-10">
-                        <img src="/images/index/Arrow_r.png" alt="Вправо" />
-                    </div>
-                </button>
-            </div>
-        </section>
 
         <section class="mt-24">
             <div class="bg-white px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
