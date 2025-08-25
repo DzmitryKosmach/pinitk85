@@ -615,116 +615,96 @@ function getHomeUrl() {
 
 
         <!-- Блок основной -->
-        <div class="hidden max-w-1440 mx-auto md:grid gap-16 md:grid-cols-4">
-            <!-- Блок 1: Компания -->
-            <div>
-                <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>"><img
-                        src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип"
-                        class="mb-4" /></a>
+      <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
+        <!-- Блок 1: Компания -->
+        <div class="lg:col-span-1">
+          <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип"
+                                                   class="mb-4" /></a>
 
-                <div class="mt-4 space-y-1 ">
-                    <p class="flex gap-4 font-semibold ">
-                        <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон"
-                            class="w-5 h-5" />
-                        <span>+7 (495)
+          <div class="mt-4 space-y-1 ">
+            <p class="flex gap-4 font-semibold ">
+              <img src="images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+              <span>+7 (495)
                             920-48-24<br>8 (800) 234-90-84</span>
-                    </p>
-                    <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
-                </div>
+            </p>
+            <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
+          </div>
 
-                <div class="mt-4 flex flex-col gap-2">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded text-sm">Заказать
-                        звонок
-                    </button>
-                    <button
-                        class="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-sm">Выезд
-                        консультанта
-                    </button>
-                </div>
-            </div>
-
-            <!-- Блок 2: Контакты -->
-            <div>
-                <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
-                <div class="flex items-center  gap-1 mb-2">
-                    <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
-                        class="w-5 h-5 mr-1" />
-                    <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
-                </div>
-                <div class="flex  gap-1 mb-2">
-                    <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email"
-                        class="w-5 h-5 mr-1" />
-                    <div>
-                        <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
-                                class="text-blue-600">zakaz@mebelioni.ru</a>
-                        </p>
-                        <p>Для информации: <br><a href="mailto:info@mebelioni.ru"
-                                class="text-blue-600">info@mebelioni.ru</a>
-                        </p>
-                        <div class="flex flex-wrap gap-3 mt-3">
-                            <!-- Иконки соцсетей -->
-                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_t.png'); ?>" alt="Twitter"
-                                    class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_vk.png'); ?>"
-                                    alt="ВКонтакте" class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_f.png'); ?>" alt="Facebook"
-                                    class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_tg.png'); ?>"
-                                    alt="Telrgram" class="w-9 h-9 hover:opacity-80" /></a>
-                            <a href="#"><img src="<?php echo getImagePath('/images/index/soc_wt.png'); ?>"
-                                    alt="Whatsapp" class="w-9 h-9 hover:opacity-80" /></a>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Блок 3: Товары -->
-            <div>
-                <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
-                <ul class="space-y-1 leading-6">
-                    <a href="#">
-                        <li>Кабинеты руководителя</li>
-                    </a>
-                    <a href="#">
-                        <li>Мебель для персонала</li>
-                    </a>
-                    <a href="#">
-                        <li>Столы для переговоров</li>
-                    </a>
-                    <a href="#">
-                        <li>Ресепшн</li>
-                    </a>
-                    <a href="#">
-                        <li>Офисные диваны</li>
-                    </a>
-                </ul>
-            </div>
-
-            <!-- Блок 4: Карта сайта -->
-            <div>
-                <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
-                <ul class="space-y-1 leading-6">
-                    <a href="#">
-                        <li>Офисные столы</li>
-                    </a>
-                    <a href="#">
-                        <li>Офисные шкафы</li>
-                    </a>
-                    <a href="#">
-                        <li>Офисные кресла</li>
-                    </a>
-                    <a href="#">
-                        <li>Офисные стулья</li>
-                    </a>
-                </ul>
-            </div>
+          <div class="mt-4 flex flex-col gap-2">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
+              звонок</button>
+            <button
+              class="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
+              консультанта</button>
+          </div>
         </div>
 
+        <!-- Блок 2: Контакты -->
+        <div class="lg:col-span-1">
+          <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
+          <div class="flex items-center  gap-1 mb-2">
+            <img src="images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
+            <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
+          </div>
+          <div class="flex  gap-1 mb-2">
+            <img src="images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
+            <div>
+              <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
+                                    class="text-blue-600">zakaz@mebelioni.ru</a>
+              </p>
+              <p>Для информации: <br><a href="mailto:info@mebelioni.ru"
+                                        class="text-blue-600">info@mebelioni.ru</a>
+              </p>
+              <div class="flex flex-wrap gap-3 mt-3">
+                <!-- Иконки соцсетей -->
+                <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp" class="w-7 h-7 hover:opacity-80">
+                  <img src="images/index/soc_wt.png" alt="Whatsapp" />
+                </a>
+                <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen" class="w-7 h-7 hover:opacity-80">
+                  <img src="images/index/soc_t.png" alt="Yandex Zen" />
+                </a>
+                <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="w-7 h-7 hover:opacity-80">
+                  <img src="images/index/soc_vk.png" alt="ВКонтакте" />
+                </a>
+                <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok" class="w-7 h-7 hover:opacity-80">
+                  <img src="images/index/soc_f.png" alt="OK" />
+                </a>
+                <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok" class="w-7 h-7 hover:opacity-80">
+                  <img src="images/index/soc_tg.png" alt="TikTok" />
+                </a>
 
-        <!-- Блок основной (md)-->
-        <div class="md:hidden max-w-1440 mx-auto grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Блок 3: Товары -->
+        <div class="lg:col-span-2">
+          <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+          <div class="flex gap-8">
+            <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+              <?php foreach($catsMenu as $n => $c) { ?>
+              <li>
+                <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                  <?php echo $c['name']; ?>
+                </a>
+              </li>
+              <?php } ?>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Блок 4: Карта сайта -->
+        <div class="lg:col-span-1">
+          <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
+
+        </div>
+      </div>
+
+
+        <!-- Блок основной (lg)-->
+        <div class="lg:hidden max-w-1440 mx-auto grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
             <!-- Блок 1: Компания -->
             <div>
                 <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
@@ -739,24 +719,24 @@ function getHomeUrl() {
                 </div>
 
                 <div class="mt-4 flex flex-col gap-2">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded text-sm">Заказать
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
                         звонок
                     </button>
                     <button
-                        class="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-sm">Выезд
+                        class="border border-blue-600 text-blue-600 hover:bg-blue-50 text-center py-3 px-4 rounded text-sm">Выезд
                         консультанта
                     </button>
                 </div>
             </div>
 
             <!-- Блок 2: Контакты -->
-            <div class="flex flex-row-reverse justify-center text-sm mt-8">
-                <div class="flex w-[45%] gap-1 mb-2">
+            <div class="flex flex-wrap flex-row-reverse justify-center text-sm mt-8">
+                <div class="flex w-[45%] min-w-[220px]  gap-1 mb-2">
                     <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
                         class="w-4 h-4 mr-1" />
                     <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
                 </div>
-                <div class="flex w-[45%] gap-1 mb-2">
+                <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
                     <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email"
                         class="w-4 h-4 mr-1" />
                     <div>
@@ -770,61 +750,46 @@ function getHomeUrl() {
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-3 mt-1">
-                <!-- Иконки соцсетей -->
-                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_t.png'); ?>" alt="Twitter"
-                        class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_vk.png'); ?>" alt="ВКонтакте"
-                        class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_f.png'); ?>" alt="Facebook"
-                        class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_tg.png'); ?>" alt="Telrgram"
-                        class="w-7 h-7 hover:opacity-80" /></a>
-                <a href="#"><img src="<?php echo getImagePath('/images/index/soc_wt.png'); ?>" alt="Whatsapp"
-                        class="w-7 h-7 hover:opacity-80" /></a>
+          <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
+            <!-- Иконки соцсетей -->
+            <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp" class="w-7 h-7 hover:opacity-80">
+              <img src="images/index/soc_wt.png" alt="Whatsapp" />
+            </a>
+            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen" class="w-7 h-7 hover:opacity-80">
+              <img src="images/index/soc_t.png" alt="Yandex Zen" />
+            </a>
+            <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="w-7 h-7 hover:opacity-80">
+              <img src="images/index/soc_vk.png" alt="ВКонтакте" />
+            </a>
+            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok" class="w-7 h-7 hover:opacity-80">
+              <img src="images/index/soc_f.png" alt="OK" />
+            </a>
+            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok" class="w-7 h-7 hover:opacity-80">
+              <img src="images/index/soc_tg.png" alt="TikTok" />
+            </a>
+          </div>
 
-            </div>
 
-            <div class="flex flex-row justify-start gap-4 text-sm ml-2 mt-0 mb:mt-[-110px]">
+          <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
                 <!-- Блок 3: Товары -->
-                <div>
-                    <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
-                    <ul class="space-y-1 text-[12px] leading-6">
-                        <a href="#">
-                            <li>Кабинеты руководителя</li>
-                        </a>
-                        <a href="#">
-                            <li>Мебель для персонала</li>
-                        </a>
-                        <a href="#">
-                            <li>Столы для переговоров</li>
-                        </a>
-                        <a href="#">
-                            <li>Ресепшн</li>
-                        </a>
-                        <a href="#">
-                            <li>Офисные диваны</li>
-                        </a>
-                    </ul>
+              <div class="lg:col-span-2">
+                <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+                <div class="flex gap-8">
+                  <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+                    <?php foreach($catsMenu as $n => $c) { ?>
+                    <li>
+                      <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                        <?php echo $c['name']; ?>
+                      </a>
+                    </li>
+                    <?php } ?>
+                  </ul>
                 </div>
+              </div>
 
                 <!-- Блок 4: Карта сайта -->
                 <div>
                     <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
-                    <ul class="space-y-1 text-[12px] leading-6">
-                        <a href="#">
-                            <li>Офисные столы</li>
-                        </a>
-                        <a href="#">
-                            <li>Офисные шкафы</li>
-                        </a>
-                        <a href="#">
-                            <li>Офисные кресла</li>
-                        </a>
-                        <a href="#">
-                            <li>Офисные стулья</li>
-                        </a>
-                    </ul>
                 </div>
             </div>
         </div>
