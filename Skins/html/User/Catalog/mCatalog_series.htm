@@ -375,7 +375,7 @@
           <?php if(count($materials)) { ?>
           <span class="mb-1 font-semibold">Цветовая гамма:</span>
 
-          <div class="series-materials new flex gap-3 flex-wrap">
+          <div class="series-materials new flex gap-2 flex-wrap">
             <?php
 							function recurseSubMaterials($materials, $prevLevelName){
 								foreach($materials as $m){
@@ -391,7 +391,7 @@
           }else{
           print '
           <div class="series-materials-level3">
-            <div class="image">' .
+            <div class="image w-16 h-16">' .
               (
               $m['image']['ext'] ?
               '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' :
@@ -408,12 +408,13 @@
           <?php if(!$m['current-series']) continue; ?>
           <?php if($m['has_sub']) { ?>
           <a class="level1" href="javascript:void(0)">
-            <div class="image">
+            <div class="image transform transition-transform duration-300 ease-in-out
+  hover:scale-110">
               <?php if($m['image']['ext']) { ?>
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>" width="70" height="70" alt="<?php echo hsch($m['name'])?>">
               <?php } ?>
             </div>
-            <div class="name"><?php echo $m['name']; ?></div>
+            <div class="name hidden"><?php echo $m['name']; ?></div>
           </a>
           <div class="materials-zoom hidden">
             <div class="level1-sub">
@@ -424,7 +425,7 @@
           <?php } else { ?>
           <?php if($m['image']['ext']) { ?>
           <a class="level1" href="javascript:void(0)">
-            <div class="image">
+            <div class="image w-16 h-16">
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>" width="70" height="70" alt="<?php echo hsch($m['name'])?>">
             </div>
             <div class="name"><?php echo $m['name']; ?></div>
@@ -434,8 +435,8 @@
           </div>
           <?php } else { ?>
           <div class="level1">
-            <div class="image">&nbsp;</div>
-            <div class="name"><?php echo $m['name']; ?></div>
+            <div class="image w-16 h-16">&nbsp;</div>
+            <div class="name text-sm hidden"><?php echo $m['name']; ?></div>
           </div>
           <?php } ?>
           <?php } ?>
@@ -443,29 +444,6 @@
           <div class="cl"></div>
         </div>
         <?php } ?>
-
-        <div>
-          <p class="mb-1 font-semibold">Цветовая гамма:</p>
-          <div class="flex gap-3 flex-wrap">
-            <?php if(count($materials)) { ?>
-            <?php foreach($materials as $m) { ?>
-            <?php if(!$m['current-series']) continue; ?>
-            <?php if($m['image']['ext']) { ?>
-            <div class="w-12 h-12 rounded border"
-                 style="background-color: <?php echo $m['color'] ?? '#000'; ?>">
-              <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_48x48_0.<?php echo $m['image']['ext']; ?>"
-                   class="w-full h-full object-cover rounded"
-                   alt="<?php echo hsch($m['name'])?>" />
-            </div>
-            <?php } else { ?>
-            <div class="w-12 h-12 rounded border"
-                 style="background-color: <?php echo $m['color'] ?? '#000'; ?>"></div>
-            <?php } ?>
-            <?php } ?>
-            <?php } ?>
-
-          </div>
-        </div>
       </div>
     </div>
   </div>
