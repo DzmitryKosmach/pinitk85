@@ -853,11 +853,35 @@ function getHomeUrl() {
         </div>
     </div>
     <div class="xCallback">
-        <div class="xCallback__entity" onclick="kcall(); return false;">
-            <img src="<?php echo getImagePath('/img/icons/blue-ear-phone.png'); ?>" alt="">
-            Заказать звонок
-        </div>
+      <button onclick="kcall(); return false;"
+              class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2
+                 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium
+                 rounded-full sm:rounded-lg shadow-md
+                 hover:bg-blue-700 hover:opacity-100
+                 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
+                 transition-all duration-200 ease-in-out
+                 opacity-80
+                 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
+        <!-- Иконка -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor" class="w-8 h-8">
+          <!-- Телефон -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
+          <!-- Стрелка -->
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m 15.327534,8.4004399 6.0561,-5.9433702 m -6.0561,5.9433702 5.999735,0.056365 m -5.999735,-0.056365 0.05636,-5.9997352" />
+        </svg>
+
+        <!-- Текст (показывается с sm и выше) -->
+        <span class="hidden sm:inline">Заказать звонок</span>
+      </button>
     </div>
+
+
     <div class="modal modal--order-call" id="kmodal">
         <a href="javascript:void(0);" class="modal__close modal__close--big-margin" onclick="kclose(); return false;">
             <img src="<?php echo getImagePath('/img/icons/modal-close.png'); ?>" alt="">
