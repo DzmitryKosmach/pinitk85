@@ -339,6 +339,49 @@ class Catalog_Series extends ExtDbList
         }
     }
 
+    /**
+     * Gets paginated series list with pagination HTML
+     * @param int $page Current page number
+     * @param int $perPage Items per page
+     * @param string $fields Fields to select
+     * @param string $where WHERE clause
+     * @param string $order ORDER BY clause
+     * @return array [$items, $toggle, $page, $total]
+     */
+
+    public function getByPage(
+        int $pgNum = 1,
+        int $pgSize = 8,
+        string $fields = '',
+        string $cond = '',
+        string $order = '`id` ASC',
+        string $joins = '',
+        string $group = ''
+    ): array {
+        $page = max(1, intval($pgNum));
+        $perPage = intval($pgSize) > 0 ? intval($pgSize) : 8; // <= вот так
+
+        $total = $this->getCount($cond);
+        $totalPages = ceil($total / $perPage);
+
+        $limit = (($page - 1) * $perPage) . ',' . $perPage;
+        $items = $this->get($fields, $cond, $order, $limit, $joins, $group);
+
+        // Получаем базовый URL без page_N
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $baseUrl = preg_replace('#/page_\d+/?#', '/', $requestUri);
+        $baseUrl = rtrim($baseUrl, '/') . '/';
+
+        ob_start();
+        // Передаем переменные для пагинации
+        $currentPage = $page;
+        include(Config::path('skins') . '/html/Components/pagination.htm');
+        $toggle = ob_get_clean();
+
+        return array($items, $toggle, $page, $total);
+    }
+
+
 
     /** Изменять значение extra_charge для серии нужно этим методом - здесь сразу же обновится наценка для товаров серии в соответствии с extra_charge_action
      * @param int   $seriesId
@@ -352,9 +395,9 @@ class Catalog_Series extends ExtDbList
             '`id` = ' . $seriesId
         );
         if (!$seriesInf || round($seriesInf['extra_charge'], Catalog::MULTIPLERS_DECIMAL) == round(
-                $newExtraCharge,
-                Catalog::MULTIPLERS_DECIMAL
-            )) {
+            $newExtraCharge,
+            Catalog::MULTIPLERS_DECIMAL
+        )) {
             return;
         }
 
@@ -480,7 +523,7 @@ class Catalog_Series extends ExtDbList
 
         // Получаем маркеры
         $oMarkers = new Catalog_Markers();
-        foreach ($series as $i=>$s) {
+        foreach ($series as $i => $s) {
             $tmp = $oMarkers->getForSeries($s['id']);
             //dp($tmp);
             $series[$i]['marker'] = $oMarkers->getForSeries($s['id']);

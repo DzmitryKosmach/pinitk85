@@ -106,16 +106,38 @@
             </div>
 
             <!-- Основное изображение -->
-            <div class="w-full">
+            <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
               <img
                 src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                 alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                 title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                class="w-full rounded-xl object-cover"
+                class="w-full rounded-xl object-cover cursor-zoom-in"
                 id="main-product-image"
+                onclick="openBigPhoto('<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>')"
               />
             </div>
+
+            <!-- модалка для большого фото -->
+            <div id="photo-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+              <div class="relative max-w-5xl w-full">
+                <img id="photo-modal-img" src="" class="w-full h-auto rounded-lg object-contain" alt="">
+                <button onclick="closeBigPhoto()" class="absolute top-3 right-3 text-white text-3xl font-bold">&times;</button>
+              </div>
+            </div>
+
+            <script>
+              function openBigPhoto(src) {
+                const modal = document.getElementById('photo-modal');
+                const img = document.getElementById('photo-modal-img');
+                img.src = src;
+                modal.classList.remove('hidden');
+              }
+
+              function closeBigPhoto() {
+                document.getElementById('photo-modal').classList.add('hidden');
+              }
+            </script>
           </div>
 
           <!-- Описание под галереей -->
@@ -161,7 +183,7 @@
         <?php } ?>
 
         <!-- Правая колонка: Описание и цены -->
-        <div class="sm2:w-1/2">
+        <div id="section-prices" class="sm2:w-1/2">
 
           <!-- Блок с названием и кнопками -->
           <div class="md:block hidden">
@@ -188,16 +210,67 @@
           <div id="series-set" class="flex flex-col gap-4">
             <!-- Табы -->
             <div class="flex gap-2 text-sm">
-              <button class="px-4 py-2 rounded-lg bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)]">
+              <button
+                class="tab-btn active
+           px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
+           shadow-[0_0_8px_rgba(59,130,246,0.3)]
+           hover:bg-blue-700 hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+           active:translate-y-[-1px]
+           transition-all duration-200 ease-in-out"
+                data-target="section-photo">
                 Мебель на фото
               </button>
-              <button class="px-4 py-2 rounded-lg bg-white border shadow-[0_0_8px_rgba(0,0,0,0.1)]">
+
+              <button
+                class="tab-btn
+           px-4 py-2 rounded-lg bg-white border border-gray-200
+           shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+           hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+           active:translate-y-[-1px]
+           transition-all duration-200 ease-in-out"
+                data-target="section-specs">
                 Характеристики
               </button>
-              <button class="px-4 py-2 rounded-lg bg-blue-600 text-white">
+
+              <button
+                class="tab-btn
+           px-4 py-2 rounded-lg bg-white border border-gray-200
+           shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+           hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+           active:translate-y-[-1px]
+           transition-all duration-200 ease-in-out"
+                data-target="section-prices">
                 Цены на товары
               </button>
             </div>
+
+            <script>
+              document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                  // Убираем активный класс со всех
+                  document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                    btn.classList.add('bg-white', 'text-gray-700');
+                  });
+
+                  // Добавляем активный класс к нажатой
+                  this.classList.add('active', 'bg-blue-600', 'text-white');
+                  this.classList.remove('bg-white', 'text-gray-700');
+
+                  // Получаем целевой блок
+                  const targetId = this.getAttribute('data-target');
+                  const targetElement = document.getElementById(targetId);
+
+                  if (targetElement) {
+                    // Плавный скролл
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }
+                });
+              });
+            </script>
 
             <!-- Список товаров -->
             <div class="ajaxpages_gmci">
@@ -335,7 +408,14 @@
               Отложить в 1 клик со СКИДКОЙ
             </button>
             <button class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded text-center">
+              <a
+                rel="nofollow"
+                class="cheaper detail fancyajax fancybox.ajax"
+                href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER?>"
+                title="Нашли дешевле?"
+              >
               Нашли дешевле?
+              </a>
             </button>
           </div>
 
@@ -361,8 +441,8 @@
                 <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp">
                   <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="Whatsapp" />
                 </a>
-                <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok">
-                  <img src="/images/product/soc_tg.png" class="w-8 h-8" alt="TikTok" />
+                <a href="https://ok.ru/group/61739138941100" target="_blank" title="Tik Tok">
+                  <img src="/images/product/soc_tg.png" class="w-8 h-8" alt="Одноклассники" />
                 </a>
                 <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
                   <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
@@ -391,14 +471,14 @@
           }else{
           print '
           <div class="series-materials-level3">
-            <div class="image w-16 h-16">' .
+            <div class="image">' .
               (
               $m['image']['ext'] ?
               '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' :
               ''
               ) .
               '</div>
-            <div class="name">' . $m['name'] . '</div>
+            <div class="name hidden">' . $m['name'] . '</div>
           </div>';
           }
           }
@@ -425,17 +505,18 @@
           <?php } else { ?>
           <?php if($m['image']['ext']) { ?>
           <a class="level1" href="javascript:void(0)">
-            <div class="image w-16 h-16">
+            <div class="image transform transition-transform duration-300 ease-in-out
+  hover:scale-110">
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>" width="70" height="70" alt="<?php echo hsch($m['name'])?>">
             </div>
-            <div class="name"><?php echo $m['name']; ?></div>
+            <div class="name hidden"><?php echo $m['name']; ?></div>
           </a>
           <div class="materials-zoom hidden">
             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
           </div>
           <?php } else { ?>
           <div class="level1">
-            <div class="image w-16 h-16">&nbsp;</div>
+            <div class="image">&nbsp;</div>
             <div class="name text-sm hidden"><?php echo $m['name']; ?></div>
           </div>
           <?php } ?>
@@ -454,7 +535,7 @@
   <!-- Кнопки-вкладки -->
   <div class="flex flex-wrap gap-3 mt-10 mb-6">
     <?php if (count($options)) { ?>
-    <button
+    <button id="section-specs"
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
       onclick="showTab('options')">
       Характеристики
@@ -504,7 +585,7 @@
     <!-- Характеристики -->
     <div class="text options" id="tab-options" style="display: none;" itemprop="description">
       <?php if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') { ?>
-      <span>Срок доставки:</span>
+      <span class="opacity-60">Срок доставки:</span>
       <?php echo htmlspecialchars($seriesInf['delivery_time']); ?>
       <br>
       <?php } ?>
@@ -860,7 +941,7 @@ $benefits = [
 
 
 <section class="mt-24">
-  <div class="bg-white px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
+  <div class="bg-white px-8 md:px-16 lg:px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
 
     <!-- Левая колонка -->
     <div class="flex-1">
