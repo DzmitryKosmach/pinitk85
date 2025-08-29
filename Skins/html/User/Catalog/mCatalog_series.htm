@@ -841,9 +841,11 @@ $benefits = [
         <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
           <!-- Изображение -->
           <?php if (!empty($item['_img_ext'])): ?>
-          <a
-            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"
-          >
+
+            <a
+              href="javascript:void(0)"
+              onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+            >
             <img
               src="<?php echo Catalog::photoUrl(
                                             Catalog_Items::$imagePath,
@@ -859,7 +861,7 @@ $benefits = [
           <?php endif; ?>
 
           <!-- Артикул -->
-          <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
+          <p class="text-gray-400 text-sm">Арт2: <?php echo htmlspecialchars($item['art']); ?></p>
 
           <!-- Название -->
           <h3 class="font-medium text-[18px] lg:text-[21px] leading-7 mb-1 line-clamp-2 h-14">
@@ -905,9 +907,14 @@ $benefits = [
 
           <!-- Кнопка -->
           <a
-            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"
+            href="javascript:void(0)"
+            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
             class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
           >
+<!--          <a-->
+<!--            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"-->
+<!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
+<!--          >-->
             Отложить
           </a>
         </div>
