@@ -118,26 +118,65 @@
               />
             </div>
 
-            <!-- модалка для большого фото -->
-            <div id="photo-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-              <div class="relative max-w-5xl w-full">
-                <img id="photo-modal-img" src="" class="w-full h-auto rounded-lg object-contain" alt="">
-                <button onclick="closeBigPhoto()" class="absolute top-3 right-3 text-white text-3xl font-bold">&times;</button>
+            <!-- Модальное окно (скрытое) -->
+            <div id="series-modal" class="fancyimages noned hidden" title="<?php echo hsch($seriesInf['name'])?>">
+              <div class="fancygallery">
+                <table class="changegenimage">
+                  <tbody>
+                  <tr>
+                    <td class="image">
+                      <?php
+											$p = $photos[0];
+											?>
+                      <img class="max genimage" src="<?php echo Catalog::photoUrl(
+													 Catalog_Series_Photos::$imagePath,
+													 $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]
+												 )?>" alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])?>"
+                           title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])?>"
+                      <?php /*style="max-width: 800px" */?>
+                      >
+                    </td>
+                    <td class="slider">
+                      <div class="picslider scrollp vertical">
+                        <a rel="nofollow" class="scrollbtn prev pop" href="#">
+                          <i class="icon pngicons"></i>
+                        </a>
+                        <div class="popd_jscrollpane scroll vertical-only max"
+                             id="d_scroll_popup_<?php echo $seriesInf['id']; ?>">
+                          <div class="scrollinner">
+                            <?php
+                                                        foreach($photos as $pn => $p) {
+                            $p['alt'] = !is_null($p['alt']) ? $p['alt'] : '';
+                            $altName = hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']);
+                            ?>
+                            <a rel="nofollow"
+                               class="changeimage scrollitem<?php if($pn==0) { ?> imgoffer imgofferid<?php echo $p['id']; ?><?php } ?>"
+                               href="#">
+                              <img src="<?php echo Catalog::photoUrl(
+																		Catalog_Series_Photos::$imagePath,
+																		$p['id'], 90, 90, $p['rm'], $p['_img_ext']
+																	)?>" alt="<?php echo $altName . hsch(($pn > 0 ? ' - фото' . ($pn+1) : '')); ?>"
+                                   title="<?php echo $altName . hsch(($pn > 0 ? ' - фото' . ($pn+1) : '')); ?>"
+                                   data-bigimage="<?php echo Catalog::photoUrl(
+																		Catalog_Series_Photos::$imagePath,
+																		$p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]
+																	)?>">
+                            </a>
+                            <?php } ?>
+                          </div>
+                        </div>
+                        <a rel="nofollow" class="scrollbtn next pop" href="#">
+                          <i class="icon pngicons"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <script>
-              function openBigPhoto(src) {
-                const modal = document.getElementById('photo-modal');
-                const img = document.getElementById('photo-modal-img');
-                img.src = src;
-                modal.classList.remove('hidden');
-              }
 
-              function closeBigPhoto() {
-                document.getElementById('photo-modal').classList.add('hidden');
-              }
-            </script>
           </div>
 
           <!-- Описание под галереей -->
