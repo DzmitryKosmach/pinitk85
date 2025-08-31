@@ -4,18 +4,20 @@
         <?php if (!empty($s['marker'])) { ?>
         <div class="text-block">
             <span
-                class="marker absolute top-[-8px] left-[-8px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
+                class="marker absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
                 style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
                        white-space: normal;">
 
                 <?php
-                // Принудительно заменяем <br> на \n, чтобы использовать nl2br
-                $text = $s['marker']['text'];
-                $text = preg_replace('/<br\s*\/?>/', "\n", $text);
-                $text = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
-                echo nl2br($text);
-                ?>
+              $text = $s['marker']['text'];
+              // Заменяем <br>, <br/>, <br/> и т.п. на пробел
+              $text = preg_replace('/<br\s*\/?>/', ' ', $text);
+              // Удаляем все остальные теги
+              $text = strip_tags($text);
+              // Не трогаем пробелы — оставляем как есть
+              echo $text;
+          ?>
 
             </span>
         </div>
