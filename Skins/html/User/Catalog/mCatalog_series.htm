@@ -83,10 +83,10 @@
                   <?php foreach($photos as $pn => $p): ?>
                   <img
                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
+                    data-bigimage="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                     alt="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     title="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer transition-transform hover:scale-105"
-                    data-bigimage="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                     onclick="changeMainImage(this)"
                   />
                   <?php endforeach; ?>
@@ -108,22 +108,36 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a
-                id="main-image-link"
-                data-fancybox="series-gallery"
-                href="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
-                data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-              >
-                <img
-                  src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
-                  alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                  title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                  class="w-full rounded-xl object-cover cursor-zoom-in"
-                  id="main-product-image"
-                />
-              </a>
+              <img
+                src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
+                alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                class="w-full rounded-xl object-cover cursor-zoom-in"
+                id="main-product-image"
+                onclick="openBigPhoto('<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>')"
+              />
             </div>
 
+            <!-- модалка для большого фото -->
+            <div id="photo-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+              <div class="relative max-w-5xl w-full">
+                <img id="photo-modal-img" src="" class="w-full h-auto rounded-lg object-contain" alt="">
+                <button onclick="closeBigPhoto()" class="absolute top-3 right-3 text-white text-3xl font-bold">&times;</button>
+              </div>
+            </div>
+
+            <script>
+              function openBigPhoto(src) {
+                const modal = document.getElementById('photo-modal');
+                const img = document.getElementById('photo-modal-img');
+                img.src = src;
+                modal.classList.remove('hidden');
+              }
+
+              function closeBigPhoto() {
+                document.getElementById('photo-modal').classList.add('hidden');
+              }
+            </script>
           </div>
 
           <!-- Описание под галереей -->
@@ -220,12 +234,9 @@
         <!-- JavaScript для смены изображения -->
         <script>
           function changeMainImage(thumb) {
-            var mainImg = document.getElementById('main-product-image');
-            var mainLink = document.getElementById('main-image-link');
-            if (mainImg && mainLink && thumb.dataset.bigimage) {
+            const mainImg = document.getElementById('main-product-image');
+            if (mainImg && thumb.dataset.bigimage) {
               mainImg.src = thumb.dataset.bigimage;
-              mainLink.href = thumb.dataset.bigimage;
-              mainLink.setAttribute('data-caption', thumb.alt);
             }
           }
 
@@ -1071,5 +1082,5 @@ $benefits = [
 
 </div>
 
-<link rel="stylesheet" href="/Js/fancybox/jquery.fancybox.min.css" />
-<script src="/Js/fancybox/jquery.fancybox.min.js"></script>
+<?php echo JsCopmress::load('slider-vertical'); ?>
+<?php echo JsCopmress::load('series-set-price.js'); ?>
