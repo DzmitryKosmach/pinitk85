@@ -4,6 +4,12 @@
 <!-- <?php echo CssCopmress::load('series')?> -->
 <?php echo JsCopmress::load('series')?>
 
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+
 <script>
   oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
 </script>
@@ -104,23 +110,18 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a id="main-image-link"
-                 data-fancybox
-                 data-src="#series-modal"
-                 href="javascript:;"
-                 data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>">
+              <a id="main-image-link" data-fancybox data-src="#series-modal" href="javascript:;"
+                data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>">
                 <img
                   src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                   alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                   title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                  class="w-full rounded-xl object-cover cursor-zoom-in"
-                  id="main-product-image"
-                />
+                  class="w-full rounded-xl object-cover cursor-zoom-in" id="main-product-image" />
               </a>
             </div>
 
             <!-- Модальное окно (скрытое) -->
-            <div id="series-modal" class="fancyimages noned" title="<?php echo hsch($seriesInf['name'])?>">
+            <div id="series-modal" class="fancyimages noned hidden" title="<?php echo hsch($seriesInf['name'])?>">
               <div class="fancygallery">
                 <table class="changegenimage">
                   <tbody>
@@ -176,6 +177,7 @@
                 </table>
               </div>
             </div>
+
 
           </div>
 
