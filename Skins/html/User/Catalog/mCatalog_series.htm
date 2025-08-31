@@ -114,6 +114,7 @@
                 title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                 class="w-full rounded-xl object-cover cursor-zoom-in"
                 id="main-product-image"
+                onclick="openBigPhoto('<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>')"
               />
             </div>
 
@@ -271,49 +272,33 @@
 
         <!-- JavaScript для смены изображения -->
         <script>
-          // Функция смены основного изображения
           function changeMainImage(thumb) {
             const mainImg = document.getElementById('main-product-image');
-            const mainLink = document.getElementById('main-image-link');
-            const bigImage = thumb.dataset.bigimage;
-            const alt = thumb.alt;
-
-            if (mainImg && mainLink && bigImage) {
-              // Меняем изображение
-              mainImg.src = bigImage;
-              mainImg.alt = alt;
-
-              // Обновляем ссылку fancybox
-              mainLink.href = bigImage;
-              mainLink.setAttribute('data-caption', alt);
+            if (mainImg && thumb.dataset.bigimage) {
+              mainImg.src = thumb.dataset.bigimage;
             }
           }
 
-          // Инициализация: установить первую миниатюру как активную
-          document.addEventListener('DOMContentLoaded', function () {
+          // Инициализация: клик по первой миниатюре (если нужно)
+          document.addEventListener('DOMContentLoaded', () => {
             const firstThumb = document.querySelector('.slider-track img');
-            if (firstThumb) {
-              // Принудительно вызываем смену (на случай, если основное изображение не совпадает)
+            if (firstThumb && !document.getElementById('main-product-image').src.includes(firstThumb.dataset.bigimage)) {
               changeMainImage(firstThumb);
             }
 
-            // Инициализация fancybox (если используешь fancybox v3)
-            if (typeof $.fancybox !== 'undefined') {
-              $('[data-fancybox="gallery"]').fancybox({
-                animationEffect: "zoom",
-                transitionEffect: "slide",
-                buttons: [
-                  "zoom",
-                  "slideShow",
-                  "fullScreen",
-                  "close"
-                ],
-                thumbs: {
-                  autoStart: true
-                },
-                loop: true
-              });
-            }
+            // Прокрутка миниатюр кнопками
+            const track = document.querySelector('.slider-track');
+            const prevBtn = document.querySelector('.slider-prev');
+            const nextBtn = document.querySelector('.slider-next');
+            const itemWidth = 90 + 8; // ширина изображения + gap
+
+            prevBtn.addEventListener('click', () => {
+              track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+            });
+
+            nextBtn.addEventListener('click', () => {
+              track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+            });
           });
         </script>
         <?php } ?>
