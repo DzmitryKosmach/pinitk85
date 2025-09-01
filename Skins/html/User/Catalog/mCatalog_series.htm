@@ -108,7 +108,13 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a href="javascript:void(0);" onclick="openGalleryModal()">
+              <a
+                id="main-image-link"
+                data-fancybox
+                data-src="#series-modal"
+                href="javascript:;"
+                data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+              >
                 <img
                   src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                   alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
@@ -120,7 +126,7 @@
             </div>
 
             <!-- Модальное окно (скрытое) -->
-            <div id="series-modal" class="fancyimages noned hidden" title="<?php echo hsch($seriesInf['name'])?>">
+            <div id="series-modal" class="fancyimages noned" style="display: none;" title="<?php echo hsch($seriesInf['name'])?>">
               <div class="fancygallery">
                 <table class="changegenimage">
                   <tbody>
@@ -272,24 +278,6 @@
 
         <!-- JavaScript для смены изображения -->
         <script>
-          // Глобальный массив галереи (должен быть вне DOMContentLoaded)
-          const photoGallery = [
-            <?php foreach($photos as $pn => $p) {
-            $altName = hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']);
-            $caption = $altName . ($pn > 0 ? ' - фото ' . ($pn + 1) : '');
-              ?>
-            {
-              src: "<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]); ?>",
-                thumb: "<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>",
-              alt: "<?php echo $caption; ?>",
-              caption: "<?php echo $caption; ?>"
-            },
-            <?php } ?>
-          ];
-
-          // Текущее активное изображение
-          let currentImageIndex = 0;
-
           // Функция смены основного изображения
           function changeMainImage(thumb) {
             const mainImg = document.getElementById('main-product-image');
@@ -299,68 +287,38 @@
             if (mainImg && bigImage) {
               mainImg.src = bigImage;
               mainImg.alt = alt;
-
-              // Найдём индекс для fancybox
-              currentImageIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-
-              // Подсветим активную миниатюру
-              document.querySelectorAll('.slider-track img').forEach(img => {
-                img.classList.remove('border-blue-600');
-              });
-              thumb.classList.add('border-blue-600');
-            }
-          }
-
-          // Открытие модального окна с галереей
-          function openGalleryModal() {
-            if (typeof $.fancybox === 'undefined') {
-              console.error('fancybox не загружен');
-              return;
             }
 
-            $.fancybox.open(photoGallery, {
-              index: currentImageIndex,
-              animationEffect: "zoom",
-              transitionEffect: "slide",
-              buttons: ["zoom", "slideShow", "fullScreen", "close"],
-              thumbs: {
-                autoStart: true
-              },
-              loop: true
+            // Подсветка активной миниатюры
+            document.querySelectorAll('.slider-track img').forEach(img => {
+              img.classList.remove('border-blue-600');
             });
+            thumb.classList.add('border-blue-600');
           }
 
           // Инициализация при загрузке
           document.addEventListener('DOMContentLoaded', function () {
             const firstThumb = document.querySelector('.slider-track img');
             if (firstThumb) {
-              // Установим первую как активную
-              firstThumb.classList.add('border-blue-600');
               changeMainImage(firstThumb);
             }
 
-            // Подсветка активной миниатюры при клике
+            // Подсветка миниатюр при клике
             document.querySelectorAll('.slider-track img').forEach(img => {
               img.addEventListener('click', function () {
                 changeMainImage(this);
               });
             });
 
-            // Инициализация fancybox (если используется)
+            // Инициализация fancybox для модального окна
             if (typeof $.fancybox !== 'undefined') {
-              $('[data-fancybox="gallery"]').fancybox({
+              $('[data-fancybox]').fancybox({
                 animationEffect: "zoom",
                 transitionEffect: "slide",
-                buttons: [
-                  "zoom",
-                  "slideShow",
-                  "fullScreen",
-                  "close"
-                ],
-                thumbs: {
-                  autoStart: true
-                },
-                loop: true
+                buttons: ["close"],
+                thumbs: { autoStart: true },
+                loop: true,
+                clickContent: false
               });
             }
           });
