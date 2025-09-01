@@ -1,7 +1,7 @@
-<!-- <?php echo CssCopmress::load('catalog')?> -->
+<?php echo CssCopmress::load('catalog')?>
 <?php echo JsCopmress::load('catalog')?>
 
-<!-- <?php echo CssCopmress::load('series')?> -->
+<?php echo CssCopmress::load('series')?>
 <?php echo JsCopmress::load('series')?>
 
 <script>
@@ -123,6 +123,8 @@
                   id="main-product-image"
                 />
               </a>
+
+              <!-- Точки на изображении с информацией-->
               <?php if(count($seriesSet)) { ?>
               <div class="series-set-points" id="series-set-points">
                 <?php foreach($seriesSet as $in => $i) { ?>
