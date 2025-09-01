@@ -313,6 +313,11 @@
 
           // Открытие модального окна с галереей
           function openGalleryModal() {
+            if (typeof $.fancybox === 'undefined') {
+              console.error('fancybox не загружен');
+              return;
+            }
+
             $.fancybox.open(photoGallery, {
               index: currentImageIndex,
               animationEffect: "zoom",
