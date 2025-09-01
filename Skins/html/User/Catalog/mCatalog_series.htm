@@ -272,48 +272,7 @@
 
         <!-- JavaScript для смены изображения -->
         <script>
-          // Функция смены основного изображения
-          function changeMainImage(thumb) {
-            const mainImg = document.getElementById('main-product-image');
-            const bigImage = thumb.dataset.bigimage;
-            const alt = thumb.alt;
-
-            if (mainImg && bigImage) {
-              mainImg.src = bigImage;
-              mainImg.alt = alt;
-
-              // Найдём индекс для fancybox
-              currentImageIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-            }
-
-          // Инициализация: установить первую миниатюру как активную
-          document.addEventListener('DOMContentLoaded', function () {
-            const firstThumb = document.querySelector('.slider-track img');
-            if (firstThumb) {
-              // Принудительно вызываем смену (на случай, если основное изображение не совпадает)
-              changeMainImage(firstThumb);
-            }
-
-            // Инициализация fancybox (если используешь fancybox v3)
-            if (typeof $.fancybox !== 'undefined') {
-              $('[data-fancybox="gallery"]').fancybox({
-                animationEffect: "zoom",
-                transitionEffect: "slide",
-                buttons: [
-                  "zoom",
-                  "slideShow",
-                  "fullScreen",
-                  "close"
-                ],
-                thumbs: {
-                  autoStart: true
-                },
-                loop: true
-              });
-            }
-          });
-
-          // Глобальный массив галереи
+          // Глобальный массив галереи (должен быть вне DOMContentLoaded)
           const photoGallery = [
             <?php foreach($photos as $pn => $p) {
             $altName = hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']);
@@ -331,11 +290,25 @@
           // Текущее активное изображение
           let currentImageIndex = 0;
 
-            // Подсветим активную миниатюру
-            document.querySelectorAll('.slider-track img').forEach(img => {
-              img.classList.remove('border-blue-600');
-            });
-            thumb.classList.add('border-blue-600');
+          // Функция смены основного изображения
+          function changeMainImage(thumb) {
+            const mainImg = document.getElementById('main-product-image');
+            const bigImage = thumb.dataset.bigimage;
+            const alt = thumb.alt;
+
+            if (mainImg && bigImage) {
+              mainImg.src = bigImage;
+              mainImg.alt = alt;
+
+              // Найдём индекс для fancybox
+              currentImageIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+
+              // Подсветим активную миниатюру
+              document.querySelectorAll('.slider-track img').forEach(img => {
+                img.classList.remove('border-blue-600');
+              });
+              thumb.classList.add('border-blue-600');
+            }
           }
 
           // Открытие модального окна с галереей
@@ -367,6 +340,24 @@
                 changeMainImage(this);
               });
             });
+
+            // Инициализация fancybox (если используется)
+            if (typeof $.fancybox !== 'undefined') {
+              $('[data-fancybox="gallery"]').fancybox({
+                animationEffect: "zoom",
+                transitionEffect: "slide",
+                buttons: [
+                  "zoom",
+                  "slideShow",
+                  "fullScreen",
+                  "close"
+                ],
+                thumbs: {
+                  autoStart: true
+                },
+                loop: true
+              });
+            }
           });
         </script>
         <?php } ?>
