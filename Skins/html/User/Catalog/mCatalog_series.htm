@@ -108,12 +108,7 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a
-                id="main-image-link"
-                data-fancybox="gallery"
-                data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                href="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
-              >
+              <a href="javascript:void(0);" onclick="openGalleryModal()">
                 <img
                   src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                   alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
@@ -280,20 +275,16 @@
           // Функция смены основного изображения
           function changeMainImage(thumb) {
             const mainImg = document.getElementById('main-product-image');
-            const mainLink = document.getElementById('main-image-link');
             const bigImage = thumb.dataset.bigimage;
             const alt = thumb.alt;
 
-            if (mainImg && mainLink && bigImage) {
-              // Меняем изображение
+            if (mainImg && bigImage) {
               mainImg.src = bigImage;
               mainImg.alt = alt;
 
-              // Обновляем ссылку fancybox
-              mainLink.href = bigImage;
-              mainLink.setAttribute('data-caption', alt);
+              // Найдём индекс для fancybox
+              currentImageIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
             }
-          }
 
           // Инициализация: установить первую миниатюру как активную
           document.addEventListener('DOMContentLoaded', function () {
@@ -320,6 +311,62 @@
                 loop: true
               });
             }
+          });
+
+          // Глобальный массив галереи
+          const photoGallery = [
+            <?php foreach($photos as $pn => $p) {
+            $altName = hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']);
+            $caption = $altName . ($pn > 0 ? ' - фото ' . ($pn + 1) : '');
+              ?>
+            {
+              src: "<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]); ?>",
+                thumb: "<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>",
+              alt: "<?php echo $caption; ?>",
+              caption: "<?php echo $caption; ?>"
+            },
+            <?php } ?>
+          ];
+
+          // Текущее активное изображение
+          let currentImageIndex = 0;
+
+            // Подсветим активную миниатюру
+            document.querySelectorAll('.slider-track img').forEach(img => {
+              img.classList.remove('border-blue-600');
+            });
+            thumb.classList.add('border-blue-600');
+          }
+
+          // Открытие модального окна с галереей
+          function openGalleryModal() {
+            $.fancybox.open(photoGallery, {
+              index: currentImageIndex,
+              animationEffect: "zoom",
+              transitionEffect: "slide",
+              buttons: ["zoom", "slideShow", "fullScreen", "close"],
+              thumbs: {
+                autoStart: true
+              },
+              loop: true
+            });
+          }
+
+          // Инициализация при загрузке
+          document.addEventListener('DOMContentLoaded', function () {
+            const firstThumb = document.querySelector('.slider-track img');
+            if (firstThumb) {
+              // Установим первую как активную
+              firstThumb.classList.add('border-blue-600');
+              changeMainImage(firstThumb);
+            }
+
+            // Подсветка активной миниатюры при клике
+            document.querySelectorAll('.slider-track img').forEach(img => {
+              img.addEventListener('click', function () {
+                changeMainImage(this);
+              });
+            });
           });
         </script>
         <?php } ?>
