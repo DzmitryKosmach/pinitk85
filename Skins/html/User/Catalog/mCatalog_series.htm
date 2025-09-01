@@ -108,11 +108,11 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a
+              <div class="pointer"
                 id="main-image-link"
                 data-fancybox="gallery"
                 data-src="#series-modal"
-                href="javascript:void(0);"
+<!--                href="javascript:void(0);"-->
                 data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
               >
                 <img
@@ -122,7 +122,7 @@
                   class="w-full rounded-xl object-cover cursor-zoom-in"
                   id="main-product-image"
                 />
-              </a>
+              </div>
             </div>
 
             <!-- Модальное окно (скрытое) -->
