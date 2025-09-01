@@ -110,9 +110,9 @@
               <?php $p = $photos[0]; ?>
               <a
                 id="main-image-link"
-                data-fancybox
+                data-fancybox="gallery"
                 data-src="#series-modal"
-                href="javascript:;"
+                href="javascript:void(0);"
                 data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
               >
                 <img
