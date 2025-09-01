@@ -123,10 +123,32 @@
                   id="main-product-image"
                 />
               </a>
+              <?php if(count($seriesSet)) { ?>
+              <div class="series-set-points" id="series-set-points">
+                <?php foreach($seriesSet as $in => $i) { ?>
+                <?php
+												$seriesSetItemsIds[] = $i['id'];
+												//$seriesInf = ($i['series_id'] == $seriesOrig['id'] ? $seriesOrig : $crossSeries[$i['series_id']]);
+											?>
+                <?php if(!$i['on_series_photo']) continue; ?>
+                <div
+                  id="series-set-point-<?php echo $i['id']; ?>"
+                  style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
+                  onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>);  return handleOnclick(event);"
+                  onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"
+                  onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"
+                >
+                  <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
+                  <?php echo $i['name']; ?> <?php echo $i['art']; ?><?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
+                  </span>
+                </div>
+                <?php } ?>
+              </div>
+              <?php } ?>
             </div>
 
             <!-- Модальное окно (скрытое) -->
-            <div id="series-modal" class="fancyimages noned"  title="<?php echo hsch($seriesInf['name'])?>">
+            <div id="series-modal" class="fancyimages noned hidden"  title="<?php echo hsch($seriesInf['name'])?>">
               <div class="fancygallery">
                 <table class="changegenimage">
                   <tbody>
@@ -1006,7 +1028,7 @@ $benefits = [
                                             $item['id'], 170, 140, 1, $item['_img_ext']
                                         ); ?>"
               alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
-              class="w-full h-48 object-contain mb-4"
+              class="w-full h-48 сcontain mb-4"
             /></a>
           <?php else: ?>
           <div class="w-full h-48 bg-gray-100 mb-4 flex items-center justify-center">
