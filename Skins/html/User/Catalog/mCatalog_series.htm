@@ -117,10 +117,10 @@
                   class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
                   id="main-product-image"
                 />
-                <div class="absolute top-0 bottom-0 left-0 right-0 z-20">
+                <div id="infoDots" class="absolute top-0 bottom-0 left-0 right-0 z-20">
                   <!-- Точки на изображении с информацией-->
                   <?php if(count($seriesSet)) { ?>
-                  <div class="series-set-points absolute bg-white" id="series-set-points">
+                  <div class="series-set-points absolute top-0 bottom-0 left-0 right-0 z-20 bg-white" id="series-set-points">
                     <?php foreach($seriesSet as $in => $i) { ?>
                     <?php
 												$seriesSetItemsIds[] = $i['id'];
@@ -129,14 +129,33 @@
                     <?php if(!$i['on_series_photo']) continue; ?>
                     <div
                       id="series-set-point-<?php echo $i['id']; ?>"
+                      class="absolute flex flex-row items-center justify-start space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-30 text-xs font-medium text-black whitespace-nowrap pointer-events-none"
                       style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
-                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>);  return handleOnclick(event);"
+                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"
                       onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"
                       onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"
                     >
-                      <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
-                      <?php echo $i['name']; ?> <?php echo $i['art']; ?><?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
-                      </span>
+                      <!-- SVG точка -->
+                      <svg width="28" height="28" viewBox="0 0 50 50" class="flex-shrink-0">
+                        <defs>
+                          <filter id="outer-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+                          </filter>
+                        </defs>
+                        <circle cx="20" cy="20" r="16" fill="white" filter="url(#outer-shadow)" />
+                        <circle cx="20" cy="20" r="14" fill="#10b981" />
+                      </svg>
+
+                      <!-- Текст: имя, артикул, размер -->
+                      <span class="leading-none">
+    <span class="font-semibold"><?php echo hsch($i['name']); ?></span>
+                        <?php if (!empty($i['art'])): ?>
+                        <span> <?php echo hsch($i['art']); ?></span>
+                        <?php endif; ?>
+                        <?php if (!is_null($i['size']) && trim($i['size']) !== ''): ?>
+                        <span> (<?php echo hsch($i['size']); ?>)</span>
+                        <?php endif; ?>
+  </span>
                     </div>
                     <?php } ?>
                   </div>
@@ -310,16 +329,31 @@
           // Функция смены основного изображения
           function changeMainImage(thumb) {
             const mainImg = document.getElementById('main-product-image');
+            const infoDots = document.getElementById('infoDots'); // или 'series-set-points', если так называется
             const bigImage = thumb.dataset.bigimage;
             const alt = thumb.alt;
 
+            // Меняем главное изображение
             if (mainImg && bigImage) {
               mainImg.src = bigImage;
               mainImg.alt = alt;
             }
 
+            // Получаем все миниатюры
+            const thumbnails = document.querySelectorAll('.slider-track img');
+
+            // Определяем индекс текущей миниатюры
+            const thumbIndex = Array.from(thumbnails).indexOf(thumb);
+
+            // Показываем точки ТОЛЬКО если выбрана первая миниатюра
+            if (thumbIndex === 0) {
+              infoDots.classList.remove('hidden'); // показываем
+            } else {
+              infoDots.classList.add('hidden');    // скрываем
+            }
+
             // Подсветка активной миниатюры
-            document.querySelectorAll('.slider-track img').forEach(img => {
+            thumbnails.forEach(img => {
               img.classList.remove('border-blue-600');
             });
             thumb.classList.add('border-blue-600');
