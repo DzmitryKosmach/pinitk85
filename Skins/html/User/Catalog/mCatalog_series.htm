@@ -65,7 +65,7 @@
           <div class="flex lg:flex-row flex-col-reverse gap-4">
             <!-- Галерея миниатюр с кнопками прокрутки -->
             <div class="slider-thumbnails-container">
-              <div class="flex flex-row lg:flex-col justify-center items-center gap-6 max-h-[500px] overflow-hidden">
+              <div class="flex flex-row lg:flex-col justify-center items-center gap-2 max-h-[500px] overflow-hidden">
                 <!-- Кнопка "вверх / влево" -->
                 <button type="button"
                         class="slider-prev text-gray-600 hover:text-black focus:outline-none"
@@ -108,13 +108,13 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <div class="relative w-full">
+              <div class="relative w-full" id="mainImageContainer">
 
                 <img
                   src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                   alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                   title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                  class="w-full aspect-[1,4132] rounded-xl object-cover cursor-zoom-in"
+                  class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
                   id="main-product-image"
                 />
                 <div class="absolute top-0 bottom-0 left-0 right-0 z-20">
