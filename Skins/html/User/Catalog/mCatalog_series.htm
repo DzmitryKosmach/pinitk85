@@ -78,7 +78,7 @@
                 </button>
 
                 <!-- Слайдер миниатюр -->
-                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-[400px] max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
+                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-full max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
                      style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
@@ -108,45 +108,51 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <a
-                id="main-image-link"
-                data-fancybox="gallery"
-                data-src="#series-modal"
-                href="javascript:void(0);"
-                data-caption="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-              >
+              <div class="relative w-full">
+
                 <img
                   src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                   alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                   title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                  class="w-full rounded-xl object-cover cursor-zoom-in"
+                  class="w-full aspect-[1,4132] rounded-xl object-cover cursor-zoom-in"
                   id="main-product-image"
                 />
-              </a>
-
-              <!-- Точки на изображении с информацией-->
-              <?php if(count($seriesSet)) { ?>
-              <div class="series-set-points" id="series-set-points">
-                <?php foreach($seriesSet as $in => $i) { ?>
-                <?php
+                <div class="absolute top-0 bottom-0 left-0 right-0 z-20">
+                  <!-- Точки на изображении с информацией-->
+                  <?php if(count($seriesSet)) { ?>
+                  <div class="series-set-points absolute bg-white" id="series-set-points">
+                    <?php foreach($seriesSet as $in => $i) { ?>
+                    <?php
 												$seriesSetItemsIds[] = $i['id'];
 												//$seriesInf = ($i['series_id'] == $seriesOrig['id'] ? $seriesOrig : $crossSeries[$i['series_id']]);
 											?>
-                <?php if(!$i['on_series_photo']) continue; ?>
-                <div
-                  id="series-set-point-<?php echo $i['id']; ?>"
-                  style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
-                  onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>);  return handleOnclick(event);"
-                  onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"
-                  onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"
-                >
-                  <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
-                  <?php echo $i['name']; ?> <?php echo $i['art']; ?><?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
-                  </span>
+                    <?php if(!$i['on_series_photo']) continue; ?>
+                    <div
+                      id="series-set-point-<?php echo $i['id']; ?>"
+                      style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
+                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>);  return handleOnclick(event);"
+                      onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"
+                      onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"
+                    >
+                      <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
+                      <?php echo $i['name']; ?> <?php echo $i['art']; ?><?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
+                      </span>
+                    </div>
+                    <?php } ?>
+                  </div>
+                  <?php } ?>
+
                 </div>
-                <?php } ?>
+
+                <!-- Модальное затемнение -->
+                <div class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4">
+                  <img src="" alt="Увеличенное фото"
+                       class="max-w-full max-h-full object-contain transition-all duration-300 scale-95 opacity-0"
+                       id="zoomedImage" />
+                </div>
               </div>
-              <?php } ?>
+
+
             </div>
 
             <!-- Модальное окно (скрытое) -->
@@ -297,7 +303,6 @@
           </script>
 
 
-
         </div>
 
         <!-- JavaScript для смены изображения -->
@@ -335,16 +340,162 @@
             });
 
             // Инициализация fancybox для модального окна
-            if (typeof $.fancybox !== 'undefined') {
-              $('[data-fancybox]').fancybox({
-                animationEffect: "zoom",
-                transitionEffect: "slide",
-                buttons: ["close"],
-                thumbs: { autoStart: true },
-                loop: true,
-                clickContent: false
-              });
+            // if (typeof $.fancybox !== 'undefined') {
+            //   $('[data-fancybox]').fancybox({
+            //     animationEffect: "zoom",
+            //     transitionEffect: "slide",
+            //     buttons: ["close"],
+            //     thumbs: { autoStart: true },
+            //     loop: true,
+            //     clickContent: false
+            //   });
+            // }
+          });
+
+          // Функция обновления высоты слайдера миниатюр
+          function updateThumbnailSliderHeight() {
+            // 🔹 Проверяем ширину экрана
+            if (window.innerWidth < 1024) {
+              // На маленьких экранах — ничего не меняем
+              const track = document.querySelector('.slider-track');
+              const container = document.querySelector('.slider-thumbnails-container');
+
+              if (track) {
+                // Сбрасываем стили, заданные JS
+                track.style.maxHeight = '';
+                track.style.height = '';
+              }
+              if (container) {
+                container.style.height = '';
+                container.style.maxHeight = '';
+              }
+
+              // Всё равно обновляем кнопки (на случай, если контейнер изменился из-за ресайза)
+              updateButtons();
+              return;
             }
+
+            // 🔹 На больших экранах — подстраиваем под высоту главного изображения
+            const mainImage = document.querySelector('.w-full > img');
+            const container = document.querySelector('.slider-thumbnails-container');
+            const track = container?.querySelector('.slider-track');
+            const btnPrev = container?.querySelector('.slider-prev');
+            const btnNext = container?.querySelector('.slider-next');
+
+            if (!mainImage || !container || !track || !btnPrev || !btnNext) {
+              updateButtons(); // всё равно попробуем обновить кнопки
+              return;
+            }
+
+            const imageRect = mainImage.getBoundingClientRect();
+            const imageHeight = imageRect.height;
+
+            if (imageHeight <= 0) {
+              updateButtons();
+              return;
+            }
+
+            const btnHeight = btnPrev.offsetHeight;
+            const totalButtonsHeight = btnHeight * 2;
+            const gap = 24; // gap-6 между кнопками и треком
+
+            const desiredTrackHeight = imageHeight - totalButtonsHeight - gap;
+
+            // Устанавливаем высоту трека
+            if (desiredTrackHeight > 100) {
+              track.style.maxHeight = `${desiredTrackHeight}px`;
+              track.style.height = `${desiredTrackHeight}px`;
+            } else {
+              track.style.maxHeight = '400px';
+              track.style.height = '400px';
+            }
+
+            // Устанавливаем высоту контейнера ТОЛЬКО на десктопе
+            container.style.height = `${imageHeight}px`;
+            container.style.maxHeight = `${imageHeight}px`;
+
+            // Обновляем состояние кнопок прокрутки
+            updateButtons();
+          }
+
+          // Вызов при загрузке
+          window.addEventListener('load', () => {
+            updateThumbnailSliderHeight();
+            updateButtons(); // твоя функция обновления кнопок
+          });
+
+          // При ресайзе
+          window.addEventListener('resize', () => {
+            updateThumbnailSliderHeight();
+            updateButtons();
+          });
+
+          // Если главное изображение загружается позже
+          document.querySelector('.w-full > img')?.addEventListener('load', updateThumbnailSliderHeight);
+
+          // --------------------------------------------
+
+          // Модальное изображение
+          document.addEventListener("DOMContentLoaded", () => {
+            const mainImageContainer = document.getElementById("mainImageContainer");
+            const mainImage = document.getElementById("mainImage");
+            const modalOverlay = document.querySelector(".modal-overlay");
+            const zoomedImage = document.getElementById("zoomedImage");
+
+            // Открытие
+            mainImageContainer.addEventListener("click", () => {
+              if (modalOverlay.classList.contains("flex")) return;
+
+              // Устанавливаем src
+              zoomedImage.src = mainImage.src;
+
+              // 1. Показываем оверлей (но без анимации пока)
+              modalOverlay.classList.remove("hidden");
+              modalOverlay.classList.add("flex");
+
+              // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации
+              zoomedImage.classList.remove("scale-100", "opacity-100");
+              zoomedImage.classList.add("scale-95", "opacity-0");
+
+              // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние
+              zoomedImage.offsetHeight; // это триггерит reflow
+
+              // 4. Запускаем анимацию появления
+              requestAnimationFrame(() => {
+                zoomedImage.classList.remove("scale-95", "opacity-0");
+                zoomedImage.classList.add("scale-100", "opacity-100");
+              });
+            });
+
+            // Закрытие
+            function closeModal() {
+              // Убираем увеличение
+              zoomedImage.classList.remove("scale-100", "opacity-100");
+              zoomedImage.classList.add("scale-95", "opacity-0");
+
+              // Ждём завершения анимации
+              setTimeout(() => {
+                modalOverlay.classList.remove("flex");
+                modalOverlay.classList.add("hidden");
+                zoomedImage.src = ""; // очищаем
+              }, 300);
+            }
+
+            // Клик по изображению — закрывает
+            zoomedImage.addEventListener("click", (e) => {
+              e.stopPropagation();
+              closeModal();
+            });
+
+            // Клик по фону — закрывает
+            modalOverlay.addEventListener("click", closeModal);
+
+            // Закрытие на Escape (опционально, но полезно)
+            window.addEventListener("keydown", (e) => {
+              if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {
+                closeModal();
+              }
+            });
           });
         </script>
         <?php } ?>
