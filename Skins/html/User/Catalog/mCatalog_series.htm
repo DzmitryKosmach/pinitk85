@@ -54,7 +54,7 @@
         <!-- Название -->
         <h1 class="text-2xl font-bold leading-snug mb-3">
           <?php echo $seriesInf['name']; ?><br class="hidden md:inline" />
-<!--          <?php echo $pageInf['header']; ?>-->
+          <!--          <?php echo $pageInf['header']; ?>-->
         </h1>
 
       </div>
@@ -117,10 +117,10 @@
                   class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
                   id="main-product-image"
                 />
-                <div id="infoDots" class="absolute top-0 bottom-0 left-0 right-0 z-20">
-                  <!-- Точки на изображении с информацией-->
+
+                <!-- Точки на изображении с информацией-->
                   <?php if(count($seriesSet)) { ?>
-                  <div class="series-set-points absolute top-0 bottom-0 left-0 right-0 z-20" id="series-set-points">
+                  <div id="infoDots" class="series-set-points absolute top-0 bottom-0 left-0 right-0 z-20">
                     <?php foreach($seriesSet as $in => $i) { ?>
                     <?php
 												$seriesSetItemsIds[] = $i['id'];
@@ -128,49 +128,57 @@
 											?>
                     <?php if(!$i['on_series_photo']) continue; ?>
 
-<!--                    <div-->
-<!--                      id="series-set-point-<?php echo $i['id']; ?>"-->
-<!--                      class="absolute flex flex-row items-center justify-start space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-30 text-xs font-medium text-black whitespace-nowrap pointer-events-none"-->
-<!--                      style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"-->
-<!--                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"-->
-<!--                      onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"-->
-<!--                      onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"-->
-<!--                    >-->
+                    <!--                    <div-->
+                    <!--                      id="series-set-point-<?php echo $i['id']; ?>"-->
+                    <!--                      class="absolute flex flex-row items-center justify-start space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-30 text-xs font-medium text-black whitespace-nowrap pointer-events-none"-->
+                    <!--                      style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"-->
+                    <!--                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"-->
+                    <!--                      onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"-->
+                    <!--                      onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"-->
+                    <!--                    >-->
                     <!-- Общая обёртка для позиционирования -->
-                    <!-- SVG — всегда виден -->
-                    <!-- SVG — всегда виден -->
-                    <svg
-                      id="svg-point-<?php echo $i['id']; ?>"
-                      width="28"
-                      height="28"
-                      viewBox="0 0 50 50"
-                      class="absolute pointer-events-auto cursor-pointer z-30"
-                      style="
-    left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
-    top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
-    transform: translate(-50%, -50%);
-    filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.3));
-  "
-                      onmouseover="showLabel(<?php echo $i['id']; ?>)"
-                      onmouseout="hideLabel(<?php echo $i['id']; ?>)"
-                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"
-                    >
-                      <circle cx="25" cy="25" r="16" fill="white" />
-                      <circle cx="25" cy="25" r="14" fill="#10b981" />
-                    </svg>
+                    <div class="absolute" style="
+                      left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
+                      top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
+                      width: 28px;
+                      height: 28px;
+                      transform: translate(-50%, -50%);
+                      pointer-events: none;
+                    ">
+                      <!-- SVG — ВСЕГДА виден -->
+                      <svg
+                        id="svg-point-<?php echo $i['id']; ?>"
+                        width="28"
+                        height="28"
+                        viewBox="0 0 50 50"
+                        class="absolute pointer-events-auto cursor-pointer z-30"
+                        style="
+                          left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
+                          top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
+                          transform: translate(-50%, -50%);
+                          filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.3));
+                        "
+                        onmouseover="showLabel2(<?php echo $i['id']; ?>)"
+                        onmouseout="hideLabel2(<?php echo $i['id']; ?>)"
+                        onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"
+                      >
+                        <circle cx="25" cy="25" r="16" fill="white" />
+                        <circle cx="25" cy="25" r="14" fill="#10b981" />
+                      </svg>
 
-                    <!-- div с подписью — справа от SVG -->
-                    <div
-                      id="series-set-point-<?php echo $i['id']; ?>"
-                      class="absolute flex flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-200"
-                      style="
-    /* Начинаем справа от центра SVG */
+                      <!-- Подпись — появляется при hover -->
+                      <div
+                        id="series-set-point2-<?php echo $i['id']; ?>"
+                        class="absolute ml-3 w-[200px] md:w-[360px] flex flex-wrap flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black
+         opacity-0 pointer-events-none transition-opacity duration-200
+         whitespace-normal break-words"
+                        style="
     left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4) + 2 ?>%;
     top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4) ?>%;
-    transform: translate(0, -50%); /* Выравниваем по вертикали, начало слева */
+    transform: translate(0, -50%);
   "
-                      onmouseout="hideLabel(<?php echo $i['id']; ?>)"
-                    >
+                        onmouseout="hideLabel(<?php echo $i['id']; ?>)"
+                      >
   <span class="leading-none">
     <span class="font-semibold"><?php echo hsch($i['name']); ?></span>
     <?php if (!empty($i['art'])): ?>
@@ -180,27 +188,30 @@
     <span> (<?php echo hsch($i['size']); ?>)</span>
     <?php endif; ?>
   </span>
-                    </div></div>
+                      </div>
+                    </div>
                     <?php } ?>
                   </div>
                   <?php } ?>
 
-                </div>
+
 
                 <script>
-                  function showLabel(id) {
-                    const label = document.getElementById('series-set-point-' + id);
-                    if (label) {
-                      label.classList.remove('opacity-0', 'pointer-events-none');
-                      label.classList.add('opacity-100', 'pointer-events-auto');
+                  // Показать весь блок (div)
+                  function showLabel2(id) {
+                    const container = document.getElementById('series-set-point2-' + id);
+                    if (container) {
+                      container.classList.remove('opacity-0', 'pointer-events-none');
+                      container.classList.add('opacity-100', 'pointer-events-auto');
                     }
                   }
 
-                  function hideLabel(id) {
-                    const label = document.getElementById('series-set-point-' + id);
-                    if (label) {
-                      label.classList.remove('opacity-100', 'pointer-events-auto');
-                      label.classList.add('opacity-0', 'pointer-events-none');
+                  // Скрыть весь блок (div)
+                  function hideLabel2(id) {
+                    const container = document.getElementById('series-set-point2-' + id);
+                    if (container) {
+                      container.classList.remove('opacity-100', 'pointer-events-auto');
+                      container.classList.add('opacity-0', 'pointer-events-none');
                     }
                   }
                 </script>
