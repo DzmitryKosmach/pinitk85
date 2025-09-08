@@ -337,7 +337,7 @@ function getHomeUrl() {
                     <div class="flex flex-col lg:flex-row items-center text-base mb-2">
                         <!-- Телефоны -->
                         <div class="text-center">
-                          <a href="tel:+74959204824">+7 (495) 920-48-24</a>
+                            <a href="tel:+74959204824">+7 (495) 920-48-24</a>
                         </div>
 
                         <!-- Иконки -->
@@ -363,32 +363,25 @@ function getHomeUrl() {
 
                             <!-- Корзина -->
 
-                          <div class="relative inline-block">
-                            <svg
-                              width="26"
-                              height="26"
-                              viewBox="0 0 26 26"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50"
-                            >
-                              <path
-                                d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
-                                fill="#020202"
-                              />
-                            </svg>
+                            <div class="relative inline-block">
+                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
+                                    <path
+                                        d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
+                                        fill="#020202" />
+                                </svg>
 
-                            <!-- Бейдж с количеством товаров -->
-                            <?php
+                                <!-- Бейдж с количеством товаров -->
+                                <?php
                               $cart = Catalog_Cart::total();
                               $count = (int)$cart[0]; // количество товаров
                               ?>
-                                                      <?php if ($count > 0): ?>
-                                                      <span class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                      <?php echo $count; ?>
-                                  </span>
-                            <?php endif; ?>
-                          </div>
+                                <span id="cart-badge-count-mobile"
+                                    class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
+                                    <?php echo $count; ?>
+                                </span>
+                            </div>
 
                             <!-- Избранное -->
 
@@ -488,32 +481,24 @@ function getHomeUrl() {
 
                     <!-- Корзина -->
 
-                  <div class="relative inline-block">
-                    <svg
-                      width="26"
-                      height="26"
-                      viewBox="0 0 26 26"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50"
-                    >
-                      <path
-                        d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
-                        fill="#020202"
-                      />
-                    </svg>
+                    <div class="relative inline-block">
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
+                            <path
+                                d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
+                                fill="#020202" />
+                        </svg>
 
-                    <!-- Бейдж с количеством товаров -->
-                    <?php
+                        <!-- Бейдж с количеством товаров -->
+                        <?php
                       $cart = Catalog_Cart::total();
                       $count = (int)$cart[0]; // количество товаров
                       ?>
-                                      <?php if ($count > 0): ?>
-                                      <span class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                              <?php echo $count; ?>
-                          </span>
-                                      <?php endif; ?>
-                  </div>
+                        <span id="cart-badge-count-desktop"
+                            class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
+                            <?php echo $count; ?>
+                        </span>
+                    </div>
 
                     <!-- Избранное -->
 
@@ -654,92 +639,98 @@ function getHomeUrl() {
 
 
         <!-- Блок основной -->
-      <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
-        <!-- Блок 1: Компания -->
-        <div class="lg:col-span-1">
-          <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип"
-                                                   class="mb-4" /></a>
+        <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
+            <!-- Блок 1: Компания -->
+            <div class="lg:col-span-1">
+                <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип"
+                        class="mb-4" /></a>
 
-          <div class="mt-4 space-y-1 ">
-            <p class="flex gap-4 font-semibold ">
-              <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
-              <span>+7 (495)
+                <div class="mt-4 space-y-1 ">
+                    <p class="flex gap-4 font-semibold ">
+                        <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+                        <span>+7 (495)
                             920-48-24<br>8 (800) 234-90-84</span>
-            </p>
-            <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
-          </div>
+                    </p>
+                    <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
+                </div>
 
-          <div class="mt-4 flex flex-col gap-2">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
-              звонок</button>
-            <button
-              class="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
-              консультанта</button>
-          </div>
-        </div>
-
-        <!-- Блок 2: Контакты -->
-        <div class="lg:col-span-1">
-          <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
-          <div class="flex items-center  gap-1 mb-2">
-            <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
-            <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
-          </div>
-          <div class="flex  gap-1 mb-2">
-            <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
-            <div>
-              <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
-                                    class="text-blue-600">zakaz@mebelioni.ru</a>
-              </p>
-              <p>Для информации: <br><a href="mailto:info@mebelioni.ru"
-                                        class="text-blue-600">info@mebelioni.ru</a>
-              </p>
-              <div class="flex flex-wrap gap-3 mt-3">
-                <!-- Иконки соцсетей -->
-                <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp" class="w-7 h-7 hover:opacity-80">
-                  <img src="/images/index/soc_wt.png" alt="Whatsapp" />
-                </a>
-                <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen" class="w-7 h-7 hover:opacity-80">
-                  <img src="/images/index/soc_t.png" alt="Yandex Zen" />
-                </a>
-                <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="w-7 h-7 hover:opacity-80">
-                  <img src="/images/index/soc_vk.png" alt="ВКонтакте" />
-                </a>
-                <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok" class="w-7 h-7 hover:opacity-80">
-                  <img src="/images/index/soc_f.png" alt="OK" />
-                </a>
-                <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok" class="w-7 h-7 hover:opacity-80">
-                  <img src="/images/index/soc_tg.png" alt="TikTok" />
-                </a>
-
-              </div>
+                <div class="mt-4 flex flex-col gap-2">
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
+                        звонок</button>
+                    <button
+                        class="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
+                        консультанта</button>
+                </div>
             </div>
-          </div>
 
+            <!-- Блок 2: Контакты -->
+            <div class="lg:col-span-1">
+                <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
+                <div class="flex items-center  gap-1 mb-2">
+                    <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
+                    <p class="mb-2">Адрес: г.Москва, <br>Наб. Космодамианская, д.4/22, к.5, пом.8Н</p>
+                </div>
+                <div class="flex  gap-1 mb-2">
+                    <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
+                    <div>
+                        <p>Для заказа: <br><a href="mailto:zakaz@mebelioni.ru"
+                                class="text-blue-600">zakaz@mebelioni.ru</a>
+                        </p>
+                        <p>Для информации: <br><a href="mailto:info@mebelioni.ru"
+                                class="text-blue-600">info@mebelioni.ru</a>
+                        </p>
+                        <div class="flex flex-wrap gap-3 mt-3">
+                            <!-- Иконки соцсетей -->
+                            <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp"
+                                class="w-7 h-7 hover:opacity-80">
+                                <img src="/images/index/soc_wt.png" alt="Whatsapp" />
+                            </a>
+                            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank"
+                                title="Yandex Zen" class="w-7 h-7 hover:opacity-80">
+                                <img src="/images/index/soc_t.png" alt="Yandex Zen" />
+                            </a>
+                            <a href="https://vk.com/mebelioniru" target="_blank" title="Vk"
+                                class="w-7 h-7 hover:opacity-80">
+                                <img src="/images/index/soc_vk.png" alt="ВКонтакте" />
+                            </a>
+                            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok"
+                                class="w-7 h-7 hover:opacity-80">
+                                <img src="/images/index/soc_f.png" alt="OK" />
+                            </a>
+                            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok"
+                                class="w-7 h-7 hover:opacity-80">
+                                <img src="/images/index/soc_tg.png" alt="TikTok" />
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Блок 3: Товары -->
+            <div class="lg:col-span-2">
+                <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+                <div class="flex gap-8">
+                    <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+                        <?php foreach($catsMenu as $n => $c) { ?>
+                        <li>
+                            <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                                <?php echo $c['name']; ?>
+                            </a>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Блок 4: Карта сайта -->
+            <div class="lg:col-span-1">
+                <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
+
+            </div>
         </div>
-
-        <!-- Блок 3: Товары -->
-        <div class="lg:col-span-2">
-          <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
-          <div class="flex gap-8">
-            <ul class="columns-2 gap-x-8 space-y-1 leading-6">
-              <?php foreach($catsMenu as $n => $c) { ?>
-              <li>
-                <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
-                  <?php echo $c['name']; ?>
-                </a>
-              </li>
-              <?php } ?>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Блок 4: Карта сайта -->
-        <div class="lg:col-span-1">
-          <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
-
-        </div>
-      </div>
 
 
         <!-- Блок основной (lg)-->
@@ -758,7 +749,8 @@ function getHomeUrl() {
                 </div>
 
                 <div class="mt-4 flex flex-col gap-2">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">Заказать
                         звонок
                     </button>
                     <button
@@ -789,42 +781,45 @@ function getHomeUrl() {
                 </div>
             </div>
 
-          <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
-            <!-- Иконки соцсетей -->
-            <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp" class="w-7 h-7 hover:opacity-80">
-              <img src="/images/index/soc_wt.png" alt="Whatsapp" />
-            </a>
-            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen" class="w-7 h-7 hover:opacity-80">
-              <img src="/images/index/soc_t.png" alt="Yandex Zen" />
-            </a>
-            <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="w-7 h-7 hover:opacity-80">
-              <img src="/images/index/soc_vk.png" alt="ВКонтакте" />
-            </a>
-            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok" class="w-7 h-7 hover:opacity-80">
-              <img src="/images/index/soc_f.png" alt="OK" />
-            </a>
-            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok" class="w-7 h-7 hover:opacity-80">
-              <img src="/images/index/soc_tg.png" alt="TikTok" />
-            </a>
-          </div>
+            <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
+                <!-- Иконки соцсетей -->
+                <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp" class="w-7 h-7 hover:opacity-80">
+                    <img src="/images/index/soc_wt.png" alt="Whatsapp" />
+                </a>
+                <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen"
+                    class="w-7 h-7 hover:opacity-80">
+                    <img src="/images/index/soc_t.png" alt="Yandex Zen" />
+                </a>
+                <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="w-7 h-7 hover:opacity-80">
+                    <img src="/images/index/soc_vk.png" alt="ВКонтакте" />
+                </a>
+                <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok"
+                    class="w-7 h-7 hover:opacity-80">
+                    <img src="/images/index/soc_f.png" alt="OK" />
+                </a>
+                <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok"
+                    class="w-7 h-7 hover:opacity-80">
+                    <img src="/images/index/soc_tg.png" alt="TikTok" />
+                </a>
+            </div>
 
 
-          <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
+            <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
                 <!-- Блок 3: Товары -->
-              <div class="lg:col-span-2">
-                <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
-                <div class="flex gap-8">
-                  <ul class="columns-2 gap-x-8 space-y-1 leading-6">
-                    <?php foreach($catsMenu as $n => $c) { ?>
-                    <li>
-                      <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
-                        <?php echo $c['name']; ?>
-                      </a>
-                    </li>
-                    <?php } ?>
-                  </ul>
+                <div class="lg:col-span-2">
+                    <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+                    <div class="flex gap-8">
+                        <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+                            <?php foreach($catsMenu as $n => $c) { ?>
+                            <li>
+                                <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                                    <?php echo $c['name']; ?>
+                                </a>
+                            </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
                 </div>
-              </div>
 
                 <!-- Блок 4: Карта сайта -->
                 <div>
@@ -892,8 +887,7 @@ function getHomeUrl() {
         </div>
     </div>
     <div class="xCallback">
-      <button onclick="kcall(); return false;"
-              class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2
+        <button onclick="kcall(); return false;" class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2
                  bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium
                  rounded-full sm:rounded-lg shadow-md
                  hover:bg-blue-700 hover:opacity-100
@@ -901,23 +895,20 @@ function getHomeUrl() {
                  transition-all duration-200 ease-in-out
                  opacity-80
                  w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
-        <!-- Иконка -->
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             stroke="currentColor" class="w-8 h-8">
-          <!-- Телефон -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
-          <!-- Стрелка -->
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m 15.327534,8.4004399 6.0561,-5.9433702 m -6.0561,5.9433702 5.999735,0.056365 m -5.999735,-0.056365 0.05636,-5.9997352" />
-        </svg>
+            <!-- Иконка -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="w-8 h-8">
+                <!-- Телефон -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
+                <!-- Стрелка -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m 15.327534,8.4004399 6.0561,-5.9433702 m -6.0561,5.9433702 5.999735,0.056365 m -5.999735,-0.056365 0.05636,-5.9997352" />
+            </svg>
 
-        <!-- Текст (показывается с sm и выше) -->
-        <span class="hidden sm:inline">Заказать звонок</span>
-      </button>
+            <!-- Текст (показывается с sm и выше) -->
+            <span class="hidden sm:inline">Заказать звонок</span>
+        </button>
     </div>
 
 
@@ -1034,51 +1025,51 @@ function getHomeUrl() {
     </div>
     <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
     <style>
-      .fade-in {
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-      }
-      .fade-out {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-      }
+        .fade-in {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
     </style>
 
     <!-- Кнопка "наверх" -->
-    <button
-      id="scrollToTopBtn"
-      class="fixed bottom-6 right-6 fade-out z-50 p-4 rounded-full bg-indigo-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-indigo-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
-      style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;"
-      aria-label="Наверх"
-    >
-      <!-- Широкая стрелка SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
-        <path d="M12 19V5M5 12l7-7 7 7" />
-      </svg>
+    <button id="scrollToTopBtn"
+        class="fixed bottom-6 right-6 fade-out z-50 p-4 rounded-full bg-indigo-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-indigo-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
+        style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;"
+        aria-label="Наверх">
+        <!-- Широкая стрелка SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
     </button>
 
     <script>
-      <!-- Кнопка "наверх" -->
-      const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+        <!-- Кнопка "наверх" -->
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-      // Показать/скрыть кнопку при прокрутке
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 300) {
-          scrollToTopBtn.classList.replace("fade-out", "fade-in");
-        } else {
-          scrollToTopBtn.classList.replace("fade-in", "fade-out");
-        }
-      });
-
-      // Плавная прокрутка наверх при клике
-      scrollToTopBtn.addEventListener("click", () => {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
+        // Показать/скрыть кнопку при прокрутке
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.replace("fade-out", "fade-in");
+            } else {
+                scrollToTopBtn.classList.replace("fade-in", "fade-out");
+            }
         });
-      });
+
+        // Плавная прокрутка наверх при клике
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
     </script>
 
     <script>
