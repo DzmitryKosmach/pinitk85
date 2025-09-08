@@ -1033,6 +1033,53 @@ function getHomeUrl() {
         </div>
     </div>
     <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
+    <style>
+      .fade-in {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      }
+      .fade-out {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      }
+    </style>
+
+    <!-- Кнопка "наверх" -->
+    <button
+      id="scrollToTopBtn"
+      class="fixed bottom-6 right-6 fade-out z-50 p-4 rounded-full bg-indigo-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-indigo-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
+      style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;"
+      aria-label="Наверх"
+    >
+      <!-- Широкая стрелка SVG -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+
+    <script>
+      <!-- Кнопка "наверх" -->
+      const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+      // Показать/скрыть кнопку при прокрутке
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+          scrollToTopBtn.classList.replace("fade-out", "fade-in");
+        } else {
+          scrollToTopBtn.classList.replace("fade-in", "fade-out");
+        }
+      });
+
+      // Плавная прокрутка наверх при клике
+      scrollToTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+    </script>
 
     <script>
         function catchEnter(e) {
