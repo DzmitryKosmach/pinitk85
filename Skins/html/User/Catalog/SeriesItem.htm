@@ -2,9 +2,9 @@
 <div class="js-element simple propvision1 bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
     <div class="relative">
         <?php if (!empty($s['marker'])) { ?>
-        <div class="text-block">
+        <div>
             <span
-                class="marker absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
+                class="absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
                 style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
                        white-space: normal;">
@@ -34,7 +34,7 @@
                  title="<?php echo hsch(
                 mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
             ); ?>"
-                 class="w-full h-28 lg:h-48 object-cover rounded-md mb-4"/>
+                 class="w-full h-28 lg:h-48 object-contain rounded-md mb-4"/>
         </a>
     </div>
 
