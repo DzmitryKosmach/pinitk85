@@ -1,72 +1,162 @@
 <?php echo CssCopmress::load('catalog')?>
 <?php echo JsCopmress::load('catalog')?>
+<?php echo CssCopmress::load('category')?>
+<?php echo JsCopmress::load('category')?>
 
-<div id="title" class="title">
-	<div class="centering">
-		<div class="centeringin clearfix">
-			<?php if(count($breadcrumbs)) { ?>
-				<?php $bcLast = array_pop($breadcrumbs); ?>
-				<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-					<?php $position = 0; ?>
-					<?php foreach($breadcrumbs as $bc) { ?>
-						<?php $position = $position + 1 ?>
-						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-							<a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
-								itemid="<?php echo $bc['url']; ?>"
-								itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
-						    <meta itemprop="position" content="<?php echo $position?>" />
-						</li>
-						<li><span> / </span></li>
-					<?php } ?>
-					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-						<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
-							<span itemprop="name"><?php echo $bcLast['name']; ?></span>
-						</span>
-				    	<meta itemprop="position" content="<?php echo $position + 1?>" />
-					</li>
-				</ul>
-			<?php } ?>
-			<?php if(trim($pageInf['header'])) { ?>
-				<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
-			<?php } ?>
-		</div>
-	</div>
-</div>
-<div id="content" class="content">
-	<div class="centering">
-		<div class="centeringin clearfix">
-			<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-			<div class="cl"></div>
+<div>
+  <!-- Хлебные крошки -->
+  <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+    <?php if(count($breadcrumbs)) { ?>
+    <?php $bcLast = array_pop($breadcrumbs); ?>
+    <?php $position = 0; ?>
+    <?php foreach($breadcrumbs as $bc) { ?>
+    <?php $position++; ?>
+    <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+      <?php echo $bc['name']; ?>
+    </a>
+    <span class="mx-1">›</span>
+    <?php } ?>
+    <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+    <?php } ?>
+  </nav>
 
-			<?php if(!$empty) { ?>
-				<?php if(count($series)) { ?>
-					По запросу <span style="font-weight: bold">&laquo;<?php echo trim($_GET['text']); ?>&raquo;</span> найдено серий - <?php echo $seriesCnt; ?>
-					<br><br>
+  <!-- Заголовок -->
+  <?php if(trim($pageInf['header'])) { ?>
+  <h1 class="text-2xl font-bold mb-8"><?php echo $pageInf['header']; ?></h1>
+  <?php } ?>
 
-					<div id="ajaxpages_gmci" class="ajaxpages_gmci">
-						<!-- showcase -->
-						<div class="showcase clearfix" id="showcaseview">
-							<?php foreach($series as $sn => $s) { ?>
-								<?php include(_ROOT . Catalog_Series::$tpl)?>
-							<?php } ?>
-						</div>
-						<!-- showcase -->
-					</div>
+  <!-- SEO-текст -->
+  <?php if(trim($pageInf['text'])) { ?>
+  <div class="mb-8 prose max-w-none">
+    <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+  </div>
+  <?php } ?>
 
-					<div class="paginator-show-all"></div>
-					<?php echo $toggle; ?>
-				<?php } ?>
+  <!-- Табы (если есть $pages) -->
+  <?php if (!empty($pages)): ?>
+  <div class="sticky top-0 pt-4 z-20 bg-white mb-8">
+    <div class="text-sm">
+      <?php
+                    $visibleCount = 5;
+                    $visiblePages = array_slice($pages, 0, $visibleCount);
+                    $hiddenPages = array_slice($pages, $visibleCount);
+                ?>
 
-				<?php if(!count($series)) { ?>
-					<div>
-						<?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
-					</div>
-				<?php } ?>
-			<?php } else { ?>
-				<div>
-					<?php echo Pages::msgErr('Задан пустой поисковый запрос.')?>
-				</div>
-			<?php } ?>
-		</div>
-	</div>
+      <!-- Видимые табы -->
+      <div id="tabsContainer" class="flex flex-wrap gap-2 mb-4">
+        <?php foreach ($visiblePages as $p): ?>
+        <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
+        <?php if ($isActive): ?>
+        <span class="flex-1 min-h-8 px-4 lg:min-h-12 leading-3 semibold rounded-xl bg-white border shadow text-center flex items-center justify-center font-medium text-gray-800">
+                                <?php echo htmlspecialchars($p['name']); ?>
+                            </span>
+        <?php else: ?>
+        <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+           class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow text-center flex items-center justify-center hover:bg-gray-50 transition">
+          <?php echo htmlspecialchars($p['name']); ?>
+        </a>
+        <?php endif; ?>
+        <?php endforeach; ?>
+      </div>
+
+      <!-- Скрытые табы -->
+      <?php if (!empty($hiddenPages)): ?>
+      <div id="hiddenWrapper" class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
+        <div class="flex flex-wrap gap-2 mt-2">
+          <?php foreach ($hiddenPages as $p): ?>
+          <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+             class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow text-center flex items-center justify-center hover:bg-gray-50 transition">
+            <?php echo htmlspecialchars($p['name']); ?>
+          </a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
+      <!-- Кнопка "Ещё" -->
+      <div class="mt-4 flex justify-end">
+        <button id="showMoreBtn"
+                class="attention flex items-center gap-1 min-h-8 px-6 rounded-lg bg-blue-600 text-white text-sm shadow hover:bg-blue-700 transition">
+          <span id="btnText">Ещё</span>
+          <svg id="btnIcon" class="w-4 h-4 transition-transform duration-300"
+               fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <style>
+    @keyframes pulseAttention {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .attention {
+      animation: pulseAttention 1.5s infinite;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("showMoreBtn");
+      const btnText = document.getElementById("btnText");
+      const btnIcon = document.getElementById("btnIcon");
+      const hiddenWrapper = document.getElementById("hiddenWrapper");
+
+      if (btn && hiddenWrapper) {
+        btn.addEventListener("click", () => {
+          const isCollapsed = hiddenWrapper.classList.contains("max-h-0");
+
+          if (isCollapsed) {
+            hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+            hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
+            btnText.textContent = "Свернуть";
+            btn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+            btn.classList.add("bg-gray-600", "hover:bg-gray-700");
+            btnIcon.classList.add("rotate-180");
+          } else {
+            hiddenWrapper.classList.add("max-h-0", "opacity-0");
+            hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+            btnText.textContent = "Ещё";
+            btn.classList.remove("bg-gray-600", "hover:bg-gray-700");
+            btn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+            btnIcon.classList.remove("rotate-180");
+          }
+        });
+      }
+    });
+  </script>
+  <?php endif; ?>
+
+  <!-- Основной контент: товары или сообщения -->
+  <?php if(!$empty) { ?>
+  <?php if(count($series)) { ?>
+  <p class="mb-4">
+    По запросу <strong>«<?php echo htmlspecialchars(trim($_GET['text'])); ?>»</strong> найдено серий — <?php echo $seriesCnt; ?>
+  </p>
+
+  <div id="ajaxpages_gmci" class="mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6">
+      <?php foreach($series as $sn => $s) { ?>
+      <?php include(_ROOT . Catalog_Series::$tpl)?>
+      <?php } ?>
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-6">
+    <?php echo $toggle; ?>
+  </div>
+
+  <?php } else { ?>
+  <div class="text-center py-8 text-gray-600">
+    <?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
+  </div>
+  <?php } ?>
+  <?php } else { ?>
+  <div class="text-center py-8 text-gray-600">
+    <?php echo Pages::msgErr('Задан пустой поисковый запрос.')?>
+  </div>
+  <?php } ?>
+
 </div>
