@@ -693,11 +693,27 @@
                                     $offer_price += (str_replace(" ", '', Catalog::priceFormat($i['price_min'])) * $i['in_series_set_amount']);
                                     ?>
 
+                  <style>
+                    .series-item {
+                      opacity: 1;
+                      max-height: 500px; /* достаточно для любого контента */
+                      overflow: hidden;
+                      transition: all 0.4s ease-in-out;
+                    }
+
+                    .series-item.hidden {
+                      opacity: 0;
+                      max-height: 0;
+                      margin: 0;
+                      padding: 0;
+                      border-width: 0;
+                      transform: scaleY(0.8);
+                    }
+                  </style>
                   <div id="series-set-row-<?php echo $i['id']; ?>"
                        onmouseover="seriesSetHoverTable(<?php echo $i['id']; ?>, true)"
-                       onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)" <?php if($in>=
-                  3) { ?>style="display: none"
-                  <?php } ?>
+                       onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)"
+                  <?php if($in >= 3) { ?>class="series-item hidden"<?php } else { ?>class="series-item"<?php } ?>
                   class="flex flex-col gap-[6px] p-3 rounded-lg border border-gray-200
                   hover:shadow-sm transition"
                   >
@@ -792,6 +808,31 @@
                 </button>
               </div>
             </div>
+            <script>
+              function setShowAll(button) {
+                const items = document.querySelectorAll('.arproducts > .series-item');
+                const initiallyVisible = Array.from(items).slice(0, 3); // первые 3 — всегда видны
+                const toggleItems = Array.from(items).slice(3);         // остальные — переключаем
+
+                const isCurrentlyHidden = toggleItems.some(item => item.classList.contains('hidden'));
+
+                if (isCurrentlyHidden) {
+                  // Показываем
+                  toggleItems.forEach((item, index) => {
+                    setTimeout(() => {
+                      item.classList.remove('hidden');
+                    }, index * 50); // небольшая задержка для эффекта "поочередного" появления
+                  });
+                  button.textContent = 'Скрыть лишние';
+                } else {
+                  // Скрываем
+                  toggleItems.forEach(item => {
+                    item.classList.add('hidden');
+                  });
+                  button.textContent = 'Показать все';
+                }
+              }
+            </script>
             <script>RSGoPro_DetectTable();</script>
           </div>
 
