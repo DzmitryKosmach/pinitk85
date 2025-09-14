@@ -289,184 +289,144 @@
 							<br><br>
 					</div>
 					<div class="seriespage-left">
-					<div class="soloprice">
-						<table>
-							<tr>
-								<td>
-									<div class="line">
-										<span class="name">Цена товара</span>
-									</div>
-								</td>
-								<td class="nowrap">
-									<span class="price gen">
-										<span id="item-<?php echo $itemInf['id']; ?>-price" <?php if(!abs($itemInf['price_min'])) { ?>class="price-by-request"<?php } ?>>
-											<?php if(abs($itemInf['price_min'])) { ?>
-												<?php echo Catalog::priceFormat($itemInf['price_min'])?>
-											<?php } else { ?>
-												Цена по запросу
-											<?php } ?>
-										</span>
-										руб.
-										<?php $d = abs($itemInf['discount']); ?>
-										<?php if($d != 1 && $d != 0) { ?>
-											<span class="price-old" id="item-<?php echo $itemInf['id']?>-price-old">
-												<?php echo Catalog::priceFormat($itemInf['price_min'] / $d)?>
-											</span>
-										<?php } ?>
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="line">
-										<span class="name">
-											<a href="<?php echo Url::a('info-delivery'); ?>" target="_blank">Доставка</a>
-										</span>
-									</div>
-								</td>
-								<td class="nowrap">
-									<span class="price">
-										<span id="info-delivery"></span>
-										руб.
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="line">
-										<span class="name">
-											<a href="<?php echo Url::a('info-delivery'); ?>" target="_blank">Сборка</a>
-										</span>
-									</div>
-								</td>
-								<td class="nowrap">
-									<span class="price">
-										<span id="info-assembly"></span>
-										руб.
-									</span>
-								</td>
-							</tr>
-						</table>
-					</div>
+						<!-- Итоговая цена -->
+						<div>
+							<p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
+								<?php
+			$d = abs($itemInf['discount']);
+			if ($d != 1 && $d != 0) {
+				echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
+			}
+		?>
+							</p>
+							<div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl font-bold text-black">
+								<?php if(abs($itemInf['price_min'])): ?>
+								<?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
+								<?php else: ?>
+								Цена по запросу
+								<?php endif; ?>
+							</div>
+						</div>
 
-					<?php
+						<!-- Количество + кнопки -->
+						<div class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
+							<a href="javascript:void(0)" class="text-4xl text-gray-600 minus js-minus">−</a>
+							<span class="text-sm font-medium">
+		<input type="text" class="js-quantity w-10 text-center border-none outline-none" name="amount" value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>" data-ratio="1">
+		<span class="js-measurename">шт</span>
+	</span>
+							<a href="javascript:void(0)" class="text-3xl text-gray-600 plus js-plus">+</a>
+						</div>
 
-					$mActive = false;
-					if(count($itemInf['materials'])) {
-						$mActive = $materials[$itemInf['price_min_material_id']];
-						$mActiveName = array($mActive['name']);
-						while($mActive['has_sub'] && count($mActive['sub'])){
-							$mActive = $mActive['sub'][array_shift(array_keys($mActive['sub']))];
-							$mActiveName[] = $mActive['name'];
-						}
-					}
-					?>
-						<div class="buy clearfix">
+						<!-- Кнопки -->
+						<div class="flex flex-col sm:flex-row gap-3 mt-6">
+							<?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
+							<button
+									type="button"
+									class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
+									disabled
+							>
+								✓ В корзине
+							</button>
+							<?php else: ?>
 							<form
-								class="add2basketform clearfix main-cart-form"
-								id="catalog-item-full-<?php echo $itemInf['id']?>"
-								action="<?php echo Url::a('catalog-cart')?>"
-								method="get"
-								onsubmit="oCart.add(this); return false;"
-								>
-								<input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
-								<span class="quantitytitle">
-									Купить&nbsp; &nbsp;
-								</span>
-								<span class="quantity">
-									<a class="minus js-minus">-</a>
-									<?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
-										<input type="text" class="js-quantity min_4" name="amount" value="4" data-ratio="1">
-									<?php } else { ?>
-										<input type="text" class="js-quantity" name="amount" value="1" data-ratio="1">
-									<?php } ?>
-									<span class="js-measurename">шт</span>
-									<a class="plus js-plus">+</a>
-								</span>
-								<div class="button-block">
-								<?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
-									<button
+									class="add2basketform main-cart-form"
+									action="<?php echo Url::a('catalog-cart') ?>"
+									method="get"
+									onsubmit="oCart.add(this); return false;"
+							>
+								<input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
+								<input type="hidden" name="amount" value="1">
+								<input type="hidden" name="material_id" value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
+								<button
 										type="submit"
-										class="submit inbasket"
-										<?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-										title="В корзине"
-										>
-										<i class="icon pngicons"></i>В корзине
-									</button>
-								<?php } else { ?>
-									<button
-										type="submit"
-										class="submit add2basket"
-										<?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+										class="bg-blue-600 text-white py-2 px-12 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
 										title="Добавить в корзину"
-										>
-										<i class="icon pngicons"></i>Отложить
-									</button>
-								<?php } ?>
-								<?php if(!$seriesInf['out_of_production']) { ?>
-									<a
-										href="javascript:void(0)"
-										onclick="oCart.buyOneClick(); return false;"
-										class="buy1click detail"
-										title="Отложить в 1 клик со СКИДКОЙ"
-										<?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>style="display: none"<?php } ?>
-										>
-                                    Отложить в 1 клик со СКИДКОЙ
-									</a>
-								<?php } ?>
-								<a
-									rel="nofollow"
-									class="go2basket"
-									href="<?php echo Url::a('catalog-cart'); ?>"
-									<?php if(!Catalog_Cart::isItemInCart($itemInf['id'])) { ?>style="display: none"<?php } ?>
-									>
-									Перейти в корзину
-								</a>
-								<input type="submit" name="submit" class="noned" value="">
-								</div>
-
-								<div class="material-nojs">
-									<select name="material_id" id="item-<?php echo $itemInf['id']?>-material" style="max-width: 240px;">
-										<?php foreach($itemInf['materials'] as $im) { ?>
-										<?php $m1 = $materials[$im['material_id']]; ?>
-										<?php if($m1['has_sub']) { ?>
-											<?php foreach($m1['sub'] as $m2) { ?>
-												<?php if($m2['has_sub']) { ?>
-													<?php foreach($m2['sub'] as $m3) { ?>
-														<option value="<?php echo $m3['id']?>" <?php if($m3['id'] == $mActive['id']) { ?>selected<?php } ?>>
-															<?php echo $m1['name']?> / <?php echo $m2['name']?> / <?php echo $m3['name']?>
-															<?php if(abs($im['price'])) { ?>
-																(<?php echo $im['price']?> р.)
-															<?php } else { ?>
-																(по запросу)
-															<?php } ?>
-														</option>
-													<?php } ?>
-												<?php } else { ?>
-													<option value="<?php echo $m2['id']?>" <?php if($m2['id'] == $mActive['id']) { ?>selected<?php } ?>>
-														<?php echo $m1['name']?> / <?php echo $m2['name']?>
-														<?php if(abs($im['price'])) { ?>
-															(<?php echo $im['price']?> р.)
-														<?php } else { ?>
-															(по запросу)
-														<?php } ?>
-													</option>
-												<?php } ?>
-											<?php } ?>
-										<?php } else { ?>
-											<option value="<?php echo $m1['id']?>" <?php if($m1['id'] == $mActive['id']) { ?>selected<?php } ?>>
-												<?php echo $m1['name']?>
-												<?php if(abs($im['price'])) { ?>
-													(<?php echo $im['price']?> р.)
-												<?php } else { ?>
-													(по запросу)
-												<?php } ?>
-											</option>
-										<?php } ?>
-									<?php } ?>
-									</select>
-								</div>
+								<?php if($seriesInf['out_of_production']) echo 'disabled'; ?>
+								>
+								Отложить
+								</button>
 							</form>
+
+							<?php if(!$seriesInf['out_of_production']): ?>
+							<a
+									href="javascript:void(0)"
+									onclick="oCart.buyOneClick(); return false;"
+									class="bg-blue-600 text-white py-2 px-12 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+									title="Отложить в 1 клик со СКИДКОЙ"
+							>
+								Отложить в 1 клик со СКИДКОЙ
+							</a>
+							<?php endif; ?>
+							<?php endif; ?>
+
+							<a
+									rel="nofollow"
+									class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+									href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
+									title="Нашли дешевле?"
+							>
+								Нашли дешевле?
+							</a>
+						</div>
+
+						<!-- Условия доставки и контакты -->
+						<div class="flex flex-col md:flex-row gap-6 mt-8">
+							<!-- Доставка -->
+							<div class="text-sm space-y-1">
+								<p>
+									<img class="inline-block w-4 h-3" src="/images/product/truck.png" />
+									<span class="underline">Срок доставки:</span>
+									<span class="underline font-bold">2–4 дня</span>
+								</p>
+								<p>
+									<span class="underline">Доставка и сборка (по Москве <br />и МО):</span>
+									<span class="font-semibold">Бесплатная</span>
+								</p>
+							</div>
+
+							<!-- Соцсети -->
+							<div class="flex flex-col">
+								<p class="text-sm mb-1">Быстрые контакты:</p>
+								<div class="flex gap-3 text-xl mt-1">
+									<a target="_blank" title="WhatsApp" href="https://wa.me/79859204824">
+										<img src="/images/product/soc_wt.png" class="w-8 h-8" alt="WhatsApp" />
+									</a>
+									<a target="_blank" title="Vk" href="https://vk.com/mebelioniru">
+										<img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
+									</a>
+									<a target="_blank" title="Tik Tok" href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU">
+										<img src="/images/product/soc_tt.png" class="w-8 h-8" alt="TikTok" />
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Форма выбора материала (для JS/не-JS) -->
+						<div class="material-nojs mt-8">
+							<select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material" style="max-width: 240px;" class="block w-full p-2 border rounded">
+								<?php foreach($itemInf['materials'] as $im): ?>
+								<?php $m = $materials[$im['material_id']]; ?>
+								<?php if(!$m) continue; ?>
+								<option value="<?php echo $im['material_id']; ?>" <?php if($mActive && $m['id'] == $mActive['id']) echo 'selected'; ?>>
+								<?php echo $m['name']; ?>
+								<?php if($m['has_sub'] && !empty($m['sub'])): ?>
+								<?php $firstSub = array_values($m['sub'])[0]; ?>
+								<?php if($firstSub['has_sub'] && !empty($firstSub['sub'])): ?>
+								<?php $secondSub = array_values($firstSub['sub'])[0]; ?>
+								/ <?php echo $firstSub['name']; ?> / <?php echo $secondSub['name']; ?>
+								<?php else: ?>
+								/ <?php echo $firstSub['name']; ?>
+								<?php endif; ?>
+								<?php endif; ?>
+								<?php if(abs($im['price'])): ?>
+								(<?php echo Catalog::priceFormat($im['price']); ?> р.)
+								<?php else: ?>
+								(по запросу)
+								<?php endif; ?>
+								</option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 
 					<div class="threeblock clearfix">
@@ -503,12 +463,35 @@
                         $itemInf['materials'] = array_values($itemInf['materials']);
 					?>
 
-					<?php if(count($itemInf['materials'])) { ?>
+						<?php
+// Инициализируем переменные по умолчанию — это защитит от ошибки
+$mActive = false;
+$mActiveName = [];
+
+if(count($itemInf['materials'])) {
+    $materialId = $itemInf['price_min_material_id'];
+    if(isset($materials[$materialId])) {
+        $mActive = $materials[$materialId];
+        $mActiveName = [$mActive['name']]; // начинаем с первого уровня
+        while($mActive['has_sub'] && !empty($mActive['sub'])) {
+            $keys = array_keys($mActive['sub']);
+            $nextKey = array_shift($keys);
+            if (!isset($mActive['sub'][$nextKey])) break;
+            $mActive = $mActive['sub'][$nextKey];
+            $mActiveName[] = $mActive['name'];
+        }
+    }
+}
+
+// Теперь безопасно использовать $mActiveName — он всегда массив!
+?>
+
+						<?php if(count($itemInf['materials'])) { ?>
 						<div class="item-current-material" style="float: none">
 							<span class="b2">Выбран цвет:</span>
 							<div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
-								<?php if($mActive['image']['ext']) { ?>
-									<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>" width="107" height="87" alt="">
+								<?php if($mActive && $mActive['image']['ext']) { ?>
+								<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>" width="107" height="87" alt="">
 								<?php } ?>
 							</div>
 							<div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
@@ -519,23 +502,6 @@
 						<div class="item-materials" style="margin-top: 30px;">
 							<div class="b">Цветовая гамма</div>
 
-							<?php /*<style type="text/css">
-								#materials-popup,
-								#materials-popup-content {
-									width: 470px;
-								}
-								#materials-popup .materials-level1 > .materials-row {
-									width: 440px;
-								}
-								#materials-popup .materials-level2 {
-									left: 0;
-									width: 800px;
-								}
-								#materials-popup .materials-level2 > .level-tail {
-									margin-left: 25px;
-								}
-							</style>*/?>
-
 							<div id="materials-popup">
 								<div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
 								<a href="javascript:void(0)" class="klink-dashed" onclick="oMaterials.openrows(); return false;">Показать все</a>
@@ -543,32 +509,32 @@
 						</div>
 
 						<script>
-                            <?php
-                                // FIX: исправление некорректной сортировки элементов в pageInf.
-                                /*
-                                $materialsOrder = [];
-                                foreach ($materials as $id => $im) {
-                                    foreach ($itemInf['materials'] as $ii => $inf) {
-                                        if ((int)$id === (int)$inf['material_id']) {
-                                            $materialsOrder[] = $inf;
+							<?php
+									// FIX: исправление некорректной сортировки элементов в pageInf.
+									/*
+                                    $materialsOrder = [];
+                                    foreach ($materials as $id => $im) {
+                                        foreach ($itemInf['materials'] as $ii => $inf) {
+                                            if ((int)$id === (int)$inf['material_id']) {
+                                                $materialsOrder[] = $inf;
+                                            }
                                         }
                                     }
-                                }
-                                */
-                            ?>
+                                    */
+									?>
 							oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?>');
 							onLoad(function(){
 								//oMaterials.setRowSize(1, 4);
 								oMaterials.open(<?php echo $itemInf['id']; ?>);
 							});
 						</script>
-					<?php } else { ?>
+						<?php } else { ?>
 						<script>
 							onLoad(function(){
 								oCart.setInfo();
 							});
 						</script>
-					<?php } ?>
+						<?php } ?>
 					</div>
 
 				</div>
