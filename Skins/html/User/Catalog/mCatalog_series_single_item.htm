@@ -34,7 +34,7 @@
 		<div>
 			<div class="flex flex-col sm2:flex-row gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1 clearfix" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
 				<?php if(count($photos)) { ?>
-					<div class="sm2:w-1/2 changegenimage">
+					<div class="pictures sm2:w-1/2 changegenimage">
 						<div class="pic">
 							<?php if(intval($seriesInf['out_of_production'])) { ?>
 								<div class="out-of-production">
@@ -163,22 +163,93 @@
 							</div>
 						</div>
 
-						<div class="description1" id="options-block">
-							<div class="text" id="text-text" style="display: block">
-								<div id="series-text" class="text-closed"><div id="series-text-in">
-								<div class="description">
-									<?php echo $seriesInf['text']; ?>
-									<span>
-										<?php echo $seriesInf['video']; ?>
-									</span>
-								</div>
-									</div></div>
-								<a href="javascript:void(0)" id="series-text-lnk" class="description-lnk closed" onclick="showHideDescription(); return false;">
-									<span class="label-closed">Показать всё</span>
-									<span class="label-opened">Свернуть</span>
-								</a>
-							</div>
+				<!-- Описание под галереей -->
+				<div class="bg-white py-4 px-8 rounded-lg shadow-md mt-10" id="series-block">
+					<div class="relative">
+						<div id="series-text">
+							<p class="text-lg leading-6 overflow-hidden transition-all duration-300">
+								<?php echo $seriesInf['text']; ?>
+							</p>
 						</div>
+
+						<!-- Градиент -->
+						<div id="fade-gradient"
+							 class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none hidden"></div>
+
+						<a id="read-more-btn"
+						   class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
+							Читать все
+						</a>
+					</div>
+				</div>
+
+				<script>
+					// Читать все
+					document.addEventListener('DOMContentLoaded', () => {
+						const text = document.getElementById('series-text');
+						const btn = document.getElementById('read-more-btn');
+						const gradient = document.getElementById('fade-gradient');
+						const block = document.getElementById('series-block');
+
+						if (!text) return;
+
+						const maxLines = 3;
+						let maxHeight = 0;
+
+						const updateHeights = () => {
+							const computed = window.getComputedStyle(text);
+							let lineHeight = parseFloat(computed.lineHeight);
+
+							if (isNaN(lineHeight)) {
+								const tempSpan = document.createElement('span');
+								tempSpan.style.visibility = 'hidden';
+								tempSpan.style.font = computed.font;
+								tempSpan.textContent = 'Hg';
+								document.body.appendChild(tempSpan);
+								const rect = tempSpan.getBoundingClientRect();
+								lineHeight = rect.height;
+								document.body.removeChild(tempSpan);
+							}
+
+							maxHeight = lineHeight * maxLines;
+							return maxHeight;
+						};
+
+						const checkTruncation = () => {
+							updateHeights();
+							setTimeout(() => {
+								const realHeight = text.scrollHeight;
+								if (realHeight > maxHeight) {
+									text.style.maxHeight = maxHeight + 'px';
+									text.style.overflow = 'hidden';
+									btn.classList.remove('hidden');
+									gradient.classList.remove('hidden');
+								}
+							}, 0);
+						};
+
+						checkTruncation();
+
+						// Кнопка
+						btn.addEventListener('click', () => {
+							if (text.style.maxHeight && text.style.maxHeight !== 'none') {
+								// Разворачиваем
+								text.style.maxHeight = 'none';
+								btn.textContent = 'Свернуть';
+								gradient.classList.add('hidden');
+							} else {
+								// Сворачиваем
+								text.style.maxHeight = maxHeight + 'px';
+								btn.textContent = 'Читать все';
+								gradient.classList.remove('hidden');
+
+								// Скроллим с отступом 80px от верха
+								const top = block.getBoundingClientRect().top + window.scrollY - 80;
+								window.scrollTo({ top, behavior: 'smooth' });
+							}
+						});
+					});
+				</script>
 					</div>
 				<?php } ?>
 
