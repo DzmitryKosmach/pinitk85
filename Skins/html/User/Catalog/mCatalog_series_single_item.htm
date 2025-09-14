@@ -624,7 +624,7 @@
 						<div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
 					</div>
 					<div >
-						<div class="showcase clearfix columns5" >
+						<div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" >
 							<?php foreach($l['series'] as $s) { ?>
 								<?php include(_ROOT . Catalog_Series::$tpl) ?>
 							<?php } ?>
