@@ -104,47 +104,47 @@
 
                         <!-- Основное изображение -->
                         <div class="pic w-full relative">
-                        <?php if(intval($seriesInf['out_of_production'])) { ?>
-                        <div class="out-of-production">
-                            <div>Снято с производства</div>
-                        </div>
-                        <?php } ?>
-                        <div class="glass w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in">
-                            <?php
+                            <?php if(intval($seriesInf['out_of_production'])) { ?>
+                            <div class="out-of-production">
+                                <div>Снято с производства</div>
+                            </div>
+                            <?php } ?>
+                            <div class="glass w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in">
+                                <?php
                                 $p = $photos[0];
                                 ?>
-                            <img class="js_picture_glass genimage"
-                                 src="<?php echo Catalog::photoUrl(
+                                <img id="main-product-image" class="js_picture_glass genimage"
+                                     src="<?php echo Catalog::photoUrl(
 										 Catalog_Series_Photos::$imagePath,
 										 $p['id'], 0, 0, 0, $p['_img_ext']
 									 )?>"
-                                 alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                                 title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                            >
-                            <?php /*<div class="glass_lupa"></div>*/?>
+                                     alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                                     title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                                >
+                                <?php /*<div class="glass_lupa"></div>*/?>
 
-                        <?php
+                            <?php
                                     if(is_array($seriesSet) && count($seriesSet)) {
                                     ?>
-                        <div class="series-set-points" id="series-set-points">
-                            <?php foreach($seriesSet as $in => $i) { ?>
-                            <?php if(!$i['on_series_photo']) continue; ?>
-                            <div
-                                    id="series-set-point-<?php echo $i['id']; ?>"
-                                    style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
-                                    onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo $i['id']; ?>); return false;"
-                                    onmouseover="seriesSetHoverPoint(<?php echo $i['id']?>, true)"
-                                    onmouseout="seriesSetHoverPoint(<?php echo $i['id']?>, false)"
-                            >
-                                <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
-                                <?php echo $i['name']?> <?php echo $i['art']; ?><?php if(trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
-                                </span>
+                            <div class="series-set-points" id="series-set-points">
+                                <?php foreach($seriesSet as $in => $i) { ?>
+                                <?php if(!$i['on_series_photo']) continue; ?>
+                                <div
+                                        id="series-set-point-<?php echo $i['id']; ?>"
+                                        style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
+                                        onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo $i['id']; ?>); return false;"
+                                        onmouseover="seriesSetHoverPoint(<?php echo $i['id']?>, true)"
+                                        onmouseout="seriesSetHoverPoint(<?php echo $i['id']?>, false)"
+                                >
+                                    <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
+                                    <?php echo $i['name']?> <?php echo $i['art']; ?><?php if(trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
+                                    </span>
+                                </div>
+                                <?php } ?>
                             </div>
-                            <?php } ?>
+                            <?php }  ?>
                         </div>
-                        <?php }  ?>
                     </div>
-                  </div>
                 </div>
 
                 <div class="fancyimages noned" title="<?php echo hsch($seriesInf['name']); ?>">
@@ -1031,3 +1031,5 @@ if(count($itemInf['materials'])) {
 </div>
 </div>
 </div>
+
+<?php echo JsCopmress::load('slider-vertical'); ?>
