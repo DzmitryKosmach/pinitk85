@@ -113,7 +113,7 @@
                                 <?php
                                 $p = $photos[0];
                                 ?>
-                                <img id="main-product-image" class="js_picture_glass genimage"
+                                <img id="main-product-image" class="js_picture_glass !max-h-none genimage"
                                      src="<?php echo Catalog::photoUrl(
 										 Catalog_Series_Photos::$imagePath,
 										 $p['id'], 0, 0, 0, $p['_img_ext']
@@ -542,30 +542,19 @@
                 <?php if(is_array($options) &&  count($options)) { ?>
                 <h3 class="title2"><a href="#options-block" onclick="$('#description-options').prop('checked', true);">Характеристики</a></h3>
                 <?php } ?>
-                <div class="favoriteandcheaper">
-                    <div class="cheaper">
-                        <a
-                                rel="nofollow"
-                                class="cheaper detail fancyajax fancybox.ajax"
-                                href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
-                                title="Нашли дешевле?"><div style="font-size: 19px;">НАШЛИ ДЕШЕВЛЕ?</div>
-                        </a>
-                    </div>
-                </div>
-                <br><br>
-                <div class="clear"></div>
-                <br><br>
+
+
             </div>
             <div class="seriespage-left">
                 <!-- Итоговая цена -->
                 <div>
                     <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
                         <?php
-			$d = abs($itemInf['discount']);
-			if ($d != 1 && $d != 0) {
-				echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
-			}
-		?>
+                            $d = abs($itemInf['discount']);
+                            if ($d != 1 && $d != 0) {
+                                echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
+                            }
+                        ?>
                     </p>
                     <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl font-bold text-black">
                         <?php if(abs($itemInf['price_min'])): ?>

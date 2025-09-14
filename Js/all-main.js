@@ -1832,7 +1832,7 @@ var oMaterials = new function(){
 		var topM = matById(matId).top;
 		var price = matPrice4Item(topM.id);
 		if(price > 0){
-			$$$('item-' + openedItemId + '-price').className = '';
+			// $$$('item-' + openedItemId + '-price').className = '';
 			$$$('item-' + openedItemId + '-price').innerHTML = priceFormat(price);
 			if($$$('item-' + openedItemId + '-price-old')){
 				$$$('item-' + openedItemId + '-price-old').style.display = '';
