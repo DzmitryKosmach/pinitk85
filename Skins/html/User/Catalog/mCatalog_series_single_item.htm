@@ -59,48 +59,7 @@
                 <?php if(count($photos)) { ?>
                 <div class="pictures sm2:w-1/2 changegenimage">
                     <div class="flex lg:flex-row flex-col-reverse gap-4">
-                    <!-- Основное изображение -->
-                    <div class="pic w-full relative">
-                        <?php if(intval($seriesInf['out_of_production'])) { ?>
-                        <div class="out-of-production">
-                            <div>Снято с производства</div>
-                        </div>
-                        <?php } ?>
-                        <div class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in">
-                            <?php
-                                $p = $photos[0];
-                                ?>
-                            <img class="js_picture_glass genimage"
-                                 src="<?php echo Catalog::photoUrl(
-										 Catalog_Series_Photos::$imagePath,
-										 $p['id'], 0, 0, 0, $p['_img_ext']
-									 )?>"
-                                 alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                                 title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                            >
-                            <?php /*<div class="glass_lupa"></div>*/?>
 
-                        <?php
-                                    if(is_array($seriesSet) && count($seriesSet)) {
-                                    ?>
-                        <div class="series-set-points" id="series-set-points">
-                            <?php foreach($seriesSet as $in => $i) { ?>
-                            <?php if(!$i['on_series_photo']) continue; ?>
-                            <div
-                                    id="series-set-point-<?php echo $i['id']; ?>"
-                                    style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
-                                    onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo $i['id']; ?>); return false;"
-                                    onmouseover="seriesSetHoverPoint(<?php echo $i['id']?>, true)"
-                                    onmouseout="seriesSetHoverPoint(<?php echo $i['id']?>, false)"
-                            >
-                                <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
-                                <?php echo $i['name']?> <?php echo $i['art']; ?><?php if(trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
-                                </span>
-                            </div>
-                            <?php } ?>
-                        </div>
-                        <?php }  ?>
-                    </div>
                         <!-- Галерея миниатюр с кнопками прокрутки -->
                         <div class="slider-thumbnails-container">
                             <div class="flex flex-row lg:flex-col justify-center items-center gap-2 max-h-[500px] overflow-hidden">
@@ -142,35 +101,52 @@
                                 </button>
                             </div>
                         </div>
-                  </div>
-                </div>
-                <div class="picslider horizontal scrollp">
-                    <a rel="nofollow" class="scrollbtn prev page" href="#">
-                        <i class="icon pngicons"></i>
-                    </a>
-                    <a rel="nofollow" class="scrollbtn next page" href="#">
-                        <i class="icon pngicons"></i>
-                    </a>
-                    <div class="d_jscrollpane scroll horizontal-only" id="d_scroll_<?php echo $seriesInf['id']; ?>" style="<?php /*width: 377px; */?>overflow: hidden">
-                        <div class="sliderin scrollinner" style="width:<?php echo (count($photos) * 112); ?>px;">
-                            <?php foreach($photos as $pn => $p) { ?>
-                            <a rel="nofollow" class="changeimage scrollitem<?php if($pn==0) { ?> imgoffer imgofferid<?php echo $p['id']; ?><?php } ?>" href="#" data-photonum="<?php echo $pn; ?>">
-                                <img
-                                        src="<?php echo Catalog::photoUrl(
-													Catalog_Series_Photos::$imagePath,
-													$p['id'], 90, 90, $p['rm'], $p['_img_ext']
-												); ?>"
-                                        alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото' . ($pn+1) : '')); ?>"
-                                        title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото' . ($pn+1) : '')); ?>"
-                                        data-bigimage="<?php echo Catalog::photoUrl(
-													Catalog_Series_Photos::$imagePath,
-													$p['id'], 0, 0, 0, $p['_img_ext']
-												);?>">
-                            </a>
+
+                        <!-- Основное изображение -->
+                        <div class="pic w-full relative">
+                        <?php if(intval($seriesInf['out_of_production'])) { ?>
+                        <div class="out-of-production">
+                            <div>Снято с производства</div>
+                        </div>
+                        <?php } ?>
+                        <div class="glass w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in">
+                            <?php
+                                $p = $photos[0];
+                                ?>
+                            <img class="js_picture_glass genimage"
+                                 src="<?php echo Catalog::photoUrl(
+										 Catalog_Series_Photos::$imagePath,
+										 $p['id'], 0, 0, 0, $p['_img_ext']
+									 )?>"
+                                 alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                                 title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                            >
+                            <?php /*<div class="glass_lupa"></div>*/?>
+
+                        <?php
+                                    if(is_array($seriesSet) && count($seriesSet)) {
+                                    ?>
+                        <div class="series-set-points" id="series-set-points">
+                            <?php foreach($seriesSet as $in => $i) { ?>
+                            <?php if(!$i['on_series_photo']) continue; ?>
+                            <div
+                                    id="series-set-point-<?php echo $i['id']; ?>"
+                                    style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"
+                                    onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo $i['id']; ?>); return false;"
+                                    onmouseover="seriesSetHoverPoint(<?php echo $i['id']?>, true)"
+                                    onmouseout="seriesSetHoverPoint(<?php echo $i['id']?>, false)"
+                            >
+                                <span <?php if($i['on_series_photo_x'] >= 400) { ?>class="title-left"<?php } ?>>
+                                <?php echo $i['name']?> <?php echo $i['art']; ?><?php if(trim($i['size']) !== '') { ?> (<?php echo $i['size']; ?>)<?php } ?>
+                                </span>
+                            </div>
                             <?php } ?>
                         </div>
+                        <?php }  ?>
                     </div>
+                  </div>
                 </div>
+
                 <div class="fancyimages noned" title="<?php echo hsch($seriesInf['name']); ?>">
                     <div class="fancygallery">
                         <table class="changegenimage">
@@ -314,6 +290,214 @@
                     });
                 </script>
             </div>
+            <!-- JavaScript для смены изображения -->
+            <script>
+                // Функция смены основного изображения
+                function changeMainImage(thumb) {
+                    const mainImg = document.getElementById('main-product-image');
+                    const infoDots = document.getElementById('infoDots'); // или 'series-set-points', если так называется
+                    const bigImage = thumb.dataset.bigimage;
+                    const alt = thumb.alt;
+
+                    // Меняем главное изображение
+                    if (mainImg && bigImage) {
+                        mainImg.src = bigImage;
+                        mainImg.alt = alt;
+                    }
+
+                    // Получаем все миниатюры
+                    const thumbnails = document.querySelectorAll('.slider-track img');
+
+                    // Определяем индекс текущей миниатюры
+                    const thumbIndex = Array.from(thumbnails).indexOf(thumb);
+
+                    // Показываем точки ТОЛЬКО если выбрана первая миниатюра
+                    if (thumbIndex === 0) {
+                        infoDots.classList.remove('hidden'); // показываем
+                    } else {
+                        infoDots.classList.add('hidden');    // скрываем
+                    }
+
+                    // Подсветка активной миниатюры
+                    thumbnails.forEach(img => {
+                        img.classList.remove('border-blue-600');
+                    });
+                    thumb.classList.add('border-blue-600');
+                }
+
+                // Инициализация при загрузке
+                document.addEventListener('DOMContentLoaded', function () {
+                    const firstThumb = document.querySelector('.slider-track img');
+                    if (firstThumb) {
+                        changeMainImage(firstThumb);
+                    }
+
+                    // Подсветка миниатюр при клике
+                    document.querySelectorAll('.slider-track img').forEach(img => {
+                        img.addEventListener('click', function () {
+                            changeMainImage(this);
+                        });
+                    });
+
+                    // Инициализация fancybox для модального окна
+                    // if (typeof $.fancybox !== 'undefined') {
+                    //   $('[data-fancybox]').fancybox({
+                    //     animationEffect: "zoom",
+                    //     transitionEffect: "slide",
+                    //     buttons: ["close"],
+                    //     thumbs: { autoStart: true },
+                    //     loop: true,
+                    //     clickContent: false
+                    //   });
+                    // }
+                });
+
+                // Функция обновления высоты слайдера миниатюр
+                function updateThumbnailSliderHeight() {
+                    // 🔹 Проверяем ширину экрана
+                    if (window.innerWidth < 1024) {
+                        // На маленьких экранах — ничего не меняем
+                        const track = document.querySelector('.slider-track');
+                        const container = document.querySelector('.slider-thumbnails-container');
+
+                        if (track) {
+                            // Сбрасываем стили, заданные JS
+                            track.style.maxHeight = '';
+                            track.style.height = '';
+                        }
+                        if (container) {
+                            container.style.height = '';
+                            container.style.maxHeight = '';
+                        }
+
+                        // Всё равно обновляем кнопки (на случай, если контейнер изменился из-за ресайза)
+                        updateButtons();
+                        return;
+                    }
+
+                    // 🔹 На больших экранах — подстраиваем под высоту главного изображения
+                    const mainImage = document.querySelector('.w-full > img');
+                    const container = document.querySelector('.slider-thumbnails-container');
+                    const track = container?.querySelector('.slider-track');
+                    const btnPrev = container?.querySelector('.slider-prev');
+                    const btnNext = container?.querySelector('.slider-next');
+
+                    if (!mainImage || !container || !track || !btnPrev || !btnNext) {
+                        updateButtons(); // всё равно попробуем обновить кнопки
+                        return;
+                    }
+
+                    const imageRect = mainImage.getBoundingClientRect();
+                    const imageHeight = imageRect.height;
+
+                    if (imageHeight <= 0) {
+                        updateButtons();
+                        return;
+                    }
+
+                    const btnHeight = btnPrev.offsetHeight;
+                    const totalButtonsHeight = btnHeight * 2;
+                    const gap = 24; // gap-6 между кнопками и треком
+
+                    const desiredTrackHeight = imageHeight - totalButtonsHeight - gap;
+
+                    // Устанавливаем высоту трека
+                    if (desiredTrackHeight > 100) {
+                        track.style.maxHeight = `${desiredTrackHeight}px`;
+                        track.style.height = `${desiredTrackHeight}px`;
+                    } else {
+                        track.style.maxHeight = '400px';
+                        track.style.height = '400px';
+                    }
+
+                    // Устанавливаем высоту контейнера ТОЛЬКО на десктопе
+                    container.style.height = `${imageHeight}px`;
+                    container.style.maxHeight = `${imageHeight}px`;
+
+                    // Обновляем состояние кнопок прокрутки
+                    updateButtons();
+                }
+
+                // Вызов при загрузке
+                window.addEventListener('load', () => {
+                    updateThumbnailSliderHeight();
+                    updateButtons(); // твоя функция обновления кнопок
+                });
+
+                // При ресайзе
+                window.addEventListener('resize', () => {
+                    updateThumbnailSliderHeight();
+                    updateButtons();
+                });
+
+                // Если главное изображение загружается позже
+                document.querySelector('.w-full > img')?.addEventListener('load', updateThumbnailSliderHeight);
+
+                // --------------------------------------------
+
+                // Модальное изображение
+                document.addEventListener("DOMContentLoaded", () => {
+                    const mainImageContainer = document.getElementById("mainImageContainer");
+                    const mainImage = document.getElementById("main-product-image");
+                    const modalOverlay = document.querySelector(".modal-overlay");
+                    const zoomedImage = document.getElementById("zoomedImage");
+
+                    // Открытие
+                    mainImageContainer.addEventListener("click", () => {
+                        if (modalOverlay.classList.contains("flex")) return;
+
+                        // Устанавливаем src
+                        zoomedImage.src = mainImage.src;
+
+                        // 1. Показываем оверлей (но без анимации пока)
+                        modalOverlay.classList.remove("hidden");
+                        modalOverlay.classList.add("flex");
+
+                        // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации
+                        zoomedImage.classList.remove("scale-100", "opacity-100");
+                        zoomedImage.classList.add("scale-95", "opacity-0");
+
+                        // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние
+                        zoomedImage.offsetHeight; // это триггерит reflow
+
+                        // 4. Запускаем анимацию появления
+                        requestAnimationFrame(() => {
+                            zoomedImage.classList.remove("scale-95", "opacity-0");
+                            zoomedImage.classList.add("scale-100", "opacity-100");
+                        });
+                    });
+
+                    // Закрытие
+                    function closeModal() {
+                        // Убираем увеличение
+                        zoomedImage.classList.remove("scale-100", "opacity-100");
+                        zoomedImage.classList.add("scale-95", "opacity-0");
+
+                        // Ждём завершения анимации
+                        setTimeout(() => {
+                            modalOverlay.classList.remove("flex");
+                            modalOverlay.classList.add("hidden");
+                            zoomedImage.src = ""; // очищаем
+                        }, 300);
+                    }
+
+                    // Клик по изображению — закрывает
+                    zoomedImage.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        closeModal();
+                    });
+
+                    // Клик по фону — закрывает
+                    modalOverlay.addEventListener("click", closeModal);
+
+                    // Закрытие на Escape (опционально, но полезно)
+                    window.addEventListener("keydown", (e) => {
+                        if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {
+                            closeModal();
+                        }
+                    });
+                });
+            </script>
             <?php } ?>
 
             <div class="info">
