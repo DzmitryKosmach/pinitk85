@@ -8,45 +8,33 @@
 </script>
 
 <div id="title" class="title">
-	<div class="centering">
-		<div class="centeringin clearfix">
+	<div>
+		<!-- Хлебные крошки -->
+		<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
 			<?php if(count($breadcrumbs)) { ?>
-				<?php $bcLast = array_pop($breadcrumbs); ?>
-				<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-					<?php $position = 0; ?>
-					<?php foreach($breadcrumbs as $bc) {?>
-						<?php $position = $position + 1 ?>
-						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-							<a href="<?php echo $bc['url']?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
-								itemid="<?php echo $bc['url']?>"
-								itemprop="item"><span itemprop="name"><?php echo $bc['name']?></span></a>
-						    <meta itemprop="position" content="<?php echo $position?>" />
-						</li>
-						<li><span> / </span></li>
-					<?php } ?>
-					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-						<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']?>" itemprop="item">
-							<span itemprop="name"><?php echo $bcLast['name']?></span>
-						</span>
-				    	<meta itemprop="position" content="<?php echo $position + 1?>" />
-					</li>
-				</ul>
-			<?php }
-            //dp($pageInf);
-            ?>
-			<?php if(trim($pageInf['header'])) { ?>
-				<h1 class="pagetitle"><?php echo $pageInf['header']?></h1>
+			<?php $bcLast = array_pop($breadcrumbs); ?>
+			<?php $position = 0; ?>
+			<?php foreach($breadcrumbs as $bc) { ?>
+			<?php $position = $position + 1; ?>
+			<a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+				<?php echo $bc['name']; ?>
+			</a>
+			<span class="mx-1">›</span>
 			<?php } ?>
-		</div>
+			<span class="text-gray-700">
+                    <?php echo $bcLast['name']; ?>
+                </span>
+			<?php } ?>
+		</nav>
 	</div>
 </div>
 
 <div id="content" class="content">
-	<div class="centering">
-		<div class="centeringin clearfix">
-			<div class="elementdetail js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1 clearfix" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
+	<div>
+		<div>
+			<div class="flex flex-col sm2:flex-row gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1 clearfix" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
 				<?php if(count($photos)) { ?>
-					<div class="pictures changegenimage">
+					<div class="sm2:w-1/2 changegenimage">
 						<div class="pic">
 							<?php if(intval($seriesInf['out_of_production'])) { ?>
 								<div class="out-of-production">
@@ -511,45 +499,7 @@
 						</script>
 					<?php } ?>
 					</div>
-					<div class="seriespage-right">
-						<div class="benefits-block">
-							<a href="https://mebelioni.ru/preimuschestva/nizkie-tseny-i-skidki/" class="benefit-item">
-								<div class="benefit-item-img"><img src="/Skins/img/user/Design_prj.svg" alt="Низкие цены"></div>
-								<div class="benefit-item-block">
-									<div class="benefit-item-title">Самые низкие цены!</div>
-									<div class="benefit-item-text">Индивидуальный подход к каждому заказчику. Минимальные цены,
-										дополнительные
-										скидки. Удобная оплата, с НДС и без, договор.</div>
-								</div>
-							</a>
-							<a href="https://mebelioni.ru/preimuschestva/garantiya-ot-proizvoditelya/" class="benefit-item">
-								<div class="benefit-item-img"><img src="/Skins/img/user/Factory.svg" alt="Гарантия"></div>
-								<div class="benefit-item-block">
-									<div class="benefit-item-title">Гарантия от производителя!</div>
-									<div class="benefit-item-text">Мебель только лучших фабрик, поставщиков и производителей России и
-										зарубежья.</div>
-								</div>
-							</a>
-							<a href="https://mebelioni.ru/preimuschestva/nashi-sotrudniki-professionaly-svoego-dela/" class="benefit-item">
-								<div class="benefit-item-img"><img src="/Skins/img/user/Catalog.svg" alt="Вызов специалиста"></div>
-								<div class="benefit-item-block">
-									<div class="benefit-item-title">Вызвать специалиста в офис или получить консультацию эксперта!</div>
-									<div class="benefit-item-text">Предоставим каталоги и образцы, дизайн проект и расстановку Вашей
-										офисной
-										мебели.</div>
-								</div>
-							</a>
-							<a href="https://mebelioni.ru/preimuschestva/prostota-vybora/" class="benefit-item">
-								<div class="benefit-item-img"><img src="/Skins/img/user/Order.svg" alt="Сделать покупку"></div>
-								<div class="benefit-item-block">
-									<div class="benefit-item-title">Как уточнить и сделать покупку!</div>
-									<div class="benefit-item-text">На нашем сайте не надо регистрироваться, чтобы отправить заказ в
-										корзину для
-										уточнения информации достаточно оставить имя и телефон. Подарки при оформлении через сайт.</div>
-								</div>
-							</a>
-						</div>
-					</div>
+
 				</div>
 			</div>
 
