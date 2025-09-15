@@ -395,34 +395,43 @@ var oMaterials = new (function () {
   }
 
   /**
-   * @param	{int}	matId
+   * @param {number} matId
    */
   function displayMatPrice(matId) {
-    var topM = matById(matId).top;
-    var price = matPrice4Item(topM.id);
+    const topM = matById(matId).top;
+    const price = matPrice4Item(topM.id);
+    const priceEl = $$$("item-" + openedItemId + "-price");
+    const priceOldEl = $$$("item-" + openedItemId + "-price-old");
+    const priceInEl = $$$("item-" + openedItemId + "-price-in");
+
     if (price > 0) {
-      // $$$('item-' + openedItemId + '-price').className = '';
-      $$$("item-" + openedItemId + "-price").innerHTML = priceFormat(price);
-      if ($$$("item-" + openedItemId + "-price-old")) {
-        $$$("item-" + openedItemId + "-price-old").style.display = "";
-        $$$("item-" + openedItemId + "-price-old").innerHTML = priceFormat(
-          matPriceOld4Item(topM.id)
-        );
+      // Убираем класс "price-by-request", если есть
+      priceEl.classList.remove("price-by-request");
+      // Устанавливаем текст цены + символ рубля
+      priceEl.innerHTML = priceFormat(price) + " ₽";
+
+      // Показываем и обновляем старую цену, если элемент существует
+      if (priceOldEl) {
+        priceOldEl.style.display = "";
+        priceOldEl.innerHTML = priceFormat(matPriceOld4Item(topM.id)) + " ₽";
       }
-      if ($$$("item-" + openedItemId + "-price-in")) {
-        $$$("item-" + openedItemId + "-price-in").style.display = "";
-        $$$("item-" + openedItemId + "-price-in").innerHTML = priceFormat(
-          matPriceIn4Item(topM.id)
-        );
+
+      // Показываем и обновляем цену "в наличии", если элемент существует
+      if (priceInEl) {
+        priceInEl.style.display = "";
+        priceInEl.innerHTML = priceFormat(matPriceIn4Item(topM.id)) + " ₽";
       }
     } else {
-      $$$("item-" + openedItemId + "-price").className = "price-by-request";
-      $$$("item-" + openedItemId + "-price").innerHTML = "Цена по запросу";
-      if ($$$("item-" + openedItemId + "-price-old")) {
-        $$$("item-" + openedItemId + "-price-old").style.display = "none";
+      // Добавляем класс "price-by-request", не трогая другие классы
+      priceEl.classList.add("price-by-request");
+      priceEl.innerHTML = "Цена по запросу"; // Без ₽
+
+      // Скрываем старую цену и цену "в наличии", если элементы существуют
+      if (priceOldEl) {
+        priceOldEl.style.display = "none";
       }
-      if ($$$("item-" + openedItemId + "-price-in")) {
-        $$$("item-" + openedItemId + "-price-in").style.display = "none";
+      if (priceInEl) {
+        priceInEl.style.display = "none";
       }
     }
   }
@@ -687,8 +696,10 @@ var oMaterials = new (function () {
         '" width="164" height="132" alt="">';
     }
 
+    // 🔥 Исправлено: " р." → " ₽"
     var price = matPrice4Item(topM.id);
-    price = price > 0 ? priceFormat(price) + " р." : "по запросу";
+    price = price > 0 ? priceFormat(price) + " ₽" : "по запросу";
+
     var html =
       '<a id="material-' +
       m.id +
