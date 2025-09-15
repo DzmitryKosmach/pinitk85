@@ -1824,35 +1824,47 @@ var oMaterials = new function(){
 	}
 
 
-	/**
-	 * @param	{int}	matId
-	 */
-	function displayMatPrice(matId){
+  /**
+   * @param {number} matId
+   */
+  function displayMatPrice(matId) {
+    const topM = matById(matId).top;
+    const price = matPrice4Item(topM.id);
+    const priceEl = $$$("item-" + openedItemId + "-price");
+    const priceOldEl = $$$("item-" + openedItemId + "-price-old");
+    const priceInEl = $$$("item-" + openedItemId + "-price-in");
 
-		var topM = matById(matId).top;
-		var price = matPrice4Item(topM.id);
-		if(price > 0){
-			// $$$('item-' + openedItemId + '-price').className = '';
-			$$$('item-' + openedItemId + '-price').innerHTML = priceFormat(price);
-			if($$$('item-' + openedItemId + '-price-old')){
-				$$$('item-' + openedItemId + '-price-old').style.display = '';
-				$$$('item-' + openedItemId + '-price-old').innerHTML = priceFormat(matPriceOld4Item(topM.id));
-			}
-			if($$$('item-' + openedItemId + '-price-in')){
-				$$$('item-' + openedItemId + '-price-in').style.display = '';
-				$$$('item-' + openedItemId + '-price-in').innerHTML = priceFormat(matPriceIn4Item(topM.id));
-			}
-		}else{
-			$$$('item-' + openedItemId + '-price').className = 'price-by-request';
-			$$$('item-' + openedItemId + '-price').innerHTML = 'Цена по запросу';
-			if($$$('item-' + openedItemId + '-price-old')){
-				$$$('item-' + openedItemId + '-price-old').style.display = 'none';
-			}
-			if($$$('item-' + openedItemId + '-price-in')){
-				$$$('item-' + openedItemId + '-price-in').style.display = 'none';
-			}
-		}
-	}
+    if (price > 0) {
+      // Убираем класс "price-by-request", если есть
+      priceEl.classList.remove("price-by-request");
+      // Устанавливаем текст цены + символ рубля
+      priceEl.innerHTML = priceFormat(price) + " ₽";
+
+      // Показываем и обновляем старую цену, если элемент существует
+      if (priceOldEl) {
+        priceOldEl.style.display = "";
+        priceOldEl.innerHTML = priceFormat(matPriceOld4Item(topM.id)) + " ₽";
+      }
+
+      // Показываем и обновляем цену "в наличии", если элемент существует
+      if (priceInEl) {
+        priceInEl.style.display = "";
+        priceInEl.innerHTML = priceFormat(matPriceIn4Item(topM.id)) + " ₽";
+      }
+    } else {
+      // Добавляем класс "price-by-request", не трогая другие классы
+      priceEl.classList.add("price-by-request");
+      priceEl.innerHTML = "Цена по запросу"; // Без ₽
+
+      // Скрываем старую цену и цену "в наличии", если элементы существуют
+      if (priceOldEl) {
+        priceOldEl.style.display = "none";
+      }
+      if (priceInEl) {
+        priceInEl.style.display = "none";
+      }
+    }
+  }
 
 
 	/**
@@ -2063,64 +2075,82 @@ var oMaterials = new function(){
 	 * @param	{int}	mId
 	 * @return	{string}
 	 */
-	function oneMaterialHtml(mId){
-		var tmp = matById(mId);
-		var m = tmp.material;
-		var topM = tmp.top;
-		var level = tmp.level;
+  function oneMaterialHtml(mId) {
+    var tmp = matById(mId);
+    var m = tmp.material;
+    var topM = tmp.top;
+    var level = tmp.level;
 
-		var onclick = '';
-		var className = 'material';
-		if(m.has_sub == 1){
-			className += ' has-sub';
-			if(level == 1){
-				onclick = 'oMaterials.openLevel2(' + mId + ')';
-			}else{
-				onclick = 'oMaterials.openLevel3(' + mId + ')';
-			}
-		}else{
-			onclick = 'oMaterials.selectMaterial(' + mId + ')';
-		}
+    var onclick = "";
+    var className = "material";
+    if (m.has_sub == 1) {
+      className += " has-sub";
+      if (level == 1) {
+        onclick = "oMaterials.openLevel2(" + mId + ")";
+      } else {
+        onclick = "oMaterials.openLevel3(" + mId + ")";
+      }
+    } else {
+      onclick = "oMaterials.selectMaterial(" + mId + ")";
+    }
 
-		var active = false;
-		for(var i = 0, l = itemActiveMats.length; i < l; i++){
-			if(itemActiveMats[i] == mId){
-				active = true;
-				break;
-			}
-		}
-		if(active){
-			className += ' active';
-		}
+    var active = false;
+    for (var i = 0, l = itemActiveMats.length; i < l; i++) {
+      if (itemActiveMats[i] == mId) {
+        active = true;
+        break;
+      }
+    }
+    if (active) {
+      className += " active";
+    }
 
-		var image = '';
-		var imageBig = '';
-		if(m.image.ext){
-			image = '<img src="/Uploads/Material/' + m.image.id + '_76x61_0.' + m.image.ext + '" width="76" height="61" alt="">';
-			imageBig = '<img src="/Uploads/Material/' + m.image.id + '_164x132_0.' + m.image.ext + '" width="164" height="132" alt="">';
-		}
+    var image = "";
+    var imageBig = "";
+    if (m.image.ext) {
+      image =
+        '<img src="/Uploads/Material/' +
+        m.image.id +
+        "_76x61_0." +
+        m.image.ext +
+        '" width="76" height="61" alt="">';
+      imageBig =
+        '<img src="/Uploads/Material/' +
+        m.image.id +
+        "_164x132_0." +
+        m.image.ext +
+        '" width="164" height="132" alt="">';
+    }
 
-		var price = matPrice4Item(topM.id);
-		price = (price > 0) ? priceFormat(price) + ' р.' : 'по запросу';
-		var html =
-			'<a id="material-' + m.id + '" class="' + className + '" href="javascript:void(0)" onclick="' + onclick + '; return false;">' +
-				'<div class="material-in">' +
-					'<div class="image">' +
-						image +
-						(imageBig ? '<div class="image-big">' + imageBig  + '</div>' : '') +
-					'</div>' +
-					'<div class="info material-info">' +
-						'<div class="name">' +
-							m.name +
-						'</div>' +
-						'<div class="price">' +
-							price +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-			'</a>';
-		return html;
-	}
+    // 🔥 Исправлено: " р." → " ₽"
+    var price = matPrice4Item(topM.id);
+    price = price > 0 ? priceFormat(price) + " ₽" : "по запросу";
+
+    var html =
+      '<a id="material-' +
+      m.id +
+      '" class="' +
+      className +
+      '" href="javascript:void(0)" onclick="' +
+      onclick +
+      '; return false;">' +
+      '<div class="material-in">' +
+      '<div class="image">' +
+      image +
+      (imageBig ? '<div class="image-big">' + imageBig + "</div>" : "") +
+      "</div>" +
+      '<div class="info material-info">' +
+      '<div class="name">' +
+      m.name +
+      "</div>" +
+      '<div class="price">' +
+      price +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</a>";
+    return html;
+  }
 };
 /*  catalog/compare.js */
 /**

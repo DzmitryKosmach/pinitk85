@@ -3,7 +3,7 @@
 
 <?php echo JsCopmress::load('catalog')?>
 <?php echo JsCopmress::load('series')?>
-<script>
+<script xmlns="http://www.w3.org/1999/html">
     oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
 </script>
 
@@ -542,6 +542,7 @@
                 <?php if(is_array($options) &&  count($options)) { ?>
                 <h3 class="title2"><a href="#options-block" onclick="$('#description-options').prop('checked', true);">Характеристики</a></h3>
                 <?php } ?>
+                </br>
 
 
             </div>
@@ -569,9 +570,9 @@
                 <div class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
                     <a href="javascript:void(0)" class="text-4xl text-gray-600 minus js-minus">−</a>
                     <span class="text-sm font-medium">
-		<input type="text" class="js-quantity w-10 text-center border-none outline-none" name="amount" value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>" data-ratio="1">
-		<span class="js-measurename">шт</span>
-	</span>
+                      <input type="text" class="js-quantity w-10 text-center border-none outline-none" name="amount" value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>" data-ratio="1">
+                      <span class="js-measurename">шт</span>
+                    </span>
                     <a href="javascript:void(0)" class="text-3xl text-gray-600 plus js-plus">+</a>
                 </div>
 
