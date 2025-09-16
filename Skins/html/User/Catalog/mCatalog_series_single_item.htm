@@ -596,7 +596,7 @@
         </script>
       </div>
 
-      <div class="seriespage-left">
+      <div>
         <!-- Итоговая цена -->
         <div>
           <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
@@ -666,8 +666,8 @@
         </div>
 
         <!-- Условия доставки и контакты -->
-        <div class="flex flex-col md:flex-row gap-6 mt-8">
-          <!-- Доставка -->
+        <div class="flex flex-wrap gap-6">
+          <!-- Условия доставки -->
           <div class="text-sm space-y-1">
             <p>
               <img class="inline-block w-4 h-3" src="/images/product/truck.png" />
@@ -675,24 +675,31 @@
               <span class="underline font-bold">2–4 дня</span>
             </p>
             <p>
-              <span class="underline">Доставка и сборка (по Москве <br />и МО):</span>
+              <span class="underline">
+                Доставка и сборка (по Москве <br />
+                и МО):</span>
               <span class="font-semibold">Бесплатная</span>
             </p>
           </div>
 
-          <!-- Соцсети -->
+          <!-- Контакты -->
           <div class="flex flex-col">
-            <p class="text-sm mb-1">Быстрые контакты:</p>
+            <p>Быстрые контакты:</p>
             <div class="flex gap-3 text-xl mt-1">
-              <a target="_blank" title="WhatsApp" href="https://wa.me/79859204824">
-                <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="WhatsApp" />
+              <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp">
+                <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="Whatsapp" />
               </a>
-              <a target="_blank" title="Vk" href="https://vk.com/mebelioniru">
+              <a href="https://ok.ru/group/61739138941100" target="_blank" title="Tik Tok">
+                <img src="/images/product/soc_ок.png" class="w-8 h-8" alt="Одноклассники" />
+              </a>
+              <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Zen">
+                <img src="/images/product/soc_zen.png" class="w-8 h-8" alt="Zen" />
+              </a>
+              <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
                 <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
               </a>
-              <a target="_blank" title="Tik Tok"
-                 href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU">
-                <img src="/images/product/soc_tt.png" class="w-8 h-8" alt="TikTok" />
+              <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok">
+                <img src="/images/product/soc_tiktok.png" class="w-8 h-8" alt="Tik Tok" />
               </a>
             </div>
           </div>
