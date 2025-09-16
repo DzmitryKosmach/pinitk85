@@ -818,7 +818,7 @@ if(count($itemInf['materials'])) {
         </div>
 
         <script>
-          <? php
+          <?php
             // FIX: исправление некорректной сортировки элементов в pageInf.
             /*
             $materialsOrder = [];
@@ -831,10 +831,10 @@ if(count($itemInf['materials'])) {
             }
             */
             ?>
-          oMaterials.items2mats[<? php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
+          oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
           onLoad(function () {
             //oMaterials.setRowSize(1, 4);
-            oMaterials.open(<? php echo $itemInf['id']; ?>);
+            oMaterials.open(<?php echo $itemInf['id']; ?>);
           });
         </script>
         <?php } else { ?>
