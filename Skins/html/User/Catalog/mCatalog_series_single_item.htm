@@ -103,7 +103,7 @@
             </div>
 
             <!-- Основное изображение -->
-            <div class="pic w-full relative">
+            <div id="section-photo" class="pic w-full relative">
               <?php if(intval($seriesInf['out_of_production'])) { ?>
               <div class="out-of-production">
                 <div>Снято с производства</div>
@@ -538,7 +538,7 @@
       </div>
       <div class="mods" style=" margin-top: 0;">
         <!-- Табы -->
-        <div class="flex gap-2 text-sm">
+        <div class="flex gap-2 text-sm mb-8">
           <button class="tab-btn active
                             px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
                             shadow-[0_0_8px_rgba(59,130,246,0.3)]
@@ -598,7 +598,7 @@
 
       <div>
         <!-- Итоговая цена -->
-        <div>
+        <div id="section-prices">
           <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
             <?php
                             $d = abs($itemInf['discount']);
@@ -631,7 +631,7 @@
         </div>
 
         <!-- Кнопки -->
-        <div class="flex flex-col sm:flex-row gap-3 mt-6">
+        <div class="flex flex-col sm:flex-row gap-3 mt-6 mb-8">
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
           <button type="button"
                   class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
@@ -646,7 +646,7 @@
             <input type="hidden" name="material_id"
                    value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
             <button type="submit"
-                    class="bg-blue-600 text-white py-2 px-12 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                    class="w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                     title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled' ;
                                 ?>
             >
@@ -658,7 +658,7 @@
           <?php endif; ?>
 
           <a rel="nofollow"
-             class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+             class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
              href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
              title="Нашли дешевле?">
             Нашли дешевле?
@@ -750,22 +750,6 @@
           <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
 
           <?php } ?>
-        </div>
-        <div class="share">
-          <div style="margin-bottom:25px;">
-            <div style="margin-bottom:6px;text-transform:uppercase;">
-              Соцсети
-            </div>
-            <a target="_blank" title="WhatsApp" class="icon_social wa"
-               href="https://wa.me/79859204824"></a>
-            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank"
-               title="Yandex Zen" class="icon_social zen"></a>
-            <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="icon_social vk"></a>
-            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok"
-               class="icon_social ok"></a>
-            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok"
-               class="icon_social tiktok"></a>
-          </div>
         </div>
 
         <?php
