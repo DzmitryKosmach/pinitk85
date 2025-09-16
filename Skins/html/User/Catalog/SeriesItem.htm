@@ -94,14 +94,6 @@
     <!-- Цена -->
     <div class="flex justify-between items-center mb-1">
         <div>
-            <span class="text-gray-600 text-sm line-through leading-2">
-                <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
-                <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от') ?>
-                <?php echo Catalog::priceFormat(floor($s['price_search_min'])) ?> руб.
-                <?php elseif (abs($s['price_min'])): ?>
-                от <?php echo Catalog::priceFormat(floor($s['price_min'])) ?> руб.
-                <?php endif; ?>
-            </span>
             <div class="font-bold text-lg leading-2 mt-[-6px]">
                 <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
                 <?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от') ?>
