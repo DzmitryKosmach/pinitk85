@@ -542,7 +542,7 @@
           <button class="tab-btn active
                             px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
                             shadow-[0_0_8px_rgba(59,130,246,0.3)]
-                            hover:bg-blue-700 hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+                            hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
                             active:translate-y-[-1px]
                             transition-all duration-200 ease-in-out" data-target="section-photo">
             Мебель на фото
@@ -595,6 +595,7 @@
           });
         </script>
       </div>
+
       <div class="seriespage-left">
         <!-- Итоговая цена -->
         <div>
@@ -616,40 +617,38 @@
         </div>
 
         <!-- Количество + кнопки -->
-        <div class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
+        <div
+          class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
           <a href="javascript:void(0)" class="text-4xl text-gray-600 minus js-minus">−</a>
           <span class="text-sm font-medium">
-                      <input type="text" class="js-quantity w-10 text-center border-none outline-none" name="amount" value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>" data-ratio="1">
-                      <span class="js-measurename">шт</span>
-                    </span>
+                            <input type="text" class="js-quantity w-10 text-center border-none outline-none"
+                                   name="amount"
+                                   value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>"
+                                   data-ratio="1">
+                            <span class="js-measurename">шт</span>
+                        </span>
           <a href="javascript:void(0)" class="text-3xl text-gray-600 plus js-plus">+</a>
         </div>
 
         <!-- Кнопки -->
         <div class="flex flex-col sm:flex-row gap-3 mt-6">
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
-          <button
-            type="button"
-            class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
-            disabled
-          >
+          <button type="button"
+                  class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
+                  disabled>
             ✓ В корзине
           </button>
           <?php else: ?>
-          <form
-            class="add2basketform main-cart-form"
-            action="<?php echo Url::a('catalog-cart') ?>"
-            method="get"
-            onsubmit="oCart.add(this); return false;"
-          >
+          <form class="add2basketform main-cart-form" action="<?php echo Url::a('catalog-cart') ?>"
+                method="get" onsubmit="oCart.add(this); return false;">
             <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
             <input type="hidden" name="amount" value="1">
-            <input type="hidden" name="material_id" value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
-            <button
-              type="submit"
-              class="bg-blue-600 text-white py-2 px-12 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-              title="Добавить в корзину"
-            <?php if($seriesInf['out_of_production']) echo 'disabled'; ?>
+            <input type="hidden" name="material_id"
+                   value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
+            <button type="submit"
+                    class="bg-blue-600 text-white py-2 px-12 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                    title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled' ;
+                                ?>
             >
             Отложить в 1 клик со СКИДКОЙ
             </button>
@@ -658,12 +657,10 @@
 
           <?php endif; ?>
 
-          <a
-            rel="nofollow"
-            class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
-            href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
-            title="Нашли дешевле?"
-          >
+          <a rel="nofollow"
+             class="border-2 border-blue-600 text-blue-600 py-2 px-12 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+             href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
+             title="Нашли дешевле?">
             Нашли дешевле?
           </a>
         </div>
@@ -693,7 +690,8 @@
               <a target="_blank" title="Vk" href="https://vk.com/mebelioniru">
                 <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
               </a>
-              <a target="_blank" title="Tik Tok" href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU">
+              <a target="_blank" title="Tik Tok"
+                 href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU">
                 <img src="/images/product/soc_tt.png" class="w-8 h-8" alt="TikTok" />
               </a>
             </div>
@@ -702,23 +700,29 @@
 
         <!-- Форма выбора материала (для JS/не-JS) -->
         <div class="material-nojs mt-8">
-          <select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material" style="max-width: 240px;" class="block w-full p-2 border rounded">
+          <select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material"
+                  style="max-width: 240px;" class="block w-full p-2 border rounded">
             <?php foreach($itemInf['materials'] as $im): ?>
             <?php $m = $materials[$im['material_id']]; ?>
             <?php if(!$m) continue; ?>
-            <option value="<?php echo $im['material_id']; ?>" <?php if($mActive && $m['id'] == $mActive['id']) echo 'selected'; ?>>
+            <option value="<?php echo $im['material_id']; ?>" <?php if($mActive &&
+                                $m['id']==$mActive['id']) echo 'selected' ; ?>>
             <?php echo $m['name']; ?>
             <?php if($m['has_sub'] && !empty($m['sub'])): ?>
             <?php $firstSub = array_values($m['sub'])[0]; ?>
             <?php if($firstSub['has_sub'] && !empty($firstSub['sub'])): ?>
             <?php $secondSub = array_values($firstSub['sub'])[0]; ?>
-            / <?php echo $firstSub['name']; ?> / <?php echo $secondSub['name']; ?>
+            /
+            <?php echo $firstSub['name']; ?> /
+            <?php echo $secondSub['name']; ?>
             <?php else: ?>
-            / <?php echo $firstSub['name']; ?>
+            /
+            <?php echo $firstSub['name']; ?>
             <?php endif; ?>
             <?php endif; ?>
             <?php if(abs($im['price'])): ?>
-            (<?php echo Catalog::priceFormat($im['price']); ?> р.)
+            (
+            <?php echo Catalog::priceFormat($im['price']); ?> р.)
             <?php else: ?>
             (по запросу)
             <?php endif; ?>
@@ -729,7 +733,8 @@
 
         <div class="threeblock clearfix">
           <div class="compare">
-            <a rel="nofollow" class="add2compare" href="/catalog/mebel_dlya_gostinnoy/kresla/kreslo_van_gog/?action=ADD_TO_COMPARE_LIST&amp;id=">
+            <a rel="nofollow" class="add2compare"
+               href="/catalog/mebel_dlya_gostinnoy/kresla/kreslo_van_gog/?action=ADD_TO_COMPARE_LIST&amp;id=">
               <i class="icon pngicons"></i>
               Добавить к сравнению
             </a>
@@ -744,11 +749,15 @@
             <div style="margin-bottom:6px;text-transform:uppercase;">
               Соцсети
             </div>
-            <a target="_blank" title="WhatsApp" class="icon_social wa" href="https://wa.me/79859204824"></a>
-            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Yandex Zen" class="icon_social zen"></a>
+            <a target="_blank" title="WhatsApp" class="icon_social wa"
+               href="https://wa.me/79859204824"></a>
+            <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank"
+               title="Yandex Zen" class="icon_social zen"></a>
             <a href="https://vk.com/mebelioniru" target="_blank" title="Vk" class="icon_social vk"></a>
-            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok" class="icon_social ok"></a>
-            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok" class="icon_social tiktok"></a>
+            <a href="https://ok.ru/group/61739138941100" target="_blank" title="Ok"
+               class="icon_social ok"></a>
+            <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok"
+               class="icon_social tiktok"></a>
           </div>
         </div>
 
@@ -789,7 +798,8 @@ if(count($itemInf['materials'])) {
           <span class="b2">Выбран цвет:</span>
           <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
             <?php if($mActive && $mActive['image']['ext']) { ?>
-            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>" width="107" height="87" alt="">
+            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
+                 width="107" height="87" alt="">
             <?php } ?>
           </div>
           <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
@@ -802,12 +812,13 @@ if(count($itemInf['materials'])) {
 
           <div id="materials-popup">
             <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
-            <a href="javascript:void(0)" class="klink-dashed" onclick="oMaterials.openrows(); return false;">Показать все</a>
+            <a href="javascript:void(0)" class="klink-dashed"
+               onclick="oMaterials.openrows(); return false;">Показать все</a>
           </div>
         </div>
 
         <script>
-          <?php
+          <? php
             // FIX: исправление некорректной сортировки элементов в pageInf.
             /*
             $materialsOrder = [];
@@ -820,15 +831,15 @@ if(count($itemInf['materials'])) {
             }
             */
             ?>
-          oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?>');
-          onLoad(function(){
+          oMaterials.items2mats[<? php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
+          onLoad(function () {
             //oMaterials.setRowSize(1, 4);
-            oMaterials.open(<?php echo $itemInf['id']; ?>);
+            oMaterials.open(<? php echo $itemInf['id']; ?>);
           });
         </script>
         <?php } else { ?>
         <script>
-          onLoad(function(){
+          onLoad(function () {
             oCart.setInfo();
           });
         </script>
@@ -838,68 +849,216 @@ if(count($itemInf['materials'])) {
     </div>
   </div>
 
-  <div class="elementdetail">
-    <div class="description1">
-      <?php /*if(trim($seriesInf['text']) !== '' || trim($seriesInf['video']) !== '') { ?>
-      <input type="radio" name="description" value="text" id="description-text" checked>
-      <label for="description-text">
-        Описание
-      </label>
-      <?php } */?>
-      <?php if(count($options)) { ?>
-      <input type="radio" name="description" value="options" id="description-options" checked>
-      <label for="description-options">
+  <!-- Верхние вкладки -->
+  <div class="elementdetail" id="options-block">
+    <!-- Кнопки-вкладки -->
+    <div class="flex flex-wrap gap-3 mt-10 mb-6">
+      <?php if (count($options)) { ?>
+      <button id="section-specs" class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('options')">
         Характеристики
-      </label>
+      </button>
       <?php } ?>
 
-      <input type="radio" name="description" value="delivery" id="description-delivery" <?php if(trim($seriesInf['text']) === '' && trim($seriesInf['video']) === '') { ?>checked<?php } ?>>
-      <label for="description-delivery">
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('delivery')">
         Доставка и оплата
-      </label>
-      <label>
-        <a href="#review">Вопросы и отзывы</a>
-      </label>
+      </button>
 
-      <div class="text options" id="text-options">
-        <?php if(trim($seriesInf['delivery_time']) !== '') { ?>
-        <span>Срок доставки:</span>
-        <?php echo $seriesInf['delivery_time']; ?>
-        <br>
-        <?php } ?>
-        <?php foreach($options as $o) { ?>
-        <span><?php echo $o['name']; ?>:</span>
-        <?php echo $o['value']; ?>
-        <br>
-        <?php } ?>
-        <?php if(trim($itemInf['size']) !== '') { ?>
-        <span>Размер:</span>
-        <?php echo $itemInf['size']; ?>
-        <br>
-        <?php } ?>
-        <?php if((float)($itemInf['weight'])) { ?>
-        <span>Вес:</span>
-        <?php echo abs($itemInf['weight']); ?> кг
-        <br>
-        <?php } ?>
-        <?php if((float)($itemInf['volume'])) { ?>
-        <span>Объём:</span>
-        <?php echo abs($itemInf['volume']); ?> м&sup3;
-        <br>
-        <?php } ?>
-      </div>
-      <div class="text" id="text-delivery">
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('commercial')">
+        Ком. Пред
+      </button>
+
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('sets')">
+        Комплекты
+      </button>
+
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('download')">
+        Скачать
+      </button>
+
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('questions')">
+        Вопросы
+      </button>
+
+      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+              onclick="showTab('reviews')">
+        Отзывы
+      </button>
+    </div>
+
+    <!-- Контент вкладок -->
+    <div class="description1">
+
+      <!-- Характеристики -->
+      <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+
         <?php
-						$t = $catInf['series_info'];
-						$t = str_replace('[name]', $seriesInf['name'], $t);
-						$t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
+    $processedOptions = [];
+
+    // 1. Добавляем "Срок доставки" как первую характеристику, если есть
+    if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
+        $processedOptions[] = [
+            'name' => 'Срок доставки',
+        'value' => htmlspecialchars($seriesInf['delivery_time'])
+        ];
+        }
+
+        // 2. Добавляем остальные опции
+        foreach ($options as $o) {
+        $processedOptions[] = [
+        'name' => htmlspecialchars($o['name']),
+        'value' => htmlspecialchars(rtrim($o['value'], '.'))
+        ];
+        }
+
+        // 3. Берём первые 6 — основные, остальные — дополнительные
+        $mainOptions = array_slice($processedOptions, 0, 6);
+        $additionalOptions = array_slice($processedOptions, 6);
+        ?>
+
+        <!-- Основные характеристики (первые 6, включая срок доставки) -->
+        <?php if (!empty($mainOptions)): ?>
+        <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
+          <?php foreach ($mainOptions as $o): ?>
+          <div
+            class="font-medium text-[#7D838A] flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+            <?= $o['name'] ?>:
+          </div>
+          <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+            <?= $o['value'] ?>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+
+        <!-- Дополнительные характеристики -->
+        <?php if (!empty($additionalOptions)): ?>
+        <div id="additionalDetails" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
+          <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
+            <?php foreach ($additionalOptions as $o): ?>
+            <div
+              class="font-medium text-[#7D838A] flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+              <?= $o['name'] ?>:
+            </div>
+            <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+              <?= $o['value'] ?>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <!-- Кнопка -->
+        <button id="toggleButton"
+                class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
+          <span id="buttonText">Смотреть все характеристики</span>
+          <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
+               class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
+               fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+          </svg>
+        </button>
+        <?php endif; ?>
+
+      </div>
+
+      <script>
+        //Кнопка все характеристики
+        document.addEventListener("DOMContentLoaded", () => {
+          const button = document.getElementById("toggleButton");
+          const details = document.getElementById("additionalDetails");
+          const buttonText = document.getElementById("buttonText");
+          const arrow = document.getElementById("arrow");
+
+          // Установим большую max-height для анимации (в px)
+          const fullHeight = "200px"; // подберите по количеству пунктов
+
+          button.addEventListener("click", () => {
+            if (details.style.maxHeight) {
+              // Скрытие
+              details.style.maxHeight = null;
+              buttonText.textContent = "Смотреть все характеристики";
+              arrow.classList.remove("rotate-180");
+            } else {
+              // Раскрытие
+              details.style.maxHeight = fullHeight;
+              buttonText.textContent = "Скрыть характеристики";
+              arrow.classList.add("rotate-180");
+            }
+          });
+        });
+      </script>
+
+      <!-- Доставка и оплата -->
+      <div class="text" id="tab-delivery" style="display: none;">
+        <?php
+            $t = $catInf['series_info'];
+            $t = str_replace('[name]', htmlspecialchars($seriesInf['name']), $t);
+            $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
         $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
         $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
-        print $t;
+        echo $t;
         ?>
+      </div>
+
+      <!-- Ком. Пред (пример пустого контента) -->
+      <div class="text" id="tab-commercial" style="display: none;">
+        Здесь будет коммерческое предложение.
+      </div>
+
+      <!-- Комплекты -->
+      <div class="text" id="tab-sets" style="display: none;">
+        Подробная информация о комплектах.
+      </div>
+
+      <!-- Скачать -->
+      <div class="text" id="tab-download" style="display: none;">
+        Файлы для скачивания: паспорт, сертификаты, чертежи.
+      </div>
+
+      <!-- Вопросы -->
+      <div class="text" id="tab-questions" style="display: none;">
+        <a name="review"></a>
+        <h3>Задать вопрос</h3>
+        <p>Форма для отправки вопроса по товару.</p>
+      </div>
+
+      <!-- Отзывы -->
+      <div class="text" id="tab-reviews" style="display: none;">
+        <h3>Отзывы покупателей</h3>
+        <p>Отзывы и рейтинги пользователей.</p>
       </div>
     </div>
   </div>
+
+  <script>
+    // Показываем нужную вкладку
+    function showTab(tabName) {
+      // Скрываем все
+      document.querySelectorAll('.description1 .text').forEach(div => {
+        div.style.display = 'none';
+      });
+
+      // Показываем выбранную
+      document.getElementById('tab-' + tabName).style.display = 'block';
+    }
+
+    // По умолчанию открываем "Характеристики" или "Доставку"
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if (count($options)) { ?>
+        showTab('options');
+        <?php } else { ?>
+        showTab('delivery');
+        <?php } ?>
+    });
+  </script>
+
+  <hr class="mb-6 border-gray-300 mt-12" />
 
   <div class="clear"></div>
 
