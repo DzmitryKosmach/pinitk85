@@ -500,7 +500,7 @@
       </script>
       <?php } ?>
 
-      <div class="info">
+      <div class="info sm2:w-1/2">
         <!-- Блок с названием и кнопками -->
         <div class="md:block hidden">
           <div class="flex items-center justify-between">
@@ -523,28 +523,77 @@
 
         </div>
         <div class="articleandstores clearfix">
-          <?php /*<div class="article">Код товара: <?php echo $seriesInf['id']?></div>*/?>
+          <?php /*<div class="article">Код товара: <?php echo $seriesInf['id']?>
+        </div>*/?>
         <div class="stores">
-							<span>
-								<?php /*Наличие
+                        <span>
+                            <?php /*Наличие
 								<?php if($seriesInf['in_stock']) { ?>
-                <span style="color:#00cc00;">Есть</span>
-                <?php } else { ?>
-                <span style="color:#ff0000;">Нет</span>
-                <?php } ?>*/?>
-							</span>
+                          <span style="color:#00cc00;">Есть</span>
+                          <?php } else { ?>
+                          <span style="color:#ff0000;">Нет</span>
+                          <?php } ?>*/?>
+                        </span>
         </div>
       </div>
       <div class="mods" style=" margin-top: 0;">
-        <?php if(is_array($itemsGroups) && count($itemsGroups)) { ?>
-        <h3 class="title2 green"><a href="#series-items-title">Цены на товары</a></h3>
-        <?php } ?>
-        <?php if(is_array($options) &&  count($options)) { ?>
-        <h3 class="title2"><a href="#options-block" onclick="$('#description-options').prop('checked', true);">Характеристики</a></h3>
-        <?php } ?>
-        </br>
+        <!-- Табы -->
+        <div class="flex gap-2 text-sm">
+          <button class="tab-btn active
+                            px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
+                            shadow-[0_0_8px_rgba(59,130,246,0.3)]
+                            hover:bg-blue-700 hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+                            active:translate-y-[-1px]
+                            transition-all duration-200 ease-in-out" data-target="section-photo">
+            Мебель на фото
+          </button>
 
+          <button class="tab-btn
+                            px-4 py-2 rounded-lg bg-white border border-gray-200
+                            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+                            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+                            active:translate-y-[-1px]
+                            transition-all duration-200 ease-in-out" data-target="section-specs">
+            Характеристики
+          </button>
 
+          <button class="tab-btn
+                            px-4 py-2 rounded-lg bg-white border border-gray-200
+                            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+                            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+                            active:translate-y-[-1px]
+                            transition-all duration-200 ease-in-out" data-target="section-prices">
+            Цена на товар
+          </button>
+        </div>
+
+        <script>
+          document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', function () {
+              // Убираем активный класс со всех
+              document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+              });
+
+              // Добавляем активный класс к нажатой
+              this.classList.add('active', 'bg-blue-600', 'text-white');
+              this.classList.remove('bg-white', 'text-gray-700');
+
+              // Получаем целевой блок
+              const targetId = this.getAttribute('data-target');
+              const targetElement = document.getElementById(targetId);
+
+              if (targetElement) {
+                // Плавный скролл
+                targetElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            });
+          });
+        </script>
       </div>
       <div class="seriespage-left">
         <!-- Итоговая цена -->
