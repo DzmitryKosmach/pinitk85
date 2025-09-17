@@ -895,7 +895,7 @@ if(count($itemInf['materials'])) {
     </div>
 
     <!-- Контент вкладок -->
-    <div class="description1">
+    <div class="description2">
 
       <!-- Характеристики -->
       <div class="text options" id="tab-options" style="display: none;" itemprop="description">
@@ -958,7 +958,7 @@ if(count($itemInf['materials'])) {
         <!-- Кнопка -->
         <button id="toggleButton"
                 class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
-          <span id="buttonText">Смотреть все характеристики</span>
+          <div id="buttonText">Смотреть все характеристики</div>
           <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
                class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
                fill="currentColor">
@@ -980,7 +980,7 @@ if(count($itemInf['materials'])) {
           const arrow = document.getElementById("arrow");
 
           // Установим большую max-height для анимации (в px)
-          const fullHeight = "200px"; // подберите по количеству пунктов
+          const fullHeight = "810px"; // подберите по количеству пунктов
 
           button.addEventListener("click", () => {
             if (details.style.maxHeight) {
@@ -1044,7 +1044,7 @@ if(count($itemInf['materials'])) {
     // Показываем нужную вкладку
     function showTab(tabName) {
       // Скрываем все
-      document.querySelectorAll('.description1 .text').forEach(div => {
+      document.querySelectorAll('.description2 .text').forEach(div => {
         div.style.display = 'none';
       });
 
