@@ -91,12 +91,42 @@ function RSGoPro_SetFavorite() {
   }
 }
 
+// set compare Old
+// function RSGoPro_SetCompared() {
+//   $('.add2compare').removeClass('in').html( '<i class="icon pngicons"></i>'+BX.message('RSGOPRO_JS_COMPARE') );;
+//   for(element_id in RSGoPro_COMPARE) {
+//     if(RSGoPro_COMPARE[element_id]=='Y' && $('.js-elementid'+element_id).find('.add2compare').length>0) {
+//       $('.js-elementid'+element_id).find('.add2compare').addClass('in').html( '<i class="icon pngicons"></i>'+BX.message('RSGOPRO_JS_COMPARE_IN') );
+//     }
+//   }
+// }
+
 // set compare
 function RSGoPro_SetCompared() {
-  $('.add2compare').removeClass('in').html( '<i class="icon pngicons"></i>'+BX.message('RSGOPRO_JS_COMPARE') );;
-  for(element_id in RSGoPro_COMPARE) {
-    if(RSGoPro_COMPARE[element_id]=='Y' && $('.js-elementid'+element_id).find('.add2compare').length>0) {
-      $('.js-elementid'+element_id).find('.add2compare').addClass('in').html( '<i class="icon pngicons"></i>'+BX.message('RSGOPRO_JS_COMPARE_IN') );
+  // Сбрасываем все кнопки сравнения в состояние по умолчанию
+  $(".add2compare").removeClass("in");
+  $(".add2compare .compare-icon-add").show();
+  $(".add2compare .compare-icon-remove").hide();
+  $(".add2compare").attr("title", "Добавить в сравнение");
+
+  // Устанавливаем активное состояние для товаров в сравнении
+  for (element_id in RSGoPro_COMPARE) {
+    if (
+      RSGoPro_COMPARE[element_id] == "Y" &&
+      $(".js-elementid" + element_id).find(".add2compare").length > 0
+    ) {
+      $(".js-elementid" + element_id)
+        .find(".add2compare")
+        .addClass("in");
+      $(".js-elementid" + element_id)
+        .find(".add2compare .compare-icon-add")
+        .hide();
+      $(".js-elementid" + element_id)
+        .find(".add2compare .compare-icon-remove")
+        .show();
+      $(".js-elementid" + element_id)
+        .find(".add2compare")
+        .attr("title", "Удалить из сравнения");
     }
   }
 }
