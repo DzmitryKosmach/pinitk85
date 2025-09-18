@@ -772,19 +772,6 @@
           </select>
         </div>
 
-        <div class="threeblock clearfix">
-          <div class="compare">
-            <a rel="nofollow" class="add2compare"
-               href="/catalog/mebel_dlya_gostinnoy/kresla/kreslo_van_gog/?action=ADD_TO_COMPARE_LIST&amp;id=">
-              <i class="icon pngicons"></i>
-              Добавить к сравнению
-            </a>
-          </div>
-          <?php $fc = trim(Options::name('found-cheaper')); ?>
-          <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
-
-          <?php } ?>
-        </div>
 
         <?php
                         foreach($itemInf['materials'] as $n => $im){
@@ -819,7 +806,7 @@ if(count($itemInf['materials'])) {
 ?>
 
         <?php if(count($itemInf['materials'])) { ?>
-        <div class="item-current-material" style="float: none">
+        <div class="item-current-material mt-8" style="float: none">
           <span class="b2">Выбран цвет:</span>
           <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
             <?php if($mActive && $mActive['image']['ext']) { ?>
@@ -966,7 +953,7 @@ if(count($itemInf['materials'])) {
           <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
             <?php foreach ($additionalOptions as $o): ?>
             <div
-              class="font-medium text-[#7D838A] flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+              class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
               <?= $o['name'] ?>:
             </div>
             <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
