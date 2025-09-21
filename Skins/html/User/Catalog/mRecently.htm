@@ -2,34 +2,38 @@
 <?php echo JsCopmress::load('catalog')?>
 
 <div id="title" class="title">
-	<div class="centering">
-		<div class="centeringin clearfix">
-			<?php if(count($breadcrumbs)) { ?>
-				<?php $bcLast = array_pop($breadcrumbs); ?>
-				<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-					<?php $position = 0; ?>
-					<?php foreach($breadcrumbs as $bc) { ?>
-						<?php $position = $position + 1 ?>
-						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-							<a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name']); ?>" itemscope itemtype="http://schema.org/Thing"
-								itemid="<?php echo $bc['url']; ?>"
-								itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
-						    <meta itemprop="position" content="<?php echo $position; ?>" />
-						</li>
-						<li><span> / </span></li>
-					<?php } ?>
-					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-						<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
-							<span itemprop="name"><?php echo $bcLast['name']; ?></span>
-						</span>
-				    	<meta itemprop="position" content="<?php echo $position + 1; ?>" />
-					</li>
-				</ul>
-			<?php } ?>
-			<?php if(trim($pageInf['header'])) { ?>
-				<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
-			<?php } ?>
-		</div>
+	<div class="">
+    <?php if(count($breadcrumbs)) { ?>
+    <?php $bcLast = array_pop($breadcrumbs); ?>
+    <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <?php $position = 0; ?>
+      <?php foreach($breadcrumbs as $bc) { ?>
+      <?php $position++; ?>
+      <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="<?php echo $bc['url']; ?>"
+                   title="<?php echo hsch($bc['name']); ?>"
+                   class="hover:text-gray-700"
+                   itemscope
+                   itemtype="http://schema.org/Thing"
+                   itemprop="item"
+                   itemid="<?php echo $bc['url']; ?>">
+                    <span itemprop="name"><?php echo $bc['name']; ?></span>
+                </a>
+                <meta itemprop="position" content="<?php echo $position; ?>" />
+            </span>
+      <span class="mx-1" aria-hidden="true">›</span>
+      <?php } ?>
+      <!-- Последний элемент без ссылки -->
+      <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemscope itemtype="http://schema.org/Thing"
+                  itemprop="item"
+                  itemid="<?php echo $bcLast['url']; ?>">
+                <span itemprop="name" class="text-gray-700 font-medium"><?php echo $bcLast['name']; ?></span>
+            </span>
+            <meta itemprop="position" content="<?php echo $position + 1; ?>" />
+        </span>
+    </nav>
+    <?php } ?>
 	</div>
 </div>
 <div id="content" class="content">
@@ -41,15 +45,18 @@
 			<?php if(count($series)) { ?>
 				<div id="ajaxpages_gmci" class="ajaxpages_gmci">
 					<!-- showcase -->
-					<div class="showcase clearfix" id="showcaseview">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6">
 						<?php foreach($series as $sn => $s) { ?>
 							<?php include(_ROOT . Catalog_Series::$tpl)?>
 						<?php } ?>
 					</div>
 					<!-- showcase -->
 				</div>
-				<div class="paginator-show-all"></div>
-				<?php echo $toggle; ?>
+
+        <div class="flex justify-center mt-6">
+          <?php echo $toggle; ?>
+        </div>
+
 			<?php } ?>
 
 			<?php if(!count($series)) { ?>
