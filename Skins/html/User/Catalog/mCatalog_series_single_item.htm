@@ -436,67 +436,67 @@
         // --------------------------------------------
 
         // Модальное изображение
-        document.addEventListener("DOMContentLoaded", () => {
-          const mainImageContainer = document.getElementById("mainImageContainer");
-          const mainImage = document.getElementById("main-product-image");
-          const modalOverlay = document.querySelector(".modal-overlay");
-          const zoomedImage = document.getElementById("zoomedImage");
-
-          // Открытие
-          mainImageContainer.addEventListener("click", () => {
-            if (modalOverlay.classList.contains("flex")) return;
-
-            // Устанавливаем src
-            zoomedImage.src = mainImage.src;
-
-            // 1. Показываем оверлей (но без анимации пока)
-            modalOverlay.classList.remove("hidden");
-            modalOverlay.classList.add("flex");
-
-            // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации
-            zoomedImage.classList.remove("scale-100", "opacity-100");
-            zoomedImage.classList.add("scale-95", "opacity-0");
-
-            // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние
-            zoomedImage.offsetHeight; // это триггерит reflow
-
-            // 4. Запускаем анимацию появления
-            requestAnimationFrame(() => {
-              zoomedImage.classList.remove("scale-95", "opacity-0");
-              zoomedImage.classList.add("scale-100", "opacity-100");
-            });
-          });
-
-          // Закрытие
-          function closeModal() {
-            // Убираем увеличение
-            zoomedImage.classList.remove("scale-100", "opacity-100");
-            zoomedImage.classList.add("scale-95", "opacity-0");
-
-            // Ждём завершения анимации
-            setTimeout(() => {
-              modalOverlay.classList.remove("flex");
-              modalOverlay.classList.add("hidden");
-              zoomedImage.src = ""; // очищаем
-            }, 300);
-          }
-
-          // Клик по изображению — закрывает
-          zoomedImage.addEventListener("click", (e) => {
-            e.stopPropagation();
-            closeModal();
-          });
-
-          // Клик по фону — закрывает
-          modalOverlay.addEventListener("click", closeModal);
-
-          // Закрытие на Escape (опционально, но полезно)
-          window.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {
-              closeModal();
-            }
-          });
-        });
+        // document.addEventListener("DOMContentLoaded", () => {
+        //   const mainImageContainer = document.getElementById("mainImageContainer");
+        //   const mainImage = document.getElementById("main-product-image");
+        //   const modalOverlay = document.querySelector(".modal-overlay");
+        //   const zoomedImage = document.getElementById("zoomedImage");
+        //
+        //   // Открытие
+        //   mainImageContainer.addEventListener("click", () => {
+        //     if (modalOverlay.classList.contains("flex")) return;
+        //
+        //     // Устанавливаем src
+        //     zoomedImage.src = mainImage.src;
+        //
+        //     // 1. Показываем оверлей (но без анимации пока)
+        //     modalOverlay.classList.remove("hidden");
+        //     modalOverlay.classList.add("flex");
+        //
+        //     // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации
+        //     zoomedImage.classList.remove("scale-100", "opacity-100");
+        //     zoomedImage.classList.add("scale-95", "opacity-0");
+        //
+        //     // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние
+        //     zoomedImage.offsetHeight; // это триггерит reflow
+        //
+        //     // 4. Запускаем анимацию появления
+        //     requestAnimationFrame(() => {
+        //       zoomedImage.classList.remove("scale-95", "opacity-0");
+        //       zoomedImage.classList.add("scale-100", "opacity-100");
+        //     });
+        //   });
+        //
+        //   // Закрытие
+        //   function closeModal() {
+        //     // Убираем увеличение
+        //     zoomedImage.classList.remove("scale-100", "opacity-100");
+        //     zoomedImage.classList.add("scale-95", "opacity-0");
+        //
+        //     // Ждём завершения анимации
+        //     setTimeout(() => {
+        //       modalOverlay.classList.remove("flex");
+        //       modalOverlay.classList.add("hidden");
+        //       zoomedImage.src = ""; // очищаем
+        //     }, 300);
+        //   }
+        //
+        //   // Клик по изображению — закрывает
+        //   zoomedImage.addEventListener("click", (e) => {
+        //     e.stopPropagation();
+        //     closeModal();
+        //   });
+        //
+        //   // Клик по фону — закрывает
+        //   modalOverlay.addEventListener("click", closeModal);
+        //
+        //   // Закрытие на Escape (опционально, но полезно)
+        //   window.addEventListener("keydown", (e) => {
+        //     if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {
+        //       closeModal();
+        //     }
+        //   });
+        // });
       </script>
       <?php } ?>
 
