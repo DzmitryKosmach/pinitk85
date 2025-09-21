@@ -30,8 +30,8 @@
         <span class="mx-1">›</span>
         <?php } ?>
         <span class="text-gray-700">
-          <?php echo $bcLast['name']; ?>
-        </span>
+                    <?php echo $bcLast['name']; ?>
+                </span>
         <?php } ?>
       </nav>
 
@@ -67,18 +67,19 @@
             <div class="slider-thumbnails-container">
               <div class="flex flex-row lg:flex-col justify-center items-center gap-2 max-h-[500px] overflow-hidden">
                 <!-- Кнопка "вверх / влево" -->
-                <button type="button" class="slider-prev text-gray-600 hover:text-black focus:outline-none"
+                <button type="button"
+                        class="slider-prev text-gray-600 hover:text-black focus:outline-none"
                         aria-label="Предыдущее изображение">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0" fill="none"
-                       viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
+                       fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 15l7-7 7 7" />
                   </svg>
                 </button>
 
                 <!-- Слайдер миниатюр -->
-                <div
-                  class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-full max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
-                  style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
+                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-full max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
+                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
@@ -86,16 +87,19 @@
                     alt="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     title="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer transition-transform hover:scale-105"
-                    onclick="changeMainImage(this)" />
+                    onclick="changeMainImage(this)"
+                  />
                   <?php endforeach; ?>
                 </div>
 
                 <!-- Кнопка "вниз / вправо" -->
-                <button type="button" class="slider-next text-gray-600 hover:text-black focus:outline-none"
+                <button type="button"
+                        class="slider-next text-gray-600 hover:text-black focus:outline-none"
                         aria-label="Следующее изображение">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180" fill="none"
-                       viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180"
+                       fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 15l7-7 7 7" />
                   </svg>
                 </button>
               </div>
@@ -104,14 +108,15 @@
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
               <?php $p = $photos[0]; ?>
-              <div class="glass w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in" id="mainImageContainer">
-                <?php
-                                $p = $photos[0];
-                                ?>
-                <img id="main-product-image" class="js_picture_glass !max-h-none genimage"
-                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
-                     alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                     title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>" />
+              <div class="relative w-full" id="mainImageContainer">
+
+                <img
+                  src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
+                  alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                  title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                  class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
+                  id="main-product-image"
+                />
 
                 <!-- Точки на изображении с информацией-->
                 <?php if(count($seriesSet)) { ?>
@@ -141,42 +146,48 @@
                       pointer-events: none;
                     ">
                     <!-- SVG — ВСЕГДА виден -->
-                    <svg id="svg-point-<?php echo $i['id']; ?>" width="28" height="28" viewBox="0 0 50 50"
-                         class="absolute pointer-events-auto cursor-pointer z-30" style="
+                    <svg
+                      id="svg-point-<?php echo $i['id']; ?>"
+                      width="28"
+                      height="28"
+                      viewBox="0 0 50 50"
+                      class="absolute pointer-events-auto cursor-pointer z-30"
+                      style="
                           left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
                           top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
                           transform: translate(-50%, -50%);
                           filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.3));
-                        " onmouseover="showLabel2(<?php echo $i['id']; ?>)"
-                         onmouseout="hideLabel2(<?php echo $i['id']; ?>)"
-                         onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);">
+                        "
+                      onmouseover="showLabel2(<?php echo $i['id']; ?>)"
+                      onmouseout="hideLabel2(<?php echo $i['id']; ?>)"
+                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"
+                    >
                       <circle cx="25" cy="25" r="16" fill="white" />
                       <circle cx="25" cy="25" r="14" fill="#10b981" />
                     </svg>
 
                     <!-- Подпись — появляется при hover -->
-                    <div id="series-set-point2-<?php echo $i['id']; ?>" class="absolute ml-3 w-[200px] md:w-[360px] flex flex-wrap flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black
+                    <div
+                      id="series-set-point2-<?php echo $i['id']; ?>"
+                      class="absolute ml-3 w-[200px] md:w-[360px] flex flex-wrap flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black
                             opacity-0 pointer-events-none transition-opacity duration-200
-                            whitespace-normal break-words" style="
+                            whitespace-normal break-words"
+                      style="
                         left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4) + 2 ?>%;
                         top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4) ?>%;
                         transform: translate(0, -50%);
-                      " onmouseout="hideLabel(<?php echo $i['id']; ?>)">
-                      <span class="leading-none">
-                        <span class="font-semibold">
-                          <?php echo hsch($i['name']); ?>
-                        </span>
-                        <?php if (!empty($i['art'])): ?>
-                        <span>
-                          <?php echo hsch($i['art']); ?>
-                        </span>
-                        <?php endif; ?>
-                        <?php if (!is_null($i['size']) && trim($i['size']) !== ''): ?>
-                        <span> (
-                          <?php echo hsch($i['size']); ?>)
-                        </span>
-                        <?php endif; ?>
-                      </span>
+                      "
+                      onmouseout="hideLabel(<?php echo $i['id']; ?>)"
+                    >
+                  <span class="leading-none">
+                    <span class="font-semibold"><?php echo hsch($i['name']); ?></span>
+                    <?php if (!empty($i['art'])): ?>
+                    <span> <?php echo hsch($i['art']); ?></span>
+                    <?php endif; ?>
+                    <?php if (!is_null($i['size']) && trim($i['size']) !== ''): ?>
+                    <span> (<?php echo hsch($i['size']); ?>)</span>
+                    <?php endif; ?>
+                  </span>
                     </div>
                   </div>
                   <?php } ?>
@@ -206,8 +217,7 @@
                 </script>
 
                 <!-- Модальное затемнение -->
-                <div
-                  class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4">
+                <div class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4">
                   <img src="" alt="Увеличенное фото"
                        class="max-w-full max-h-full object-contain transition-all duration-300 scale-95 opacity-0"
                        id="zoomedImage" />
@@ -218,7 +228,7 @@
             </div>
 
             <!-- Модальное окно (скрытое) -->
-            <div id="series-modal" class="fancyimages noned hidden" title="<?php echo hsch($seriesInf['name'])?>">
+            <div id="series-modal" class="fancyimages noned hidden"  title="<?php echo hsch($seriesInf['name'])?>">
               <div class="fancygallery">
                 <table class="changegenimage">
                   <tbody>
@@ -287,10 +297,10 @@
 
               <!-- Градиент -->
               <div id="fade-gradient"
-                   class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none hidden">
-              </div>
+                   class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none hidden"></div>
 
-              <a id="read-more-btn" class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
+              <a id="read-more-btn"
+                 class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
                 Читать все
               </a>
             </div>
@@ -514,7 +524,7 @@
 
           // Модальное изображение
           document.addEventListener("DOMContentLoaded", () => {
-            const mainImageContainer = document.querySelector(".glass");
+            const mainImageContainer = document.getElementById("mainImageContainer");
             const mainImage = document.getElementById("main-product-image");
             const modalOverlay = document.querySelector(".modal-overlay");
             const zoomedImage = document.getElementById("zoomedImage");
@@ -605,30 +615,36 @@
           <div id="series-set" class="flex flex-col gap-4">
             <!-- Табы -->
             <div class="flex gap-2 text-sm">
-              <button class="tab-btn
+              <button
+                class="tab-btn
            px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
            shadow-[0_0_8px_rgba(59,130,246,0.3)]
            hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
            active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out" data-target="section-photo">
+           transition-all duration-200 ease-in-out"
+                data-target="section-photo">
                 Мебель на фото
               </button>
 
-              <button class="tab-btn break-all
+              <button
+                class="tab-btn break-all
            px-4 py-2 rounded-lg bg-white border border-gray-200
            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
            active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out" data-target="section-specs">
+           transition-all duration-200 ease-in-out"
+                data-target="section-specs">
                 Характеристики
               </button>
 
-              <button class="tab-btn
+              <button
+                class="tab-btn
            px-4 py-2 rounded-lg bg-white border border-gray-200
            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
            active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out" data-target="section-prices">
+           transition-all duration-200 ease-in-out"
+                data-target="section-prices">
                 Цены на товары
               </button>
             </div>
@@ -680,8 +696,7 @@
                   <style>
                     .series-item {
                       opacity: 1;
-                      max-height: 500px;
-                      /* достаточно для любого контента */
+                      max-height: 500px; /* достаточно для любого контента */
                       overflow: hidden;
                       transition: all 0.4s ease-in-out;
                     }
@@ -697,10 +712,8 @@
                   </style>
                   <div id="series-set-row-<?php echo $i['id']; ?>"
                        onmouseover="seriesSetHoverTable(<?php echo $i['id']; ?>, true)"
-                       onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)" <?php if($in>= 3) {
-                  ?>class="series-item hidden"
-                  <?php } else { ?>class="series-item"
-                  <?php } ?>
+                       onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)"
+                  <?php if($in >= 3) { ?>class="series-item hidden"<?php } else { ?>class="series-item"<?php } ?>
                   class="flex flex-col gap-[6px] p-3 rounded-lg border border-gray-200
                   hover:shadow-sm transition"
                   >
@@ -713,7 +726,7 @@
                         <?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?>
                         <span class="text-xs text-gray-500">(
                           <?php echo $i['size']; ?>)
-                          </span>
+                                                    </span>
                         <?php } ?>
                       </p>
                     </div>
@@ -741,14 +754,13 @@
                       ?>
 
                       <?php if($mActive && $mActive['image']['ext']) { ?>
-                      <img
-                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_21x21_0.<?php echo $mActive['image']['ext']; ?>"
-                        width="21" height="21" class="rounded-full border cursor-pointer"
-                        title="<?php echo hsch(implode(' / ', $mActiveName))?>">
+                      <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_21x21_0.<?php echo $mActive['image']['ext']; ?>"
+                           width="21" height="21" class="rounded-full border cursor-pointer"
+                           title="<?php echo hsch(implode(' / ', $mActiveName))?>">
                       <?php } elseif($mActive) { ?>
                       <span class="text-xs text-gray-600 cursor-pointer">
-                          <?php echo implode(' / ', $mActiveName)?>
-                        </span>
+                                                    <?php echo implode(' / ', $mActiveName)?>
+                                                </span>
                       <?php } ?>
 
 
@@ -756,7 +768,8 @@
                       <div class="flex flex-col items-end">
                         <?php $d = abs($i['discount']); ?>
                         <?php if($d != 1 && $d !== 0) { ?>
-                        <p id="item2-<?php echo $i['id']; ?>-price-old" class="text-xs text-gray-400 line-through">
+                        <p id="item2-<?php echo $i['id']; ?>-price-old"
+                           class="text-xs text-gray-400 line-through">
                           <?php echo Catalog::priceFormat($i['price_min'] / $d)?> ₽
                         </p>
                         <?php } ?>
@@ -775,9 +788,11 @@
                         <a href="javascript:void(0)" class="px-2 text-xl text-gray-600 no-underline"
                            onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">-</a>
                         <input type="text" name="amount[<?php echo $i['id']; ?>]"
-                               id="item2-<?php echo $i['id']; ?>-amount" value="<?php echo $i['in_series_set_amount']; ?>"
-                               class="w-12 text-center border rounded" onchange="seriesSetPrice()"
-                               onkeyup="seriesSetPrice()" onclick="seriesSetPrice()">
+                               id="item2-<?php echo $i['id']; ?>-amount"
+                               value="<?php echo $i['in_series_set_amount']; ?>"
+                               class="w-12 text-center border rounded"
+                               onchange="seriesSetPrice()" onkeyup="seriesSetPrice()"
+                               onclick="seriesSetPrice()">
                         <span class="text-sm text-gray-500">шт</span>
                         <a href="javascript:void(0)" class="px-2 text-xl text-gray-600 no-underline"
                            onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">+</a>
@@ -842,12 +857,14 @@
           <div class="flex flex-col sm:flex-row gap-2">
             <!-- Форма для добавления в корзину -->
             <form method="post" action="<?php echo Url::a('catalog-cart')?>"
-                  onsubmit="oCart.add(this, true); return false;" style="display: inline;">
+                  onsubmit="oCart.add(this, true); return false;"
+                  style="display: inline;">
               <?php foreach($seriesSet as $i) { ?>
               <input type="hidden" name="add[]" value="<?php echo $i['id']; ?>">
               <input type="hidden" name="amount[<?php echo $i['id']; ?>]"
                      value="<?php echo $i['in_series_set_amount']; ?>">
-              <input type="hidden" name="material_id[<?php echo $i['id']; ?>]" value="<?php
+              <input type="hidden" name="material_id[<?php echo $i['id']; ?>]"
+                     value="<?php
                    $mActive = false;
                    if(count($i['materials'])) {
                        $mActive = $materials[$i['price_min_material_id']];
@@ -872,9 +889,9 @@
             </form>
 
             <!-- Кнопка "Нашли дешевле?" -->
-            <button
-              class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
-              <a rel="nofollow" class="cheaper detail fancyajax fancybox.ajax"
+            <button class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
+              <a rel="nofollow"
+                 class="cheaper detail fancyajax fancybox.ajax"
                  href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER?>"
                  title="Нашли дешевле?">
                 Нашли дешевле?
@@ -893,7 +910,7 @@
                 const itemIds = Array.from(hiddenInputs).map(input => input.value);
 
                 // Проверяем статус корзины (это упрощенная версия, может потребоваться адаптация)
-                const isInCart = <? php echo Catalog_Cart:: isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;
+                const isInCart = <?php echo Catalog_Cart::isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;
 
                 if (isInCart && button) {
                   button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
@@ -906,13 +923,13 @@
             }
 
             // Обновляем кнопки при загрузке
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
               updateCartButtons();
 
               // Можно также обновлять после AJAX операций
               if (typeof oCart !== 'undefined') {
                 const originalAdd = oCart.add;
-                oCart.add = function () {
+                oCart.add = function() {
                   const result = originalAdd.apply(this, arguments);
                   // Обновляем кнопки после добавления в корзину
                   setTimeout(updateCartButtons, 100);
@@ -931,8 +948,8 @@
                 <span class="underline font-bold">2–4 дня</span>
               </p>
               <p>
-                  <span class="underline">Доставка и сборка (по Москве <br />
-                    и МО):</span>
+                                    <span class="underline">Доставка и сборка (по Москве <br />
+                                        и МО):</span>
                 <span class="font-semibold">Бесплатная</span>
               </p>
             </div>
@@ -997,17 +1014,16 @@
           <?php if(!$m['current-series']) continue; ?>
           <?php if($m['has_sub']) { ?>
           <a class="level1" href="javascript:void(0)">
-            <div
-              class="w-[52px] h-[52px] bg-[#4E3B31] rounded-lg mb-2 flex items-center justify-center overflow-hidden">
+            <div class="w-[52px] h-[52px] bg-[#4E3B31] rounded-lg mb-2 flex items-center justify-center overflow-hidden">
               <?php if($m['image']['ext']) { ?>
-              <img
-                src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                width="52" height="52" alt="<?php echo hsch($m['name'])?>" class="w-full h-full object-cover">
+              <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
+                   width="52" height="52"
+                   alt="<?php echo hsch($m['name'])?>"
+                   class="w-full h-full object-cover"
+              >
               <?php } ?>
             </div>
-            <div class="name hidden">
-              <?php echo $m['name']; ?>
-            </div>
+            <div class="name hidden"><?php echo $m['name']; ?></div>
           </a>
           <div class="materials-zoom hidden">
             <div class="level1-sub">
@@ -1017,33 +1033,26 @@
           </div>
           <?php } else { ?>
           <?php if($m['image']['ext']) { ?>
-          <a class="level1 transform transition-transform duration-300 ease-in-out hover:scale-110"
-             href="javascript:void(0)">
+          <a class="level1 transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
             <div class="flex gap-3 flex-wrap">
               <div class="w-14 h-14 border-[3px] border-[#2B48F1] rounded-lg">
-                <div
-                  class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
-                  <img
-                    src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                    width="70" height="70" alt="<?php echo hsch($m['name'])?>" class="w-full h-full object-cover">
+                <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
+                  <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
+                       width="70" height="70" alt="<?php echo hsch($m['name'])?>"
+                       class="w-full h-full object-cover"
+                  >
                 </div>
               </div>
             </div>
-            <div class="name hidden">
-              <?php echo $m['name']; ?>
-            </div>
+            <div class="name hidden"><?php echo $m['name']; ?></div>
           </a>
           <div class="materials-zoom hidden">
-            <img
-              src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"
-              alt="<?php echo hsch($m['name'])?>">
+            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
           </div>
           <?php } else { ?>
           <div class="level1">
             <div class="image">&nbsp;</div>
-            <div class="name text-sm hidden">
-              <?php echo $m['name']; ?>
-            </div>
+            <div class="name text-sm hidden"><?php echo $m['name']; ?></div>
           </div>
           <?php } ?>
           <?php } ?>
@@ -1061,33 +1070,46 @@
   <!-- Кнопки-вкладки -->
   <div class="flex flex-wrap gap-3 mt-10 mb-6">
     <?php if (count($options)) { ?>
-    <button id="section-specs" class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+    <button id="section-specs"
+            class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
             onclick="showTab('options')">
       Характеристики
     </button>
     <?php } ?>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('delivery')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('delivery')">
       Доставка и оплата
     </button>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('commercial')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('commercial')">
       Ком. Пред
     </button>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('sets')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('sets')">
       Комплекты
     </button>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('download')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('download')">
       Скачать
     </button>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('questions')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('questions')">
       Вопросы
     </button>
 
-    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('reviews')">
+    <button
+      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      onclick="showTab('reviews')">
       Отзывы
     </button>
   </div>
@@ -1103,9 +1125,7 @@
       <br>
       <?php } ?>
       <?php foreach ($options as $o) { ?>
-      <span>
-            <?php echo htmlspecialchars($o['name']); ?>:
-          </span>
+      <span><?php echo htmlspecialchars($o['name']); ?>:</span>
       <?php echo htmlspecialchars($o['value']); ?>
       <br>
       <?php } ?>
@@ -1167,11 +1187,11 @@
 
   // По умолчанию открываем "Характеристики" или "Доставку"
   document.addEventListener('DOMContentLoaded', function () {
-    <? php if (count($options)) { ?>
+    <?php if (count($options)) { ?>
       showTab('options');
-      <? php } else { ?>
+      <?php } else { ?>
       showTab('delivery');
-      <? php } ?>
+      <?php } ?>
   });
 </script>
 
@@ -1214,21 +1234,20 @@ $benefits = [
   <!-- Почему у нас -->
   <h2 class="text-2xl font-bold mt-28 mb-12">Почему стоит заказать у нас</h2>
 
-  <div
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium">
     <?php foreach ($benefits as $item): ?>
     <a href="<?php echo $baseUrl . $item['url']; ?>"
        class="flex items-start gap-2 bg-white p-3 shadow rounded no-underline text-current hover:no-underline"
-       target="_blank">
+       target="_blank"
+    >
       <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-        <img src="<?php echo $item['icon']; ?>" class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
+        <img src="<?php echo $item['icon']; ?>"
+             class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
              alt="<?php echo htmlspecialchars($item['title']); ?>" />
       </div>
       <p class="text-lg font-medium">
         <?php echo htmlspecialchars($item['title']); ?>
-        <span class="block font-normal">
-              <?php echo htmlspecialchars($item['text']); ?>
-            </span>
+        <span class="block font-normal"><?php echo htmlspecialchars($item['text']); ?></span>
       </p>
     </a>
     <?php endforeach; ?>
@@ -1238,13 +1257,11 @@ $benefits = [
 
 <?php if (count($itemsGroups)) { ?>
 <section class="series-items mt-20">
-  <div>
+  <div >
     <!-- Заголовок -->
     <h2 class="text-2xl font-bold mb-6">
       Элементы мебели
-      <span class="text-gray-500 font-normal">"
-        <?php echo htmlspecialchars($seriesInf['name']); ?>"
-          </span>
+      <span class="text-gray-500 font-normal">"<?php echo htmlspecialchars($seriesInf['name']); ?>"</span>
     </h2>
 
     <!<!-- Меню групп (вкладки) -->
@@ -1252,8 +1269,8 @@ $benefits = [
     <div class="sticky top-0 bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
       <div class="flex flex-wrap gap-3">
         <!-- Кнопка "Наверх" -->
-        <a href="#top"
-           class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition">
+        <a href="#top" class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition"
+        >
           Наверх
         </a>
 
@@ -1261,10 +1278,13 @@ $benefits = [
                 $groupId = (int)$g['id'];
                 $groupName = htmlspecialchars(trim($g['name']) !== '' ? $g['name'] : 'Разное');
             ?>
-        <a href="#group-<?php echo $groupId; ?>" onclick="return oItemsScroll.navTo(this.href)"
-           id="menu-group-<?php echo $groupId; ?>"
-           class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link"
-           data-target="group-<?php echo $groupId; ?>">
+        <a
+          href="#group-<?php echo $groupId; ?>"
+          onclick="return oItemsScroll.navTo(this.href)"
+          id="menu-group-<?php echo $groupId; ?>"
+          class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link"
+          data-target="group-<?php echo $groupId; ?>"
+        >
           <?php echo $groupName; ?>
         </a>
         <?php } ?>
@@ -1347,9 +1367,7 @@ $benefits = [
       <?php if ($g['h2']) { ?>
       <h3 class="text-xl font-semibold mb-6 text-gray-800 mt-8">
         <?php echo htmlspecialchars($groupName); ?>
-        <span class="font-normal text-gray-500">"
-          <?php echo htmlspecialchars($seriesOrig['name']); ?>"
-              </span>
+        <span class="font-normal text-gray-500">"<?php echo htmlspecialchars($seriesOrig['name']); ?>"</span>
       </h3>
       <?php } else { ?>
       <h4 class="text-lg font-medium mb-5 text-gray-700 border-t pt-6 mt-6">
@@ -1366,18 +1384,22 @@ $benefits = [
                                 : ($crossSeries[$item['series_id']] ?? $seriesOrig);
                             ?>
 
-        <div
-          class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+        <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
           <!-- Изображение -->
           <?php if (!empty($item['_img_ext'])): ?>
 
-          <a href="javascript:void(0)"
-             onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;">
-            <img src="<?php echo Catalog::photoUrl(
+          <a
+            href="javascript:void(0)"
+            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+          >
+            <img
+              src="<?php echo Catalog::photoUrl(
                                             Catalog_Items::$imagePath,
                                             $item['id'], 170, 140, 1, $item['_img_ext']
-                                        ); ?>" alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
-                 class="w-full h-48 сcontain mb-4" /></a>
+                                        ); ?>"
+              alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
+              class="w-full h-48 сcontain mb-4"
+            /></a>
           <?php else: ?>
           <div class="w-full h-48 bg-gray-100 mb-4 flex items-center justify-center">
             <span class="text-gray-400 text-sm">Нет фото</span>
@@ -1385,9 +1407,7 @@ $benefits = [
           <?php endif; ?>
 
           <!-- Артикул -->
-          <p class="text-gray-400 text-sm">Арт:
-            <?php echo htmlspecialchars($item['art']); ?>
-          </p>
+          <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
 
           <!-- Название -->
           <h3 class="font-medium text-[18px] lg:text-[21px] leading-7 mb-1 line-clamp-2 h-14">
@@ -1396,9 +1416,7 @@ $benefits = [
 
           <!-- Габариты -->
           <?php if (!empty($item['size'])): ?>
-          <p class="text-gray-400 text-sm mt-2">Ш/В/Д:
-            <?php echo htmlspecialchars($item['size']); ?>
-          </p>
+          <p class="text-gray-400 text-sm mt-2">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
           <?php endif; ?>
 
           <!-- Цвет (заглушка) -->
@@ -1425,20 +1443,20 @@ $benefits = [
             <!-- Кнопки: избранное, сравнение -->
             <div class="flex gap-3 my-2">
               <button title="В избранное" class="hover:scale-110 transition">
-                <img src="/images/index/izbr_small.png" alt="Избранное"
-                     class="w-5 h-5 opacity-70 hover:opacity-100" />
+                <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5 opacity-70 hover:opacity-100" />
               </button>
               <button title="Сравнить" class="hover:scale-110 transition">
-                <img src="/images/index/srav_small.png" alt="Сравнение"
-                     class="w-5 h-5 opacity-70 hover:opacity-100" />
+                <img src="/images/index/srav_small.png" alt="Сравнение" class="w-5 h-5 opacity-70 hover:opacity-100" />
               </button>
             </div>
           </div>
 
           <!-- Кнопка -->
-          <a href="javascript:void(0)"
-             onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-             class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium">
+          <a
+            href="javascript:void(0)"
+            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+          >
             <!--          <a-->
             <!--            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"-->
             <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
@@ -1461,11 +1479,9 @@ $benefits = [
 <?php if(count($linkages)) { ?>
 <?php foreach($linkages as $ln => $l) { ?>
 <div class="sorter_and_name clearfix">
-  <div class="name" style="color: <?php echo $l['color_name']; ?>!important">
-    <?php echo $l['name']; ?>
-  </div>
+  <div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
 </div>
-<div class="ajaxpages_main">
+<div  class="ajaxpages_main">
   <div class="relative grid grid-cols-1 sm:grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-6">
     <?php foreach($l['series'] as $s) { ?>
     <?php include(Config::path('skins') . '/html/Components/series_card.htm'); ?>
@@ -1478,8 +1494,7 @@ $benefits = [
 
 
 <section class="mt-24">
-  <div
-    class="bg-white px-8 md:px-16 lg:px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
+  <div class="bg-white px-8 md:px-16 lg:px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
 
     <!-- Левая колонка -->
     <div class="flex-1">
