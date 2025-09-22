@@ -364,7 +364,8 @@ function getHomeUrl() {
                             <!-- Корзина -->
 
                             <div class="relative inline-block">
-                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                              <a href="<?php echo Url::a('catalog-cart')?>">
+                              <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                     class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
                                     <path
@@ -381,6 +382,7 @@ function getHomeUrl() {
                                     class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
                                     <?php echo $count; ?>
                                 </span>
+                              </a>
                             </div>
 
                             <!-- Избранное -->
@@ -394,14 +396,26 @@ function getHomeUrl() {
                             </svg>
 
                             <!-- Сравнение -->
+                            <div class="relative inline-block">
+                                <a href="<?php echo Url::a('catalog-compare')?>">
+                                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
+                                        <path
+                                            d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
+                                            fill="#020202" />
+                                    </svg>
 
-                            <svg width="20" height="21" viewBox="0 0 20 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                                <path
-                                    d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
-                                    fill="#020202" />
-                            </svg>
+                                    <!-- Бейдж с количеством товаров для сравнения -->
+                                    <?php
+                                    $compareCount = Catalog_Compare::count();
+                                    ?>
+                                    <span id="compare-badge-count-desktop"
+                                        class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
+                                        <?php echo $compareCount; ?>
+                                    </span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -512,13 +526,25 @@ function getHomeUrl() {
                     </svg>
 
                     <!-- Сравнение -->
+                    <div class="relative inline-block">
+                        <a href="<?php echo Url::a('catalog-compare')?>">
+                            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
+                                <path
+                                    d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
+                                    fill="#020202" />
+                            </svg>
 
-                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                        <path
-                            d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
-                            fill="#020202" />
-                    </svg>
+                            <!-- Бейдж с количеством товаров для сравнения -->
+                            <?php
+                            $compareCount = Catalog_Compare::count();
+                            ?>
+                            <span id="compare-badge-count-mobile"
+                                class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
+                                <?php echo $compareCount; ?>
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

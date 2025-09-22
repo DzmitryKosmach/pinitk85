@@ -25,6 +25,28 @@ var oCompare = new function(){
 					if(typeof(spans[i]) === 'undefined') continue;
 					spans[i].innerHTML = cnt;
 				}
+				
+				// Обновляем бейджи сравнения в header
+				var desktopBadge = $$$('compare-badge-count-desktop');
+				var mobileBadge = $$$('compare-badge-count-mobile');
+				
+				if(desktopBadge) {
+					desktopBadge.innerHTML = cnt;
+					if(cnt > 0) {
+						desktopBadge.classList.remove('hidden');
+					} else {
+						desktopBadge.classList.add('hidden');
+					}
+				}
+				
+				if(mobileBadge) {
+					mobileBadge.innerHTML = cnt;
+					if(cnt > 0) {
+						mobileBadge.classList.remove('hidden');
+					} else {
+						mobileBadge.classList.add('hidden');
+					}
+				}
 			}
 		);
 	};
@@ -45,6 +67,28 @@ var oCompare = new function(){
 				for(var i = 0, l = spans.length; i < l; i++){
 					if(typeof(spans[i]) === 'undefined') continue;
 					spans[i].innerHTML = cnt;
+				}
+				
+				// Обновляем бейджи сравнения в header
+				var desktopBadge = $$$('compare-badge-count-desktop');
+				var mobileBadge = $$$('compare-badge-count-mobile');
+				
+				if(desktopBadge) {
+					desktopBadge.innerHTML = cnt;
+					if(cnt > 0) {
+						desktopBadge.classList.remove('hidden');
+					} else {
+						desktopBadge.classList.add('hidden');
+					}
+				}
+				
+				if(mobileBadge) {
+					mobileBadge.innerHTML = cnt;
+					if(cnt > 0) {
+						mobileBadge.classList.remove('hidden');
+					} else {
+						mobileBadge.classList.add('hidden');
+					}
 				}
 			}
 		);
