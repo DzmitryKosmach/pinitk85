@@ -714,7 +714,9 @@
       </button>
       <?php else: ?>
       <form class="add2basketform main-cart-form" action="<?php echo Url::a('catalog-cart') ?>"
-            method="post" onsubmit="oCart.add(this, true); console.log('Form submitted'); return false;">
+
+          method="post" onsubmit="oCart.add(this, true); return false;">
+
         <input type="hidden" name="add[]" value="<?php echo $itemInf['id']; ?>">
         <input type="hidden" name="amount[<?php echo $itemInf['id']; ?>]" value="1">
         <input type="hidden" name="material_id[<?php echo $itemInf['id']; ?>]"
