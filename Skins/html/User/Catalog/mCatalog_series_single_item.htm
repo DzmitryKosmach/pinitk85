@@ -40,43 +40,49 @@
             <div class="threeblock clearfix">
               <div class="compare">
                 <?php $rnd_mobile = rand(1, 1000); ?>
-                
-                <!-- Кнопка "Добавить к сравнению" (мобильная) -->
-                <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-0" 
-                     <?php if (Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)" 
-                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                    <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
-                  </a>
-                </div>
+                <?php
+                // Отладочная информация (удалить после тестирования)
+                $isInCompare = Catalog_Compare::check($seriesInf['id']);
+                // echo "<!-- DEBUG: Series ID: {$seriesInf['id']}, isInCompare: " . ($isInCompare ? 'true' : 'false') . " -->";
+                ?>
 
-                <!-- Кнопка "Убрать из сравнения" (мобильная) -->
-                <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1" 
-                     <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)" 
-                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                    <!-- Используем стиль для показа активного состояния -->
-                    <img src="/images/index/srav_small.png" alt="Убрать из сравнения" style="filter: sepia(1) saturate(5) hue-rotate(90deg);">
-                  </a>
-                </div>
+                <!-- Кнопка "Добавить к сравнению" (мобильная) -->
+                <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-0"
+                <?php if ($isInCompare): ?>style="display: none"<?php endif; ?>>
+                <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                   onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                  <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
+                </a>
               </div>
+
+              <!-- Кнопка "Убрать из сравнения" (мобильная) -->
+              <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
+              <?php if (!$isInCompare): ?>style="display: none"<?php endif; ?>>
+              <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                 onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                <!-- Используем более заметный стиль для активного состояния -->
+                <img src="/images/index/srav_small.png" alt="Убрать из сравнения"
+                     style="filter: brightness(0) saturate(100%) invert(27%) sepia(78%) saturate(2476%) hue-rotate(100deg) brightness(97%) contrast(97%); opacity: 1;">
+              </a>
             </div>
-          </button>
-        </div>
-        <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-          <button class="hover:opacity-50">&lt; Пред.товар</button>
-          <button class="hover:opacity-50">След.товар &gt;</button>
         </div>
       </div>
-
-      <!-- Название -->
-      <h1 class="text-2xl font-bold leading-snug mb-3">
-        <?php echo $seriesInf['name']; ?><br class="hidden md:inline" />
-        <!--          <?php echo $pageInf['header']; ?>-->
-      </h1>
-
+      </button>
+    </div>
+    <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
+      <button class="hover:opacity-50">&lt; Пред.товар</button>
+      <button class="hover:opacity-50">След.товар &gt;</button>
     </div>
   </div>
+
+  <!-- Название -->
+  <h1 class="text-2xl font-bold leading-snug mb-3">
+    <?php echo $seriesInf['name']; ?><br class="hidden md:inline" />
+    <!--          <?php echo $pageInf['header']; ?>-->
+  </h1>
+
+</div>
+</div>
 </div>
 
 <div id="content" class="content">
@@ -538,68 +544,72 @@
                 <div class="threeblock clearfix">
                   <div class="compare">
                     <?php $rnd = rand(1, 1000); ?>
-                    
+                    <?php
+                    // Используем ту же переменную для консистентности
+                    $isInCompareDesktop = Catalog_Compare::check($seriesInf['id']);
+                    ?>
+
                     <!-- Кнопка "Добавить к сравнению" -->
-                    <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-0" 
-                         <?php if (Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
-                      <a rel="nofollow" class="add2compare" href="javascript:void(0)" 
-                         onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
-                        <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-add"
-                             xmlns="http://www.w3.org/2000/svg">
-                          <path
-                            d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-                            fill="#3C3C3A" />
-                        </svg>
-                      </a>
-                    </div>
-
-                    <!-- Кнопка "Убрать из сравнения" -->
-                    <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-1" 
-                         <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
-                      <a rel="nofollow" class="add2compare" href="javascript:void(0)" 
-                         onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
-                        <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-remove"
-                             xmlns="http://www.w3.org/2000/svg">
-                          <!-- Красный крестик сверху, смещён ещё вправо -->
-                          <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
-                             transform="translate(8,0)">
-                            <line x1="13" y1="2" x2="21" y2="10" />
-                            <line x1="21" y1="2" x2="13" y2="10" />
-                          </g>
-
-                          <!-- Исходная графика, смещена вниз на 3px -->
-                          <g transform="translate(0,3)">
-                            <path
-                              d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-                              fill="#3C3C3A" />
-                          </g>
-                        </svg>
-                      </a>
-                    </div>
+                    <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-0"
+                    <?php if ($isInCompareDesktop): ?>style="display: none"<?php endif; ?>>
+                    <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                       onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
+                      <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-add"
+                           xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                          fill="#3C3C3A" />
+                      </svg>
+                    </a>
                   </div>
-                  <?php $fc = trim(Options::name('found-cheaper')); ?>
-                  <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
 
-                  <?php } ?>
+                  <!-- Кнопка "Убрать из сравнения" -->
+                  <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-1"
+                  <?php if (!$isInCompareDesktop): ?>style="display: none"<?php endif; ?>>
+                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
+                    <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-remove"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <!-- Красный крестик сверху, смещён ещё вправо -->
+                      <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+                         transform="translate(8,0)">
+                        <line x1="13" y1="2" x2="21" y2="10" />
+                        <line x1="21" y1="2" x2="13" y2="10" />
+                      </g>
+
+                      <!-- Исходная графика, смещена вниз на 3px -->
+                      <g transform="translate(0,3)">
+                        <path
+                          d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                          fill="#3C3C3A" />
+                      </g>
+                    </svg>
+                  </a>
                 </div>
-              </button>
             </div>
-            <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-              <button class="hover:opacity-50">&lt; Пред.товар</button>
-              <button class="hover:opacity-50">След.товар &gt;</button>
-            </div>
+            <?php $fc = trim(Options::name('found-cheaper')); ?>
+            <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
+
+            <?php } ?>
           </div>
-
-          <!-- Название -->
-          <h1 class="text-2xl font-bold leading-snug mb-3">
-            <?php echo $pageInf['header']; ?>
-          </h1>
-
+          </button>
         </div>
-        <div class="articleandstores clearfix">
-          <?php /*<div class="article">Код товара: <?php echo $seriesInf['id']?>
-        </div>*/?>
-        <div class="stores">
+        <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
+          <button class="hover:opacity-50">&lt; Пред.товар</button>
+          <button class="hover:opacity-50">След.товар &gt;</button>
+        </div>
+      </div>
+
+      <!-- Название -->
+      <h1 class="text-2xl font-bold leading-snug mb-3">
+        <?php echo $pageInf['header']; ?>
+      </h1>
+
+    </div>
+    <div class="articleandstores clearfix">
+      <?php /*<div class="article">Код товара: <?php echo $seriesInf['id']?>
+    </div>*/?>
+    <div class="stores">
                         <span>
                             <?php /*Наличие
 								<?php if($seriesInf['in_stock']) { ?>
@@ -608,221 +618,221 @@
                           <span style="color:#ff0000;">Нет</span>
                           <?php } ?>*/?>
                         </span>
-        </div>
-      </div>
-      <div class="mods" style=" margin-top: 0;">
-        <!-- Табы -->
-        <div class="flex gap-2 text-sm mb-8">
-          <button class="tab-btn active
+    </div>
+  </div>
+  <div class="mods" style=" margin-top: 0;">
+    <!-- Табы -->
+    <div class="flex gap-2 text-sm mb-8">
+      <button class="tab-btn active
                             px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
                             shadow-[0_0_8px_rgba(59,130,246,0.3)]
                             hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
                             active:translate-y-[-1px]
                             transition-all duration-200 ease-in-out" data-target="section-photo">
-            Мебель на фото
-          </button>
+        Мебель на фото
+      </button>
 
-          <button class="tab-btn
+      <button class="tab-btn
                             px-4 py-2 rounded-lg bg-white border border-gray-200
                             shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
                             hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
                             active:translate-y-[-1px]
                             transition-all duration-200 ease-in-out" data-target="section-specs">
-            Характеристики
-          </button>
+        Характеристики
+      </button>
 
-          <button class="tab-btn
+      <button class="tab-btn
                             px-4 py-2 rounded-lg bg-white border border-gray-200
                             shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
                             hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
                             active:translate-y-[-1px]
                             transition-all duration-200 ease-in-out" data-target="section-prices">
-            Цена на товар
-          </button>
-        </div>
+        Цена на товар
+      </button>
+    </div>
 
-        <script>
-          document.querySelectorAll('.tab-btn').forEach(button => {
-            button.addEventListener('click', function () {
-              // Убираем активный класс со всех
-              document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-blue-600', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700');
-              });
-
-              // Добавляем активный класс к нажатой
-              this.classList.add('active', 'bg-blue-600', 'text-white');
-              this.classList.remove('bg-white', 'text-gray-700');
-
-              // Получаем целевой блок
-              const targetId = this.getAttribute('data-target');
-              const targetElement = document.getElementById(targetId);
-
-              if (targetElement) {
-                // Плавный скролл
-                targetElement.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start'
-                });
-              }
-            });
+    <script>
+      document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          // Убираем активный класс со всех
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-600', 'text-white');
+            btn.classList.add('bg-white', 'text-gray-700');
           });
-        </script>
-      </div>
 
-      <div>
-        <!-- Итоговая цена -->
-        <div id="section-prices">
-          <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
-            <?php
+          // Добавляем активный класс к нажатой
+          this.classList.add('active', 'bg-blue-600', 'text-white');
+          this.classList.remove('bg-white', 'text-gray-700');
+
+          // Получаем целевой блок
+          const targetId = this.getAttribute('data-target');
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            // Плавный скролл
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+  </div>
+
+  <div>
+    <!-- Итоговая цена -->
+    <div id="section-prices">
+      <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
+        <?php
                             $d = abs($itemInf['discount']);
                             if ($d != 1 && $d != 0) {
                                 echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
                             }
                         ?>
-          </p>
-          <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl font-bold text-black">
-            <?php if(abs($itemInf['price_min'])): ?>
-            <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
-            <?php else: ?>
-            Цена по запросу
-            <?php endif; ?>
-          </div>
-        </div>
+      </p>
+      <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl font-bold text-black">
+        <?php if(abs($itemInf['price_min'])): ?>
+        <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
+        <?php else: ?>
+        Цена по запросу
+        <?php endif; ?>
+      </div>
+    </div>
 
-        <!-- Количество + кнопки -->
-        <div
-          class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
-          <a href="javascript:void(0)" class="text-4xl text-gray-600 minus js-minus">−</a>
-          <span class="text-sm font-medium">
+    <!-- Количество + кнопки -->
+    <div
+      class="flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6">
+      <a href="javascript:void(0)" class="text-4xl text-gray-600 minus js-minus">−</a>
+      <span class="text-sm font-medium">
                             <input type="text" class="js-quantity w-10 text-center border-none outline-none"
                                    name="amount"
                                    value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>"
                                    data-ratio="1">
                             <span class="js-measurename">шт</span>
                         </span>
-          <a href="javascript:void(0)" class="text-3xl text-gray-600 plus js-plus">+</a>
-        </div>
+      <a href="javascript:void(0)" class="text-3xl text-gray-600 plus js-plus">+</a>
+    </div>
 
-        <!-- Кнопки -->
-        <div class="flex flex-col sm:flex-row gap-3 mt-6 mb-8">
-          <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
-          <button type="button"
-                  class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
-                  disabled>
-            ✓ В корзине
-          </button>
-          <?php else: ?>
-          <form class="add2basketform main-cart-form" action="<?php echo Url::a('catalog-cart') ?>"
-                method="get" onsubmit="oCart.add(this); return false;">
-            <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
-            <input type="hidden" name="amount" value="1">
-            <input type="hidden" name="material_id"
-                   value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
-            <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                    title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled' ;
+    <!-- Кнопки -->
+    <div class="flex flex-col sm:flex-row gap-3 mt-6 mb-8">
+      <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
+      <button type="button"
+              class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
+              disabled>
+        ✓ В корзине
+      </button>
+      <?php else: ?>
+      <form class="add2basketform main-cart-form" action="<?php echo Url::a('catalog-cart') ?>"
+            method="get" onsubmit="oCart.add(this); return false;">
+        <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
+        <input type="hidden" name="amount" value="1">
+        <input type="hidden" name="material_id"
+               value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled' ;
                                 ?>
-            >
-            Отложить в 1 клик со СКИДКОЙ
-            </button>
-          </form>
+        >
+        Отложить в 1 клик со СКИДКОЙ
+        </button>
+      </form>
 
 
-          <?php endif; ?>
+      <?php endif; ?>
 
-          <a rel="nofollow"
-             class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
-             href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
-             title="Нашли дешевле?">
-            Нашли дешевле?
-          </a>
-        </div>
+      <a rel="nofollow"
+         class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+         href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
+         title="Нашли дешевле?">
+        Нашли дешевле?
+      </a>
+    </div>
 
-        <!-- Условия доставки и контакты -->
-        <div class="flex flex-wrap gap-6">
-          <!-- Условия доставки -->
-          <div class="text-sm space-y-1">
-            <p>
-              <img class="inline-block w-4 h-3" src="/images/product/truck.png" />
-              <span class="underline">Срок доставки:</span>
-              <span class="underline font-bold">2–4 дня</span>
-            </p>
-            <p>
+    <!-- Условия доставки и контакты -->
+    <div class="flex flex-wrap gap-6">
+      <!-- Условия доставки -->
+      <div class="text-sm space-y-1">
+        <p>
+          <img class="inline-block w-4 h-3" src="/images/product/truck.png" />
+          <span class="underline">Срок доставки:</span>
+          <span class="underline font-bold">2–4 дня</span>
+        </p>
+        <p>
               <span class="underline">
                 Доставка и сборка (по Москве <br />
                 и МО):</span>
-              <span class="font-semibold">Бесплатная</span>
-            </p>
-          </div>
+          <span class="font-semibold">Бесплатная</span>
+        </p>
+      </div>
 
-          <!-- Контакты -->
-          <div class="flex flex-col">
-            <p>Быстрые контакты:</p>
-            <div class="flex gap-3 text-xl mt-1">
-              <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp">
-                <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="Whatsapp" />
-              </a>
-              <a href="https://ok.ru/group/61739138941100" target="_blank" title="Tik Tok">
-                <img src="/images/product/soc_ок.png" class="w-8 h-8" alt="Одноклассники" />
-              </a>
-              <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Zen">
-                <img src="/images/product/soc_zen.png" class="w-8 h-8" alt="Zen" />
-              </a>
-              <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
-                <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
-              </a>
-              <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok">
-                <img src="/images/product/soc_tiktok.png" class="w-8 h-8" alt="Tik Tok" />
-              </a>
-            </div>
-          </div>
+      <!-- Контакты -->
+      <div class="flex flex-col">
+        <p>Быстрые контакты:</p>
+        <div class="flex gap-3 text-xl mt-1">
+          <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp">
+            <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="Whatsapp" />
+          </a>
+          <a href="https://ok.ru/group/61739138941100" target="_blank" title="Tik Tok">
+            <img src="/images/product/soc_ок.png" class="w-8 h-8" alt="Одноклассники" />
+          </a>
+          <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Zen">
+            <img src="/images/product/soc_zen.png" class="w-8 h-8" alt="Zen" />
+          </a>
+          <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
+            <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
+          </a>
+          <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok">
+            <img src="/images/product/soc_tiktok.png" class="w-8 h-8" alt="Tik Tok" />
+          </a>
         </div>
+      </div>
+    </div>
 
-        <!-- Форма выбора материала (для JS/не-JS) -->
-        <div class="material-nojs mt-8">
-          <select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material"
-                  style="max-width: 240px;" class="block w-full p-2 border rounded">
-            <?php foreach($itemInf['materials'] as $im): ?>
-            <?php $m = $materials[$im['material_id']]; ?>
-            <?php if(!$m) continue; ?>
-            <option value="<?php echo $im['material_id']; ?>" <?php if($mActive &&
+    <!-- Форма выбора материала (для JS/не-JS) -->
+    <div class="material-nojs mt-8">
+      <select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material"
+              style="max-width: 240px;" class="block w-full p-2 border rounded">
+        <?php foreach($itemInf['materials'] as $im): ?>
+        <?php $m = $materials[$im['material_id']]; ?>
+        <?php if(!$m) continue; ?>
+        <option value="<?php echo $im['material_id']; ?>" <?php if($mActive &&
                                 $m['id']==$mActive['id']) echo 'selected' ; ?>>
-            <?php echo $m['name']; ?>
-            <?php if($m['has_sub'] && !empty($m['sub'])): ?>
-            <?php $firstSub = array_values($m['sub'])[0]; ?>
-            <?php if($firstSub['has_sub'] && !empty($firstSub['sub'])): ?>
-            <?php $secondSub = array_values($firstSub['sub'])[0]; ?>
-            /
-            <?php echo $firstSub['name']; ?> /
-            <?php echo $secondSub['name']; ?>
-            <?php else: ?>
-            /
-            <?php echo $firstSub['name']; ?>
-            <?php endif; ?>
-            <?php endif; ?>
-            <?php if(abs($im['price'])): ?>
-            (
-            <?php echo Catalog::priceFormat($im['price']); ?> р.)
-            <?php else: ?>
-            (по запросу)
-            <?php endif; ?>
-            </option>
-            <?php endforeach; ?>
-          </select>
-        </div>
+        <?php echo $m['name']; ?>
+        <?php if($m['has_sub'] && !empty($m['sub'])): ?>
+        <?php $firstSub = array_values($m['sub'])[0]; ?>
+        <?php if($firstSub['has_sub'] && !empty($firstSub['sub'])): ?>
+        <?php $secondSub = array_values($firstSub['sub'])[0]; ?>
+        /
+        <?php echo $firstSub['name']; ?> /
+        <?php echo $secondSub['name']; ?>
+        <?php else: ?>
+        /
+        <?php echo $firstSub['name']; ?>
+        <?php endif; ?>
+        <?php endif; ?>
+        <?php if(abs($im['price'])): ?>
+        (
+        <?php echo Catalog::priceFormat($im['price']); ?> р.)
+        <?php else: ?>
+        (по запросу)
+        <?php endif; ?>
+        </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
 
 
-        <?php
+    <?php
                         foreach($itemInf['materials'] as $n => $im){
-        if(!isset($materials[$im['material_id']])){
-        unset($itemInf['materials'][$n]);
-        }
-        }
-        $itemInf['materials'] = array_values($itemInf['materials']);
-        ?>
+    if(!isset($materials[$im['material_id']])){
+    unset($itemInf['materials'][$n]);
+    }
+    }
+    $itemInf['materials'] = array_values($itemInf['materials']);
+    ?>
 
-        <?php
+    <?php
 // Инициализируем переменные по умолчанию — это защитит от ошибки
 $mActive = false;
 $mActiveName = [];
@@ -845,137 +855,153 @@ if(count($itemInf['materials'])) {
 // Теперь безопасно использовать $mActiveName — он всегда массив!
 ?>
 
-        <?php if(count($itemInf['materials'])) { ?>
-        <div class="item-current-material mt-8" style="float: none">
-          <span class="b2">Выбран цвет:</span>
-          <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
-            <?php if($mActive && $mActive['image']['ext']) { ?>
-            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
-                 width="107" height="87" alt="">
-            <?php } ?>
-          </div>
-          <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
-            <?php echo implode(' / ', $mActiveName); ?>
-          </div>
-        </div>
-
-        <div class="item-materials" style="margin-top: 30px;">
-          <div class="b">Цветовая гамма</div>
-
-          <div id="materials-popup">
-            <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
-            <a href="javascript:void(0)" class="klink-dashed"
-               onclick="oMaterials.openrows(); return false;">Показать все</a>
-          </div>
-        </div>
-
-        <script>
-          <?php
-            // FIX: исправление некорректной сортировки элементов в pageInf.
-            /*
-            $materialsOrder = [];
-            foreach ($materials as $id => $im) {
-                foreach ($itemInf['materials'] as $ii => $inf) {
-                    if ((int)$id === (int)$inf['material_id']) {
-                        $materialsOrder[] = $inf;
-                    }
-                }
-            }
-            */
-            ?>
-          oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
-          onLoad(function () {
-            //oMaterials.setRowSize(1, 4);
-            oMaterials.open(<?php echo $itemInf['id']; ?>);
-          });
-        </script>
-        <?php } else { ?>
-        <script>
-          onLoad(function () {
-            oCart.setInfo();
-          });
-        </script>
+    <?php if(count($itemInf['materials'])) { ?>
+    <div class="item-current-material mt-8" style="float: none">
+      <span class="b2">Выбран цвет:</span>
+      <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
+        <?php if($mActive && $mActive['image']['ext']) { ?>
+        <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
+             width="107" height="87" alt="">
         <?php } ?>
       </div>
-
+      <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
+        <?php echo implode(' / ', $mActiveName); ?>
+      </div>
     </div>
+
+    <div class="item-materials" style="margin-top: 30px;">
+      <div class="b">Цветовая гамма</div>
+
+      <div id="materials-popup">
+        <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
+        <a href="javascript:void(0)" class="klink-dashed"
+           onclick="oMaterials.openrows(); return false;">Показать все</a>
+      </div>
+    </div>
+
+    <script>
+      <?php
+        // FIX: исправление некорректной сортировки элементов в pageInf.
+        /*
+        $materialsOrder = [];
+        foreach ($materials as $id => $im) {
+            foreach ($itemInf['materials'] as $ii => $inf) {
+                if ((int)$id === (int)$inf['material_id']) {
+                    $materialsOrder[] = $inf;
+                }
+            }
+        }
+        */
+        ?>
+      oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
+      onLoad(function () {
+        //oMaterials.setRowSize(1, 4);
+        oMaterials.open(<?php echo $itemInf['id']; ?>);
+      });
+    </script>
+    <?php } else { ?>
+    <script>
+      onLoad(function () {
+        oCart.setInfo();
+      });
+    </script>
+    <?php } ?>
   </div>
 
-  <!-- Верхние вкладки -->
-  <div class="elementdetail" id="options-block">
-    <!-- Кнопки-вкладки -->
-    <div class="flex flex-wrap gap-3 mt-10 mb-6">
-      <?php if (count($options)) { ?>
-      <button id="section-specs" class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('options')">
-        Характеристики
-      </button>
-      <?php } ?>
+</div>
+</div>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('delivery')">
-        Доставка и оплата
-      </button>
+<!-- Верхние вкладки -->
+<div class="elementdetail" id="options-block">
+  <!-- Кнопки-вкладки -->
+  <div class="flex flex-wrap gap-3 mt-10 mb-6">
+    <?php if (count($options)) { ?>
+    <button id="section-specs" class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('options')">
+      Характеристики
+    </button>
+    <?php } ?>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('commercial')">
-        Ком. Пред
-      </button>
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('delivery')">
+      Доставка и оплата
+    </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('sets')">
-        Комплекты
-      </button>
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('commercial')">
+      Ком. Пред
+    </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('download')">
-        Скачать
-      </button>
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50" onclick="showTab('sets')">
+      Комплекты
+    </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('questions')">
-        Вопросы
-      </button>
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('download')">
+      Скачать
+    </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              onclick="showTab('reviews')">
-        Отзывы
-      </button>
-    </div>
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('questions')">
+      Вопросы
+    </button>
 
-    <!-- Контент вкладок -->
-    <div class="description2">
+    <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            onclick="showTab('reviews')">
+      Отзывы
+    </button>
+  </div>
 
-      <!-- Характеристики -->
-      <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+  <!-- Контент вкладок -->
+  <div class="description2">
 
-        <?php
+    <!-- Характеристики -->
+    <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+
+      <?php
     $processedOptions = [];
 
     // 1. Добавляем "Срок доставки" как первую характеристику, если есть
     if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
         $processedOptions[] = [
             'name' => 'Срок доставки',
-        'value' => htmlspecialchars($seriesInf['delivery_time'])
-        ];
-        }
+      'value' => htmlspecialchars($seriesInf['delivery_time'])
+      ];
+      }
 
-        // 2. Добавляем остальные опции
-        foreach ($options as $o) {
-        $processedOptions[] = [
-        'name' => htmlspecialchars($o['name']),
-        'value' => htmlspecialchars(rtrim($o['value'], '.'))
-        ];
-        }
+      // 2. Добавляем остальные опции
+      foreach ($options as $o) {
+      $processedOptions[] = [
+      'name' => htmlspecialchars($o['name']),
+      'value' => htmlspecialchars(rtrim($o['value'], '.'))
+      ];
+      }
 
-        // 3. Берём первые 6 — основные, остальные — дополнительные
-        $mainOptions = array_slice($processedOptions, 0, 6);
-        $additionalOptions = array_slice($processedOptions, 6);
-        ?>
+      // 3. Берём первые 6 — основные, остальные — дополнительные
+      $mainOptions = array_slice($processedOptions, 0, 6);
+      $additionalOptions = array_slice($processedOptions, 6);
+      ?>
 
-        <!-- Основные характеристики (первые 6, включая срок доставки)  -->
-        <?php if (!empty($mainOptions)): ?>
-        <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
-          <?php foreach ($mainOptions as $o): ?>
+      <!-- Основные характеристики (первые 6, включая срок доставки)  -->
+      <?php if (!empty($mainOptions)): ?>
+      <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
+        <?php foreach ($mainOptions as $o): ?>
+        <div
+          class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+          <?= $o['name'] ?>:
+        </div>
+        <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+          <?= $o['value'] ?>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+
+      <!-- Дополнительные характеристики -->
+      <?php if (!empty($additionalOptions)): ?>
+      <div id="additionalDetails" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
+        <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
+          <?php foreach ($additionalOptions as $o): ?>
           <div
             class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
             <?= $o['name'] ?>:
@@ -985,186 +1011,170 @@ if(count($itemInf['materials'])) {
           </div>
           <?php endforeach; ?>
         </div>
-        <?php endif; ?>
-
-        <!-- Дополнительные характеристики -->
-        <?php if (!empty($additionalOptions)): ?>
-        <div id="additionalDetails" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
-          <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
-            <?php foreach ($additionalOptions as $o): ?>
-            <div
-              class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
-              <?= $o['name'] ?>:
-            </div>
-            <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
-              <?= $o['value'] ?>
-            </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-
-        <!-- Кнопка -->
-        <button id="toggleButton"
-                class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
-          <div id="buttonText">Смотреть все характеристики</div>
-          <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
-               class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
-               fill="currentColor">
-            <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd" />
-          </svg>
-        </button>
-        <?php endif; ?>
-
       </div>
 
-      <script>
-        //Кнопка все характеристики
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("toggleButton");
-          const details = document.getElementById("additionalDetails");
-          const buttonText = document.getElementById("buttonText");
-          const arrow = document.getElementById("arrow");
+      <!-- Кнопка -->
+      <button id="toggleButton"
+              class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
+        <div id="buttonText">Смотреть все характеристики</div>
+        <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
+             class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
+             fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+        </svg>
+      </button>
+      <?php endif; ?>
 
-          // Установим большую max-height для анимации (в px)
-          const fullHeight = "810px"; // подберите по количеству пунктов
+    </div>
 
-          button.addEventListener("click", () => {
-            if (details.style.maxHeight) {
-              // Скрытие
-              details.style.maxHeight = null;
-              buttonText.textContent = "Смотреть все характеристики";
-              arrow.classList.remove("rotate-180");
-            } else {
-              // Раскрытие
-              details.style.maxHeight = fullHeight;
-              buttonText.textContent = "Скрыть характеристики";
-              arrow.classList.add("rotate-180");
-            }
-          });
+    <script>
+      //Кнопка все характеристики
+      document.addEventListener("DOMContentLoaded", () => {
+        const button = document.getElementById("toggleButton");
+        const details = document.getElementById("additionalDetails");
+        const buttonText = document.getElementById("buttonText");
+        const arrow = document.getElementById("arrow");
+
+        // Установим большую max-height для анимации (в px)
+        const fullHeight = "810px"; // подберите по количеству пунктов
+
+        button.addEventListener("click", () => {
+          if (details.style.maxHeight) {
+            // Скрытие
+            details.style.maxHeight = null;
+            buttonText.textContent = "Смотреть все характеристики";
+            arrow.classList.remove("rotate-180");
+          } else {
+            // Раскрытие
+            details.style.maxHeight = fullHeight;
+            buttonText.textContent = "Скрыть характеристики";
+            arrow.classList.add("rotate-180");
+          }
         });
-      </script>
+      });
+    </script>
 
-      <!-- Доставка и оплата -->
-      <div class="text" id="tab-delivery" style="display: none;">
-        <?php
+    <!-- Доставка и оплата -->
+    <div class="text" id="tab-delivery" style="display: none;">
+      <?php
             $t = $catInf['series_info'];
             $t = str_replace('[name]', htmlspecialchars($seriesInf['name']), $t);
             $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
-        $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
-        $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
-        echo $t;
-        ?>
-      </div>
+      $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
+      $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
+      echo $t;
+      ?>
+    </div>
 
-      <!-- Ком. Пред (пример пустого контента) -->
-      <div class="text" id="tab-commercial" style="display: none;">
-        Здесь будет коммерческое предложение.
-      </div>
+    <!-- Ком. Пред (пример пустого контента) -->
+    <div class="text" id="tab-commercial" style="display: none;">
+      Здесь будет коммерческое предложение.
+    </div>
 
-      <!-- Комплекты -->
-      <div class="text" id="tab-sets" style="display: none;">
-        Подробная информация о комплектах.
-      </div>
+    <!-- Комплекты -->
+    <div class="text" id="tab-sets" style="display: none;">
+      Подробная информация о комплектах.
+    </div>
 
-      <!-- Скачать -->
-      <div class="text" id="tab-download" style="display: none;">
-        Файлы для скачивания: паспорт, сертификаты, чертежи.
-      </div>
+    <!-- Скачать -->
+    <div class="text" id="tab-download" style="display: none;">
+      Файлы для скачивания: паспорт, сертификаты, чертежи.
+    </div>
 
-      <!-- Вопросы -->
-      <div class="text" id="tab-questions" style="display: none;">
-        <a name="review"></a>
-        <h3>Задать вопрос</h3>
-        <p>Форма для отправки вопроса по товару.</p>
-      </div>
+    <!-- Вопросы -->
+    <div class="text" id="tab-questions" style="display: none;">
+      <a name="review"></a>
+      <h3>Задать вопрос</h3>
+      <p>Форма для отправки вопроса по товару.</p>
+    </div>
 
-      <!-- Отзывы -->
-      <div class="text" id="tab-reviews" style="display: none;">
-        <h3>Отзывы покупателей</h3>
-        <p>Отзывы и рейтинги пользователей.</p>
-      </div>
+    <!-- Отзывы -->
+    <div class="text" id="tab-reviews" style="display: none;">
+      <h3>Отзывы покупателей</h3>
+      <p>Отзывы и рейтинги пользователей.</p>
     </div>
   </div>
+</div>
 
-  <script>
-    // Показываем нужную вкладку
-    function showTab(tabName) {
-      // Скрываем все
-      document.querySelectorAll('.description2 .text').forEach(div => {
-        div.style.display = 'none';
-      });
-
-      // Показываем выбранную
-      document.getElementById('tab-' + tabName).style.display = 'block';
-    }
-
-    // По умолчанию открываем "Характеристики" или "Доставку"
-    document.addEventListener('DOMContentLoaded', function () {
-      <?php if (count($options)) { ?>
-        showTab('options');
-        <?php } else { ?>
-        showTab('delivery');
-        <?php } ?>
+<script>
+  // Показываем нужную вкладку
+  function showTab(tabName) {
+    // Скрываем все
+    document.querySelectorAll('.description2 .text').forEach(div => {
+      div.style.display = 'none';
     });
-  </script>
 
-  <hr class="mb-6 border-gray-300 mt-12" />
+    // Показываем выбранную
+    document.getElementById('tab-' + tabName).style.display = 'block';
+  }
 
-  <div class="clear"></div>
-
-  <?php if(count($linkages)) { ?>
-  <?php foreach($linkages as $ln => $l) { ?>
-  <div class="sorter_and_name clearfix">
-    <div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
-  </div>
-  <div >
-    <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" >
-      <?php foreach($l['series'] as $s) { ?>
-      <?php include(_ROOT . Catalog_Series::$tpl) ?>
+  // По умолчанию открываем "Характеристики" или "Доставку"
+  document.addEventListener('DOMContentLoaded', function () {
+    <?php if (count($options)) { ?>
+      showTab('options');
+      <?php } else { ?>
+      showTab('delivery');
       <?php } ?>
+  });
+</script>
+
+<hr class="mb-6 border-gray-300 mt-12" />
+
+<div class="clear"></div>
+
+<?php if(count($linkages)) { ?>
+<?php foreach($linkages as $ln => $l) { ?>
+<div class="sorter_and_name clearfix">
+  <div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
+</div>
+<div >
+  <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" >
+    <?php foreach($l['series'] as $s) { ?>
+    <?php include(_ROOT . Catalog_Series::$tpl) ?>
+    <?php } ?>
+  </div>
+</div>
+<?php } ?>
+<?php } ?>
+
+
+<noindex>
+  <div class="series_options">
+    <div class="series_options_item">
+      <div class="series_info_title">
+        <?php echo Options::name('series-info1-title'); ?>
+      </div>
+      <div class="series_info_text">
+        <?php echo Options::name('series-info1-text'); ?>
+      </div>
+    </div>
+    <div class="series_options_item">
+      <div class="series_info_title">
+        <?php echo Options::name('series-info2-title'); ?>
+      </div>
+      <div class="series_info_text">
+        <?php echo Options::name('series-info2-text'); ?>
+      </div>
+    </div>
+    <div class="series_options_item">
+      <div class="series_info_title">
+        <?php echo Options::name('series-info3-title'); ?>
+      </div>
+      <div class="series_info_text">
+        <?php echo Options::name('series-info3-text'); ?>
+      </div>
     </div>
   </div>
-  <?php } ?>
-  <?php } ?>
+</noindex>
 
-
-  <noindex>
-    <div class="series_options">
-      <div class="series_options_item">
-        <div class="series_info_title">
-          <?php echo Options::name('series-info1-title'); ?>
-        </div>
-        <div class="series_info_text">
-          <?php echo Options::name('series-info1-text'); ?>
-        </div>
-      </div>
-      <div class="series_options_item">
-        <div class="series_info_title">
-          <?php echo Options::name('series-info2-title'); ?>
-        </div>
-        <div class="series_info_text">
-          <?php echo Options::name('series-info2-text'); ?>
-        </div>
-      </div>
-      <div class="series_options_item">
-        <div class="series_info_title">
-          <?php echo Options::name('series-info3-title'); ?>
-        </div>
-        <div class="series_info_text">
-          <?php echo Options::name('series-info3-text'); ?>
-        </div>
-      </div>
-    </div>
-  </noindex>
-
-  <div class="detailtabs tabs">
-    <div class="headers clearfix">
-      <h3>Отзывы</h3>
-    </div>
-    <br>
-    <?php
+<div class="detailtabs tabs">
+  <div class="headers clearfix">
+    <h3>Отзывы</h3>
+  </div>
+  <br>
+  <?php
                 if (!count($comments)) {
                     ?><p class="errortext">Еще никто не поделился своим мнением. Станьте первым!</p><?php
                 } else {
@@ -1175,42 +1185,42 @@ if(count($itemInf['materials'])) {
                     );
                     $formatter->setPattern('d MMMM yyyy');
 
-    foreach ($comments as $comment) {
-    ?>
-    <div class="reviewmessages">
-      <div class="message">
-        <div class="name">
-          <?php echo $comment['name']; ?>
-          <?php
+  foreach ($comments as $comment) {
+  ?>
+  <div class="reviewmessages">
+    <div class="message">
+      <div class="name">
+        <?php echo $comment['name']; ?>
+        <?php
                                     if ($comment['rate'] > 0) {
-          echo '<div class="rating">';
-          for ($i = 1; $i <= $comment['rate']; $i++) {
-          echo '<span class="icon pngicons star"></span>';
-          }
-          echo '</div>';
-          }
-          ?>
-        </div>
-        <p class="date"><?php echo $formatter->format(new DateTimeImmutable($comment['date'])); ?></p>
-        <br>
-        <p class="body"><?php echo $comment['text']; ?></p>
+        echo '<div class="rating">';
+        for ($i = 1; $i <= $comment['rate']; $i++) {
+        echo '<span class="icon pngicons star"></span>';
+        }
+        echo '</div>';
+        }
+        ?>
       </div>
+      <p class="date"><?php echo $formatter->format(new DateTimeImmutable($comment['date'])); ?></p>
+      <br>
+      <p class="body"><?php echo $comment['text']; ?></p>
     </div>
-    <?php
+  </div>
+  <?php
                     }
                     ?>
-    <?php
+  <?php
                 }
                 ?>
 
-    <div class="contents">
-      <div class="content selected review" id="review">
-        <div class="contentbody clearfix">
-          <p><br></p>
-          <p><a class="add2review btn3" href="#addreview">Добавить отзыв</a></p>
-          <p><br></p>
+  <div class="contents">
+    <div class="content selected review" id="review">
+      <div class="contentbody clearfix">
+        <p><br></p>
+        <p><a class="add2review btn3" href="#addreview">Добавить отзыв</a></p>
+        <p><br></p>
 
-          <?php
+        <?php
                             if (isset($_SESSION['review_flash_msg'])) {
                                 echo $_SESSION['review_flash_msg'];
                             }
@@ -1218,52 +1228,52 @@ if(count($itemInf['materials'])) {
                             if (!isset($_SESSION['review_flash_status']) || $_SESSION['review_flash_status']) {
                             ?>
 
-          <div id="detailreviews">
-            <div class="contentinner">
-              <div class="reviewform noned">
-                <form action="" method="POST" id="reviewForm"> <!--  onsubmit="return RSGoPro_SummComment(this);" -->
+        <div id="detailreviews">
+          <div class="contentinner">
+            <div class="reviewform noned">
+              <form action="" method="POST" id="reviewForm"> <!--  onsubmit="return RSGoPro_SummComment(this);" -->
 
-                  <input type="hidden" name="series" value="<?php echo $seriesInf['id']; ?>">
-                  <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
+                <input type="hidden" name="series" value="<?php echo $seriesInf['id']; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
 
-                  <div class="rating clearfix">
-                    <input type="hidden" name="REVIEW_TEXT_rate" value="<?php echo isset($_SESSION['rating']) ? $_SESSION['rating'] : '0'; ?>">
-                    <span>Оцените товар: </span>
-                    <a class="icon pngicons" href="#" data-id="1"></a>
-                    <a class="icon pngicons" href="#" data-id="2"></a>
-                    <a class="icon pngicons" href="#" data-id="3"></a>
-                    <a class="icon pngicons" href="#" data-id="4"></a>
-                    <a class="icon pngicons" href="#" data-id="5"></a>
-                  </div>
+                <div class="rating clearfix">
+                  <input type="hidden" name="REVIEW_TEXT_rate" value="<?php echo isset($_SESSION['rating']) ? $_SESSION['rating'] : '0'; ?>">
+                  <span>Оцените товар: </span>
+                  <a class="icon pngicons" href="#" data-id="1"></a>
+                  <a class="icon pngicons" href="#" data-id="2"></a>
+                  <a class="icon pngicons" href="#" data-id="3"></a>
+                  <a class="icon pngicons" href="#" data-id="4"></a>
+                  <a class="icon pngicons" href="#" data-id="5"></a>
+                </div>
 
-                  <div class="fieldname">
-                    Ваше имя
-                  </div>
+                <div class="fieldname">
+                  Ваше имя
+                </div>
 
-                  <input type="text" name="REVIEW_AUTHOR" id="REVIEW_USER" maxlength="192" value="<?php echo isset($_SESSION['review_name']) ? $_SESSION['review_name'] : 'Гость'; ?>" required>
+                <input type="text" name="REVIEW_AUTHOR" id="REVIEW_USER" maxlength="192" value="<?php echo isset($_SESSION['review_name']) ? $_SESSION['review_name'] : 'Гость'; ?>" required>
 
-                  <div class="fieldname">
-                    Контактный e-mail
-                  </div>
+                <div class="fieldname">
+                  Контактный e-mail
+                </div>
 
-                  <input type="email" name="REVIEW_AUTHOR_EMAIL" id="REVIEW_EMAIL" value="<?php echo isset($_SESSION['review_email']) ? $_SESSION['review_email'] : ''; ?>" required>
-                  <br><small>Не будет опубликован на сайте.</small>
+                <input type="email" name="REVIEW_AUTHOR_EMAIL" id="REVIEW_EMAIL" value="<?php echo isset($_SESSION['review_email']) ? $_SESSION['review_email'] : ''; ?>" required>
+                <br><small>Не будет опубликован на сайте.</small>
 
-                  <div class="fieldname">
-                    Ваш отзыв
-                  </div>
-                  <textarea class="comment" name="REVIEW_TEXT_comment" id="REVIEW_TEXT_comment" required><?php echo isset($_SESSION['review_comment']) ? $_SESSION['review_comment'] : ''; ?></textarea>
-                  <br>
-                  <input class="send" name="send_button" id="send_review" type="button" value="Отправить">
-                </form>
-              </div>
+                <div class="fieldname">
+                  Ваш отзыв
+                </div>
+                <textarea class="comment" name="REVIEW_TEXT_comment" id="REVIEW_TEXT_comment" required><?php echo isset($_SESSION['review_comment']) ? $_SESSION['review_comment'] : ''; ?></textarea>
+                <br>
+                <input class="send" name="send_button" id="send_review" type="button" value="Отправить">
+              </form>
             </div>
-
-            <script>
-              //$('#detailreviews').find('.reviewform').removeClass('noned');
-            </script>
           </div>
-          <?php
+
+          <script>
+            //$('#detailreviews').find('.reviewform').removeClass('noned');
+          </script>
+        </div>
+        <?php
                             }
 
                             unset($_SESSION['review_flash_msg']);
@@ -1274,10 +1284,10 @@ if(count($itemInf['materials'])) {
                             unset($_SESSION['review_comment']);
                             unset($_SESSION['review_rating']);
                             ?>
-        </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 </div>
