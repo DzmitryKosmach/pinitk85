@@ -43,28 +43,28 @@
                 <?php
                 // Отладочная информация (удалить после тестирования)
                 $isInCompare = Catalog_Compare::check($seriesInf['id']);
-                // echo "<!-- DEBUG: Series ID: {$seriesInf['id']}, isInCompare: " . ($isInCompare ? 'true' : 'false') . " -->";
+                echo "<!-- DEBUG Mobile: Series ID: {$seriesInf['id']}, isInCompare: " . ($isInCompare ? 'true' : 'false') . " -->";
                 ?>
 
                 <!-- Кнопка "Добавить к сравнению" (мобильная) -->
                 <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-0"
-                <?php if ($isInCompare): ?>style="display: none"<?php endif; ?>>
-                <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                   onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                  <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
-                </a>
-              </div>
+                     <?php if ($isInCompare): ?>style="display: none"<?php else: ?>style="display: block; border: 2px solid red;"<?php endif; ?>>
+                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                    <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
+                  </a>
+                </div>
 
-              <!-- Кнопка "Убрать из сравнения" (мобильная) -->
-              <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
-              <?php if (!$isInCompare): ?>style="display: none"<?php endif; ?>>
-              <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                 onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                <!-- Используем более заметный стиль для активного состояния -->
-                <img src="/images/index/srav_small.png" alt="Убрать из сравнения"
-                     style="filter: brightness(0) saturate(100%) invert(27%) sepia(78%) saturate(2476%) hue-rotate(100deg) brightness(97%) contrast(97%); opacity: 1;">
-              </a>
-            </div>
+                <!-- Кнопка "Убрать из сравнения" (мобильная) -->
+                <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
+                     <?php if (!$isInCompare): ?>style="display: none"<?php else: ?>style="display: block; border: 2px solid green;"<?php endif; ?>>
+                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                    <!-- Используем более заметный стиль для активного состояния -->
+                    <img src="/images/index/srav_small.png" alt="Убрать из сравнения"
+                         style="filter: brightness(0) saturate(100%) invert(27%) sepia(78%) saturate(2476%) hue-rotate(100deg) brightness(97%) contrast(97%); opacity: 1;">
+                  </a>
+                </div>
         </div>
       </div>
       </button>
