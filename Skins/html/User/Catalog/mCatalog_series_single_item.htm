@@ -35,36 +35,34 @@
       <div class="flex items-center justify-between">
         <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
           <button class="hover:opacity-50">
-            <img src="/images/index/izbr_small.png" alt="Избранное">
-          </button>
+            <img src="/images/index/izbr_small.png" </button>
           <button class="hover:opacity-50">
             <div class="threeblock clearfix">
               <div class="compare">
                 <?php $rnd_mobile = rand(1, 1000); ?>
-                <?php $isInCompare = Catalog_Compare::check($seriesInf['id']); ?>
 
                 <!-- Кнопка "Добавить к сравнению" (мобильная) -->
                 <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-0"
-                     <?php if ($isInCompare): ?>style="display: none"<?php endif; ?>>
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                    <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
-                  </a>
-                </div>
-
-                <!-- Кнопка "Убрать из сравнения" (мобильная) -->
-                <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
-                     <?php if (!$isInCompare): ?>style="display: none"<?php endif; ?>>
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                    <img src="/images/index/srav_small.png" alt="Убрать из сравнения"
-                         style="filter: sepia(1) hue-rotate(60deg) saturate(3) brightness(1.2);">
-                  </a>
-                </div>
+                <?php if (Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
+                <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                   onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                  <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
+                </a>
               </div>
+
+              <!-- Кнопка "Убрать из сравнения" (мобильная) -->
+              <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
+              <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
+              <a rel="nofollow" class="add2compare" href="javascript:void(0)"
+                 onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
+                <!-- Используем стиль для показа активного состояния -->
+                <img src="/images/index/srav_small.png" alt="Убрать из сравнения" style="filter: sepia(1) saturate(5) hue-rotate(90deg);">
+              </a>
             </div>
-          </button>
         </div>
+      </div>
+      </button>
+    </div>
     <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
       <button class="hover:opacity-50">&lt; Пред.товар</button>
       <button class="hover:opacity-50">След.товар &gt;</button>
@@ -540,14 +538,10 @@
                 <div class="threeblock clearfix">
                   <div class="compare">
                     <?php $rnd = rand(1, 1000); ?>
-                    <?php
-                    // Используем ту же переменную для консистентности
-                    $isInCompareDesktop = Catalog_Compare::check($seriesInf['id']);
-                    ?>
 
                     <!-- Кнопка "Добавить к сравнению" -->
                     <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-0"
-                    <?php if ($isInCompareDesktop): ?>style="display: none"<?php endif; ?>>
+                    <?php if (Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
                     <a rel="nofollow" class="add2compare" href="javascript:void(0)"
                        onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
                       <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-add"
@@ -561,7 +555,7 @@
 
                   <!-- Кнопка "Убрать из сравнения" -->
                   <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-1"
-                  <?php if (!$isInCompareDesktop): ?>style="display: none"<?php endif; ?>>
+                  <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
                   <a rel="nofollow" class="add2compare" href="javascript:void(0)"
                      onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
                     <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-remove"
