@@ -51,10 +51,12 @@ class mCart {
 		}
 		if(is_array($_GET['add']) && count($_GET['add'])){
 			// Добавление нескольких товаров в корзину
+			error_log('DEBUG: addSet called with: ' . print_r($_GET, true));
 			return self::addSet($_GET['add'], $_GET['amount'], $_GET['material_id']);
 		}
 		if($itemId = intval($_GET['add'])){
 			// Добавление товара в корзину
+			error_log('DEBUG: add called with itemId: ' . $itemId);
 			return self::add($itemId, intval($_GET['amount']), intval($_GET['material_id']));
 		}
 		if($itemId = intval($_GET['remove'])){
@@ -204,12 +206,18 @@ class mCart {
 	 * @return	array
 	 */
 	static function addSet($itemsIds, $i2amounts, $i2materialsIds){
+		error_log('DEBUG: addSet function called');
+		error_log('DEBUG: itemsIds: ' . print_r($itemsIds, true));
+		error_log('DEBUG: i2amounts: ' . print_r($i2amounts, true));
+		error_log('DEBUG: i2materialsIds: ' . print_r($i2materialsIds, true));
+		
 		if(is_array($itemsIds)){
 			$itemsIds = array_map('intval', $itemsIds);
 			$itemsIds = array_unique($itemsIds);
 			foreach($itemsIds as $itemId){
 				$amount = intval($i2amounts[$itemId]);
 				$materialId = intval($i2materialsIds[$itemId]);
+				error_log('DEBUG: Adding item ' . $itemId . ' amount ' . $amount . ' material ' . $materialId);
 				Catalog_Cart::add($itemId, $amount, $materialId);
 			}
 		}
