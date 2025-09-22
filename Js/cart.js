@@ -188,8 +188,10 @@ var oCart = new (function () {
       url += selects[i].name + "=" + encodeURIComponent(selects[i].value) + "&";
     }
     url += "ajax=1";
+    console.log('DEBUG: Cart URL:', url);
     //console.log(url);
     AJAX.lookup(url, function (respond) {
+      console.log('DEBUG: Cart response:', respond);
       //console.log(respond);
       respond = AJAX.jsonDecode(respond);
       if (!respond) return;
