@@ -41,15 +41,11 @@
             <div class="threeblock clearfix">
               <div class="compare">
                 <?php $rnd_mobile = rand(1, 1000); ?>
-                <?php
-                // Отладочная информация (удалить после тестирования)
-                $isInCompare = Catalog_Compare::check($seriesInf['id']);
-                echo "<!-- DEBUG Mobile: Series ID: {$seriesInf['id']}, isInCompare: " . ($isInCompare ? 'true' : 'false') . " -->";
-                ?>
+                <?php $isInCompare = Catalog_Compare::check($seriesInf['id']); ?>
 
                 <!-- Кнопка "Добавить к сравнению" (мобильная) -->
                 <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-0"
-                     <?php if ($isInCompare): ?>style="display: none"<?php else: ?>style="display: block; border: 2px solid red;"<?php endif; ?>>
+                     <?php if ($isInCompare): ?>style="display: none"<?php endif; ?>>
                   <a rel="nofollow" class="add2compare" href="javascript:void(0)"
                      onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
                     <img src="/images/index/srav_small.png" alt="Добавить к сравнению">
@@ -58,12 +54,11 @@
 
                 <!-- Кнопка "Убрать из сравнения" (мобильная) -->
                 <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd_mobile; ?>-1"
-                     <?php if (!$isInCompare): ?>style="display: none"<?php else: ?>style="display: block; border: 2px solid green;"<?php endif; ?>>
+                     <?php if (!$isInCompare): ?>style="display: none"<?php endif; ?>>
                   <a rel="nofollow" class="add2compare" href="javascript:void(0)"
                      onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd_mobile; ?>); return false;">
-                    <!-- Используем более заметный стиль для активного состояния -->
                     <img src="/images/index/srav_small.png" alt="Убрать из сравнения"
-                         style="filter: brightness(0) saturate(100%) invert(27%) sepia(78%) saturate(2476%) hue-rotate(100deg) brightness(97%) contrast(97%); opacity: 1;">
+                         style="filter: sepia(1) hue-rotate(60deg) saturate(3) brightness(1.2);">
                   </a>
                 </div>
               </div>
