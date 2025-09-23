@@ -717,26 +717,110 @@ session_start();
         ✓ В корзине
       </button>
       <?php else: ?>
-      <form class="add2basketform main-cart-form"
-            action="<?php echo Url::a('catalog-cart') ?>"
-            method="get" onsubmit="oCart.add(this); return false;">
+      <form
+        class="add2basketform clearfix main-cart-form"
+        id="catalog-item-full-<?php echo $itemInf['id']?>"
+        action="<?php echo Url::a('catalog-cart')?>"
+        method="get"
+        onsubmit="oCart.add(this); return false;"
+      >
+        <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
+        <span class="quantitytitle">
+									Купить&nbsp; &nbsp;
+								</span>
+        <span class="quantity">
+									<a class="minus js-minus">-</a>
+          <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
+          <input type="text" class="js-quantity min_4" name="amount" value="4" data-ratio="1">
+          <?php } else { ?>
+          <input type="text" class="js-quantity" name="amount" value="1" data-ratio="1">
+          <?php } ?>
+          <span class="js-measurename">шт</span>
+									<a class="plus js-plus">+</a>
+								</span>
+        <div class="button-block">
+          <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
+          <button
+            type="submit"
+            class="submit inbasket"
+          <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+          title="В корзине"
+          >
+          <i class="icon pngicons"></i>В корзине
+          </button>
+          <?php } else { ?>
+          <button
+            type="submit"
+            class="submit add2basket"
+          <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+          title="Добавить в корзину"
+          >
+          <i class="icon pngicons"></i>Отложить
+          </button>
+          <?php } ?>
+          <?php if(!$seriesInf['out_of_production']) { ?>
+          <a
+            href="javascript:void(0)"
+            onclick="oCart.buyOneClick(); return false;"
+            class="buy1click detail"
+            title="Купить в 1 клик"
+          <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>style="display: none"<?php } ?>
+          >
+          Купить в 1 клик
+          </a>
+          <?php } ?>
+          <a
+            rel="nofollow"
+            class="go2basket"
+            href="<?php echo Url::a('catalog-cart'); ?>"
+          <?php if(!Catalog_Cart::isItemInCart($itemInf['id'])) { ?>style="display: none"<?php } ?>
+          >
+          Перейти в корзину
+          </a>
+          <input type="submit" name="submit" class="noned" value="">
+        </div>
 
-        <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
-
-        <!-- теперь количество одно, и именно оно попадёт в корзину -->
-        <input type="text" class="js-quantity w-10 text-center border-none outline-none"
-               name="amount"
-               value="<?php echo ($catInf['parent_id'] == 38 || $catInf['id'] == 9) ? '4' : '1'; ?>"
-               data-ratio="1">
-
-        <input type="hidden" name="material_id"
-               value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
-
-        <button type="submit"
-                class="add2basket w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled'; ?>>
-        Отложить в 1 клик со СКИДКОЙ
-        </button>
+        <div class="material-nojs">
+          <select name="material_id" id="item-<?php echo $itemInf['id']?>-material" style="max-width: 240px;">
+            <?php foreach($itemInf['materials'] as $im) { ?>
+            <?php $m1 = $materials[$im['material_id']]; ?>
+            <?php if($m1['has_sub']) { ?>
+            <?php foreach($m1['sub'] as $m2) { ?>
+            <?php if($m2['has_sub']) { ?>
+            <?php foreach($m2['sub'] as $m3) { ?>
+            <option value="<?php echo $m3['id']?>" <?php if($m3['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?> / <?php echo $m2['name']?> / <?php echo $m3['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } else { ?>
+            <option value="<?php echo $m2['id']?>" <?php if($m2['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?> / <?php echo $m2['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } ?>
+            <?php } else { ?>
+            <option value="<?php echo $m1['id']?>" <?php if($m1['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } ?>
+          </select>
+        </div>
       </form>
 
 
