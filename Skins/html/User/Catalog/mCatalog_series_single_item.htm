@@ -6,7 +6,7 @@
 <script>
   oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
 </script>
-<script xmlns="http://www.w3.org/1999/html">
+<script>
   oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
 </script>
 
@@ -715,17 +715,17 @@
       <?php else: ?>
       <form class="add2basketform main-cart-form" action="<?php echo Url::a('catalog-cart') ?>"
 
-          method="post" onsubmit="oCart.add(this, true); return false;">
+            method="get" onsubmit="oCart.add(this); return false;">
 
-        <input type="hidden" name="add[]" value="<?php echo $itemInf['id']; ?>">
-        <input type="hidden" name="amount[<?php echo $itemInf['id']; ?>]" value="1">
-        <input type="hidden" name="material_id[<?php echo $itemInf['id']; ?>]"
+        <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
+        <input type="hidden" name="amount" value="1">
+        <input type="hidden" name="material_id"
                value="<?php echo ($mActive ? $mActive['id'] : 0); ?>">
         <button type="submit"
                 class="add2basket w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                 title="Добавить в корзину" <?php if($seriesInf['out_of_production']) echo 'disabled' ;
                                 ?>
-                onclick="this.form['amount[<?php echo $itemInf['id']; ?>]'].value = document.querySelector('.js-quantity').value;"
+        onclick="this.form['amount[<?php echo $itemInf['id']; ?>]'].value = document.querySelector('.js-quantity').value;"
         >
         Отложить в 1 клик со СКИДКОЙ
         </button>
