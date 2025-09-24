@@ -768,6 +768,48 @@ session_start();
           <input type="submit" name="submit" class="noned" value="">
         </div>
 
+        <div class="material-nojs">
+          <select name="material_id" id="item-<?php echo $itemInf['id']?>-material" style="max-width: 240px;">
+            <?php foreach($itemInf['materials'] as $im) { ?>
+            <?php $m1 = $materials[$im['material_id']]; ?>
+            <?php if($m1['has_sub']) { ?>
+            <?php foreach($m1['sub'] as $m2) { ?>
+            <?php if($m2['has_sub']) { ?>
+            <?php foreach($m2['sub'] as $m3) { ?>
+            <option value="<?php echo $m3['id']?>" <?php if($m3['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?> / <?php echo $m2['name']?> / <?php echo $m3['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } else { ?>
+            <option value="<?php echo $m2['id']?>" <?php if($m2['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?> / <?php echo $m2['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } ?>
+            <?php } else { ?>
+            <option value="<?php echo $m1['id']?>" <?php if($m1['id'] == $mActive['id']) { ?>selected<?php } ?>>
+            <?php echo $m1['name']?>
+            <?php if(abs($im['price'])) { ?>
+            (<?php echo $im['price']?> р.)
+            <?php } else { ?>
+            (по запросу)
+            <?php } ?>
+            </option>
+            <?php } ?>
+            <?php } ?>
+          </select>
+        </div>
+
 
       </form>
 
