@@ -709,18 +709,24 @@
       >
         <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
-        <span class="quantity flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-6 mb-8">
+        <span class="quantity flex items-center w-fit gap-6 py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-2 mb-4">
 						<a class="minus js-minus text-4xl text-gray-600 cursor-pointer">−</a>
           <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
-          <input type="text" class="js-quantity min_4 w-10 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
+          <div>
+            <input type="text" class="js-quantity min_4 w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
+            <span class="js-measurename">шт</span>
+          </div>
           <?php } else { ?>
-          <input type="text" class="js-quantity w-10 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
+          <div>
+            <input type="text" class="js-quantity w-6 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
+            <span class="js-measurename">шт</span>
+          </div>
           <?php } ?>
-          <span class="js-measurename">шт</span>
-						<a class="plus js-plus text-3xl text-gray-600 cursor-pointer">+</a>
+
+					<a class="plus js-plus text-3xl text-gray-600 cursor-pointer">+</a>
 				</span>
 
-        <div class="button-block flex self-end">
+        <div class="button-block flex self-end pt-2">
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
           <button
             type="submit"
