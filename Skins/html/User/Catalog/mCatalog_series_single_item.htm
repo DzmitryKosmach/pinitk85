@@ -701,11 +701,11 @@
       </button>
       <?php else: ?>
       <form
-        class="add2basketform clearfix main-cart-form "
+        class="add2basketform clearfix main-cart-form"
         id="catalog-item-full-<?php echo $itemInf['id']?>"
         action="<?php echo Url::a('catalog-cart')?>"
         method="get"
-        onsubmit="oCart.add(this); return false;"
+        onsubmit="oCart.add(this); updateCartButton(this); return false;"
       >
         <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
@@ -746,14 +746,7 @@
           <i class="icon pngicons"></i>Отложить в 1 клик со СКИДКОЙ
           </button>
           <?php } ?>
-          <a
-            rel="nofollow"
-            class="go2basket"
-            href="<?php echo Url::a('catalog-cart'); ?>"
-          <?php if(!Catalog_Cart::isItemInCart($itemInf['id'])) { ?>style="display: none"<?php } ?>
-          >
-          Перейти в корзину
-          </a>
+
           <input type="submit" name="submit" class="noned" value="">
         </div>
 
@@ -804,6 +797,26 @@
 
 
       <?php endif; ?>
+
+      <script>
+        function updateCartButton(form) {
+          // Находим кнопку "Добавить"
+          let btn = form.querySelector("button.submit");
+
+          if (btn) {
+            btn.classList.remove("add2basket", "bg-blue-600", "hover:bg-blue-700");
+            btn.classList.add("inbasket", "bg-green-600", "cursor-not-allowed", "opacity-90");
+            btn.disabled = true;
+            btn.textContent = "✓ В корзине";
+          }
+
+          // Показываем ссылку "Перейти в корзину"
+          let go2basket = form.querySelector(".go2basket");
+          if (go2basket) {
+            go2basket.style.display = "inline-block";
+          }
+        }
+      </script>
 
       <div class="flex self-end">
         <a rel="nofollow"
@@ -1267,7 +1280,7 @@ $benefits = [
   <section class="mt-24 mb-10">
     <div class="series_options bg-white px-4 md:px-8 lg:px-16 py-10 rounded-lg shadow-md flex flex-col lg:flex-row gap-8 md:gap-16">
       <div class="flex-1">
-        <div class="series_options_item">
+        <div class="series_options_item text-base">
           <div class="series_info_title text-xl font-bold mb-4">
             <?php echo Options::name('series-info1-title'); ?>
           </div>
@@ -1277,7 +1290,7 @@ $benefits = [
         </div>
       </div>
       <div class="flex-1">
-        <div class="series_options_item">
+        <div class="series_options_item text-base">
           <div class="series_info_title text-xl font-bold mb-4">
             <?php echo Options::name('series-info2-title'); ?>
           </div>
@@ -1287,7 +1300,7 @@ $benefits = [
         </div>
       </div>
       <div class="flex-1">
-        <div class="series_options_item">
+        <div class="series_options_item text-base">
           <div class="series_info_title text-xl font-bold mb-4">
             <?php echo Options::name('series-info3-title'); ?>
           </div>
