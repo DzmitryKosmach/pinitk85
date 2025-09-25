@@ -576,7 +576,7 @@
                     </svg>
                   </a>
                 </div>
-            </div>
+              </div>
             <?php $fc = trim(Options::name('found-cheaper')); ?>
             <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
 
@@ -705,7 +705,7 @@
         id="catalog-item-full-<?php echo $itemInf['id']?>"
         action="<?php echo Url::a('catalog-cart')?>"
         method="get"
-        onsubmit="oCart.add(this); updateCartButton(this); return false;"
+        onsubmit="updateCartButton(this); oCart.add(this);  return false;"
       >
         <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
