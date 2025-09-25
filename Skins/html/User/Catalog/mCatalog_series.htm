@@ -1493,43 +1493,42 @@ $benefits = [
 
 
 
-<section class="mt-24">
-  <div class="bg-white px-8 md:px-16 lg:px-28 py-10 rounded-lg shadow-md flex flex-col md:flex-row gap-10 md:gap-28">
-
-    <!-- Левая колонка -->
-    <div class="flex-1">
-      <h2 class="text-xl font-bold mb-4">Выбор мебели:</h2>
-
-      <p class="font-semibold mb-1">- Выбор мебели из каталога.</p>
-      <p class="mb-4">На нашем сайте более 7000 товаров категории офисной мебели.</p>
-
-      <p class="font-semibold mb-1">- Позвоните нам и получите консультацию.</p>
-      <p class="mb-4">Позвонив по телефону +7 (495) 920-48-24, вы можете получить консультацию
-        специалиста, или договориться о вызове специалиста для замеров помещения.</p>
-
-      <p class="font-semibold mb-1">- Оформление заказа.</p>
-      <p>Выбрав что вам понравилось, нажмите кнопку "Купить" или просто позвоните нам +7 (495) 920-48-24 и
-        мы сделаем все за вас.</p>
+<noindex>
+  <section class="mt-24">
+    <div class="series_options bg-white px-4 md:px-8 lg:px-16 py-10 rounded-lg shadow-md flex flex-col lg:flex-row gap-8 md:gap-16">
+      <div class="flex-1">
+        <div class="series_options_item">
+          <div class="series_info_title text-xl font-bold mb-4">
+            <?php echo Options::name('series-info1-title'); ?>
+          </div>
+          <div class="series_info_text text-base">
+            <?php echo Options::name('series-info1-text'); ?>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="series_options_item text-base">
+          <div class="series_info_title text-xl font-bold mb-4">
+            <?php echo Options::name('series-info2-title'); ?>
+          </div>
+          <div class="series_info_text">
+            <?php echo Options::name('series-info2-text'); ?>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="series_options_item text-base">
+          <div class="series_info_title text-xl font-bold mb-4">
+            <?php echo Options::name('series-info3-title'); ?>
+          </div>
+          <div class="series_info_text">
+            <?php echo Options::name('series-info3-text'); ?>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- Правая колонка -->
-    <div class="flex-1">
-      <h2 class="text-xl font-bold mb-4">Доставка Вашего заказа:</h2>
-
-      <p class="font-semibold mb-1">- Обсуждение доставки.</p>
-      <p class="mb-4">Перед доставкой мебели наш специалист наберет Вас и обсудит максимально удобное
-        время доставки для вас.</p>
-
-      <p class="font-semibold mb-1">- Наш экспедитор позвонит вам за 1 час до доставки.</p>
-      <p class="mb-4">Наш экспедитор заранее Вам позвонит и предупредит о доставке.</p>
-
-      <p class="font-semibold mb-1">- Доставка, подъем и сборка мебели.</p>
-      <p>Вы можете заказать полный спектр услуг нашей компании, но также и отказаться, чтобы уменьшить
-        расходы на покупку.</p>
-    </div>
-
-  </div>
-</section>
+  </section>
+</noindex>
 
 </div>
 
