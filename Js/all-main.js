@@ -2165,11 +2165,10 @@ var oCompare = new function(){
 
 	/**
 	 * @param	{int}	seriesId
-	 * @param	{int}	rnd
 	 */
 	this.add = function(seriesId, rnd){
-		$$$('series-compare-' + seriesId + '-' + rnd + '-0').style.display = 'none';
-		$$$('series-compare-' + seriesId + '-' + rnd + '-1').style.display = '';
+		$$$('series-compare-' + seriesId + '-0').style.display = 'none';
+		$$$('series-compare-' + seriesId + '-1').style.display = '';
 
 		AJAX.lookup(
 			this.url + '?add=' + seriesId + '&ajax=1',
@@ -2194,11 +2193,10 @@ var oCompare = new function(){
 
 	/**
 	 * @param	{int}	seriesId
-	 * @param	{int}	rnd
 	 */
-	this.remove = function(seriesId, rnd){
-		$$$('series-compare-' + seriesId + '-' + rnd + '-0').style.display = '';
-		$$$('series-compare-' + seriesId + '-' + rnd + '-1').style.display = 'none';
+	this.remove = function(seriesId){
+		$$$('series-compare-' + seriesId + '-0').style.display = '';
+		$$$('series-compare-' + seriesId + '-1').style.display = 'none';
 
 		AJAX.lookup(
 			this.url + '?remove=' + seriesId + '&ajax=1',
