@@ -537,13 +537,12 @@
               <button class="hover:opacity-50">
                 <div class="threeblock clearfix">
                   <div class="compare">
-                    <?php $rnd = rand(1, 1000); ?>
 
                     <!-- Кнопка "Добавить к сравнению" -->
-                    <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-0"
+                    <div id="series-compare-<?php echo $seriesInf['id']; ?>-0"
                     <?php if (Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
                     <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                       onclick="oCompare.add(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
+                       onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;">
                       <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-add"
                            xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -554,10 +553,10 @@
                   </div>
 
                   <!-- Кнопка "Убрать из сравнения" -->
-                  <div id="series-compare-<?php echo $seriesInf['id']; ?>-<?php echo $rnd; ?>-1"
+                  <div id="series-compare-<?php echo $seriesInf['id']; ?>-1"
                   <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>style="display: none"<?php endif; ?>>
                   <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>, <?php echo $rnd; ?>); return false;">
+                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;">
                     <svg width="26" height="26" viewBox="0 0 34 34" fill="none" class="compare-icon-remove"
                          xmlns="http://www.w3.org/2000/svg">
                       <!-- Красный крестик сверху, смещён ещё вправо -->
