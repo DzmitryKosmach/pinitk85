@@ -5,6 +5,10 @@
 <?php echo JsCopmress::load('series')?>
 
 <script>
+  oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
+</script>
+
+<script>
   oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
 </script>
 
