@@ -588,8 +588,7 @@
         <?php } ?>
 
         <!-- Правая колонка: Описание и цены -->
-        <div id="section-prices" class="sm2:w-1/2">
-
+        <div id="section-prices" class="info sm2:w-1/2">
           <!-- Блок с названием и кнопками -->
           <div class="md:block hidden">
             <div class="flex items-center justify-between">
@@ -646,7 +645,6 @@
             </div>
             </button>
           </div>
-
           <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
             <button class="hover:opacity-50">&lt; Пред.товар</button>
             <button class="hover:opacity-50">След.товар &gt;</button>
@@ -905,7 +903,7 @@
           <div class="flex flex-col sm:flex-row gap-2">
             <!-- Форма для добавления в корзину -->
             <form method="post" action="<?php echo Url::a('catalog-cart')?>"
-                  onsubmit="oCart.add(this, true); return false;"
+                  onsubmit="updateCartButton(this); oCart.add(this, true); return false;"
                   style="display: inline;">
               <?php foreach($seriesSet as $i) { ?>
               <input type="hidden" name="add[]" value="<?php echo $i['id']; ?>">
@@ -935,6 +933,26 @@
               </button>
               <?php } ?>
             </form>
+
+            <script>
+              function updateCartButton(form) {
+                // Находим кнопку "Добавить"
+                let btn = form.querySelector("button.submit");
+
+                if (btn) {
+                  btn.classList.remove("add2basket", "bg-blue-600", "hover:bg-blue-700");
+                  btn.classList.add("inbasket", "bg-green-600", "cursor-not-allowed", "opacity-90");
+                  btn.disabled = true;
+                  btn.textContent = "✓ В корзине";
+                }
+
+                // Показываем ссылку "Перейти в корзину"
+                let go2basket = form.querySelector(".go2basket");
+                if (go2basket) {
+                  go2basket.style.display = "inline-block";
+                }
+              }
+            </script>
 
             <!-- Кнопка "Нашли дешевле?" -->
             <button class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
