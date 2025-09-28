@@ -28,65 +28,65 @@
 
         <section class="">
             <div>
-                <h2 class="text-2xl font-bold mb-8">Кабинеты руководителя</h2>
+                <h1 class="text-2xl font-bold mb-8"><?php echo $pageInf['header']; ?></h1>
 
                 <!-- Табы -->
-                <div class="sticky top-0 pt-4 z-20 bg-body">
+              <div class="sticky top-0 pt-4 z-20 bg-body">
                 <div class="text-sm mb-12">
-                    <?php
-                        $visibleCount = 5;
-                        $visiblePages = array_slice($pages, 0, $visibleCount);
-                        $hiddenPages = array_slice($pages, $visibleCount);
-                    ?>
+                  <?php
+                    $visibleCount = 5;
+                    $visiblePages = array_slice($pages, 0, $visibleCount);
+                    $hiddenPages = array_slice($pages, $visibleCount);
+                ?>
 
-                    <!-- Все табы -->
-                    <div id="tabsContainer" class="flex flex-wrap gap-2">
-                        <?php foreach ($visiblePages as $p): ?>
-                        <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
-                        <?php if ($isActive): ?>
-                        <span class="flex-1 min-h-8 px-4 lg:min-h-12 leading-3 semibold rounded-xl bg-white border shadow
-                             text-center flex items-center justify-center font-medium text-gray-800">
-                    <?php echo htmlspecialchars($p['name']); ?>
-                </span>
-                        <?php else: ?>
-                        <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                           class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow
-                          text-center flex items-center justify-center hover:bg-gray-50 transition">
-                            <?php echo htmlspecialchars($p['name']); ?>
-                        </a>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Скрытые табы -->
-                    <?php if (!empty($hiddenPages)): ?>
-                    <div id="hiddenWrapper"
-                         class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
-                        <div class="flex flex-wrap gap-2 mt-2">
-                            <?php foreach ($hiddenPages as $p): ?>
-                            <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                               class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border shadow
-                              text-center flex items-center justify-center hover:bg-gray-50 transition">
+                  <!-- Все табы -->
+                  <div id="tabsContainer" class="flex flex-wrap gap-2">
+                    <?php foreach ($visiblePages as $p): ?>
+                    <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
+                    <?php if ($isActive): ?>
+                    <span class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow
+                                 text-center flex items-center justify-center">
                                 <?php echo htmlspecialchars($p['name']); ?>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Кнопка справа -->
-                    <div class="mt-4 flex justify-end">
-                        <button id="showMoreBtn"
-                                class="attention flex items-center gap-1 min-h-8 px-6 rounded-lg bg-blue-600 text-white text-sm shadow hover:bg-blue-700 transition">
-                            <span id="btnText">Ещё</span>
-                            <svg id="btnIcon" class="w-4 h-4 transition-transform duration-300"
-                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                    </div>
+                            </span>
+                    <?php else: ?>
+                    <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                       class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow
+                                      text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition">
+                      <?php echo htmlspecialchars($p['name']); ?>
+                    </a>
                     <?php endif; ?>
+                    <?php endforeach; ?>
+                  </div>
+
+                  <!-- Скрытые табы -->
+                  <?php if (!empty($hiddenPages)): ?>
+                  <div id="hiddenWrapper"
+                       class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
+                    <div class="flex flex-wrap gap-2 mt-2">
+                      <?php foreach ($hiddenPages as $p): ?>
+                      <a href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                         class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow
+                                          text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition">
+                        <?php echo htmlspecialchars($p['name']); ?>
+                      </a>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+
+                  <!-- Кнопка справа -->
+                  <div class="mt-4 flex justify-end">
+                    <button id="showMoreBtn"
+                            class="attention flex items-center gap-1 min-h-8 px-6 rounded-lg bg-blue-600 text-white text-sm shadow hover:bg-blue-700 transition">
+                      <span id="btnText">Ещё</span>
+                      <svg id="btnIcon" class="w-4 h-4 transition-transform duration-300"
+                           fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+                  <?php endif; ?>
                 </div>
-                </div>
+              </div>
 
                 <style>
                     /* Анимация "пульс" для кнопки */
@@ -99,38 +99,51 @@
                     }
                 </style>
 
-                <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        const btn = document.getElementById("showMoreBtn");
-                        const btnText = document.getElementById("btnText");
-                        const btnIcon = document.getElementById("btnIcon");
-                        const hiddenWrapper = document.getElementById("hiddenWrapper");
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  const btn = document.getElementById("showMoreBtn");
+                  const btnText = document.getElementById("btnText");
+                  const btnIcon = document.getElementById("btnIcon");
+                  const hiddenWrapper = document.getElementById("hiddenWrapper");
 
-                        if (btn && hiddenWrapper) {
-                            btn.addEventListener("click", () => {
-                                const isCollapsed = hiddenWrapper.classList.contains("max-h-0");
+                  if (!btn || !hiddenWrapper) return;
 
-                                if (isCollapsed) {
-                                    // раскрыть
-                                    hiddenWrapper.classList.remove("max-h-0", "opacity-0");
-                                    hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
-                                    btnText.textContent = "Свернуть";
-                                    btn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
-                                    btn.classList.add("bg-gray-600", "hover:bg-gray-700");
-                                    btnIcon.classList.add("rotate-180");
-                                } else {
-                                    // свернуть
-                                    hiddenWrapper.classList.add("max-h-0", "opacity-0");
-                                    hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
-                                    btnText.textContent = "Ещё";
-                                    btn.classList.remove("bg-gray-600", "hover:bg-gray-700");
-                                    btn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
-                                    btnIcon.classList.remove("rotate-180");
-                                }
-                            });
-                        }
-                    });
-                </script>
+                  // Восстановление состояния из localStorage
+                  const isExpanded = localStorage.getItem('tabsExpanded') === 'true';
+                  if (isExpanded) {
+                    hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+                    hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
+                    btnText.textContent = "Свернуть";
+                    btn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                    btn.classList.add("bg-gray-600", "hover:bg-gray-700");
+                    btnIcon.classList.add("rotate-180");
+                  }
+
+                  btn.addEventListener("click", () => {
+                    const isCollapsed = hiddenWrapper.classList.contains("max-h-0");
+
+                    if (isCollapsed) {
+                      // раскрыть
+                      hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+                      hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
+                      btnText.textContent = "Свернуть";
+                      btn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                      btn.classList.add("bg-gray-600", "hover:bg-gray-700");
+                      btnIcon.classList.add("rotate-180");
+                      localStorage.setItem('tabsExpanded', 'true');
+                    } else {
+                      // свернуть
+                      hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                      hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                      btnText.textContent = "Ещё";
+                      btn.classList.remove("bg-gray-600", "hover:bg-gray-700");
+                      btn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+                      btnIcon.classList.remove("rotate-180");
+                      localStorage.setItem('tabsExpanded', 'false');
+                    }
+                  });
+                });
+              </script>
 
                 <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
                     <?php if($pageWithSeries) { ?>
@@ -237,9 +250,9 @@
             <div class="flex flex-col md:flex-row gap-20 lg:gap-32">
                 <!-- Левая колонка -->
                 <div class="w-full md:w-1/2">
-                    <h1 class="text-2xl font-bold mb-2">
+                    <h2 class="text-2xl font-bold mb-2">
                         Офисная мебель руководителя - ассортимент
-                    </h1>
+                    </h2>
                     <p class="mb-4">
                         В отличие от рабочего места рядового офисного сотрудника, место,
                         занимаемое руководителем, должно обладать более широкой
