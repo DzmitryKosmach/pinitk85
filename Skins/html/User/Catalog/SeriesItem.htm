@@ -54,7 +54,7 @@
     </h3>
   </div>
 
-    <div class="flex gap-[6px] justify-start items-center mt-6 mb-3">
+    <div class="flex gap-[6px] justify-start items-center mt-8 mb-3">
         <?php
         $materials = [];
         foreach ($s['materials'] as $m) {
@@ -113,38 +113,36 @@
                 <?php endif; ?>
             </div>
         </div>
+      <div class="flex justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3">
+        <!-- Избранное -->
+        <div>
+          <a href="javascript:void(0)" class="hover:opacity-50" title="В избранное">
+            <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5">
+          </a>
+        </div>
 
         <!-- Сравнение -->
-        <div class="flex justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3">
-
-            <div>
-              <button class="hover:opacity-50">
-                <img src="/images/index/izbr_small.png">
-              </button>
+        <div>
+          <div class="threeblock clearfix compare">
+            <!-- Кнопка "Добавить к сравнению" -->
+            <div class="series-compare-add" data-id="<?php echo (int)$s['id']; ?>"
+              <?php if (Catalog_Compare::check($s['id'])): ?>style="display: none"<?php endif; ?>>
+              <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+                 onclick="oCompare.add(<?php echo (int)$s['id']; ?>); return false;"
+                 title="Добавить к сравнению">
+                <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
+                </svg>
+              </a>
             </div>
-          <button class="hover:opacity-50">
-            <div class="threeblock clearfix">
-              <div class="compare">
 
-                <!-- Кнопка "Добавить к сравнению" -->
-                <div class="series-compare-add" data-id="<?php echo $s['id']; ?>"
-                <?php if (Catalog_Compare::check($s['id'])): ?>style="display: none"<?php endif; ?>>
-                <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                   onclick="oCompare.add(<?php echo $s['id']; ?>); return false;">
-                  <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                       xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
-                  </svg>
-                </a>
-              </div>
-
-              <!-- Кнопка "Убрать из сравнения" -->
-              <div class="series-compare-remove" data-id="<?php echo $s['id']; ?>"
+            <!-- Кнопка "Убрать из сравнения" -->
+            <div class="series-compare-remove" data-id="<?php echo (int)$s['id']; ?>"
               <?php if (!Catalog_Compare::check($s['id'])): ?>style="display: none"<?php endif; ?>>
-              <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                 onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;">
-                <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
+              <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+                 onclick="oCompare.remove(<?php echo (int)$s['id']; ?>); return false;"
+                 title="Убрать из сравнения">
+                <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(8,0)">
                     <line x1="13" y1="2" x2="21" y2="10" />
                     <line x1="21" y1="2" x2="13" y2="10" />
@@ -155,10 +153,10 @@
                 </svg>
               </a>
             </div>
+
+          </div>
         </div>
-    </div>
-  </button>
-        </div>
+      </div>
     </div>
 
     <!-- Кнопка "Подробнее" -->
