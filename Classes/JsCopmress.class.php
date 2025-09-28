@@ -112,12 +112,14 @@ class JsCopmress
 				/*		'/Js/visual.js',
 				'/Js/catalog.js',
 				'/Js/materials.js',
-				'/Js/catalog/compare.js',
 				'/Js/search.js',
 				'/Js/cart.js',
 				'/Js/gototop.js',  */
 				//'/Js/HighSlide/highslide-full.js',
 				//'/Js/seo-hide.js'
+			),
+			'compare' => array(
+				self::getBasePath() . '/Js/catalog/compare.js'
 			),
 			'main-async'	=> array(
 				//'/Js/fix-sizes.js',
