@@ -126,11 +126,7 @@
       <!-- Сравнение -->
       <div class="threeblock clearfix compare">
         <!-- Кнопка "Добавить к сравнению" -->
-        <div class="series-compare-add" data-id="<?php echo (int)$s['id']; ?>"
-        <?php if (Catalog_Compare::check($s['id'])): ?>
-        style="display: none"
-        <?php endif; ?>
-        >
+        <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
         <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
            onclick="oCompare.add(<?php echo (int)$s['id']; ?>); return false;"
            title="Добавить к сравнению">
@@ -143,11 +139,7 @@
       </div>
 
       <!-- Кнопка "Убрать из сравнения" -->
-      <div class="series-compare-remove" data-id="<?php echo (int)$s['id']; ?>"
-      <?php if (!Catalog_Compare::check($s['id'])): ?>
-      style="display: none"
-      <?php endif; ?>
-      >
+      <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
       <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
          onclick="oCompare.remove(<?php echo (int)$s['id']; ?>); return false;"
          title="Убрать из сравнения">

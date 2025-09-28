@@ -16,12 +16,12 @@ var oCompare = new function() {
     var addButtons = document.querySelectorAll('.series-compare-add[data-id="' + seriesId + '"]');
     var removeButtons = document.querySelectorAll('.series-compare-remove[data-id="' + seriesId + '"]');
 
-    // Скрываем "Добавить", показываем "Убрать"
+    // Скрываем "Добавить", показываем "Убрать" через классы вместо прямого изменения стилей
     addButtons.forEach(function (btn) {
-      btn.style.display = 'none';
+      btn.classList.add('hidden');
     });
     removeButtons.forEach(function (btn) {
-      btn.style.display = '';
+      btn.classList.remove('hidden');
     });
 
     // Отправляем AJAX
@@ -57,12 +57,12 @@ var oCompare = new function() {
     var addButtons = document.querySelectorAll('.series-compare-add[data-id="' + seriesId + '"]');
     var removeButtons = document.querySelectorAll('.series-compare-remove[data-id="' + seriesId + '"]');
 
-    // Скрываем "Убрать", показываем "Добавить"
+    // Скрываем "Убрать", показываем "Добавить" через классы вместо прямого изменения стилей
     removeButtons.forEach(function (btn) {
-      btn.style.display = 'none';
+      btn.classList.add('hidden');
     });
     addButtons.forEach(function (btn) {
-      btn.style.display = '';
+      btn.classList.remove('hidden');
     });
 
     // Отправляем AJAX
