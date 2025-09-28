@@ -64,6 +64,7 @@
                        class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
                     <div class="flex flex-wrap gap-2 mt-2">
                       <?php foreach ($hiddenPages as $p): ?>
+                      <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
                       <?php if ($isActive): ?>
                       <span class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow
                                  text-center flex items-center justify-center">
