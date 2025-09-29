@@ -1525,11 +1525,11 @@ $benefits = [
 
           <!-- Габариты -->
           <?php if (!empty($item['size'])): ?>
-          <p class="text-gray-400 text-sm mt-2">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
+          <p class="text-gray-400 text-sm mt-6">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
           <?php endif; ?>
 
           <!-- Цвета -->
-          <div class="mt-8 mb-3">
+          <div class="mt-4 mb-3">
             <div class="favorishare">
               <?php if(count($item['materials'])) { ?>
               <script>
@@ -1582,7 +1582,7 @@ $benefits = [
         <a
           href="javascript:void(0)"
           onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-          class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+          class="mt-4 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
         >
           <!--          <a-->
           <!--            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"-->
