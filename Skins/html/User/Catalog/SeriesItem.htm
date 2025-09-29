@@ -5,23 +5,23 @@
   <div class="relative">
     <?php if (!empty($s['marker'])) { ?>
     <div>
-            <span
-              class="absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
-              style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
+      <span
+        class="absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
+        style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
                        white-space: normal;">
 
-                <?php
+        <?php
               $text = $s['marker']['text'];
               // Заменяем <br>, <br/>, <br/> и т.п. на пробел
               $text = preg_replace('/<br\s*\/?>/', ' ', $text);
-                // Удаляем все остальные теги
-                $text = strip_tags($text);
-                // Не трогаем пробелы — оставляем как есть
-                echo $text;
-                ?>
+        // Удаляем все остальные теги
+        $text = strip_tags($text);
+        // Не трогаем пробелы — оставляем как есть
+        echo $text;
+        ?>
 
-            </span>
+      </span>
     </div>
     <?php } ?>
 
@@ -73,9 +73,9 @@
     <?php foreach ($materials as $m): ?>
     <?php if ($count >= 7) break; // Ограничиваем 7 цветами ?>
     <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
-          style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
-          title="<?php echo htmlspecialchars($m['name']); ?>">
-        </span>
+      style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
+      title="<?php echo htmlspecialchars($m['name']); ?>">
+    </span>
     <?php $count++; ?>
     <?php endforeach; ?>
 
@@ -92,18 +92,17 @@
       <div
         class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2">
         <?php for ($i = 7; $i < count($materials); $i++): ?>
-        <span
-          class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
+        <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
           style="background-image: url('<?php echo htmlspecialchars($materials[$i]['img']); ?>'); background-size: cover;"
           title="<?php echo htmlspecialchars($materials[$i]['name']); ?>">
-                </span>
+        </span>
         <?php endfor; ?>
       </div>
     </div>
     <?php endif; ?>
   </div>
 
-  <div class="flex justify-between items-center mb-1">
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-1">
     <!-- Цена -->
     <div class="font-bold text-lg leading-2 mt-[-6px]">
       <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
@@ -115,7 +114,7 @@
       <?php endif; ?>
     </div>
 
-    <div class="flex justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3">
+    <div class="flex w-full sm:w-auto justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3">
       <!-- Избранное -->
       <div>
         <a href="javascript:void(0)" class="hover:opacity-50" title="В избранное">
@@ -126,45 +125,45 @@
       <!-- Сравнение -->
       <div class="threeblock clearfix compare">
         <!-- Кнопка "Добавить к сравнению" -->
-        <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
-        <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-           onclick="oCompare.add(<?php echo $s['id']; ?>); return false;"
-           title="Добавить к сравнению">
-          <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-              fill="#3C3C3A" />
-          </svg>
-        </a>
-      </div>
+        <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+            onclick="oCompare.add(<?php echo $s['id']; ?>); return false;" title="Добавить к сравнению">
+            <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                fill="#3C3C3A" />
+            </svg>
+          </a>
+        </div>
 
-      <!-- Кнопка "Убрать из сравнения" -->
-      <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
-      <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-         onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;"
-         title="Убрать из сравнения">
-        <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
-             transform="translate(8,0)">
-            <line x1="13" y1="2" x2="21" y2="10" />
-            <line x1="21" y1="2" x2="13" y2="10" />
-          </g>
-          <g transform="translate(0,3)">
-            <path
-              d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-              fill="#3C3C3A" />
-          </g>
-        </svg>
-      </a>
+        <!-- Кнопка "Убрать из сравнения" -->
+        <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+            onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из сравнения">
+            <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+                transform="translate(8,0)">
+                <line x1="13" y1="2" x2="21" y2="10" />
+                <line x1="21" y1="2" x2="13" y2="10" />
+              </g>
+              <g transform="translate(0,3)">
+                <path
+                  d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                  fill="#3C3C3A" />
+              </g>
+            </svg>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- Кнопка "Подробнее" -->
-<a href="<?php echo Catalog_Series::a($s); ?>"
-   class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
-  Подробнее
-</a>
+  <!-- Кнопка "Подробнее" -->
+  <a href="<?php echo Catalog_Series::a($s); ?>"
+    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition">
+    Подробнее
+  </a>
 
 </div>
