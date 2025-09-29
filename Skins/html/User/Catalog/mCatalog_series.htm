@@ -1167,6 +1167,7 @@
     <?php if (count($options)) { ?>
     <button id="section-specs"
             class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+            data-tab="options"
             onclick="showTab('options')">
       Характеристики
     </button>
@@ -1174,36 +1175,42 @@
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="delivery"
       onclick="showTab('delivery')">
       Доставка и оплата
     </button>
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="commercial"
       onclick="showTab('commercial')">
       Ком. Пред
     </button>
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="sets"
       onclick="showTab('sets')">
       Комплекты
     </button>
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="download"
       onclick="showTab('download')">
       Скачать
     </button>
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="questions"
       onclick="showTab('questions')">
       Вопросы
     </button>
 
     <button
       class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
+      data-tab="reviews"
       onclick="showTab('reviews')">
       Отзывы
     </button>
@@ -1269,18 +1276,34 @@
 </div>
 
 <script>
-  // Показываем нужную вкладку
   function showTab(tabName) {
-    // Скрываем все
+    // Скрываем все вкладки контента
     document.querySelectorAll('.description1 .text').forEach(div => {
       div.style.display = 'none';
     });
 
-    // Показываем выбранную
-    document.getElementById('tab-' + tabName).style.display = 'block';
+    // Показываем нужную вкладку
+    const contentTab = document.getElementById('tab-' + tabName);
+    if (contentTab) {
+      contentTab.style.display = 'block';
+    }
+
+    // Убираем активный класс у всех кнопок
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
+      // Возвращаем базовые стили (если нужно)
+      btn.classList.add('bg-white', 'text-gray-900');
+    });
+
+    // Добавляем активный класс к текущей кнопке
+    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeButton) {
+      activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
+      activeButton.classList.remove('bg-white');
+    }
   }
 
-  // По умолчанию открываем "Характеристики" или "Доставку"
+  // Инициализация при загрузке страницы
   document.addEventListener('DOMContentLoaded', function () {
     <?php if (count($options)) { ?>
       showTab('options');
