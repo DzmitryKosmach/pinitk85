@@ -669,7 +669,7 @@
 
       <div>
         <!-- Итоговая цена -->
-        <div id="section-prices">
+        <div>
           <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
             <?php
                             $d = abs($itemInf['discount']);
@@ -1230,6 +1230,8 @@ $benefits = [
   ];
   ?>
 
+  <div class="clear"></div>
+
   <section>
     <!-- Почему у нас -->
     <h2 class="text-2xl font-bold mt-20 mb-12">Почему стоит заказать у нас</h2>
@@ -1254,11 +1256,11 @@ $benefits = [
     </div>
   </section>
 
-  <div class="clear"></div>
+
 
   <?php if(count($linkages)) { ?>
   <?php foreach($linkages as $ln => $l) { ?>
-  <div class="sorter_and_name clearfix">
+  <div id="section-prices" class="sorter_and_name clearfix">
     <div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
   </div>
   <div >
