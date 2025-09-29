@@ -1076,7 +1076,7 @@
           <?php if(count($materials)) { ?>
           <span class="mb-1 font-semibold">Цветовая гамма:</span>
 
-          <div class="series-materials new flex gap-2 flex-wrap">
+          <div class="series-materials new flex gap-2 mt-2 flex-wrap">
             <?php
 							function recurseSubMaterials($materials, $prevLevelName){
 								foreach($materials as $m){
@@ -1538,7 +1538,7 @@ $benefits = [
               <a
                 href="javascript:void(0)"
                 id="item1-<?php echo $item['id']; ?>-materials-preview"
-                class="materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
+                class="flex gap-[6px] justify-start items-center materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
                 onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
               >
                 <?php foreach($item['materials'] as $mn => $im) { ?>
