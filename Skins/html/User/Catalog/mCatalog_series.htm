@@ -1529,7 +1529,7 @@ $benefits = [
           <?php endif; ?>
 
           <!-- Цвета -->
-          <div class="flex gap-[6px] justify-start items-center mt-8 mb-3">
+          <div class="mt-8 mb-3">
             <div class="favorishare">
               <?php if(count($item['materials'])) { ?>
               <script>
@@ -1543,11 +1543,13 @@ $benefits = [
               >
                 <?php foreach($item['materials'] as $mn => $im) { ?>
                 <?php $m = $materials[$im['material_id']]; ?>
+                <div class="flex gap-[6px] justify-start items-center">
                 <div id="item1-<?php echo $item['id']; ?>-m-<?php echo $m['id']; ?>" <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
-                <?php if($m['image']['ext']) { ?>
-                <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
-                <?php } ?>
-            </div>
+                  <?php if($m['image']['ext']) { ?>
+                  <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
+                  <?php } ?>
+                </div>
+                </div>
             <?php } ?>
             </a>
             <?php } ?>
