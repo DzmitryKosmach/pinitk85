@@ -128,7 +128,7 @@
         <!-- Кнопка "Добавить к сравнению" -->
         <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
         <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-           onclick="oCompare.add(<?php echo (int)$s['id']; ?>); return false;"
+           onclick="oCompare.add(<?php echo $s['id']; ?>); return false;"
            title="Добавить к сравнению">
           <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -141,7 +141,7 @@
       <!-- Кнопка "Убрать из сравнения" -->
       <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$s['id']; ?>">
       <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-         onclick="oCompare.remove(<?php echo (int)$s['id']; ?>); return false;"
+         onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;"
          title="Убрать из сравнения">
         <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
