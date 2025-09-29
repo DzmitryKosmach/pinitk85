@@ -1493,10 +1493,10 @@ $benefits = [
                                             $item['id'], 170, 140, 1, $item['_img_ext']
                                         ); ?>"
               alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
-              class="w-full h-48 сcontain mb-4"
+              class="w-full h-28 lg:h-48 object-contain rounded-md mb-4"
             /></a>
           <?php else: ?>
-          <div class="w-full h-48 bg-gray-100 mb-4 flex items-center justify-center">
+          <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
             <span class="text-gray-400 text-sm">Нет фото</span>
           </div>
           <?php endif; ?>
@@ -1505,17 +1505,74 @@ $benefits = [
           <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
 
           <!-- Название -->
-          <h3 class="font-medium text-[18px] lg:text-[21px] leading-7 mb-1 line-clamp-2 h-14">
-            <?php echo htmlspecialchars($item['name']); ?>
-          </h3>
+          <div class="relative mb-1" style="height: 2.5em;">
+            <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5
+            line-clamp-2
+            transition-all duration-200
+            absolute top-0 left-0 right-0
+            hover:line-clamp-none
+            hover:z-10
+            hover:bg-white
+            hover:shadow-lg
+            hover:rounded
+            hover:px-2
+            hover:py-1">
+              <a href="<?php echo Catalog_Series::a($s); ?>" class="text-inherit hover:text-inherit block">
+                <?php echo htmlspecialchars($item['name']); ?>
+              </a>
+            </h3>
+          </div>
 
           <!-- Габариты -->
           <?php if (!empty($item['size'])): ?>
           <p class="text-gray-400 text-sm mt-2">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
           <?php endif; ?>
 
-          <!-- Цвет (заглушка) -->
-          <span class="w-4 h-4 rounded bg-black inline-block mb-3 mt-2"></span>
+          <!-- Цвета -->
+          <div class="flex gap-[6px] justify-start items-center mt-8 mb-3">
+            <?php
+        $materials = [];
+        foreach ($item['materials'] as $m) {
+            $materials[] = [
+                'name' => $m['name'],
+            'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext']
+            ];
+            }
+            ?>
+
+            <!-- Отображаем первые 7 цветов как квадратики -->
+            <?php $count = 0; ?>
+            <?php foreach ($materials as $m): ?>
+            <?php if ($count >= 7) break; // Ограничиваем 7 цветами ?>
+            <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
+                  style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
+                  title="<?php echo htmlspecialchars($m['name']); ?>">
+    </span>
+            <?php $count++; ?>
+            <?php endforeach; ?>
+
+            <!-- Если больше 7 — показываем "ещё" через hover -->
+            <?php if (count($materials) > 7): ?>
+            <div class="relative group">
+              <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M7.29289 8.70721C7.68342 9.09773 8.31658 9.09773 8.70711 8.70721L15.0711 2.34325C15.4616 1.95272 15.4616 1.31956 15.0711 0.929032C14.6805 0.538508 14.0474 0.538508 13.6569 0.929032L8 6.58589L2.34315 0.929032C1.95262 0.538508 1.31946 0.538508 0.928932 0.929032C0.538408 1.31956 0.538408 1.95272 0.928932 2.34325L7.29289 8.70721ZM8 8H7V8.0001H8H9V8H8Z"
+                  fill="#020202" />
+              </svg>
+
+              <!-- Всплывающее окно с оставшимися цветами -->
+              <div
+                class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2">
+                <?php for ($i = 7; $i < count($materials); $i++): ?>
+                <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
+                      style="background-image: url('<?php echo htmlspecialchars($materials[$i]['img']); ?>'); background-size: cover;"
+                      title="<?php echo htmlspecialchars($materials[$i]['name']); ?>">
+        </span>
+                <?php endfor; ?>
+              </div>
+            </div>
+            <?php endif; ?>
+          </div>
 
           <!-- Цена -->
           <div class="flex flex-wrap justify-between items-center mt-auto">
@@ -1535,15 +1592,7 @@ $benefits = [
               </div>
             </div>
 
-            <!-- Кнопки: избранное, сравнение -->
-            <div class="flex gap-3 my-2">
-              <button title="В избранное" class="hover:scale-110 transition">
-                <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5 opacity-70 hover:opacity-100" />
-              </button>
-              <button title="Сравнить" class="hover:scale-110 transition">
-                <img src="/images/index/srav_small.png" alt="Сравнение" class="w-5 h-5 opacity-70 hover:opacity-100" />
-              </button>
-            </div>
+
           </div>
 
           <!-- Кнопка -->
