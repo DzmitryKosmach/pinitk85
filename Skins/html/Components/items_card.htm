@@ -1,5 +1,5 @@
 <!-- Карточка товара -->
-  
+
   <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
     <!-- Изображение -->
     <?php if (!empty($i['_img_ext'])): ?>
@@ -38,11 +38,14 @@
       hover:rounded
       hover:px-2
       hover:py-1">
-        <a href="<?php echo Catalog_Series::a($s); ?>" class="text-inherit hover:text-inherit block">
+        <a href="javascript:void(0)"
+           onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+           class="text-inherit hover:text-inherit block">
           <?php echo htmlspecialchars($i['name']); ?>
         </a>
       </h3>
     </div>
+
 
     <!-- Габариты -->
     <?php if (!empty($i['size'])): ?>
