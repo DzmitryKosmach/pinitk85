@@ -205,6 +205,8 @@
           <?php } ?>
           <?php } else { ?>
           <?php if(count($items)) { ?>
+            <?php echo CssCopmress::load('series')?>
+            <?php echo JsCopmress::load('series')?>
 
           <script>
             oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
