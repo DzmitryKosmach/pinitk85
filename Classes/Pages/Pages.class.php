@@ -543,38 +543,25 @@ class Pages extends ExtDbList
      */
     static function toggle(int $total = 0, int $pgNum = 1, int $pgSize = 1): string
     {
-        $maxTglLinks = round(self::$maxToggleLinks / 2) * 2;
-
         // Общее к-во страниц
-        $pgCount = ceil($total / $pgSize);
-        if ($pgCount < 1) {
-            $pgCount = 1;
+        $totalPages = ceil($total / $pgSize);
+        if ($totalPages < 1) {
+            $totalPages = 1;
         }
 
         // Проверяем корректность номера текущей страницы
-        if ($pgNum > $pgCount) {
-            $pgNum = $pgCount;
+        if ($pgNum > $totalPages) {
+            $pgNum = $totalPages;
         }
         if ($pgNum != -1 && $pgNum < 1) {
             $pgNum = 1;
         }
 
-        // Диапазон показываемых страниц
-        $from = $pgNum - $maxTglLinks / 2;
-        if ($from < 1) {
-            $from = 1;
-        }
-        $to = $from + $maxTglLinks - 1;
-        if ($to > $pgCount) {
-            $to = $pgCount;
-        }
-
-        return pattExeP(fgc(Config::path('skins') . self::$tooglePattern), array(
-            'pgNum' => $pgNum,
-            'pgCount' => $pgCount,
-            'from' => $from,
-            'to' => $to
-        ));
+        // Используем шаблон pagination.htm
+        ob_start();
+        $currentPage = $pgNum;
+        include(Config::path('skins') . '/html/Components/pagination.htm');
+        return ob_get_clean();
     }
 
     /** Формирует URL для ссылки в переключателе страниц
