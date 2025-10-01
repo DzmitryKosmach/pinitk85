@@ -14,10 +14,14 @@
       >
         <?php
               $text = $s['marker']['text'];
-              // Заменяем <br>, <br />, <br />
-        и т.п. на пробел $text = preg_replace('/<br\s*\/?>/', ' ', $text); //
-        Удаляем все остальные теги $text = strip_tags($text); // Не трогаем
-        пробелы — оставляем как есть echo $text; ?>
+              // Заменяем <br>, <br/>, <br/> и т.п. на пробел
+              $text = preg_replace('/<br\s*\/?>/', ' ', $text);
+        // Удаляем все остальные теги
+        $text = strip_tags($text);
+        // Не трогаем пробелы — оставляем как есть
+        echo $text;
+        ?>
+
       </span>
     </div>
     <?php } ?>
