@@ -267,7 +267,7 @@
           </div>
 
           <!-- Модальное окно галереи -->
-          <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center pt-4 pl-4 pr-4 pb-10 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+          <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
             <!-- Обёртка для центрирования -->
             <div class="relative max-w-full max-h-[90vh] flex items-center justify-center">
               <!-- Контейнер изображения (ограничивает позиционирование кнопок) -->
@@ -282,7 +282,7 @@
                 <!-- Кнопка закрытия (в правом верхнем углу изображения) -->
                 <button
                   id="gallery-close"
-                  class="absolute top-2 right-2 text-white/90 hover:text-white text-lg font-light z-20 bg-black/40 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 ease-in-out"
+                  class="absolute top-2 right-2 text-white/90 hover:text-white text-lg font-light z-51 bg-black/40 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 ease-in-out"
                   aria-label="Закрыть"
                 >
                   ✕
@@ -291,7 +291,7 @@
                 <!-- Стрелка "назад" -->
                 <button
                   id="gallery-prev"
-                  class="absolute left-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white font-bold text-2xl z-20 bg-black/40 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
+                  class="absolute left-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
                   aria-label="Предыдущее изображение"
                 >
                   <
@@ -300,7 +300,7 @@
                 <!-- Стрелка "вперёд" -->
                 <button
                   id="gallery-next"
-                  class="absolute right-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white font-bold text-2xl z-20 bg-black/40 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
                   aria-label="Следующее изображение"
                 >
                   >
@@ -309,7 +309,7 @@
             </div>
 
             <!-- Счётчик (под изображением, по центру) -->
-            <div id="gallery-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-mono tracking-wide bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm"></div>
+            <div id="gallery-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-base font-mono tracking-wide bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm"></div>
           </div>
 
           <!-- Описание под галереей -->
