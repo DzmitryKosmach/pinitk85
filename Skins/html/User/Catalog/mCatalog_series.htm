@@ -267,27 +267,49 @@
           </div>
 
           <!-- Модальное окно галереи -->
-          <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
-            <div class="relative w-full max-w-4xl max-h-[90vh] flex flex-col items-center">
-              <!-- Кнопка закрытия -->
-              <button id="gallery-close" class="absolute top-4 right-4 text-white text-2xl font-bold z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition">
-                &times;
-              </button>
+          <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center pt-4 pl-4 pr-4 pb-10 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+            <!-- Обёртка для центрирования -->
+            <div class="relative max-w-full max-h-[90vh] flex items-center justify-center">
+              <!-- Контейнер изображения (ограничивает позиционирование кнопок) -->
+              <div class="relative inline-block max-w-full max-h-[90vh]">
+                <img
+                  id="gallery-main-img"
+                  src=""
+                  alt=""
+                  class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+                />
 
-              <!-- Основное изображение -->
-              <img id="gallery-main-img" src="" alt="" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl" />
+                <!-- Кнопка закрытия (в правом верхнем углу изображения) -->
+                <button
+                  id="gallery-close"
+                  class="absolute top-2 right-2 text-white/90 hover:text-white text-lg font-light z-20 bg-black/40 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 ease-in-out"
+                  aria-label="Закрыть"
+                >
+                  ✕
+                </button>
 
-              <!-- Стрелки навигации -->
-              <button id="gallery-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl font-bold bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-opacity-70 transition z-10">
-                ‹
-              </button>
-              <button id="gallery-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl font-bold bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-opacity-70 transition z-10">
-                ›
-              </button>
+                <!-- Стрелка "назад" -->
+                <button
+                  id="gallery-prev"
+                  class="absolute left-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white font-bold text-2xl z-20 bg-black/40 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
+                  aria-label="Предыдущее изображение"
+                >
+                  <
+                </button>
 
-              <!-- Индикатор (опционально) -->
-              <div id="gallery-counter" class="mt-4 text-white text-sm"></div>
+                <!-- Стрелка "вперёд" -->
+                <button
+                  id="gallery-next"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white font-bold text-2xl z-20 bg-black/40 backdrop-blur-sm rounded-full w-9 h-9 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
+                  aria-label="Следующее изображение"
+                >
+                  >
+                </button>
+              </div>
             </div>
+
+            <!-- Счётчик (под изображением, по центру) -->
+            <div id="gallery-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-mono tracking-wide bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm"></div>
           </div>
 
           <!-- Описание под галереей -->
