@@ -1506,9 +1506,9 @@ $benefits = [
           <!-- Изображение -->
           <?php if (!empty($item['_img_ext'])): ?>
 
-          <a
-            href="javascript:void(0)"
-            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+          <a class="flex justify-center"
+             href="javascript:void(0)"
+             onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
           >
             <img
               src="<?php echo Catalog::photoUrl(
@@ -1516,7 +1516,7 @@ $benefits = [
                                             $item['id'], 170, 140, 1, $item['_img_ext']
                                         ); ?>"
               alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
-              class="w-full h-28 lg:h-48 object-contain rounded-md mb-4"
+              class="max-w-full h-auto object-contain rounded-md mb-4"
             /></a>
           <?php else: ?>
           <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
