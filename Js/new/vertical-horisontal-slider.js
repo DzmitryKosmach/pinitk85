@@ -1,181 +1,228 @@
 // Добавляем стили для скрытия скроллбара
 (function hideScrollbar() {
-    const style = document.createElement("style");
-    style.textContent = `
+  const style = document.createElement("style");
+  style.textContent = `
       .slider-track::-webkit-scrollbar { display: none; }
       .slider-track { scrollbar-width: none; -ms-overflow-style: none; }
     `;
-    document.head.appendChild(style);
+  document.head.appendChild(style);
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
-    const container = document.querySelector(".slider-thumbnails-container");
-    const track = container.querySelector(".slider-track");
-    const btnPrev = container.querySelector(".slider-prev");
-    const btnNext = container.querySelector(".slider-next");
+  const container = document.querySelector(".slider-thumbnails-container");
+  const track = container.querySelector(".slider-track");
+  const btnPrev = container.querySelector(".slider-prev");
+  const btnNext = container.querySelector(".slider-next");
 
-    let isSwiping = false;
-    let touchStart = { x: 0, y: 0 };
+  let isSwiping = false;
+  let touchStart = { x: 0, y: 0 };
 
-    // Определяем направление
-    function getScrollDirection() {
-        const computed = window.getComputedStyle(track);
-        return computed.flexDirection.includes("column") ? "vertical" : "horizontal";
+  // Определяем направление
+  function getScrollDirection() {
+    const computed = window.getComputedStyle(track);
+    return computed.flexDirection.includes("column")
+      ? "vertical"
+      : "horizontal";
+  }
+
+  // Получаем размер одной карточки + gap
+  function getCardSize() {
+    const firstCard = track.querySelector("img");
+    if (!firstCard) return 0;
+
+    const direction = getScrollDirection();
+    const styles = window.getComputedStyle(track);
+    const gap =
+      parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
+    const size =
+      direction === "vertical"
+        ? firstCard.offsetHeight + gap
+        : firstCard.offsetWidth + gap;
+
+    return size;
+  }
+
+  // Устанавливаем размер контейнера, чтобы вмещал целое число слайдов
+  function fitToFullSlides() {
+    const direction = getScrollDirection();
+    const cardSize = getCardSize();
+    if (!cardSize) return;
+
+    const trackStyles = window.getComputedStyle(track);
+    const containerSize =
+      direction === "vertical"
+        ? track.parentElement.clientHeight
+        : track.parentElement.clientWidth;
+
+    const visibleCount = Math.floor(containerSize / cardSize);
+
+    if (visibleCount >= track.children.length) {
+      if (direction === "vertical") {
+        track.style.height = "auto";
+        track.style.maxHeight = "none";
+      } else {
+        track.style.width = "auto";
+        track.style.maxWidth = "none";
+      }
+      track.style.overflow = "hidden";
+      return false;
     }
 
-    // Получаем размер одной карточки + gap
-    function getCardSize() {
-        const firstCard = track.querySelector("img");
-        if (!firstCard) return 0;
-
-        const direction = getScrollDirection();
-        const styles = window.getComputedStyle(track);
-        const gap = parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
-        const size = direction === "vertical"
-            ? firstCard.offsetHeight + gap
-            : firstCard.offsetWidth + gap;
-
-        return size;
+    const newSize =
+      visibleCount * cardSize -
+      (parseInt(
+        trackStyles[direction === "vertical" ? "rowGap" : "columnGap"]
+      ) || 8);
+    if (direction === "vertical") {
+      track.style.height = `${newSize}px`;
+      track.style.maxHeight = `${newSize}px`;
+    } else {
+      track.style.width = `${newSize}px`;
+      track.style.maxWidth = `${newSize}px`;
     }
 
-    // Устанавливаем размер контейнера, чтобы вмещал целое число слайдов
-    function fitToFullSlides() {
-        const direction = getScrollDirection();
-        const cardSize = getCardSize();
-        if (!cardSize) return;
+    return true;
+  }
 
-        const trackStyles = window.getComputedStyle(track);
-        const containerSize = direction === "vertical"
-            ? track.parentElement.clientHeight
-            : track.parentElement.clientWidth;
+  function scrollPrev() {
+    const size = getCardSize();
+    const direction = getScrollDirection();
+    const scrollAmount = size;
 
-        // Сколько слайдов помещается по размеру?
-        const visibleCount = Math.floor(containerSize / cardSize);
-
-        // Если слайдов мало — отключаем скролл
-        if (visibleCount >= track.children.length) {
-            if (direction === "vertical") {
-                track.style.height = "auto";
-                track.style.maxHeight = "none";
-            } else {
-                track.style.width = "auto";
-                track.style.maxWidth = "none";
-            }
-            track.style.overflow = "hidden";
-            return false;
-        }
-
-        // Устанавливаем высоту/ширину, чтобы вмещалось ровно `visibleCount` слайдов
-        const newSize = visibleCount * cardSize - gap; // минус последний gap
-        if (direction === "vertical") {
-            track.style.height = `${newSize}px`;
-            track.style.maxHeight = `${newSize}px`;
-        } else {
-            track.style.width = `${newSize}px`;
-            track.style.maxWidth = `${newSize}px`;
-        }
-
-        return true;
+    if (direction === "vertical") {
+      track.scrollTop = Math.max(0, track.scrollTop - scrollAmount);
+    } else {
+      track.scrollLeft = Math.max(0, track.scrollLeft - scrollAmount);
     }
+  }
 
-    function scrollPrev() {
-        const size = getCardSize();
-        const direction = getScrollDirection();
-        const scrollAmount = size;
+  function scrollNext() {
+    const size = getCardSize();
+    const direction = getScrollDirection();
+    const scrollAmount = size;
 
-        if (direction === "vertical") {
-            track.scrollTop = Math.max(0, track.scrollTop - scrollAmount);
-        } else {
-            track.scrollLeft = Math.max(0, track.scrollLeft - scrollAmount);
-        }
+    if (direction === "vertical") {
+      track.scrollTop += scrollAmount;
+    } else {
+      track.scrollLeft += scrollAmount;
     }
+  }
 
-    function scrollNext() {
-        const size = getCardSize();
-        const direction = getScrollDirection();
-        const scrollAmount = size;
+  function updateButtons() {
+    const direction = getScrollDirection();
+    const max =
+      direction === "vertical"
+        ? track.scrollHeight - track.clientHeight
+        : track.scrollWidth - track.clientWidth;
+    const current =
+      direction === "vertical" ? track.scrollTop : track.scrollLeft;
 
-        if (direction === "vertical") {
-            track.scrollTop += scrollAmount;
-        } else {
-            track.scrollLeft += scrollAmount;
-        }
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current >= max - 1;
+
+    btnPrev.classList.toggle("opacity-50", current === 0);
+    btnNext.classList.toggle("opacity-50", current >= max - 1);
+  }
+
+  // === НОВАЯ ФУНКЦИЯ: определяет, является ли слайд крайним ===
+  function isSlideAtStart(slideRect, trackRect) {
+    const direction = getScrollDirection();
+    if (direction === "vertical") {
+      return slideRect.top <= trackRect.top + 1; // +1 — погрешность
+    } else {
+      return slideRect.left <= trackRect.left + 1;
     }
+  }
 
-    // Обновляем состояние кнопок
-    function updateButtons() {
-        const direction = getScrollDirection();
-        const max = direction === "vertical"
-            ? track.scrollHeight - track.clientHeight
-            : track.scrollWidth - track.clientWidth;
-        const current = direction === "vertical" ? track.scrollTop : track.scrollLeft;
-
-        btnPrev.disabled = current === 0;
-        btnNext.disabled = current >= max - 1;
-
-        btnPrev.classList.toggle("opacity-50", current === 0);
-        btnNext.classList.toggle("opacity-50", current >= max - 1);
+  function isSlideAtEnd(slideRect, trackRect) {
+    const direction = getScrollDirection();
+    if (direction === "vertical") {
+      return slideRect.bottom >= trackRect.bottom - 1;
+    } else {
+      return slideRect.right >= trackRect.right - 1;
     }
+  }
 
-    // Инициализация
-    function init() {
-        // Сначала рендер, потом размеры
-        requestAnimationFrame(() => {
-            fitToFullSlides();
-            updateButtons();
-        });
+  // === НОВАЯ ФУНКЦИЯ: обработчик клика по слайду ===
+  function handleSlideClick(e) {
+    const slide = e.target.closest("img"); // или другой селектор, если не img
+    if (!slide) return;
+
+    const trackRect = track.getBoundingClientRect();
+    const slideRect = slide.getBoundingClientRect();
+
+    if (isSlideAtStart(slideRect, trackRect)) {
+      scrollPrev();
+    } else if (isSlideAtEnd(slideRect, trackRect)) {
+      scrollNext();
     }
+  }
 
-    // Кнопки
-    btnPrev.addEventListener("click", (e) => {
-        e.preventDefault();
-        scrollPrev();
-        setTimeout(updateButtons, 100);
+  // Инициализация
+  function init() {
+    requestAnimationFrame(() => {
+      fitToFullSlides();
+      updateButtons();
+
+      // Добавляем обработчик клика на все слайды
+      const slides = track.querySelectorAll("img"); // или нужный селектор
+      slides.forEach((slide) => {
+        slide.style.cursor = "pointer"; // опционально: визуальный фидбек
+        slide.addEventListener("click", handleSlideClick);
+      });
     });
+  }
 
-    btnNext.addEventListener("click", (e) => {
-        e.preventDefault();
-        scrollNext();
-        setTimeout(updateButtons, 100);
-    });
+  // Кнопки
+  btnPrev.addEventListener("click", (e) => {
+    e.preventDefault();
+    scrollPrev();
+    setTimeout(updateButtons, 100);
+  });
 
-    // Свайп
-    track.addEventListener("touchstart", (e) => {
-        isSwiping = true;
-        touchStart.x = e.touches[0].clientX;
-        touchStart.y = e.touches[0].clientY;
-        track.style.scrollBehavior = "auto";
-    });
+  btnNext.addEventListener("click", (e) => {
+    e.preventDefault();
+    scrollNext();
+    setTimeout(updateButtons, 100);
+  });
 
-    track.addEventListener("touchmove", (e) => {
-        if (!isSwiping) return;
-        const touch = e.touches[0];
-        const dx = touchStart.x - touch.clientX;
-        const dy = touchStart.y - touch.clientY;
+  // Свайп
+  track.addEventListener("touchstart", (e) => {
+    isSwiping = true;
+    touchStart.x = e.touches[0].clientX;
+    touchStart.y = e.touches[0].clientY;
+    track.style.scrollBehavior = "auto";
+  });
 
-        if (getScrollDirection() === "vertical") {
-            track.scrollTop += dy;
-        } else {
-            track.scrollLeft += dx;
-        }
+  track.addEventListener("touchmove", (e) => {
+    if (!isSwiping) return;
+    const touch = e.touches[0];
+    const dx = touchStart.x - touch.clientX;
+    const dy = touchStart.y - touch.clientY;
 
-        touchStart.x = touch.clientX;
-        touchStart.y = touch.clientY;
-    });
+    if (getScrollDirection() === "vertical") {
+      track.scrollTop += dy;
+    } else {
+      track.scrollLeft += dx;
+    }
 
-    track.addEventListener("touchend", () => {
-        isSwiping = false;
-        setTimeout(() => {
-            track.style.scrollBehavior = "smooth";
-        }, 50);
-    });
+    touchStart.x = touch.clientX;
+    touchStart.y = touch.clientY;
+  });
 
-    // События
-    track.addEventListener("scroll", updateButtons);
-    window.addEventListener("resize", () => {
-        fitToFullSlides();
-        updateButtons();
-    });
+  track.addEventListener("touchend", () => {
+    isSwiping = false;
+    setTimeout(() => {
+      track.style.scrollBehavior = "smooth";
+    }, 50);
+  });
 
-    init();
+  // События
+  track.addEventListener("scroll", updateButtons);
+  window.addEventListener("resize", () => {
+    fitToFullSlides();
+    updateButtons();
+  });
+
+  init();
 });
