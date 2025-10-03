@@ -205,8 +205,8 @@
           <?php } ?>
           <?php } else { ?>
           <?php if(count($items)) { ?>
-            <?php echo CssCopmress::load('series')?>
-            <?php echo JsCopmress::load('series')?>
+          <?php echo CssCopmress::load('series')?>
+          <?php echo JsCopmress::load('series')?>
 
           <script>
             oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
@@ -325,7 +325,7 @@
       <!-- Двухколоночное размещение -->
       <div class="flex flex-col md:flex-row gap-20 lg:gap-32">
         <!-- Левая колонка -->
-        <div class="w-full md:w-1/2">
+        <div class="w-full md:w-1/2 text-sm sm:text-[16px]">
           <h2 class="text-2xl font-bold mb-2">
             Офисная мебель руководителя - ассортимент
           </h2>
@@ -343,7 +343,7 @@
           </p>
 
           <!-- Список сегментов -->
-          <ul class="list-disc pl-5 mb-4">
+          <ul class="list-disc pl-5 mb-4 text-sm sm:text-[16px]">
             <li>
               <span class="underline">Эконом.</span> Категория меблировки,
               которая позволяет экономно обставить кабинет руководителя;
@@ -369,7 +369,7 @@
           <p class="mb-4">
             Многообразие комплектаций мебели кабинетов руководителя:
           </p>
-          <ul class="list-disc pl-5 mb-4">
+          <ul class="list-disc pl-5 mb-4 text-sm sm:text-[16px]">
             <li>
               письменные, компьютерные, рабочие столы различных форм,
               дизайнерских исполнений, цветовых решений;
@@ -402,7 +402,7 @@
         </div>
 
         <!-- Правая колонка -->
-        <div class="w-full md:w-1/2">
+        <div class="w-full md:w-1/2 text-sm sm:text-[16px]">
           <h2 class="text-2xl font-bold mb-2">
             Комплекты мебели для кабинета руководителя покупать выгодно с
             компанией ООО Дары мебели

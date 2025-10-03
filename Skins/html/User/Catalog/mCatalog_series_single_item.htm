@@ -34,42 +34,89 @@
     <div class="md:hidden block">
       <div class="flex items-center justify-between">
         <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-          <button class="hover:opacity-50">
-            <img src="/images/index/izbr_small.png" </button>
-          <button class="hover:opacity-50">
-            <div class="threeblock clearfix">
-              <div class="compare">
+          <!-- Избранное -->
+          <div>
+            <a
+              href="javascript:void(0)"
+              class="hover:opacity-50"
+              title="В избранное"
+            >
+              <img
+                src="/images/index/izbr_small.png"
+                alt="Избранное"
+                class="w-5 h-5"
+              />
+            </a>
+          </div>
 
-                <!-- Кнопка "Добавить к сравнению" -->
-                <div class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;">
-                    <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
-                    </svg>
-                  </a>
-                </div>
-
-                <!-- Кнопка "Убрать из сравнения" -->
-                <div class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
-                  <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;">
-                    <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                      <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(8,0)">
-                        <line x1="13" y1="2" x2="21" y2="10" />
-                        <line x1="21" y1="2" x2="13" y2="10" />
-                      </g>
-                      <g transform="translate(0,3)">
-                        <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
-                      </g>
-                    </svg>
-                  </a>
-                </div>
-              </div>
+          <!-- Сравнение -->
+          <div class="threeblock clearfix compare">
+            <!-- Кнопка "Добавить к сравнению" -->
+            <div
+              class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
+              data-id="<?php echo (int)$seriesInf['id']; ?>"
+            >
+              <a
+                rel="nofollow"
+                class="add2compare hover:opacity-50"
+                href="javascript:void(0)"
+                onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
+                title="Добавить к сравнению"
+              >
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 34 34"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                    fill="#3C3C3A"
+                  />
+                </svg>
+              </a>
             </div>
-          </button>
+
+            <!-- Кнопка "Убрать из сравнения" -->
+            <div
+              class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
+              data-id="<?php echo (int)$seriesInf['id']; ?>"
+            >
+              <a
+                rel="nofollow"
+                class="add2compare hover:opacity-50"
+                href="javascript:void(0)"
+                onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
+                title="Убрать из сравнения"
+              >
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 34 34"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    stroke="#FF0000"
+                    stroke-width="3.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    transform="translate(8,0)"
+                  >
+                    <line x1="13" y1="2" x2="21" y2="10" />
+                    <line x1="21" y1="2" x2="13" y2="10" />
+                  </g>
+                  <g transform="translate(0,3)">
+                    <path
+                      d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                      fill="#3C3C3A"
+                    />
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
         <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
           <button class="hover:opacity-50">&lt; Пред.товар</button>
@@ -144,11 +191,11 @@
                 <div>Снято с производства</div>
               </div>
               <?php } ?>
-              <div class="glass w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in">
+              <div class="glass w-full !flex justify-center  ">
                 <?php
                                 $p = $photos[0];
                                 ?>
-                <img id="main-product-image" class="js_picture_glass !max-h-none genimage"
+                <img id="main-product-image" class="js_picture_glass object-cover cursor-zoom-in !max-h-[500px] rounded-xl genimage"
                      src="<?php echo Catalog::photoUrl(
 										 Catalog_Series_Photos::$imagePath,
 										 $p['id'], 0, 0, 0, $p['_img_ext']
@@ -432,7 +479,7 @@
 
           const btnHeight = btnPrev.offsetHeight;
           const totalButtonsHeight = btnHeight * 2;
-          const gap = 24; // gap-6 между кнопками и треком
+          const gap = 18; //  между кнопками и треком
 
           const desiredTrackHeight = imageHeight - totalButtonsHeight - gap;
 
@@ -540,46 +587,89 @@
         <div class="md:block hidden">
           <div class="flex items-center justify-between">
             <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-              <button class="hover:opacity-50">
-                <img src="/images/index/izbr_small.png" </button>
-              <button class="hover:opacity-50">
-                <div class="threeblock clearfix">
-                  <div class="compare">
+              <!-- Избранное -->
+              <div>
+                <a
+                  href="javascript:void(0)"
+                  class="hover:opacity-50"
+                  title="В избранное"
+                >
+                  <img
+                    src="/images/index/izbr_small.png"
+                    alt="Избранное"
+                    class="w-5 h-5"
+                  />
+                </a>
+              </div>
 
-                    <!-- Кнопка "Добавить к сравнению" -->
-                    <div class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
-                      <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                         onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;">
-                        <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                          <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
-                        </svg>
-                      </a>
-                    </div>
-
-                    <!-- Кнопка "Убрать из сравнения" -->
-                    <div class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
-                      <a rel="nofollow" class="add2compare" href="javascript:void(0)"
-                         onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;">
-                        <svg width="26" height="26" viewBox="0 0 34 34" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                          <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(8,0)">
-                            <line x1="13" y1="2" x2="21" y2="10" />
-                            <line x1="21" y1="2" x2="13" y2="10" />
-                          </g>
-                          <g transform="translate(0,3)">
-                            <path d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z" fill="#3C3C3A" />
-                          </g>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                  <?php $fc = trim(Options::name('found-cheaper')); ?>
-                  <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
-
-                  <?php } ?>
+              <!-- Сравнение -->
+              <div class="threeblock clearfix compare">
+                <!-- Кнопка "Добавить к сравнению" -->
+                <div
+                  class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
+                  data-id="<?php echo (int)$seriesInf['id']; ?>"
+                >
+                  <a
+                    rel="nofollow"
+                    class="add2compare hover:opacity-50"
+                    href="javascript:void(0)"
+                    onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
+                    title="Добавить к сравнению"
+                  >
+                    <svg
+                      width="26"
+                      height="26"
+                      viewBox="0 0 34 34"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                        fill="#3C3C3A"
+                      />
+                    </svg>
+                  </a>
                 </div>
-              </button>
+
+                <!-- Кнопка "Убрать из сравнения" -->
+                <div
+                  class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
+                  data-id="<?php echo (int)$seriesInf['id']; ?>"
+                >
+                  <a
+                    rel="nofollow"
+                    class="add2compare hover:opacity-50"
+                    href="javascript:void(0)"
+                    onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
+                    title="Убрать из сравнения"
+                  >
+                    <svg
+                      width="26"
+                      height="26"
+                      viewBox="0 0 34 34"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g
+                        stroke="#FF0000"
+                        stroke-width="3.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        transform="translate(8,0)"
+                      >
+                        <line x1="13" y1="2" x2="21" y2="10" />
+                        <line x1="21" y1="2" x2="13" y2="10" />
+                      </g>
+                      <g transform="translate(0,3)">
+                        <path
+                          d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
+                          fill="#3C3C3A"
+                        />
+                      </g>
+                    </svg>
+                  </a>
+                </div>
+              </div>
             </div>
             <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
               <button class="hover:opacity-50">&lt; Пред.товар</button>
