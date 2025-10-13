@@ -2875,51 +2875,72 @@ var oCart = new function(){
 	/**
 	 *
 	 */
-	function displayTotal(cartTotal){
-		$$$('basketinfo').innerHTML = cartTotal[0] + ' ' + itemsAmountWord(cartTotal[0]) + ' на ' + priceFormat(cartTotal[1]) + ' руб.';
-		// new code
-		$$$('basketinfo2').innerHTML = cartTotal[0] + ' ' + itemsAmountWord(cartTotal[0]) + ' на ' + priceFormat(cartTotal[1]) + ' руб.';
-		var cart_link2 = $('#basketinfo2').closest('a')[0];
-		$(cart_link2).removeClass('not-empty').addClass('not-empty');
-		// new code
-		var cart_link = $('#basketinfo').closest('a')[0];
-		$(cart_link).removeClass('not-empty').addClass('not-empty');
-		$$$('basketinfo-amount').innerHTML = cartTotal[0];
-		$$$('basketinfo-price').innerHTML = priceFormat(cartTotal[1]) + ' руб.';
-		$($('#basketinfo-amount').closest('a')[0]).removeClass('not-empty').addClass('not-empty');
+  function displayTotal(cartTotal) {
+    $$$("basketinfo").innerHTML =
+      cartTotal[0] +
+      " " +
+      itemsAmountWord(cartTotal[0]) +
+      " на " +
+      priceFormat(cartTotal[1]) +
+      " руб.";
 
-		if(typeof(cartTotal[3]) === 'object'){
-			var iId, btn1, btn2, btn3;
-			for(var i = 0,l = cartTotal[3].length; i < l; i++){
-				if(typeof(cartTotal[3][i]) === 'undefined') continue;
-				iId = cartTotal[3][i];
+    $$$("basketinfo-amount").innerHTML = cartTotal[0];
+    $$$("basketinfo-price").innerHTML = priceFormat(cartTotal[1]) + " руб.";
 
-				// Items list
-				btn1 = findOne('#catalog-item-' + iId + ' .add2basketform .submit');
-				if(btn1){
-					btn1.addClass('in-cart');
-					btn1.title = 'В корзине';
-				}
+    // Update cart badge counts
+    var mobileBadge = $$$("cart-badge-count-mobile");
+    var desktopBadge = $$$("cart-badge-count-desktop");
 
-				// Item page
-				btn1 = findOne('#catalog-item-full-' + iId + ' .add2basket');
-				btn2 = findOne('#catalog-item-full-' + iId + ' .buy1click');
-				btn3 = findOne('#catalog-item-full-' + iId + ' .go2basket');
-				if(btn1){
-					btn1.removeClass('add2basket');
-					btn1.addClass('inbasket');
-					btn1.title = 'В корзине';
-					btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
-				}
-				if(btn2){
-					btn2.style.display = 'none';
-				}
-				if(btn3){
-					btn3.style.display = '';
-				}
-			}
-		}
-	}
+    if (mobileBadge) {
+      mobileBadge.innerHTML = cartTotal[0];
+      if (cartTotal[0] > 0) {
+        mobileBadge.classList.remove("hidden");
+      } else {
+        mobileBadge.classList.add("hidden");
+      }
+    }
+
+    if (desktopBadge) {
+      desktopBadge.innerHTML = cartTotal[0];
+      if (cartTotal[0] > 0) {
+        desktopBadge.classList.remove("hidden");
+      } else {
+        desktopBadge.classList.add("hidden");
+      }
+    }
+
+    if (typeof cartTotal[3] === "object") {
+      var iId, btn1, btn2, btn3;
+      for (var i = 0, l = cartTotal[3].length; i < l; i++) {
+        if (typeof cartTotal[3][i] === "undefined") continue;
+        iId = cartTotal[3][i];
+
+        // Items list
+        btn1 = findOne("#catalog-item-" + iId + " .add2basketform .submit");
+        if (btn1) {
+          btn1.addClass("in-cart");
+          btn1.title = "В корзине";
+        }
+
+        // Item page
+        btn1 = findOne("#catalog-item-full-" + iId + " .add2basket");
+        btn2 = findOne("#catalog-item-full-" + iId + " .buy1click");
+        btn3 = findOne("#catalog-item-full-" + iId + " .go2basket");
+        if (btn1) {
+          btn1.removeClass("add2basket");
+          btn1.addClass("inbasket");
+          btn1.title = "В корзине";
+          btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
+        }
+        if (btn2) {
+          btn2.style.display = "none";
+        }
+        if (btn3) {
+          btn3.style.display = "";
+        }
+      }
+    }
+  }
 
 
 	/** Получаем слово "товаров" в правильном падеже, в зависимоисти от к-ва товаров

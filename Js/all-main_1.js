@@ -2822,6 +2822,28 @@ var oCart = new (function () {
     $$$("basketinfo-amount").innerHTML = cartTotal[0];
     $$$("basketinfo-price").innerHTML = priceFormat(cartTotal[1]) + " руб.";
 
+    // Update cart badge counts
+    var mobileBadge = $$$("cart-badge-count-mobile");
+    var desktopBadge = $$$("cart-badge-count-desktop");
+
+    if (mobileBadge) {
+      mobileBadge.innerHTML = cartTotal[0];
+      if (cartTotal[0] > 0) {
+        mobileBadge.classList.remove("hidden");
+      } else {
+        mobileBadge.classList.add("hidden");
+      }
+    }
+
+    if (desktopBadge) {
+      desktopBadge.innerHTML = cartTotal[0];
+      if (cartTotal[0] > 0) {
+        desktopBadge.classList.remove("hidden");
+      } else {
+        desktopBadge.classList.add("hidden");
+      }
+    }
+
     if (typeof cartTotal[3] === "object") {
       var iId, btn1, btn2, btn3;
       for (var i = 0, l = cartTotal[3].length; i < l; i++) {
