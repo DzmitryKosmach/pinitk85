@@ -55,17 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Устанавливаем размер ТРЕКА, чтобы вмещал целое число слайдов
   function fitToFullSlides() {
-    const direction = getScrollDirection();
-    const cardSize = getCardSize();
+    const direction = getScrollDirection(); // Получаем направление прокрутки
+    const cardSize = getCardSize(); // Получаем размер одного слайда
     const mainImageEl = document.querySelector('#mainImageContainer > img');
-    if (!cardSize) return;
+    if (!cardSize || !mainImageEl) return;
 
     const containerSize = direction === "vertical"
-      ? mainImageEl.getBoundingClientRect().height
-      : container.clientWidth;
+      ? mainImageEl.getBoundingClientRect().height // Для вертикальной прокрутки
+      : container.clientWidth; // Для горизонтальной прокрутки
 
+    // Вычисляем, сколько слайдов помещается в контейнер
     const visibleCount = Math.floor(containerSize / cardSize);
 
+    // Если все слайды помещаются в контейнер, сбрасываем размеры
     if (visibleCount >= track.children.length) {
       if (direction === "vertical") {
         track.style.height = "auto";
@@ -78,10 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    const newSize = visibleCount * cardSize - (parseInt(
-      window.getComputedStyle(track)[direction === "vertical" ? "rowGap" : "columnGap"]
-    ) || 8);
+    // Рассчитываем новый размер слайдера с учётом отступов между слайдами
+    const gapSize = parseInt(window.getComputedStyle(track)[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
 
+    const newSize = visibleCount * cardSize - gapSize; // Учитываем gap
+
+    // Устанавливаем новый размер контейнера слайдов в зависимости от направления прокрутки
     if (direction === "vertical") {
       track.style.height = `${newSize}px`;
       track.style.maxHeight = `${newSize}px`;
@@ -89,8 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
       track.style.width = `${newSize}px`;
       track.style.maxWidth = `${newSize}px`;
     }
+
+    // Ожидаем полное заполнение экрана слайдами
+    track.style.overflow = "hidden"; // Скрываем прокрутку, если размеры были установлены правильно
+
     return true;
   }
+
 
   function scrollPrev() {
     const size = getCardSize();
