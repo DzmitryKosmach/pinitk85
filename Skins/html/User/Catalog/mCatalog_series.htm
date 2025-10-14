@@ -148,7 +148,7 @@
           <div class="flex lg:flex-row flex-col-reverse gap-4">
             <!-- Галерея миниатюр с кнопками прокрутки -->
             <div class="slider-thumbnails-container">
-              <div class="flex flex-row lg:flex-col justify-between items-center gap-2 w-full lg:max-w-[80px] max-h-[500px] overflow-hidden">
+              <div class="flex flex-row lg:flex-col justify-between items-center gap-2 lg:max-w-[80px] max-h-[500px] overflow-hidden">
                 <!-- Кнопка "вверх / влево" -->
                 <button type="button"
                         class="slider-prev text-gray-600 hover:text-black focus:outline-none"
@@ -161,7 +161,7 @@
                 </button>
 
                 <!-- Слайдер миниатюр -->
-                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto max-h-full max-w-full lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
+                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:w-[80px] lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
                      style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
@@ -555,29 +555,54 @@
 
             // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
             function updateThumbnailSliderHeight() {
+              const track = document.querySelector('.slider-track');
+              const container = document.querySelector('.slider-thumbnails-container');
+
+              // Если элементов нет — выходим
+              if (!track || !container) return;
+
               if (window.innerWidth < 1024) {
-                const track = document.querySelector('.slider-track');
-                const container = document.querySelector('.slider-thumbnails-container');
-                if (track) { track.style.maxHeight = ''; track.style.height = ''; }
-                if (container) { container.style.height = ''; container.style.maxHeight = ''; }
+                // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
+                track.style.height = '';
+                track.style.maxHeight = '';
+                track.style.width = '';
+                track.style.minWidth = '';
+                track.style.maxWidth = '';
+
+                container.style.height = '';
+                container.style.maxHeight = '';
+                container.style.width = '';
+                container.style.minWidth = '';
+                container.style.maxWidth = '';
+
                 return;
               }
 
+              // === Десктопный режим (>=1024px) ===
               const mainImageEl = document.querySelector('.w-full > img');
-              const container = document.querySelector('.slider-thumbnails-container');
-              const track = container?.querySelector('.slider-track');
-
-              if (!mainImageEl || !container || !track) return;
+              if (!mainImageEl) return;
 
               const imageHeight = mainImageEl.getBoundingClientRect().height;
               if (imageHeight <= 0) return;
 
-              const btnHeight = 20; // примерная высота кнопок
-              const gap = 16;
+              const btnHeight = 20; // высота кнопок "вверх/вниз"
+              const gap = 16;       // суммарный gap между кнопками и треком
               const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
+              const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
 
-              track.style.height = track.style.maxHeight = (desiredTrackHeight > 100 ? desiredTrackHeight : 400) + 'px';
-              container.style.height = container.style.maxHeight = imageHeight + 'px';
+              // --- Устанавливаем стили для ТРЕКА (слайдер миниатюр) ---
+              track.style.height = finalTrackHeight + 'px';
+              track.style.maxHeight = finalTrackHeight + 'px';
+              track.style.width = '80px';      // 🔥 фиксированная ширина
+              track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
+              track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
+
+              // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
+              container.style.height = imageHeight + 'px';
+              container.style.maxHeight = imageHeight + 'px';
+              container.style.width = '80px';
+              container.style.minWidth = '80px';
+              container.style.maxWidth = '80px';
             }
 
             window.addEventListener('load', updateThumbnailSliderHeight);
