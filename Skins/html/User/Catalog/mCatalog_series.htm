@@ -148,21 +148,16 @@
           <div class="flex lg:flex-row flex-col-reverse gap-4">
             <!-- Галерея миниатюр с кнопками прокрутки -->
             <div class="slider-thumbnails-container">
-              <div class="flex flex-row lg:flex-col justify-between items-center gap-2 lg:max-w-[80px] max-h-[500px] overflow-hidden">
-                <!-- Кнопка "вверх / влево" -->
-                <button type="button"
-                        class="slider-prev text-gray-600 hover:text-black focus:outline-none"
-                        aria-label="Предыдущее изображение">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
-                       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M5 15l7-7 7 7" />
-                  </svg>
-                </button>
+              <!-- Относительный контейнер для позиционирования кнопок -->
+              <div class="relative flex justify-center items-center lg:max-w-[80px] max-h-[500px] overflow-hidden">
 
-                <!-- Слайдер миниатюр -->
-                <div class="slider-track flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:w-[80px] lg:max-w-[80px] scroll-smooth snap-x snap-mandatory lg:snap-y scrollbar-none"
-                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
+                <!-- Слайдер миниатюр (основной контент) -->
+                <div class="slider-track flex flex-row lg:flex-col gap-2
+                overflow-x-auto lg:overflow-y-auto
+                w-full lg:w-[80px]
+                scroll-smooth snap-x snap-mandatory lg:snap-y
+                scrollbar-none"
+                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; max-height: 500px;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
@@ -175,16 +170,32 @@
                   <?php endforeach; ?>
                 </div>
 
-                <!-- Кнопка "вниз / вправо" -->
+                <!-- Кнопка "назад" (влево на мобильных, вверх на lg) -->
                 <button type="button"
-                        class="slider-next text-gray-600 hover:text-black focus:outline-none"
+                        class="slider-prev absolute z-10 flex items-center justify-center
+                   w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
+                   top-1/2 -translate-y-1/2 -left-3
+                   lg:top-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 lg:-top-3"
+                        aria-label="Предыдущее изображение">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
+                       fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                </button>
+
+                <!-- Кнопка "вперёд" (вправо на мобильных, вниз на lg) -->
+                <button type="button"
+                        class="slider-next absolute z-10 flex items-center justify-center
+                   w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
+                   top-1/2 -translate-y-1/2 -right-3
+                   lg:bottom-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 lg:-bottom-3"
                         aria-label="Следующее изображение">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180"
                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M5 15l7-7 7 7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                   </svg>
                 </button>
+
               </div>
             </div>
 
