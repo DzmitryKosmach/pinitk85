@@ -537,11 +537,11 @@
 
               if (!mainImage || !bigImage) return;
 
-              // Обновляем подсветку
+              // Обновляем подсветку миниатюр
               document.querySelectorAll('.slider-track img').forEach(img => {
-                img.classList.remove('!border-blue-600');
+                img.style.borderColor = ''; // сбрасываем инлайновый цвет
               });
-              thumb.classList.add('!border-blue-600');
+              thumb.style.setProperty('border-color', '#2563eb', 'important');
 
               // Управление точками
               const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
