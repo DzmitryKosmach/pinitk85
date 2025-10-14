@@ -1,4 +1,5 @@
 // Добавляем стили для скрытия скроллбара
+// Добавляем стили для скрытия скроллбара
 (function hideScrollbar() {
   const style = document.createElement("style");
   style.textContent = `
@@ -13,16 +14,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const track = container.querySelector(".slider-track");
   const btnPrev = container.querySelector(".slider-prev");
   const btnNext = container.querySelector(".slider-next");
+  const mainImage = document.getElementById('main-product-image');
 
   let isSwiping = false;
   let touchStart = { x: 0, y: 0 };
 
+  // === НОВАЯ: обновлённая updateThumbnailSliderHeight (только контейнер!) ===
+  function updateThumbnailSliderHeight() {
+    if (!container || !mainImage || window.innerWidth < 1024) return;
+
+    const imageHeight = mainImage.getBoundingClientRect().height;
+    if (imageHeight <= 0) return;
+
+    // Управляем ТОЛЬКО контейнером
+    container.style.height = imageHeight + 'px';
+    container.style.maxHeight = imageHeight + 'px';
+    container.style.width = '80px';
+    container.style.minWidth = '80px';
+    container.style.maxWidth = '80px';
+  }
+
   // Определяем направление
   function getScrollDirection() {
     const computed = window.getComputedStyle(track);
-    return computed.flexDirection.includes("column")
-      ? "vertical"
-      : "horizontal";
+    return computed.flexDirection.includes("column") ? "vertical" : "horizontal";
   }
 
   // Получаем размер одной карточки + gap
@@ -32,27 +47,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const direction = getScrollDirection();
     const styles = window.getComputedStyle(track);
-    const gap =
-      parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
-    const size =
-      direction === "vertical"
-        ? firstCard.offsetHeight + gap
-        : firstCard.offsetWidth + gap;
-
+    const gap = parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
+    const size = direction === "vertical"
+      ? firstCard.offsetHeight + gap
+      : firstCard.offsetWidth + gap;
     return size;
   }
 
-  // Устанавливаем размер контейнера, чтобы вмещал целое число слайдов
+  // Устанавливаем размер ТРЕКА, чтобы вмещал целое число слайдов
   function fitToFullSlides() {
     const direction = getScrollDirection();
     const cardSize = getCardSize();
     if (!cardSize) return;
 
-    const trackStyles = window.getComputedStyle(track);
-    const containerSize =
-      direction === "vertical"
-        ? track.parentElement.clientHeight
-        : track.parentElement.clientWidth;
+    const containerSize = direction === "vertical"
+      ? container.clientHeight
+      : container.clientWidth;
 
     const visibleCount = Math.floor(containerSize / cardSize);
 
@@ -68,11 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    const newSize =
-      visibleCount * cardSize -
-      (parseInt(
-        trackStyles[direction === "vertical" ? "rowGap" : "columnGap"]
-      ) || 8);
+    const newSize = visibleCount * cardSize - (parseInt(
+      window.getComputedStyle(track)[direction === "vertical" ? "rowGap" : "columnGap"]
+    ) || 8);
+
     if (direction === "vertical") {
       track.style.height = `${newSize}px`;
       track.style.maxHeight = `${newSize}px`;
@@ -80,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
       track.style.width = `${newSize}px`;
       track.style.maxWidth = `${newSize}px`;
     }
-
     return true;
   }
 
