@@ -57,10 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function fitToFullSlides() {
     const direction = getScrollDirection();
     const cardSize = getCardSize();
+    const mainImageEl = document.querySelector('#mainImageContainer > img');
     if (!cardSize) return;
 
     const containerSize = direction === "vertical"
-      ? container.clientHeight
+      ? mainImageEl.getBoundingClientRect().height
       : container.clientWidth;
 
     const visibleCount = Math.floor(containerSize / cardSize);

@@ -149,10 +149,10 @@
             <!-- Галерея миниатюр с кнопками прокрутки -->
             <div class="slider-thumbnails-container">
               <!-- Относительный контейнер для позиционирования кнопок -->
-              <div class="relative flex justify-center items-center lg:max-w-[80px] max-h-[500px] overflow-hidden">
+              <div class="relative h-full flex justify-center items-center lg:max-w-[80px] overflow-hidden">
 
                 <!-- Слайдер миниатюр (основной контент) -->
-                <div class="slider-track flex flex-row lg:flex-col gap-2
+                <div class="slider-track flex flex-row lg:flex-col gap-2 max-h-[500px]
                 overflow-x-auto lg:overflow-y-auto
                 w-full lg:w-[80px]
                 scroll-smooth snap-x snap-mandatory lg:snap-y
@@ -186,9 +186,9 @@
                 <!-- Кнопка "вперёд" (вправо на мобильных, вниз на lg) -->
                 <button type="button"
                         class="slider-next absolute z-10 flex items-center justify-center
-                   w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
-                   top-1/2 -translate-y-1/2 -right-3
-                   lg:bottom-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 lg:-bottom-3"
+                           w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
+                            -translate-y-1/2 -right-3
+                           lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 lg:-bottom-0"
                         aria-label="Следующее изображение">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90 lg:rotate-180"
                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -573,7 +573,7 @@
             // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
             function updateThumbnailSliderHeight() {
               const track = document.querySelector('.slider-track');
-              const container = document.querySelector('.slider-thumbnails-container');
+              const container = document.querySelector(".slider-thumbnails-container > .relative");
 
               // Если элементов нет — выходим
               if (!track || !container) return;
@@ -595,24 +595,26 @@
                 return;
               }
 
+
               // === Десктопный режим (>=1024px) ===
-              const mainImageEl = document.querySelector('.w-full > img');
+              const mainImageEl = document.querySelector('#mainImageContainer > img');
               if (!mainImageEl) return;
 
               const imageHeight = mainImageEl.getBoundingClientRect().height;
               if (imageHeight <= 0) return;
 
-              const btnHeight = 20; // высота кнопок "вверх/вниз"
-              const gap = 16;       // суммарный gap между кнопками и треком
+              // const btnHeight = 20; // высота кнопок "вверх/вниз"
+              // const gap = 16;       // суммарный gap между кнопками и треком
+              // const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
               const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
               const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
 
               // --- Устанавливаем стили для ТРЕКА (слайдер миниатюр) ---
-              track.style.height = finalTrackHeight + 'px';
-              track.style.maxHeight = finalTrackHeight + 'px';
-              track.style.width = '80px';      // 🔥 фиксированная ширина
-              track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
-              track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
+              // track.style.height = finalTrackHeight + 'px';
+              // track.style.maxHeight = finalTrackHeight + 'px';
+              // track.style.width = '80px';      // 🔥 фиксированная ширина
+              // track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
+              // track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
 
               // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
               container.style.height = imageHeight + 'px';
@@ -624,7 +626,7 @@
 
             function refreshSlider() {
               updateThumbnailSliderHeight();
-              fitToFullSlides();
+              // fitToFullSlides();
             }
 
             window.addEventListener('load', refreshSlider);
