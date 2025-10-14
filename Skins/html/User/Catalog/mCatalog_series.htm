@@ -164,7 +164,7 @@
                     data-bigimage="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                     alt="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     title="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
-                    class="w-20 h-20 object-cover rounded border flex-shrink-0 snap-start cursor-pointer transition-transform hover:scale-105"
+                    class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 snap-start cursor-zoom-in transition-transform hover:scale-105"
                     onclick="changeMainImage(this)"
                   />
                   <?php endforeach; ?>
@@ -172,7 +172,7 @@
 
                 <!-- Кнопка "назад" (влево на мобильных, вверх на lg) -->
                 <button type="button"
-                   class="slider-prev absolute z-10 flex items-center justify-center
+                        class="slider-prev absolute z-10 flex items-center justify-center
                    w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
                    top-1/2 -translate-y-1/2 left-0 lg:top-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 "
                         aria-label="Предыдущее изображение">
@@ -184,7 +184,7 @@
 
                 <!-- Кнопка "вперёд" (вправо на мобильных, вниз на lg) -->
                 <button type="button"
-                   class="slider-next absolute z-10 flex items-center justify-center
+                        class="slider-next absolute z-10 flex items-center justify-center
                    w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
                    -translate-y-1 right-0 lg:bottom-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0"
                         aria-label="Следующее изображение">
@@ -212,7 +212,7 @@
 
                 <!-- Точки на изображении с информацией-->
                 <?php if(count($seriesSet)) { ?>
-                <div id="infoDots" class="series-set-points absolute top-0 bottom-0 left-0 right-0 z-20">
+                <div id="infoDots" class="series-set-points absolute top-0 bottom-0 left-0 right-0 z-20 cursor-zoom-in">
                   <?php foreach($seriesSet as $in => $i) { ?>
                   <?php
 												$seriesSetItemsIds[] = $i['id'];
@@ -539,9 +539,9 @@
 
               // Обновляем подсветку
               document.querySelectorAll('.slider-track img').forEach(img => {
-                img.classList.remove('border-blue-600');
+                img.classList.remove('!border-blue-600');
               });
-              thumb.classList.add('border-blue-600');
+              thumb.classList.add('!border-blue-600');
 
               // Управление точками
               const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
