@@ -543,7 +543,7 @@
               // Ждём загрузки изображения перед обновлением высоты
               mainImage.onload = () => {
                 mainImage.onload = null; // отписываемся
-                requestAnimationFrame(updateThumbnailSliderHeight);
+                requestAnimationFrame(refreshSlider);
               };
 
               // Меняем изображение
@@ -611,9 +611,14 @@
               container.style.maxWidth = '80px';
             }
 
-            window.addEventListener('load', updateThumbnailSliderHeight);
-            window.addEventListener('resize', updateThumbnailSliderHeight);
-            mainImage?.addEventListener('load', updateThumbnailSliderHeight);
+            function refreshSlider() {
+              updateThumbnailSliderHeight();
+              fitToFullSlides();
+            }
+
+            window.addEventListener('load', refreshSlider);
+            window.addEventListener('resize', refreshSlider);
+            mainImage?.addEventListener('load', refreshSlider);
           });
         </script>
 
