@@ -526,23 +526,29 @@
               const bigImage = thumb.dataset.bigimage;
               const alt = thumb.alt;
 
-              if (mainImage && bigImage) {
-                mainImage.src = bigImage;
-                mainImage.alt = alt;
-              }
+              if (!mainImage || !bigImage) return;
 
-              // Показываем точки только на первом изображении
-              const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-              if (infoDots) {
-                if (thumbIndex === 0) infoDots.classList.remove('hidden');
-                else infoDots.classList.add('hidden');
-              }
-
-              // Подсветка
+              // Обновляем подсветку
               document.querySelectorAll('.slider-track img').forEach(img => {
                 img.classList.remove('border-blue-600');
               });
               thumb.classList.add('border-blue-600');
+
+              // Управление точками
+              const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+              if (infoDots) {
+                infoDots.classList.toggle('hidden', thumbIndex !== 0);
+              }
+
+              // Ждём загрузки изображения перед обновлением высоты
+              mainImage.onload = () => {
+                mainImage.onload = null; // отписываемся
+                requestAnimationFrame(updateThumbnailSliderHeight);
+              };
+
+              // Меняем изображение
+              mainImage.src = bigImage;
+              mainImage.alt = alt;
             }
 
             // Инициализация миниатюр
