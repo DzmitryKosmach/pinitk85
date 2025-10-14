@@ -436,68 +436,54 @@
 
         // Функция обновления высоты слайдера миниатюр
         function updateThumbnailSliderHeight() {
-          // 🔹 Проверяем ширину экрана
-          if (window.innerWidth < 1024) {
-            // На маленьких экранах — ничего не меняем
-            const track = document.querySelector('.slider-track');
-            const container = document.querySelector('.slider-thumbnails-container');
-
-            if (track) {
-              // Сбрасываем стили, заданные JS
-              track.style.maxHeight = '';
-              track.style.height = '';
-            }
-            if (container) {
-              container.style.height = '';
-              container.style.maxHeight = '';
-            }
-
-            // Всё равно обновляем кнопки (на случай, если контейнер изменился из-за ресайза)
-            updateButtons();
-            return;
-          }
-
-          // 🔹 На больших экранах — подстраиваем под высоту главного изображения
-          const mainImage = document.querySelector('.w-full > img');
+          const track = document.querySelector('.slider-track');
           const container = document.querySelector('.slider-thumbnails-container');
-          const track = container?.querySelector('.slider-track');
-          const btnPrev = container?.querySelector('.slider-prev');
-          const btnNext = container?.querySelector('.slider-next');
 
-          if (!mainImage || !container || !track || !btnPrev || !btnNext) {
-            updateButtons(); // всё равно попробуем обновить кнопки
+          // Если элементов нет — выходим
+          if (!track || !container) return;
+
+          if (window.innerWidth < 1024) {
+            // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
+            track.style.height = '';
+            track.style.maxHeight = '';
+            track.style.width = '';
+            track.style.minWidth = '';
+            track.style.maxWidth = '';
+
+            container.style.height = '';
+            container.style.maxHeight = '';
+            container.style.width = '';
+            container.style.minWidth = '';
+            container.style.maxWidth = '';
+
             return;
           }
 
-          const imageRect = mainImage.getBoundingClientRect();
-          const imageHeight = imageRect.height;
+          // === Десктопный режим (>=1024px) ===
+          const mainImageEl = document.querySelector('.w-full > img');
+          if (!mainImageEl) return;
 
-          if (imageHeight <= 0) {
-            updateButtons();
-            return;
-          }
+          const imageHeight = mainImageEl.getBoundingClientRect().height;
+          if (imageHeight <= 0) return;
 
-          const btnHeight = btnPrev.offsetHeight;
-          const totalButtonsHeight = btnHeight * 2;
-          const gap = 18; //  между кнопками и треком
+          const btnHeight = 20; // высота кнопок "вверх/вниз"
+          const gap = 16;       // суммарный gap между кнопками и треком
+          const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
+          const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
 
-          const desiredTrackHeight = imageHeight - totalButtonsHeight - gap;
+          // --- Устанавливаем стили для ТРЕКА (слайдер миниатюр) ---
+          track.style.height = finalTrackHeight + 'px';
+          track.style.maxHeight = finalTrackHeight + 'px';
+          track.style.width = '80px';      // 🔥 фиксированная ширина
+          track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
+          track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
 
-          // Устанавливаем высоту трека
-          if (desiredTrackHeight > 100) {
-            track.style.maxHeight = `${desiredTrackHeight}px`;
-            track.style.height = `${desiredTrackHeight}px`;
-          } else {
-            track.style.maxHeight = '400px';
-            track.style.height = '400px';
-          }
-
-          // Устанавливаем высоту контейнера ТОЛЬКО на десктопе
-          container.style.height = `${imageHeight}px`;
-          container.style.maxHeight = `${imageHeight}px`;
-
-          // Обновляем состояние кнопок прокрутки
-          updateButtons();
+          // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
+          container.style.height = imageHeight + 'px';
+          container.style.maxHeight = imageHeight + 'px';
+          container.style.width = '80px';
+          container.style.minWidth = '80px';
+          container.style.maxWidth = '80px';
         }
 
         // Вызов при загрузке
