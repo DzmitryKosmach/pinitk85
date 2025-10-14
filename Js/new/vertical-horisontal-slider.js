@@ -1,5 +1,4 @@
 // Добавляем стили для скрытия скроллбара
-// Добавляем стили для скрытия скроллбара
 (function hideScrollbar() {
   const style = document.createElement("style");
   style.textContent = `
@@ -10,7 +9,7 @@
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".slider-thumbnails-container");
+  const container = document.querySelector(".slider-thumbnails-container > .relative");
   const track = container.querySelector(".slider-track");
   const btnPrev = container.querySelector(".slider-prev");
   const btnNext = container.querySelector(".slider-next");
