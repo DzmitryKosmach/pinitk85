@@ -41,30 +41,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Получаем размер одной карточки + gap
   function getCardSize() {
-    const firstCard = track.querySelector("img");
+    const firstCard = track.querySelector("img"); // Находим первое изображение слайда
     if (!firstCard) return 0;
 
-    const direction = getScrollDirection();
-    const styles = window.getComputedStyle(track);
-    const gap = parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
+    const direction = getScrollDirection(); // Получаем направление прокрутки
+    const styles = window.getComputedStyle(track); // Получаем стили для track
+    const gap = parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8; // Отступы между слайдами
+
+    // Рассчитываем размер слайда с учётом отступа
     const size = direction === "vertical"
-      ? firstCard.offsetHeight + gap
-      : firstCard.offsetWidth + gap;
+      ? firstCard.offsetHeight + gap // Для вертикальной прокрутки
+      : firstCard.offsetWidth + gap; // Для горизонтальной прокрутки
+
     return size;
   }
+
 
   // Устанавливаем размер ТРЕКА, чтобы вмещал целое число слайдов
   function fitToFullSlides() {
     const direction = getScrollDirection(); // Получаем направление прокрутки
-    const cardSize = getCardSize(); // Получаем размер одного слайда
+    const cardSize = getCardSize(); // Получаем размер одного слайда (миниатюры)
     const mainImageEl = document.querySelector('#mainImageContainer > img');
-    if (!cardSize || !mainImageEl) return;
+    const track = document.querySelector('.slider-track'); // Находим слайдер
+
+    if (!cardSize || !mainImageEl || !track) return;
 
     const containerSize = direction === "vertical"
       ? mainImageEl.getBoundingClientRect().height // Для вертикальной прокрутки
-      : container.clientWidth; // Для горизонтальной прокрутки
+      : track.getBoundingClientRect().width; // Для горизонтальной прокрутки (ширина контейнера)
 
-    // Вычисляем, сколько слайдов помещается в контейнер
+    // Вычисляем количество слайдов, которое помещается в контейнер
     const visibleCount = Math.floor(containerSize / cardSize);
 
     // Если все слайды помещаются в контейнер, сбрасываем размеры
@@ -99,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return true;
   }
+
 
 
   function scrollPrev() {
