@@ -78,14 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     visibleCount = Math.max(1, visibleCount - 1);
 
     if (visibleCount >= track.children.length) {
-      // Все слайды помещаются
-      if (direction === "vertical") {
-        track.style.height = "auto";
-        track.style.maxHeight = "none";
-      } else {
-        track.style.width = "auto";
-        track.style.maxWidth = "none";
-      }
       track.style.overflow = "hidden";
       return false;
     }
