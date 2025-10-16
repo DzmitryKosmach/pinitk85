@@ -155,9 +155,8 @@
                 <div class="slider-track flex flex-row lg:flex-col gap-2 max-h-[500px]
                 overflow-x-auto lg:overflow-y-auto
                 w-full lg:w-[80px]
-                scroll-smooth snap-x snap-mandatory lg:snap-y
-                scrollbar-none"
-                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; max-height: 500px;">
+                scroll-smooth scrollbar-none"
+                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; max-height: 500px;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
