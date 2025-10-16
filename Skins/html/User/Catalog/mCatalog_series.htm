@@ -317,51 +317,8 @@
             </div>
           </div>
 
-          <!-- Модальное окно галереи -->
-          <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
-            <!-- Обёртка для центрирования -->
-            <div class="relative max-w-full max-h-[90vh] flex items-center justify-center">
-              <!-- Контейнер изображения (ограничивает позиционирование кнопок) -->
-              <div class="relative inline-block max-w-full max-h-[90vh]">
-                <img
-                  id="gallery-main-img"
-                  src=""
-                  alt=""
-                  class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-                />
+          <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
-                <!-- Кнопка закрытия (в правом верхнем углу изображения) -->
-                <button
-                  id="gallery-close"
-                  class="absolute top-2 right-2 text-white/90 hover:text-white text-lg font-light z-51 bg-black/40 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 ease-in-out"
-                  aria-label="Закрыть"
-                >
-                  ✕
-                </button>
-
-                <!-- Стрелка "назад" -->
-                <button
-                  id="gallery-prev"
-                  class="absolute left-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
-                  aria-label="Предыдущее изображение"
-                >
-                  <
-                </button>
-
-                <!-- Стрелка "вперёд" -->
-                <button
-                  id="gallery-next"
-                  class="absolute right-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
-                  aria-label="Следующее изображение"
-                >
-                  >
-                </button>
-              </div>
-            </div>
-
-            <!-- Счётчик (под изображением, по центру) -->
-            <div id="gallery-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-base font-mono tracking-wide bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm"></div>
-          </div>
 
           <!-- Описание под галереей -->
           <div class="bg-white py-4 px-8 rounded-lg shadow-md mt-10" id="series-block">
@@ -454,183 +411,6 @@
 
         <?php } ?>
 
-        <!-- JavaScript для смены изображения -->
-        <script>
-          document.addEventListener('DOMContentLoaded', () => {
-            // === ГАЛЕРЕЯ: данные ===
-            const photos = <?php echo json_encode(array_map(function($p) use ($catInf, $seriesInf) {
-              return [
-                'src' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]),
-                'thumb' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
-                'alt' => hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])
-            ];
-            }, $photos)); ?>;
-
-            let currentGalleryIndex = 0;
-
-            // === Элементы DOM ===
-            const mainImage = document.getElementById('main-product-image');
-            const mainImageContainer = document.getElementById('mainImageContainer');
-            const galleryModal = document.getElementById('gallery-modal');
-            const galleryImg = document.getElementById('gallery-main-img');
-            const galleryClose = document.getElementById('gallery-close');
-            const galleryPrev = document.getElementById('gallery-prev');
-            const galleryNext = document.getElementById('gallery-next');
-            const galleryCounter = document.getElementById('gallery-counter');
-
-            // === Открытие галереи ===
-            mainImageContainer.addEventListener('click', () => {
-              currentGalleryIndex = 0; // всегда начинаем с первого изображения
-              updateGalleryImage();
-              galleryModal.classList.remove('hidden', 'pointer-events-none');
-              setTimeout(() => galleryModal.classList.add('opacity-100', 'pointer-events-auto'), 10);
-            });
-
-            // === Закрытие галереи ===
-            function closeGallery() {
-              galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
-              setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
-            }
-
-            galleryClose.addEventListener('click', closeGallery);
-            galleryModal.addEventListener('click', (e) => {
-              if (e.target === galleryModal) closeGallery();
-            });
-
-            // === Навигация ===
-            galleryPrev.addEventListener('click', () => {
-              currentGalleryIndex = (currentGalleryIndex - 1 + photos.length) % photos.length;
-              updateGalleryImage();
-            });
-
-            galleryNext.addEventListener('click', () => {
-              currentGalleryIndex = (currentGalleryIndex + 1) % photos.length;
-              updateGalleryImage();
-            });
-
-            // === Обновление изображения в галерее ===
-            function updateGalleryImage() {
-              const photo = photos[currentGalleryIndex];
-              galleryImg.src = photo.src;
-              galleryImg.alt = photo.alt;
-              if (galleryCounter) {
-                galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
-              }
-            }
-
-            // === Клавиатура ===
-            window.addEventListener('keydown', (e) => {
-              if (!galleryModal.classList.contains('opacity-100')) return;
-
-              if (e.key === 'Escape') closeGallery();
-              else if (e.key === 'ArrowLeft') galleryPrev.click();
-              else if (e.key === 'ArrowRight') galleryNext.click();
-            });
-
-            // === Смена основного изображения (миниатюры) ===
-            const infoDots = document.getElementById('infoDots');
-
-            function changeMainImage(thumb) {
-              const bigImage = thumb.dataset.bigimage;
-              const alt = thumb.alt;
-
-              if (!mainImage || !bigImage) return;
-
-              // Обновляем подсветку миниатюр
-              document.querySelectorAll('.slider-track img').forEach(img => {
-                img.style.borderColor = ''; // сбрасываем инлайновый цвет
-              });
-              thumb.style.setProperty('border-color', '#2563eb', 'important');
-
-              // Управление точками
-              const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-              if (infoDots) {
-                infoDots.classList.toggle('hidden', thumbIndex !== 0);
-              }
-
-              // Ждём загрузки изображения перед обновлением высоты
-              mainImage.onload = () => {
-                mainImage.onload = null; // отписываемся
-                requestAnimationFrame(refreshSlider);
-              };
-
-              // Меняем изображение
-              mainImage.src = bigImage;
-              mainImage.alt = alt;
-            }
-
-            // Инициализация миниатюр
-            const firstThumb = document.querySelector('.slider-track img');
-            if (firstThumb) changeMainImage(firstThumb);
-
-            document.querySelectorAll('.slider-track img').forEach(img => {
-              img.addEventListener('click', () => changeMainImage(img));
-            });
-
-            // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
-            function updateThumbnailSliderHeight() {
-              const track = document.querySelector('.slider-track');
-              const container = document.querySelector(".slider-thumbnails-container > .relative");
-
-              // Если элементов нет — выходим
-              if (!track || !container) return;
-
-              if (window.innerWidth < 1024) {
-                // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
-                track.style.height = '';
-                track.style.maxHeight = '';
-                track.style.width = '';
-                track.style.minWidth = '';
-                track.style.maxWidth = '';
-
-                container.style.height = '';
-                container.style.maxHeight = '';
-                container.style.width = '';
-                container.style.minWidth = '';
-                container.style.maxWidth = '';
-
-                return;
-              }
-
-
-              // === Десктопный режим (>=1024px) ===
-              const mainImageEl = document.querySelector('#mainImageContainer > img');
-              if (!mainImageEl) return;
-
-              const imageHeight = mainImageEl.getBoundingClientRect().height;
-              if (imageHeight <= 0) return;
-
-              // const btnHeight = 20; // высота кнопок "вверх/вниз"
-              // const gap = 16;       // суммарный gap между кнопками и треком
-              // const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
-              const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
-              const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
-
-              // --- Устанавливаем стили для ТРЕКА (слайдер миниатюр) ---
-              // track.style.height = finalTrackHeight + 'px';
-              // track.style.maxHeight = finalTrackHeight + 'px';
-              // track.style.width = '80px';      // 🔥 фиксированная ширина
-              // track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
-              // track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
-
-              // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
-              container.style.height = imageHeight + 'px';
-              container.style.maxHeight = imageHeight + 'px';
-              container.style.width = '80px';
-              container.style.minWidth = '80px';
-              container.style.maxWidth = '80px';
-            }
-
-            function refreshSlider() {
-              updateThumbnailSliderHeight();
-              // fitToFullSlides();
-            }
-
-            window.addEventListener('load', refreshSlider);
-            window.addEventListener('resize', refreshSlider);
-            mainImage?.addEventListener('load', refreshSlider);
-          });
-        </script>
 
         <!-- Правая колонка: Описание и цены -->
         <div class="info sm2:w-1/2">
@@ -1272,17 +1052,104 @@
 
     <!-- Характеристики -->
     <div class="text options" id="tab-options" style="display: none;" itemprop="description">
-      <?php if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') { ?>
-      <span class="opacity-60">Срок доставки:</span>
-      <?php echo htmlspecialchars($seriesInf['delivery_time']); ?>
-      <br>
-      <?php } ?>
-      <?php foreach ($options as $o) { ?>
-      <span><?php echo htmlspecialchars($o['name']); ?>:</span>
-      <?php echo htmlspecialchars($o['value']); ?>
-      <br>
-      <?php } ?>
+
+      <?php
+    $processedOptions = [];
+
+    // 1. Добавляем "Срок доставки" как первую характеристику, если есть
+    if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
+        $processedOptions[] = [
+            'name' => 'Срок доставки',
+      'value' => htmlspecialchars($seriesInf['delivery_time'])
+      ];
+      }
+
+      // 2. Добавляем остальные опции
+      foreach ($options as $o) {
+      $processedOptions[] = [
+      'name' => htmlspecialchars($o['name']),
+      'value' => htmlspecialchars(rtrim($o['value'], '.'))
+      ];
+      }
+
+      // 3. Берём первые 6 — основные, остальные — дополнительные
+      $mainOptions = array_slice($processedOptions, 0, 6);
+      $additionalOptions = array_slice($processedOptions, 6);
+      ?>
+
+      <!-- Основные характеристики (первые 6, включая срок доставки)  -->
+      <?php if (!empty($mainOptions)): ?>
+      <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
+        <?php foreach ($mainOptions as $o): ?>
+        <div
+          class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+          <?= $o['name'] ?>:
+        </div>
+        <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+          <?= $o['value'] ?>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+
+      <!-- Дополнительные характеристики -->
+      <?php if (!empty($additionalOptions)): ?>
+      <div id="additionalDetails" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
+        <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
+          <?php foreach ($additionalOptions as $o): ?>
+          <div
+            class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+            <?= $o['name'] ?>:
+          </div>
+          <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+            <?= $o['value'] ?>
+          </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
+      <!-- Кнопка -->
+      <button id="toggleButton"
+              class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
+        <div id="buttonText">Смотреть все характеристики</div>
+        <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
+             class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
+             fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+        </svg>
+      </button>
+      <?php endif; ?>
+
     </div>
+
+    <script>
+      //Кнопка все характеристики
+      document.addEventListener("DOMContentLoaded", () => {
+        const button = document.getElementById("toggleButton");
+        const details = document.getElementById("additionalDetails");
+        const buttonText = document.getElementById("buttonText");
+        const arrow = document.getElementById("arrow");
+
+        // Установим большую max-height для анимации (в px)
+        const fullHeight = "810px"; // подберите по количеству пунктов
+
+        button.addEventListener("click", () => {
+          if (details.style.maxHeight) {
+            // Скрытие
+            details.style.maxHeight = null;
+            buttonText.textContent = "Смотреть все характеристики";
+            arrow.classList.remove("rotate-180");
+          } else {
+            // Раскрытие
+            details.style.maxHeight = fullHeight;
+            buttonText.textContent = "Скрыть характеристики";
+            arrow.classList.add("rotate-180");
+          }
+        });
+      });
+    </script>
 
     <!-- Доставка и оплата -->
     <div class="text" id="tab-delivery" style="display: none;">
@@ -1438,10 +1305,10 @@ $benefits = [
     <div class="sticky top-0 bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
       <div class="flex flex-wrap gap-3">
         <!-- Кнопка "Наверх" -->
-        <a href="#top" class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition"
-        >
+        <div  class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition cursor-pointer"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
           Наверх
-        </a>
+        </div>
 
         <?php foreach ($itemsGroups as $g) {
                 $groupId = (int)$g['id'];
