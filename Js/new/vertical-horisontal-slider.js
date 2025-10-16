@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollNext();
     }
 
-    // setTimeout(fitToFullSlides, 500);
+    fitToFullSlides();
 
   }
 
