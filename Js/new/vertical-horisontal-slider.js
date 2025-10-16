@@ -187,33 +187,51 @@ document.addEventListener("DOMContentLoaded", () => {
     btnNext.classList.toggle("opacity-50", atEnd);
   }
 
-  function isSlideAtStart(slideRect, trackRect) {
+  function isSlideAtStart(slide) {
     const direction = getScrollDirection();
-    return direction === "vertical"
-      ? slideRect.top <= trackRect.top + 1
-      : slideRect.left <= trackRect.left + 1;
+    if (direction === "vertical") {
+      return slide.offsetTop <= track.scrollTop + 1;
+    } else {
+      return slide.offsetLeft <= track.scrollLeft + 1;
+    }
   }
 
-  function isSlideAtEnd(slideRect, trackRect) {
+  function isSlideAtEnd(slide) {
     const direction = getScrollDirection();
-    return direction === "vertical"
-      ? slideRect.bottom >= trackRect.bottom - 1
-      : slideRect.right >= trackRect.right - 1;
+    if (direction === "vertical") {
+      return slide.offsetTop + slide.offsetHeight >= track.scrollTop + track.clientHeight - 1;
+    } else {
+      return slide.offsetLeft + slide.offsetWidth >= track.scrollLeft + track.clientWidth - 1;
+    }
   }
 
   function handleSlideClick(e) {
-    const slide = e.target.closest("img");
-    if (!slide) return;
+    // Координата клика относительно трека
+    const clickX = e.clientX - track.getBoundingClientRect().left;
+    const clickY = e.clientY - track.getBoundingClientRect().top;
 
-    const trackRect = track.getBoundingClientRect();
-    const slideRect = slide.getBoundingClientRect();
+    const direction = getScrollDirection();
+    const atStartEdge = direction === "vertical"
+      ? clickY < track.clientHeight * 0.3   // верхняя 30%
+      : clickX < track.clientWidth * 0.3;   // левая 30%
 
-    if (isSlideAtStart(slideRect, trackRect)) {
-      scrollPrev();
-    } else if (isSlideAtEnd(slideRect, trackRect)) {
-      scrollNext();
+    const atEndEdge = direction === "vertical"
+      ? clickY > track.clientHeight * 0.7   // нижняя 30%
+      : clickX > track.clientWidth * 0.7;   // правая 30%
+
+    if (atStartEdge) {
+      const canPrev = direction === "vertical"
+        ? track.scrollTop > 1
+        : track.scrollLeft > 1;
+      if (canPrev) scrollPrev();
+    } else if (atEndEdge) {
+      const max = direction === "vertical"
+        ? track.scrollHeight - track.clientHeight
+        : track.scrollWidth - track.clientWidth;
+      const current = direction === "vertical" ? track.scrollTop : track.scrollLeft;
+      const canNext = current < max - 1;
+      if (canNext) scrollNext();
     }
-
   }
 
   function init() {
@@ -310,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateButtons();
     }, 100);
   });
+
   window.addEventListener("load", () => {
     fitToFullSlides();
     updateButtons();
