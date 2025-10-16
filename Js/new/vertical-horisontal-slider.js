@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
       track.style.height = `${newSize}px`;
       track.style.maxHeight = `${newSize}px`;
     } else {
+      void track.offsetWidth;
       track.style.width = `${newSize}px`;
       track.style.maxWidth = `${newSize}px`;
     }
@@ -238,8 +239,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function init() {
     requestAnimationFrame(() => {
-      fitToFullSlides();
-      updateButtons();
+      // fitToFullSlides();
+      // updateButtons();
 
       const slides = track.querySelectorAll("img");
       let loadedCount = 0;
@@ -248,11 +249,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const checkAllLoaded = () => {
         loadedCount++;
         if (loadedCount === total) {
-          // Все изображения загружены — обновляем размеры
-          setTimeout(() => {
+          requestAnimationFrame(() => {
+            void track.offsetWidth; // гарантируем пересчёт layout
             fitToFullSlides();
             updateButtons();
-          }, 50);
+          });
         }
       };
 
