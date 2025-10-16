@@ -163,7 +163,7 @@
                     data-bigimage="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                     alt="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
                     title="<?php echo hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : '')); ?>"
-                    class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 snap-start cursor-zoom-in transition-transform hover:scale-105"
+                    class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-zoom-in transition-transform hover:scale-105"
                     onclick="changeMainImage(this)"
                   />
                   <?php endforeach; ?>
