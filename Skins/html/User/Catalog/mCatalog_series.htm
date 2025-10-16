@@ -152,11 +152,11 @@
               <div class="relative h-full flex justify-center items-center lg:max-w-[80px] overflow-hidden">
 
                 <!-- Слайдер миниатюр (основной контент) -->
-                <div class="slider-track flex flex-row lg:flex-col gap-2 max-h-[500px]
+                <div class="slider-track flex flex-row lg:flex-col gap-2
                 overflow-x-auto lg:overflow-y-auto
                 w-full lg:w-[80px]
                 scroll-smooth scrollbar-none"
-                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch; max-height: 500px;">
+                     style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
                   <?php foreach($photos as $pn => $p): ?>
                   <img
                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']); ?>"
