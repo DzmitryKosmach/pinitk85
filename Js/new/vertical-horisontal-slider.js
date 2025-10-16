@@ -10,22 +10,23 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.querySelector(".slider-thumbnails-container > .relative");
+  if (!container) return;
+
   const track = container.querySelector(".slider-track");
   const btnPrev = container.querySelector(".slider-prev");
   const btnNext = container.querySelector(".slider-next");
   const mainImage = document.getElementById('main-product-image');
 
+  if (!track || !btnPrev || !btnNext) return;
+
   let isSwiping = false;
   let touchStart = { x: 0, y: 0 };
 
-  // === НОВАЯ: обновлённая updateThumbnailSliderHeight (только контейнер!) ===
   function updateThumbnailSliderHeight() {
     if (!container || !mainImage || window.innerWidth < 1024) return;
-
     const imageHeight = mainImage.getBoundingClientRect().height;
     if (imageHeight <= 0) return;
 
-    // Управляем ТОЛЬКО контейнером
     container.style.height = imageHeight + 'px';
     container.style.maxHeight = imageHeight + 'px';
     container.style.width = '80px';
@@ -33,40 +34,51 @@ document.addEventListener("DOMContentLoaded", () => {
     container.style.maxWidth = '80px';
   }
 
-  // Определяем направление
   function getScrollDirection() {
     const computed = window.getComputedStyle(track);
     return computed.flexDirection.includes("column") ? "vertical" : "horizontal";
   }
 
-  // Получаем размер одной карточки + gap
-  function getCardSize() {
+  // ✅ Только размер слайда (без gap)
+  function getSlideSize() {
     const firstCard = track.querySelector("img");
     if (!firstCard) return 0;
-
-    const direction = getScrollDirection();
-    const styles = window.getComputedStyle(track);
-    const gap = parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
-    const size = direction === "vertical"
-      ? firstCard.offsetHeight + gap
-      : firstCard.offsetWidth + gap;
-    return size;
+    return getScrollDirection() === "vertical"
+      ? firstCard.offsetHeight
+      : firstCard.offsetWidth;
   }
 
-  // Устанавливаем размер ТРЕКА, чтобы вмещал целое число слайдов
+  // ✅ Только gap
+  function getGap() {
+    const direction = getScrollDirection();
+    const styles = window.getComputedStyle(track);
+    return parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
+  }
+
+  // Обновлённая функция под новые вспомогательные
   function fitToFullSlides() {
     const direction = getScrollDirection();
-    const cardSize = getCardSize();
-    const mainImageEl = document.querySelector('#mainImageContainer > img');
-    if (!cardSize) return;
+    const slideSize = getSlideSize();
+    const gap = getGap();
 
+    if (!slideSize || slideSize <= 0) return false;
+
+    // ✅ Используем РЕАЛЬНЫЙ размер контейнера слайдера
     const containerSize = direction === "vertical"
-      ? mainImageEl.getBoundingClientRect().height
+      ? container.clientHeight
       : container.clientWidth;
 
-    const visibleCount = Math.floor(containerSize / cardSize);
+    if (containerSize <= 0) return false;
+
+    // Считаем максимальное количество целых слайдов
+    let visibleCount = 1;
+    while (visibleCount * slideSize + (visibleCount - 1) * gap <= containerSize) {
+      visibleCount++;
+    }
+    visibleCount = Math.max(1, visibleCount - 1);
 
     if (visibleCount >= track.children.length) {
+      // Все слайды помещаются
       if (direction === "vertical") {
         track.style.height = "auto";
         track.style.maxHeight = "none";
@@ -78,10 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    const newSize = visibleCount * cardSize - (parseInt(
-      window.getComputedStyle(track)[direction === "vertical" ? "rowGap" : "columnGap"]
-    ) || 8);
-
+    // Устанавливаем точный размер под N слайдов
+    const newSize = visibleCount * slideSize + (visibleCount - 1) * gap;
     if (direction === "vertical") {
       track.style.height = `${newSize}px`;
       track.style.maxHeight = `${newSize}px`;
@@ -89,71 +99,98 @@ document.addEventListener("DOMContentLoaded", () => {
       track.style.width = `${newSize}px`;
       track.style.maxWidth = `${newSize}px`;
     }
+    track.style.overflow = "";
     return true;
   }
 
-  function scrollPrev() {
-    const size = getCardSize();
+  // ✅ Вспомогательная: выравнивание до ближайшего слайда
+  function snapToNearestSlide() {
     const direction = getScrollDirection();
-    const scrollAmount = size;
+    const slides = Array.from(track.querySelectorAll("img"));
+    if (slides.length === 0) return;
+
+    const trackRect = track.getBoundingClientRect();
+    let bestSlide = slides[0];
+    let minDistance = Infinity;
+
+    for (const slide of slides) {
+      const slideRect = slide.getBoundingClientRect();
+      const distance = direction === "vertical"
+        ? Math.abs(slideRect.top - trackRect.top)
+        : Math.abs(slideRect.left - trackRect.left);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestSlide = slide;
+      }
+    }
+
+    bestSlide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+
+  // ✅ Обновлённые функции прокрутки
+  function scrollPrev() {
+    const slideSize = getSlideSize();
+    const gap = getGap();
+    const direction = getScrollDirection();
+    const scrollAmount = slideSize + gap;
 
     if (direction === "vertical") {
       track.scrollTop = Math.max(0, track.scrollTop - scrollAmount);
     } else {
       track.scrollLeft = Math.max(0, track.scrollLeft - scrollAmount);
     }
+
+    setTimeout(snapToNearestSlide, 500);
   }
 
   function scrollNext() {
-    const size = getCardSize();
+    const slideSize = getSlideSize();
+    const gap = getGap();
     const direction = getScrollDirection();
-    const scrollAmount = size;
+    const scrollAmount = slideSize + gap;
 
     if (direction === "vertical") {
       track.scrollTop += scrollAmount;
     } else {
       track.scrollLeft += scrollAmount;
     }
+
+    setTimeout(snapToNearestSlide, 500);
   }
 
   function updateButtons() {
     const direction = getScrollDirection();
-    const max =
-      direction === "vertical"
-        ? track.scrollHeight - track.clientHeight
-        : track.scrollWidth - track.clientWidth;
-    const current =
-      direction === "vertical" ? track.scrollTop : track.scrollLeft;
+    const max = direction === "vertical"
+      ? track.scrollHeight - track.clientHeight
+      : track.scrollWidth - track.clientWidth;
+    const current = direction === "vertical" ? track.scrollTop : track.scrollLeft;
 
-    btnPrev.disabled = current === 0;
-    btnNext.disabled = current >= max - 1;
+    const atStart = current <= 1;
+    const atEnd = current >= max - 1;
 
-    btnPrev.classList.toggle("opacity-50", current === 0);
-    btnNext.classList.toggle("opacity-50", current >= max - 1);
+    btnPrev.disabled = atStart;
+    btnNext.disabled = atEnd;
+    btnPrev.classList.toggle("opacity-50", atStart);
+    btnNext.classList.toggle("opacity-50", atEnd);
   }
 
-  // === НОВАЯ ФУНКЦИЯ: определяет, является ли слайд крайним ===
   function isSlideAtStart(slideRect, trackRect) {
     const direction = getScrollDirection();
-    if (direction === "vertical") {
-      return slideRect.top <= trackRect.top + 1; // +1 — погрешность
-    } else {
-      return slideRect.left <= trackRect.left + 1;
-    }
+    return direction === "vertical"
+      ? slideRect.top <= trackRect.top + 1
+      : slideRect.left <= trackRect.left + 1;
   }
 
   function isSlideAtEnd(slideRect, trackRect) {
     const direction = getScrollDirection();
-    if (direction === "vertical") {
-      return slideRect.bottom >= trackRect.bottom - 1;
-    } else {
-      return slideRect.right >= trackRect.right - 1;
-    }
+    return direction === "vertical"
+      ? slideRect.bottom >= trackRect.bottom - 1
+      : slideRect.right >= trackRect.right - 1;
   }
 
-  // === НОВАЯ ФУНКЦИЯ: обработчик клика по слайду ===
   function handleSlideClick(e) {
-    const slide = e.target.closest("img"); // или другой селектор, если не img
+    const slide = e.target.closest("img");
     if (!slide) return;
 
     const trackRect = track.getBoundingClientRect();
@@ -164,34 +201,51 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (isSlideAtEnd(slideRect, trackRect)) {
       scrollNext();
     }
+
   }
 
-  // Инициализация
   function init() {
     requestAnimationFrame(() => {
       fitToFullSlides();
       updateButtons();
 
-      // Добавляем обработчик клика на все слайды
-      const slides = track.querySelectorAll("img"); // или нужный селектор
-      slides.forEach((slide) => {
-        slide.style.cursor = "pointer"; // опционально: визуальный фидбек
+      const slides = track.querySelectorAll("img");
+      let loadedCount = 0;
+      const total = slides.length;
+
+      const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount === total) {
+          // Все изображения загружены — обновляем размеры
+          setTimeout(() => {
+            fitToFullSlides();
+            updateButtons();
+          }, 50);
+        }
+      };
+
+      slides.forEach(slide => {
+        slide.style.cursor = "pointer";
         slide.addEventListener("click", handleSlideClick);
+
+        if (slide.complete) {
+          checkAllLoaded();
+        } else {
+          slide.addEventListener("load", checkAllLoaded);
+          slide.addEventListener("error", checkAllLoaded); // на случай ошибки загрузки
+        }
       });
     });
   }
 
-  // Кнопки
   btnPrev.addEventListener("click", (e) => {
     e.preventDefault();
     scrollPrev();
-    setTimeout(updateButtons, 100);
   });
 
   btnNext.addEventListener("click", (e) => {
     e.preventDefault();
     scrollNext();
-    setTimeout(updateButtons, 100);
   });
 
   // Свайп
@@ -222,15 +276,36 @@ document.addEventListener("DOMContentLoaded", () => {
     isSwiping = false;
     setTimeout(() => {
       track.style.scrollBehavior = "smooth";
+      snapToNearestSlide(); // выравниваем после свайпа
     }, 50);
   });
 
-  // События
   track.addEventListener("scroll", updateButtons);
+  let resizeTimer;
   window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // 👇 Обновляем ВЫСОТУ КОНТЕЙНЕРА под новую высоту главного изображения
+      if (window.innerWidth >= 1024) {
+        updateThumbnailSliderHeight(); // ← это сбросит container.style.height
+      }
+
+      // Принудительный reflow
+      void container.offsetWidth;
+
+      // Теперь пересчитываем слайды
+      fitToFullSlides();
+      updateButtons();
+    }, 100);
+  });
+  window.addEventListener("load", () => {
     fitToFullSlides();
     updateButtons();
   });
 
+  if (window.innerWidth >= 1024) {
+    updateThumbnailSliderHeight();
+  }
   init();
+
 });
