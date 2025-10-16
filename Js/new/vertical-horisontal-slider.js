@@ -105,28 +105,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✅ Вспомогательная: выравнивание до ближайшего слайда
   function snapToNearestSlide() {
-    console.log("✅ Выравнивание запущено");
     const direction = getScrollDirection();
     const slides = Array.from(track.querySelectorAll("img"));
     if (slides.length === 0) return;
 
-    const trackRect = track.getBoundingClientRect();
-    let bestSlide = slides[0];
-    let minDistance = Infinity;
+    const slideSize = getSlideSize();
+    const gap = getGap();
 
-    for (const slide of slides) {
-      const slideRect = slide.getBoundingClientRect();
-      const distance = direction === "vertical"
-        ? Math.abs(slideRect.top - trackRect.top)
-        : Math.abs(slideRect.left - trackRect.left);
+    // Текущая позиция прокрутки
+    const currentScroll = direction === "vertical" ? track.scrollTop : track.scrollLeft;
 
-      if (distance < minDistance) {
-        minDistance = distance;
-        bestSlide = slide;
+    // Вычисляем, какой слайд ближе всего к началу видимой области
+    // Позиция начала i-го слайда = i * (slideSize + gap)
+    let bestIndex = 0;
+    let minDiff = Infinity;
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideStart = i * (slideSize + gap);
+      const diff = Math.abs(slideStart - currentScroll);
+      if (diff < minDiff) {
+        minDiff = diff;
+        bestIndex = i;
       }
     }
 
-    bestSlide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    // Точная позиция прокрутки для этого слайда
+    const targetScroll = bestIndex * (slideSize + gap);
+
+    // Применяем
+    if (direction === "vertical") {
+      track.scrollTop = targetScroll;
+    } else {
+      track.scrollLeft = targetScroll;
+    }
   }
 
   // ✅ Обновлённые функции прокрутки
