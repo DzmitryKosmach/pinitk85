@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✅ Вспомогательная: выравнивание до ближайшего слайда
   function snapToNearestSlide() {
+    console.log("✅ Выравнивание запущено");
     const direction = getScrollDirection();
     const slides = Array.from(track.querySelectorAll("img"));
     if (slides.length === 0) return;
@@ -196,15 +197,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const trackRect = track.getBoundingClientRect();
     const slideRect = slide.getBoundingClientRect();
 
-    fitToFullSlides();
-
     if (isSlideAtStart(slideRect, trackRect)) {
       scrollPrev();
     } else if (isSlideAtEnd(slideRect, trackRect)) {
       scrollNext();
     }
-
-    fitToFullSlides();
 
   }
 
