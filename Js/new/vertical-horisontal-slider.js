@@ -196,13 +196,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const trackRect = track.getBoundingClientRect();
     const slideRect = slide.getBoundingClientRect();
 
+    fitToFullSlides();
+
     if (isSlideAtStart(slideRect, trackRect)) {
       scrollPrev();
     } else if (isSlideAtEnd(slideRect, trackRect)) {
       scrollNext();
     }
 
-    setTimeout(fitToFullSlides, 500);
+    // setTimeout(fitToFullSlides, 500);
 
   }
 
