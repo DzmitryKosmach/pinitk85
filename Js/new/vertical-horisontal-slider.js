@@ -206,31 +206,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleSlideClick(e) {
-    // Координата клика относительно трека
-    const clickX = e.clientX - track.getBoundingClientRect().left;
-    const clickY = e.clientY - track.getBoundingClientRect().top;
+    // Получаем позицию клика ОТНОСИТЕЛЬНО ВИДИМОЙ ОБЛАСТИ ТРЕКА
+    const trackRect = track.getBoundingClientRect();
+    const clickInTrack = e.clientX - trackRect.left;
 
     const direction = getScrollDirection();
-    const atStartEdge = direction === "vertical"
-      ? clickY < track.clientHeight * 0.3   // верхняя 30%
-      : clickX < track.clientWidth * 0.3;   // левая 30%
+    if (direction === "vertical") {
+      // Вертикальный режим — пока не трогаем
+      const clickY = e.clientY - trackRect.top;
+      const atTop = clickY < track.clientHeight * 0.3;
+      const atBottom = clickY > track.clientHeight * 0.7;
 
-    const atEndEdge = direction === "vertical"
-      ? clickY > track.clientHeight * 0.7   // нижняя 30%
-      : clickX > track.clientWidth * 0.7;   // правая 30%
+      if (atTop && track.scrollTop > 1) {
+        scrollPrev();
+      } else if (atBottom && track.scrollTop < track.scrollHeight - track.clientHeight - 1) {
+        scrollNext();
+      }
+      return;
+    }
 
-    if (atStartEdge) {
-      const canPrev = direction === "vertical"
-        ? track.scrollTop > 1
-        : track.scrollLeft > 1;
-      if (canPrev) scrollPrev();
-    } else if (atEndEdge) {
-      const max = direction === "vertical"
-        ? track.scrollHeight - track.clientHeight
-        : track.scrollWidth - track.clientWidth;
-      const current = direction === "vertical" ? track.scrollTop : track.scrollLeft;
-      const canNext = current < max - 1;
-      if (canNext) scrollNext();
+    // Горизонтальный режим
+    const atLeftEdge = clickInTrack < track.clientWidth * 0.3;
+    const atRightEdge = clickInTrack > track.clientWidth * 0.7;
+
+    if (atLeftEdge && track.scrollLeft > 1) {
+      scrollPrev();
+    } else if (atRightEdge && track.scrollLeft < track.scrollWidth - track.clientWidth - 1) {
+      scrollNext();
     }
   }
 
