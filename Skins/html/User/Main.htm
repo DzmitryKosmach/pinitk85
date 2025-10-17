@@ -43,6 +43,7 @@ function getHomeUrl() {
 
 <head>
   <meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow">
   <?php
 	// noindex start
 		if(strpos($_SERVER['REQUEST_URI'], '/preimuschestva/') !== false ){
@@ -288,6 +289,8 @@ function getHomeUrl() {
             header: "#E7EBF2",
             body: "#F8F8F8",
             footer: "#E8F1FF",
+            blue60: "#2563eb",
+            blue70: "#1d4ed8",
           },
           fontFamily: {
             sans: ["Montserrat", "sans-serif"],
@@ -837,7 +840,7 @@ function getHomeUrl() {
 <?php } ?>
 
 <footer
-  class="bg-footer text-black text-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8 mt-24"
+  class="bg-footer text-black text-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8 mt-6"
 >
   <div class="md:hidden block w-full text-center">
     <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"
