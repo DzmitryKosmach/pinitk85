@@ -1,0 +1,89 @@
+<?php if (!empty(trim($seriesInf['text'] ?? ''))): ?>
+<!-- Описание под галереей -->
+<div class="bg-white py-4 px-6 rounded-lg shadow-md mt-10" id="series-block">
+  <div class="relative">
+    <!-- ✅ Контейнер для текста с overflow и position -->
+    <div id="series-text-container" class="relative overflow-hidden">
+      <p id="series-text" class="text-lg leading-6 transition-all duration-300">
+        <?php echo $seriesInf['text']; ?>
+      </p>
+
+      <!-- Градиент поверх текста -->
+      <div id="fade-gradient"
+           class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none hidden"></div>
+    </div>
+
+    <a id="read-more-btn"
+       class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
+      Читать все
+    </a>
+  </div>
+</div>
+
+<script>
+  // Читать все
+  document.addEventListener('DOMContentLoaded', () => {
+    const textEl = document.getElementById('series-text');        // <p>
+    const container = document.getElementById('series-text-container'); // обёртка
+    const btn = document.getElementById('read-more-btn');
+    const gradient = document.getElementById('fade-gradient');
+    const block = document.getElementById('series-block');
+
+    if (!textEl || !container) return;
+
+    const maxLines = 3;
+    let maxHeight = 0;
+
+    const updateHeights = () => {
+      const computed = window.getComputedStyle(textEl);
+      let lineHeight = parseFloat(computed.lineHeight);
+
+      if (isNaN(lineHeight)) {
+        const tempSpan = document.createElement('span');
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.font = computed.font;
+        tempSpan.textContent = 'Hg';
+        document.body.appendChild(tempSpan);
+        lineHeight = tempSpan.getBoundingClientRect().height;
+        document.body.removeChild(tempSpan);
+      }
+
+      maxHeight = lineHeight * maxLines;
+      return maxHeight;
+    };
+
+    const checkTruncation = () => {
+      updateHeights();
+      // Используем requestAnimationFrame для точного измерения после рендера
+      requestAnimationFrame(() => {
+        const realHeight = textEl.scrollHeight;
+        if (realHeight > maxHeight) {
+          container.style.maxHeight = maxHeight + 'px';
+          btn.classList.remove('hidden');
+          gradient.classList.remove('hidden');
+        }
+      });
+    };
+
+    checkTruncation();
+
+    btn.addEventListener('click', () => {
+      if (container.style.maxHeight && container.style.maxHeight !== 'none') {
+        // Разворачиваем
+        container.style.maxHeight = 'none';
+        btn.textContent = 'Свернуть';
+        gradient.classList.add('hidden');
+      } else {
+        // Сворачиваем
+        container.style.maxHeight = maxHeight + 'px';
+        btn.textContent = 'Читать все';
+        gradient.classList.remove('hidden');
+
+        // Плавная прокрутка к блоку
+        const top = block.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+<?php endif; ?>
