@@ -4,7 +4,7 @@
   <div class="relative">
     <!-- ✅ Контейнер для текста с overflow и position -->
     <div id="series-text-container" class="relative overflow-hidden">
-      <p id="series-text" class="text-lg leading-6 transition-all duration-300">
+      <p id="series-text" class="!text-base !leading-6 transition-all duration-300">
         <?php echo $seriesInf['text']; ?>
       </p>
 
@@ -14,11 +14,79 @@
     </div>
 
     <a id="read-more-btn"
-       class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
+       class="inline-block !text-gray-600 mt-2 cursor-pointer hidden relative z-10">
       Читать все
     </a>
   </div>
 </div>
+
+<style>
+  /* Стили только для контента внутри #series-block */
+  #series-block h2,
+  #series-block h3 {
+    font-size: 1.125rem;        /* text-lg */
+    font-weight: 600;           /* font-semibold */
+    margin-top: 1rem;           /* mt-4 */
+    margin-bottom: 0.5rem;      /* mb-2 */
+    line-height: 1.25;
+  }
+
+  #series-block p {
+    font-size: 1rem;            /* text-base */
+    line-height: 1.5;           /* leading-6 */
+    margin-bottom: 0.75rem;     /* mb-3 */
+    margin-top: 0;
+  }
+
+  #series-block ul,
+  #series-block ol {
+    list-style-type: disc;
+    padding-left: 1.25rem;      /* pl-5 */
+    margin-bottom: 0.75rem;     /* mb-3 */
+    margin-top: 0;
+  }
+
+  #series-block ul ul,
+  #series-block ol ol {
+    list-style-type: circle;
+    padding-left: 1rem;         /* pl-4 */
+    margin-bottom: 0.25rem;
+  }
+
+  #series-block li {
+    margin-bottom: 0.25rem;     /* space-y-1 */
+  }
+
+  #series-block a {
+    color: #2563bb;
+    text-decoration: underline;
+  }
+
+  #series-block a:hover {
+    color: #1e40af;             /* text-blue-800 */
+  }
+
+  #series-block strong,
+  #series-block b {
+    font-weight: 700;           /* font-bold */
+  }
+
+  #series-block em,
+  #series-block i {
+    font-style: italic;
+  }
+
+  /* Убираем лишние отступы у первого и последнего элемента */
+  #series-text-container > p > *:first-child,
+  #series-text-container > p > :first-child {
+    margin-top: 0 !important;
+  }
+
+  #series-text-container > p > *:last-child,
+  #series-text-container > p > :last-child {
+    margin-bottom: 0 !important;
+  }
+</style>
 
 <script>
   // Читать все

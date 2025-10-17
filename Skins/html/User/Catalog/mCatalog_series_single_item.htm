@@ -515,7 +515,7 @@
           </button>
 
           <button class="tab-btn
-                            px-4 py-2 rounded-lg bg-white border border-gray-200
+                            px-4 py-2 rounded-lg break-all bg-white border border-gray-200
                             shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
                             hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
                             active:translate-y-[-1px]
@@ -633,7 +633,7 @@
                 type="submit"
                 class="submit add2basket w-full !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
               <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-              title="Добавить в корзину"
+              title="Отложить в 1 клик со СКИДКОЙ"
               >
               <i class="icon pngicons"></i>Отложить в 1 клик со СКИДКОЙ
               </button>
@@ -697,16 +697,16 @@
 
               if (btn) {
                 btn.classList.remove("add2basket", "bg-blue-600", "hover:bg-blue-700");
-                btn.classList.add("inbasket", "bg-green-600", "cursor-not-allowed", "opacity-90");
+                btn.classList.add("bg-green-600", "cursor-not-allowed", "opacity-90");
                 btn.disabled = true;
                 btn.textContent = "✓ В корзине";
               }
 
               // Показываем ссылку "Перейти в корзину"
-              let go2basket = form.querySelector(".go2basket");
-              if (go2basket) {
-                go2basket.style.display = "inline-block";
-              }
+              // let go2basket = form.querySelector(".go2basket");
+              // if (go2basket) {
+              //   go2basket.style.display = "inline-block";
+              // }
             }
           </script>
 
