@@ -922,57 +922,7 @@ function getHomeUrl() {
           </p>
           <div class="flex flex-wrap gap-3 mt-3">
             <!-- Иконки соцсетей -->
-            <a
-              href="https://wa.me/79859204824"
-              target="_blank"
-              title="WhatsApp"
-            >
-              <img
-                src="/images/product/soc_wt.png"
-                class="w-8 h-8"
-                alt="Whatsapp"
-              />
-            </a>
-            <a
-              href="https://ok.ru/group/61739138941100"
-              target="_blank"
-              title="Tik Tok"
-            >
-              <img
-                src="/images/product/soc_ок.png"
-                class="w-8 h-8"
-                alt="Одноклассники"
-              />
-            </a>
-            <a
-              href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55"
-              target="_blank"
-              title="Zen"
-            >
-              <img
-                src="/images/product/soc_zen.png"
-                class="w-8 h-8"
-                alt="Zen"
-              />
-            </a>
-            <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
-              <img
-                src="/images/product/soc_vk.png"
-                class="w-8 h-8"
-                alt="ВКонтакте"
-              />
-            </a>
-            <a
-              href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU"
-              target="_blank"
-              title="Tik Tok"
-            >
-              <img
-                src="/images/product/soc_tiktok.png"
-                class="w-8 h-8"
-                alt="Tik Tok"
-              />
-            </a>
+            <?php $size = 'w-8 h-8'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
           </div>
         </div>
       </div>
@@ -1077,47 +1027,10 @@ function getHomeUrl() {
     </div>
 
     <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
+
       <!-- Иконки соцсетей -->
-      <a
-        href="https://wa.me/79859204824"
-        target="_blank"
-        title="WhatsApp"
-        class="w-7 h-7 hover:opacity-80"
-      >
-        <img src="/images/index/soc_wt.png" alt="Whatsapp" />
-      </a>
-      <a
-        href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55"
-        target="_blank"
-        title="Yandex Zen"
-        class="w-7 h-7 hover:opacity-80"
-      >
-        <img src="/images/index/soc_t.png" alt="Yandex Zen" />
-      </a>
-      <a
-        href="https://vk.com/mebelioniru"
-        target="_blank"
-        title="Vk"
-        class="w-7 h-7 hover:opacity-80"
-      >
-        <img src="/images/index/soc_vk.png" alt="ВКонтакте" />
-      </a>
-      <a
-        href="https://ok.ru/group/61739138941100"
-        target="_blank"
-        title="Ok"
-        class="w-7 h-7 hover:opacity-80"
-      >
-        <img src="/images/index/soc_f.png" alt="OK" />
-      </a>
-      <a
-        href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU"
-        target="_blank"
-        title="Tik Tok"
-        class="w-7 h-7 hover:opacity-80"
-      >
-        <img src="/images/index/soc_tg.png" alt="TikTok" />
-      </a>
+      <?php $size = 'w-7 h-7'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
+
     </div>
 
     <div

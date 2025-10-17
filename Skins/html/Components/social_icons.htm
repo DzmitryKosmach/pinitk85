@@ -1,0 +1,46 @@
+<?php
+// Параметры (передаются при include)
+// $size — строка вида 'w-8 h-8' (по умолчанию)
+// $links — ассоциативный массив ссылок (опционально)
+
+if (!isset($size)) {
+    $size = 'w-8 h-8';
+}
+
+// Стандартные ссылки (можно переопределить через $links)
+$defaultLinks = [
+    'whatsapp' => 'https://wa.me/79859204824',
+    'ok'       => 'https://ok.ru/group/61739138941100',
+    'zen'      => 'https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55',
+    'vk'       => 'https://vk.com/mebelioniru',
+    'tiktok'   => 'https://www.tiktok.com/@mebelioni.ru?lang=ru-RU',
+];
+
+$links = $links ?? $defaultLinks;
+
+// Описание иконок
+$icons = [
+'whatsapp' => ['title' => 'WhatsApp',       'alt' => 'Whatsapp',        'img' => '/images/product/soc_wt.png'],
+'ok'       => ['title' => 'Одноклассники', 'alt' => 'Одноклассники',   'img' => '/images/product/soc_ок.png'],
+'zen'      => ['title' => 'Zen',            'alt' => 'Zen',             'img' => '/images/product/soc_zen.png'],
+'vk'       => ['title' => 'ВКонтакте',     'alt' => 'ВКонтакте',       'img' => '/images/product/soc_vk.png'],
+'tiktok'   => ['title' => 'TikTok',         'alt' => 'Tik Tok',         'img' => '/images/product/soc_tiktok.png'],
+];
+?>
+
+
+  <?php foreach ($icons as $key => $data): ?>
+  <?php if (!empty($links[$key])): ?>
+  <?php
+        $url   = htmlspecialchars($links[$key], ENT_QUOTES, 'UTF-8');
+        $title = htmlspecialchars($data['title'], ENT_QUOTES, 'UTF-8');
+        $alt   = htmlspecialchars($data['alt'], ENT_QUOTES, 'UTF-8');
+        $img   = htmlspecialchars($data['img'], ENT_QUOTES, 'UTF-8');
+        $cls   = htmlspecialchars($size, ENT_QUOTES, 'UTF-8');
+        ?>
+  <a href="<?= $url ?>" target="_blank" rel="noopener noreferrer" title="<?= $title ?>">
+    <img src="<?= $img ?>" class="<?= $cls ?>" alt="<?= $alt ?>" />
+  </a>
+  <?php endif; ?>
+  <?php endforeach; ?>
+

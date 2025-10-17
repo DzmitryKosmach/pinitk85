@@ -668,16 +668,10 @@
                 let btn = form.querySelector("button.submit");
 
                 if (btn) {
-                  btn.classList.remove("add2basket", "bg-blue-600", "hover:bg-blue-700");
-                  btn.classList.add("inbasket", "bg-green-600", "cursor-not-allowed", "opacity-90");
+                  btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
+                  btn.classList.add("!bg-green-600", "cursor-not-allowed", "opacity-90");
                   btn.disabled = true;
                   btn.textContent = "✓ В корзине";
-                }
-
-                // Показываем ссылку "Перейти в корзину"
-                let go2basket = form.querySelector(".go2basket");
-                if (go2basket) {
-                  go2basket.style.display = "inline-block";
                 }
               }
             </script>
@@ -752,21 +746,7 @@
             <div class="flex flex-col">
               <p>Быстрые контакты:</p>
               <div class="flex gap-3 text-xl mt-1">
-                <a href="https://wa.me/79859204824" target="_blank" title="WhatsApp">
-                  <img src="/images/product/soc_wt.png" class="w-8 h-8" alt="Whatsapp" />
-                </a>
-                <a href="https://ok.ru/group/61739138941100" target="_blank" title="Tik Tok">
-                  <img src="/images/product/soc_ок.png" class="w-8 h-8" alt="Одноклассники" />
-                </a>
-                <a href="https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55" target="_blank" title="Zen">
-                  <img src="/images/product/soc_zen.png" class="w-8 h-8" alt="Zen" />
-                </a>
-                <a href="https://vk.com/mebelioniru" target="_blank" title="Vk">
-                  <img src="/images/product/soc_vk.png" class="w-8 h-8" alt="ВКонтакте" />
-                </a>
-                <a href="https://www.tiktok.com/@mebelioni.ru?lang=ru-RU" target="_blank" title="Tik Tok">
-                  <img src="/images/product/soc_tiktok.png" class="w-8 h-8" alt="Tik Tok" />
-                </a>
+                <?php $size = 'w-8 h-8'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
               </div>
             </div>
           </div>
