@@ -10,11 +10,89 @@
   </nav>
 
   <section class="mt-10 md:mt-12 mb-12">
-    <h1 class="text-xl sm:text-2xl md:text-4xl font-bold mb-6 md:mb-12">Каталог офисной мебели с оптовыми ценами от производителя в Москве</h1>
+    <h1 class="text-xl sm:text-2xl md:text-4xl font-bold mb-6 md:mb-12">Каталог офисной мебели с оптовыми ценами от
+      производителя в Москве</h1>
     <div class="text-sm md:text-lg grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
       <?php foreach($categories as $c1) { ?>
       <?php include(Config::path('skins') . '/html/Components/category_card.htm'); ?>
       <?php } ?>
     </div>
+
+    <?php if($pageInf && trim($pageInf['text']) !== '') { ?>
+    <div id="catalog-toplevel">
+      <style>
+        /* Стили только для контента внутри #catalog-toplevel */
+        #catalog-toplevel h2,
+        #catalog-toplevel h3 {
+          font-size: 1.5rem;        /* text-lg */
+          font-weight: 600;           /* font-semibold */
+          margin-top: 1rem;           /* mt-4 */
+          margin-bottom: 0.5rem;      /* mb-2 */
+          line-height: 1.25;
+        }
+
+        #catalog-toplevel p {
+          font-size: 1rem;            /* text-base */
+          line-height: 1.5;           /* leading-6 */
+          margin-bottom: 0.75rem;     /* mb-3 */
+          margin-top: 0;
+        }
+
+        #catalog-toplevel ul,
+        #catalog-toplevel ol {
+          list-style-type: disc;
+          padding-left: 1.25rem;      /* pl-5 */
+          margin-bottom: 0.75rem;     /* mb-3 */
+          margin-top: 0;
+        }
+
+        #catalog-toplevel ul ul,
+        #catalog-toplevel ol ol {
+          list-style-type: circle;
+          padding-left: 1rem;         /* pl-4 */
+          margin-bottom: 0.5rem;
+        }
+
+        #catalog-toplevel li {
+          font-size: 1rem;
+          margin-bottom: 0.5rem;     /* space-y-1 */
+        }
+
+        #catalog-toplevel a {
+          color: #2563bb;
+          text-decoration: underline;
+        }
+
+        #catalog-toplevel a:hover {
+          color: #1e40af;             /* text-blue-800 */
+        }
+
+        #catalog-toplevel strong,
+        #catalog-toplevel b {
+          font-weight: 700;           /* font-bold */
+        }
+
+        #catalog-toplevel em,
+        #catalog-toplevel i {
+          font-style: italic;
+        }
+
+        /* Убираем лишние отступы у первого и последнего элемента */
+        #series-text-container > p > *:first-child,
+        #series-text-container > p > :first-child {
+          margin-top: 0 !important;
+        }
+
+        #series-text-container > p > *:last-child,
+        #series-text-container > p > :last-child {
+          margin-bottom: 0 !important;
+        }
+      </style>
+      <div style="padding-top: 30px">
+        <?php echo $pageInf['text']; ?>
+        <div class="cl"></div>
+      </div>
+    </div>
+    <?php } ?>
   </section>
 </div>
