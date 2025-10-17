@@ -272,94 +272,9 @@
 
           <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
+          <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
 
-          <!-- Описание под галереей -->
-          <div class="bg-white py-4 px-8 rounded-lg shadow-md mt-10" id="series-block">
-            <div class="relative">
-              <div id="series-text">
-                <p class="text-lg leading-6 overflow-hidden transition-all duration-300">
-                  <?php echo $seriesInf['text']; ?>
-                </p>
-              </div>
 
-              <!-- Градиент -->
-              <div id="fade-gradient"
-                   class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none hidden"></div>
-
-              <a id="read-more-btn"
-                 class="inline-block text-gray-600 mt-2 cursor-pointer hidden relative z-10">
-                Читать все
-              </a>
-            </div>
-          </div>
-
-          <script>
-            // Читать все
-            document.addEventListener('DOMContentLoaded', () => {
-              const text = document.getElementById('series-text');
-              const btn = document.getElementById('read-more-btn');
-              const gradient = document.getElementById('fade-gradient');
-              const block = document.getElementById('series-block');
-
-              if (!text) return;
-
-              const maxLines = 3;
-              let maxHeight = 0;
-
-              const updateHeights = () => {
-                const computed = window.getComputedStyle(text);
-                let lineHeight = parseFloat(computed.lineHeight);
-
-                if (isNaN(lineHeight)) {
-                  const tempSpan = document.createElement('span');
-                  tempSpan.style.visibility = 'hidden';
-                  tempSpan.style.font = computed.font;
-                  tempSpan.textContent = 'Hg';
-                  document.body.appendChild(tempSpan);
-                  const rect = tempSpan.getBoundingClientRect();
-                  lineHeight = rect.height;
-                  document.body.removeChild(tempSpan);
-                }
-
-                maxHeight = lineHeight * maxLines;
-                return maxHeight;
-              };
-
-              const checkTruncation = () => {
-                updateHeights();
-                setTimeout(() => {
-                  const realHeight = text.scrollHeight;
-                  if (realHeight > maxHeight) {
-                    text.style.maxHeight = maxHeight + 'px';
-                    text.style.overflow = 'hidden';
-                    btn.classList.remove('hidden');
-                    gradient.classList.remove('hidden');
-                  }
-                }, 0);
-              };
-
-              checkTruncation();
-
-              // Кнопка
-              btn.addEventListener('click', () => {
-                if (text.style.maxHeight && text.style.maxHeight !== 'none') {
-                  // Разворачиваем
-                  text.style.maxHeight = 'none';
-                  btn.textContent = 'Свернуть';
-                  gradient.classList.add('hidden');
-                } else {
-                  // Сворачиваем
-                  text.style.maxHeight = maxHeight + 'px';
-                  btn.textContent = 'Читать все';
-                  gradient.classList.remove('hidden');
-
-                  // Скроллим с отступом 80px от верха
-                  const top = block.getBoundingClientRect().top + window.scrollY - 80;
-                  window.scrollTo({ top, behavior: 'smooth' });
-                }
-              });
-            });
-          </script>
         </div>
 
         <?php } ?>
