@@ -16,7 +16,8 @@
   </div>
   <?php endif; ?>
 
-  <a href="<?php echo htmlspecialchars(Catalog_Series::a($s ?? '#')); ?>">
+  <a href="<?php echo htmlspecialchars(Catalog_Series::a($s ?? '#')); ?>" target="_blank"
+     rel="noopener noreferrer">
     <img
       src="<?php echo isset($s['1st_photo']) ? Catalog::photoUrl(
           Catalog_Series_Photos::$imagePath,
@@ -35,6 +36,8 @@
       <a
         href="<?php echo Catalog_Series::a($s); ?>"
         class="text-inherit hover:text-inherit block"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <?php echo htmlspecialchars($s['name']); ?>
       </a>
@@ -207,6 +210,8 @@
   <a
     href="<?php echo htmlspecialchars(Catalog_Series::a($s ?? '#')); ?>"
     class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition"
+    target="_blank"
+    rel="noopener noreferrer"
   >
     Подробнее
   </a>
