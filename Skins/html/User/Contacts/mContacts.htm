@@ -1,58 +1,21 @@
 ﻿<?php if(!$ajaxForm) { ?>
-	<div id="title" class="title">
-		<div class="">
-      <div class=" clearfix">
-        <?php if(count($breadcrumbs)) { ?>
-        <?php $bcLast = array_pop($breadcrumbs); ?>
-        <ul
-          class="breadcrumb"
-          itemscope
-          itemtype="http://schema.org/BreadcrumbList"
-        >
-          <?php $position = 0; ?>
-          <?php foreach($breadcrumbs as $bc) { ?>
-          <?php $position = $position + 1 ?>
-          <li
-            itemprop="itemListElement"
-            itemscope
-            itemtype="http://schema.org/ListItem"
-          >
-            <a
-              href="<?php echo $bc['url']; ?>"
-              title="<?php echo hsch($bc['name'])?>"
-              itemscope
-              itemtype="http://schema.org/Thing"
-              itemid="<?php echo $bc['url']; ?>"
-              itemprop="item"
-            ><span itemprop="name"><?php echo $bc['name']; ?></span></a
-            >
-            <meta itemprop="position" content="<?php echo $position?>" />
-          </li>
-          <li><span> / </span></li>
-          <?php } ?>
-          <li
-            itemprop="itemListElement"
-            itemscope
-            itemtype="http://schema.org/ListItem"
-          >
-          <span
-            itemscope
-            itemtype="http://schema.org/Thing"
-            itemid="<?php echo $bc['url']; ?>"
-            itemprop="item"
-          >
-            <span itemprop="name"><?php echo $bcLast['name']; ?></span>
-          </span>
-            <meta itemprop="position" content="<?php echo $position + 1?>" />
-          </li>
-        </ul>
-        <?php } ?>
-        <?php if(trim($pageInf['header'])) { ?>
-        <h1 class="pagetitle text-2xl"><?php echo $pageInf['header']; ?></h1>
-        <?php } ?>
-      </div>
-		</div>
-	</div>
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 -mt-8">
+  <?php if(count($breadcrumbs)) { ?>
+  <?php $bcLast = array_pop($breadcrumbs); ?>
+  <?php $position = 0; ?>
+  <?php foreach($breadcrumbs as $bc) { ?>
+  <?php $position++; ?>
+  <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+    <?php echo $bc['name']; ?>
+  </a>
+  <span class="mx-1">›</span>
+  <?php } ?>
+  <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+  <?php } ?>
+</nav>
+
+
 	<div id="content" class="content">
 		<div class="">
 			<div class="clearfix">
