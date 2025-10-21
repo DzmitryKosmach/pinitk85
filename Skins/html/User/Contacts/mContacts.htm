@@ -1,7 +1,7 @@
 ﻿<?php if(!$ajaxForm) { ?>
 	<div id="title" class="title">
-		<div class="centering">
-      <div class="centeringin clearfix">
+		<div class="">
+      <div class=" clearfix">
         <?php if(count($breadcrumbs)) { ?>
         <?php $bcLast = array_pop($breadcrumbs); ?>
         <ul
@@ -48,7 +48,7 @@
         </ul>
         <?php } ?>
         <?php if(trim($pageInf['header'])) { ?>
-        <h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+        <h1 class="pagetitle text-2xl"><?php echo $pageInf['header']; ?></h1>
         <?php } ?>
       </div>
 		</div>
@@ -64,14 +64,25 @@
 	<?php if(!$ajaxForm) { ?>
 		<?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
 			<div class="">
-				<div class="contact__text"><?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?></div>
-				<div class="cl"></div>
+
+
+        <div class=""><?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?></div>
+
+
+        <div class="cl"></div>
 				<?php if(!$ajaxForm) { ?>
-				<div class="shema">
+				<div class="shema mt-12">
 					<p><b>Схема проезда:</b></p>
-					<div>
-						<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;width=800&amp;height=600&amp;lang=ru_RU&amp;scroll=true"></script>
-					</div>
+
+          <div class="w-full" style="position: relative; padding-bottom: 55%; height: 0; overflow: hidden; max-width: 100%;">
+            <iframe
+              src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;source=constructor"
+              frameborder="0"
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 600px;"
+              allowfullscreen
+            ></iframe>
+          </div>
+
 				</div>
 				<?php } ?>
 			</div>
