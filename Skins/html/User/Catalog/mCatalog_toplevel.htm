@@ -19,12 +19,12 @@
     </div>
 
     <?php if($pageInf && trim($pageInf['text']) !== '') { ?>
-    <div id="catalog-toplevel">
+    <div id="catalog-toplevel" class="text-base">
       <style>
         /* Стили только для контента внутри #catalog-toplevel */
         #catalog-toplevel h2,
         #catalog-toplevel h3 {
-          font-size: 1.5rem;        /* text-lg */
+          font-size: 1.5rem !important;        /* text-lg */
           font-weight: 600;           /* font-semibold */
           margin-top: 1rem;           /* mt-4 */
           margin-bottom: 0.5rem;      /* mb-2 */
