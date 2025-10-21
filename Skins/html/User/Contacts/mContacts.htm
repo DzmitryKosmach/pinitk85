@@ -16,6 +16,11 @@
 </nav>
 
 
+<?php if(trim($pageInf['header'])) { ?>
+<h1 class="pagetitle text-2xl"><?php echo $pageInf['header']; ?></h1>
+<?php } ?>
+
+
 	<div id="content" class="content">
 		<div class="">
 			<div class="clearfix">
@@ -85,7 +90,7 @@
     <?php if(!$ajaxForm) { ?>
     <div style="margin-top: 20px;"><br></div>
 
-    <h2>Адреса пунктов выдачи заказов</h2>
+    <h2 id="addresses" class="text-2xl">Адреса пунктов выдачи заказов</h2>
 
     <div id="points">
         <?php
