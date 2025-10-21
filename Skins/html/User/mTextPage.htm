@@ -31,20 +31,14 @@
   #text-page h1,
   #text-page h2,
   #text-page h3 {
-    font-size: 1.5rem;        /* text-lg */
+    font-size: 1.5rem !important;        /* text-lg */
     font-weight: 600;           /* font-semibold */
     margin-top: 1rem;           /* mt-4 */
     margin-bottom: 0.5rem;      /* mb-2 */
-    line-height: 1.25;
+    line-height: 1.25 !important;
   }
 
-  #text-page h1 ~ *,
-  #text-page h2 ~ *,
-  #text-page h3 ~ *,
-  #text-page ul ~ *{
-    font-size: 1rem;
-    line-height: 1.5;
-  }
+
 
   #text-page p {
     font-size: 1rem;            /* text-base */
@@ -71,6 +65,7 @@
   #text-page li {
     font-size: 1rem;
     margin-bottom: 0.5rem;     /* space-y-1 */
+    line-height: 1.5;
   }
 
   #text-page a {
@@ -106,7 +101,7 @@
 
 <div id="content" class="content">
 	<div class="">
-		<div id="text-page" class="clearfix">
+		<div id="text-page" class="clearfix text-base">
 			<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
 			<div class="cl"></div>
 		</div>
