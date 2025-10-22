@@ -629,6 +629,14 @@
 
           <!-- Кнопки -->
           <div class="flex flex-col sm:flex-row gap-2">
+            <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
+            <button type="button"
+                    class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
+                    disabled>
+              ✓ В корзине
+            </button>
+            <?php else: ?>
+
             <!-- Форма для добавления в корзину -->
             <form method="post" action="<?php echo Url::a('catalog-cart')?>"
                   onsubmit="updateCartButton(this); oCart.add(this, true); return false;"
@@ -655,12 +663,16 @@
               </button>
               <?php } else { ?>
               <button type="submit"
-                      class="h-full w-full bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                      title="Добавить комплект в корзину">
+                      class="submit add2basket h-full w-full !bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                      title="Отложить в 1 клик со СКИДКОЙ">
                 Отложить в 1 клик со СКИДКОЙ
               </button>
               <?php } ?>
+
             </form>
+
+
+            <?php endif; ?>
 
             <script>
               function updateCartButton(form) {
@@ -687,45 +699,45 @@
             </button>
           </div>
 
-          <script>
-            // Функция для обновления состояния кнопок после добавления в корзину
-            function updateCartButtons() {
-              const forms = document.querySelectorAll('.add2basketform');
+<!--          <script>-->
+<!--            // Функция для обновления состояния кнопок после добавления в корзину-->
+<!--            function updateCartButtons() {-->
+<!--              const forms = document.querySelectorAll('.add2basketform');-->
 
-              forms.forEach(form => {
-                const button = form.querySelector('button[type="submit"]');
-                const hiddenInputs = form.querySelectorAll('input[name="add[]"]');
-                const itemIds = Array.from(hiddenInputs).map(input => input.value);
+<!--              forms.forEach(form => {-->
+<!--                const button = form.querySelector('button[type="submit"]');-->
+<!--                const hiddenInputs = form.querySelectorAll('input[name="add[]"]');-->
+<!--                const itemIds = Array.from(hiddenInputs).map(input => input.value);-->
 
-                // Проверяем статус корзины (это упрощенная версия, может потребоваться адаптация)
-                const isInCart = <?php echo Catalog_Cart::isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;
+<!--                // Проверяем статус корзины (это упрощенная версия, может потребоваться адаптация)-->
+<!--                const isInCart = <?php echo Catalog_Cart::isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;-->
 
-                if (isInCart && button) {
-                  button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                  button.classList.add('bg-green-600', 'hover:bg-green-700', 'cursor-not-allowed');
-                  button.innerHTML = '✓ В корзине';
-                  button.disabled = true;
-                  button.type = 'button';
-                }
-              });
-            }
+<!--                if (isInCart && button) {-->
+<!--                  button.classList.remove('bg-blue-600', 'hover:bg-blue-700');-->
+<!--                  button.classList.add('bg-green-600', 'hover:bg-green-700', 'cursor-not-allowed');-->
+<!--                  button.innerHTML = '✓ В корзине';-->
+<!--                  button.disabled = true;-->
+<!--                  button.type = 'button';-->
+<!--                }-->
+<!--              });-->
+<!--            }-->
 
-            // Обновляем кнопки при загрузке
-            document.addEventListener('DOMContentLoaded', function() {
-              updateCartButtons();
+<!--            // Обновляем кнопки при загрузке-->
+<!--            document.addEventListener('DOMContentLoaded', function() {-->
+<!--              updateCartButtons();-->
 
-              // Можно также обновлять после AJAX операций
-              if (typeof oCart !== 'undefined') {
-                const originalAdd = oCart.add;
-                oCart.add = function() {
-                  const result = originalAdd.apply(this, arguments);
-                  // Обновляем кнопки после добавления в корзину
-                  setTimeout(updateCartButtons, 100);
-                  return result;
-                };
-              }
-            });
-          </script>
+<!--              // Можно также обновлять после AJAX операций-->
+<!--              if (typeof oCart !== 'undefined') {-->
+<!--                const originalAdd = oCart.add;-->
+<!--                oCart.add = function() {-->
+<!--                  const result = originalAdd.apply(this, arguments);-->
+<!--                  // Обновляем кнопки после добавления в корзину-->
+<!--                  setTimeout(updateCartButtons, 100);-->
+<!--                  return result;-->
+<!--                };-->
+<!--              }-->
+<!--            });-->
+<!--          </script>-->
 
           <div class="flex flex-wrap gap-6">
             <!-- Условия доставки -->
