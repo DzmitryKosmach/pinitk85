@@ -2,343 +2,342 @@
 
 <div id="title" class="title">
   <div class="">
-    <div class=" clearfix">
-      <!-- Хлебные крошки -->
-      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 ">
-        <?php if(count($breadcrumbs)) { ?>
-        <?php $bcLast = array_pop($breadcrumbs); ?>
+    <div class="centeringin clearfix">
+      <?php if(count($breadcrumbs)) { ?>
+      <?php $bcLast = array_pop($breadcrumbs); ?>
+      <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
         <?php $position = 0; ?>
         <?php foreach($breadcrumbs as $bc) { ?>
-        <?php $position++; ?>
-        <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
-          <?php echo $bc['name']; ?>
-        </a>
-        <span class="mx-1">›</span>
+        <?php $position = $position + 1 ?>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
+             itemid="<?php echo $bc['url']; ?>"
+             itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
+          <meta itemprop="position" content="<?php echo $position?>" />
+        </li>
+        <li><span> / </span></li>
         <?php } ?>
-        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
-        <?php } ?>
-      </nav>
-
-
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+						<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
+							<span itemprop="name"><?php echo $bcLast['name']; ?></span>
+						</span>
+          <meta itemprop="position" content="<?php echo $position + 1?>" />
+        </li>
+      </ul>
+      <?php } ?>
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
       <?php } ?>
     </div>
   </div>
 </div>
-<div id="content" class="content px-4 py-6 max-w-7xl mx-auto">
+<div id="content" class="content">
   <div class="">
-    <div class="clearfix">
-
-      <!-- SEO текст -->
+    <div class="centeringin clearfix">
       <?php if(trim($pageInf['text']) !== '') { ?>
-      <div class="mb-8">
-        <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-      </div>
+      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
       <div class="cl"></div>
       <?php } ?>
 
-      <!-- Основной блок корзины -->
-      <div class="order_form_div someform orderforma order-checkout bg-white rounded-lg shadow p-4 md:p-6">
+      <div class="order_form_div someform orderforma order-checkout">
+        <form action="<?php echo Url::a('catalog-cart')?>" method="get" class="cart-table-form" style="width: 100%;">
+          <?php /* Это здесь для того, чтобы по нажатии Enter запускался пересчёт формы (основное действиие), а не очистка */?>
+          <div style="display: none"><input type="submit" name="recalc" value="1"></div>
 
-        <!-- Заголовок и очистка корзины -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-          <h2 class="text-xl font-bold">Ваш заказ</h2>
-          <a
-            href="<?php echo Url::a('catalog-cart')?>?clear=1"
-            onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')"
-            class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-          >
-            Очистить корзину
-          </a>
-        </div>
-
-        <!-- Список товаров -->
-        <div class="space-y-4 mb-6">
-          <?php foreach($cart as $c) { ?>
-          <div class="flex flex-col sm:flex-row sm:items-start gap-4 p-4 bg-gray-50 rounded-md">
-            <!-- Изображение -->
-            <div class="flex-shrink-0">
-              <?php if($c['item']['_img_ext']) { ?>
-              <img
-                src="<?php echo Catalog::photoUrl(
-                      Catalog_Items::$imagePath,
-                      $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
-                      $c['item']['image-name']
-                    )?>"
-                alt="<?php echo hsch($c['item']['name']); ?>"
-                class="w-16 h-16 object-cover rounded"
-              />
-              <?php } else { ?>
-              <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
-                </svg>
-              </div>
-              <?php } ?>
-            </div>
-
-            <!-- Информация о товаре -->
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                <!-- Название и артикул -->
-                <div class="flex-1 min-w-0">
-                  <div class="font-medium text-gray-900">
-                    <?php echo $c['item']['name']; ?>
-                  </div>
-                  <div class="text-xs text-gray-500 mt-1">
-                    Арт.: <?php echo $c['item']['art']; ?>
-                    <?php if(trim($c['item']['size']) !== '') { ?>
-                    <br>Размер: <?php echo $c['item']['size']; ?>
+          <div class="section summary">
+            <h4>Товары в заказе</h4>
+            <div class="body">
+              <table class="products js-element">
+                <tr>
+                  <th class="item nowrap">Серия</th>
+                  <th class="custom nowrap">Товар</th>
+                  <th class="custom nowrap">Цвет</th>
+                  <th class="custom nowrap">Кол-во</th>
+                  <th class="custom nowrap">Цена</th>
+                  <th class="custom nowrap">Сумма</th>
+                </tr>
+                <?php foreach($cart as $c) { ?>
+                <tr>
+                  <td class="item">
+                    <?php if($c['series']) { ?>
+                    <a href="<?php echo Catalog_Series::a($c['series'])?>"><?php echo $c['series']['name']; ?></a>
                     <?php } ?>
-                  </div>
-                </div>
-
-                <!-- Цвет -->
-                <div class="flex-shrink-0">
-                  <div class="text-xs font-medium">Цвет:</div>
-                  <?php if($c['material']) { ?>
-                  <?php if($c['material']['_img_ext']) { ?>
-                  <a
-                    href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                    target="_blank"
-                    onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                    class="block mt-1"
-                  >
-                    <img
-                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                      width="24"
-                      height="24"
-                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>"
-                      class="rounded border"
-                    />
-                  </a>
-                  <?php } else { ?>
-                  <div class="mt-1 text-xs text-gray-500">-</div>
-                  <?php } ?>
-                  <?php } else { ?>
-                  <div class="mt-1 text-xs text-gray-500">-</div>
-                  <?php } ?>
-                </div>
-
-                <!-- Количество -->
-                <div class="flex-shrink-0 flex items-center gap-2">
-                  <button
-                    type="button"
-                    class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
-                    onclick="oCart.amountMinus(this, true); return false;"
-                  >–</button>
-                  <input
-                    type="text"
-                    name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id']); ?>]"
-                    value="<?php echo $c['amount']; ?>"
-                    class="w-12 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    type="button"
-                    class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
-                    onclick="oCart.amountPlus(this); return false;"
-                  >+</button>
-                </div>
-
-                <!-- Цена -->
-                <div class="flex-shrink-0 text-right">
-                  <div class="font-medium">
-                    <?php if(abs($c['price'])) { ?>
-                    <?php echo Catalog::priceFormat($c['price'])?> руб.
-                    <?php if(abs($c['item']['discount']) != 1) { ?>
-                    <div class="text-xs text-red-600">
-                      (-<?php echo Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>%)
+                  </td>
+                  <td class="itemname">
+                    <div class="pic">
+                      <?php if($c['item']['_img_ext']) { ?>
+                      <img
+                        src="<?php echo Catalog::photoUrl(
+															Catalog_Items::$imagePath,
+															$c['item']['id'], 30, 30, 1, $c['item']['_img_ext'],
+															$c['item']['image-name']
+														)?>"
+                      >
+                      <?php } ?>
                     </div>
+                    <div class="text">
+                      <?php echo $c['item']['name']; ?><br>
+                      <span>
+														Арт.: <?php echo $c['item']['art']; ?><br>
+                        <?php if(trim($c['item']['size']) !== '') { ?>
+                        Размер: <?php echo $c['item']['size']; ?>
+                        <?php } ?>
+													</span>
+                    </div>
+                  </td>
+                  <td class="material" style="min-width: 100px;">
+                    <?php if($c['material']) { ?>
+                    <?php if($c['material']['_img_ext']) { ?>
+                    <div class="image">
+                      <a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+                        <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>" width="24" height="24" alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>">
+                      </a>
+                    </div>
+                    <?php } ?>
+                    <div class="name">
+                      <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id']))?>
+                    </div>
+                    <?php } else { ?>
+                    &nbsp;
+                    <?php } ?>
+                  </td>
+                  <td class="nowrap" style="width: 128px;">
+												<span class="quantity">
+													<a
+                            class="minus"
+                            href="javascript:void(0)"
+                            onclick="oCart.amountMinus(this, true); return false;"
+                          >-</a>
+													<input
+                            type="text"
+                            name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id']); ?>]"
+                            value="<?php echo $c['amount']; ?>"
+                          >
+													<span class="js-measurename">шт</span>
+													<a
+                            class="plus"
+                            href="javascript:void(0)"
+                            onclick="oCart.amountPlus(this); return false;"
+                          >+</a>
+												</span>
+                  </td>
+                  <td class="nowrap right">
+                    <?php if(abs($c['price'])) { ?>
+                    <?php echo Catalog::priceFormat($c['price'])?>
+                    руб.
+                    <?php if(abs($c['item']['discount']) != 1) { ?>
+                    <?php $d = Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>
+                    <br>
+                    <span class="discount" title="Цена со скидкой <?php echo $d?>%">
+															(-<?php echo $d?>%)
+														</span>
                     <?php } ?>
                     <?php } else { ?>
                     по запросу
                     <?php } ?>
-                  </div>
-                </div>
+                  </td>
 
-                <!-- Сумма -->
-                <div class="flex-shrink-0 text-right">
-                  <div class="font-medium">
-                    <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?> руб.
-                  </div>
-                  <a
-                    href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>"
-                    class="text-xs text-red-600 hover:text-red-800 mt-1 block"
-                  >× Удалить</a>
+                  <td class="nowrap right">
+                    <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?>
+                    руб.
+                    <a href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>" class="remove"></a>
+                  </td>
+                </tr>
+                <?php } ?>
+                <tr class="no-borders">
+                  <td colspan="4">&nbsp;</td>
+                  <td>
+                    <button type="submit" name="recalc" value="1" class="recalc">пересчитать</button>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+              </table>
+              <div class="order_pay">
+                <div class="right">
+                  <table class="bx_ordercart_order_sum">
+                    <tr>
+                      <td class="custom_t1 fwb" colspan="6" class="itog">
+                        Итого:
+                      </td>
+                      <td class="custom_t2 fwb price">
+                        <?php echo Catalog::priceFormat($totalPrice)?>
+                        руб.
+                      </td>
+                    </tr>
+                    <?php if($totalPriceOld) { ?>
+                    <tr>
+                      <td class="custom_t1" colspan="6"></td>
+                      <td class="custom_t2" style="text-decoration:line-through; color:#828282;">
+                        <?php echo Catalog::priceFormat(round($totalPriceOld))?>
+                        руб.
+                      </td>
+                    </tr>
+                    <?php } ?>
+                  </table>
                 </div>
               </div>
             </div>
-          </div>
-          <?php } ?>
-        </div>
-
-        <!-- Итоговая сумма -->
-        <div class="border-t pt-4 mb-6">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div class="text-lg font-bold">Итого:</div>
-            <div class="text-2xl font-bold text-blue-600">
-              <?php echo Catalog::priceFormat($totalPrice)?> ₽
+            <div class="h4 clearfix">
+              <a class="btn btn1 orderbtn !bg-main" href="<?php echo Url::a('catalog-cart')?>?clear=1" onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')">
+                очистить корзину
+              </a>
             </div>
           </div>
-          <?php if($totalPriceOld) { ?>
-          <div class="text-sm text-gray-500 mt-1">
-            Было: <span class="line-through"><?php echo Catalog::priceFormat(round($totalPriceOld))?> ₽</span>
-          </div>
-          <?php } ?>
-        </div>
+        </form>
+        <br><br>
 
-        <!-- Кнопка пересчитать -->
-        <div class="mb-6">
-          <button
-            type="submit"
-            name="recalc"
-            value="1"
-            class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition font-medium"
-          >
-            Пересчитать
-          </button>
-        </div>
-
-        <!-- Формы: "Заявка в один клик" и "Заявка с реквизитами" -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Форма "Заявка в один клик" -->
-          <div class="bg-white border border-gray-200 rounded-lg p-4">
-            <h3 class="text-lg font-bold mb-4">Заявка в один клик</h3>
-            <form action="<?php echo Url::a('catalog-cart-oneclick')?>" method="post" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Ваше ФИО<span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  name="quick[fio]"
-                  value="<?php echo $userInf['fio']; ?>"
-                  placeholder="Контактное лицо *"
-                  maxlength="1000"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Телефон<span class="text-red-500">*</span></label>
-                <input
-                  class="maskPhone"
-                  type="text"
-                  name="quick[phone]"
-                  value="<?php echo $userInf['phone']; ?>"
-                  placeholder="Телефон *"
-                  maxlength="30"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="flex items-start">
-                  <input type="checkbox" name="quick[agree]" value="1" class="mt-1 mr-2" required>
-                  <span class="text-sm text-gray-700">Согласен на обработку персональных данных</span>
-                </label>
-              </div>
-              <button
-                type="submit"
-                onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;"
-                class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium"
-              >
-                Оформить
-              </button>
-            </form>
-          </div>
-
-          <!-- Форма "Заявка с реквизитами" -->
-          <div class="bg-white border border-gray-200 rounded-lg p-4">
-            <h3 class="text-lg font-bold mb-4">Заявка с реквизитами</h3>
-              <form method="post" class="form cart-step1-right space-y-4" id="cart-form1">
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Ваше ФИО<span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  name="user[fio]"
-                  placeholder="Контактное лицо *"
-                  maxlength="1000"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Телефон<span class="text-red-500">*</span></label>
-                <input
-                  class="maskPhone"
-                  type="text"
-                  name="user[phone]"
-                  placeholder="Телефон *"
-                  maxlength="30"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">E-Mail<span class="text-red-500">*</span></label>
-                <input
-                  type="email"
-                  name="user[email]"
-                  placeholder="E-Mail *"
-                  maxlength="1000"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Город<span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  name="user[city]"
-                  placeholder="Город *"
-                  maxlength="100"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Адрес доставки<span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  name="user[address]"
-                  placeholder="Адрес доставки *"
-                  maxlength="1000"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Комментарий к заказу</label>
-                <textarea
-                  rows="2"
-                  name="user[info]"
-                  placeholder="Комментарий к заказу"
-                  maxlength="5000"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-              </div>
-              <div class="pt-2">
-                <label class="flex items-start">
-                  <input type="checkbox" name="user[agree]" value="1" class="mt-1 mr-2" required>
-                  <span class="text-sm text-gray-700">Согласен на обработку персональных данных</span>
-                </label>
-              </div>
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div class="text-sm font-medium">
-                  Сумма заказа: <strong><?php echo Catalog::priceFormat($totalPrice)?> ₽</strong>
+        <div class="clearfix">
+          <form action="<?php echo Url::a('catalog-cart-oneclick')?>" method="post" class="form cart-step1-left" id="cart-form2" style="width: 50%;">
+            <h4>Заявка в 1 клик</h4>
+            <div class="body clearfix">
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Контактное лицо
+                  <span class="required">*</span>
                 </div>
-                <button
-                  type="submit"
-                  class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium"
-                >
+                <div class="vl">
+                  <input type="text" name="quick[fio]" value="<?php echo $userInf['fio']; ?>"
+                         placeholder="Контактное лицо *"
+                         maxlength="1000"
+                         required
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Телефон
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input class="maskPhone" type="text" name="quick[phone]" value="<?php echo $userInf['phone']; ?>"
+                         placeholder="Телефон *"
+                         maxlength="30"
+                         required
+                  >
+                </div>
+              </div>
+              <div>
+                <button onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;" type="submit" class="btn btn1 orderbtn !bg-main">
+                  Оформить
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <form method="post" class="form cart-step1-right" id="cart-form1" style="width: 50%;">
+            <h4>Заявка с реквизитами</h4>
+            <div class="body clearfix">
+              <!--<div class="separator"></div>-->
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Контактное лицо
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input type="text" name="user[fio]"
+                         placeholder="Контактное лицо *"
+                         maxlength="1000"
+                         msg_maxlen="Контактное лицо не должно превышать 1000 символов"
+                         required
+                         msg_required="Вы не ввели Контактное лицо"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Телефон
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input class="maskPhone" type="text" name="user[phone]"
+                         placeholder="Телефон *"
+                         maxlength="30"
+                         msg_maxlen="Номер телефона не должен превышать 30 символов"
+                         required
+                         msg_required="Вы не ввели контактный телефон"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  E-Mail
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input type="email" name="user[email]"
+                         placeholder="E-Mail *"
+                         maxlength="1000"
+                         msg_maxlen="E-mail не должен превышать 1000 символов"
+                         required
+                         msg_required="Вы не ввели ваш E-mail"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Город
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input type="text" name="user[city]"
+                         placeholder="Город *"
+                         maxlength="100"
+                         msg_maxlen="Название города не должно превышать 100 символов"
+                         required
+                         msg_required="Вы не ввели ваш город"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="nm">
+                  Адрес доставки
+                  <span class="required">*</span>
+                </div>
+                <div class="vl">
+                  <input type="text" name="user[address]"
+                         placeholder="Адрес доставки *"
+                         maxlength="1000"
+                         msg_maxlen="Адрес доставки не должен превышать 1000 символов"
+                         required
+                         msg_required="Вы не ввели адрес доставки"
+                  >
+                </div>
+              </div>
+              <div class="line f_textarea" data-type="TEXTAREA">
+                <div class="nm">
+                  Комментарий к заказу
+                </div>
+                <div class="vl">
+									<textarea rows="2" name="user[info]" placeholder="Комментарий к заказу"
+                            style="min-height: 120px;"
+                            maxlength="5000"
+                            msg_maxlen="Комментарий к заказу не должен превышать 5000 символов"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="order-total clearfix">
+                <div class="price">
+                  Сумма заказа:
+                  <strong>
+                    <?php echo Catalog::priceFormat($totalPrice)?>
+                    руб.
+                  </strong>
+                </div>
+                <?php if($totalPriceOld) { ?>
+                <div class="price-old">
+                  <?php echo Catalog::priceFormat(round($totalPriceOld))?>
+                  руб.
+                </div>
+                <?php } ?>
+                <button type="submit" class="btn btn1 orderbtn !bg-main">
                   Продолжить оформление
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
+            </div>
+          </form>
 
+
+        </div>
       </div>
     </div>
   </div>
