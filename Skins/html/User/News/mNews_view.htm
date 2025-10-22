@@ -2,35 +2,30 @@
 <?=JsCopmress::load('news')?>
 
 <div id="title" class="title">
-	<div class="centering">
-		<div class="centeringin clearfix">
-			<?php if(count($breadcrumbs)) { ?>
-				<?php $bcLast = array_pop($breadcrumbs); ?>
-				<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-					<?php $position = 0; ?>
-					<?php foreach($breadcrumbs as $bc) { ?>
-						<?php $position = $position + 1 ?>
-						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-							<a href="<?=$bc['url']?>" title="<?=hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing"
-								itemid="<?=$bc['url']?>"
-								itemprop="item"><span itemprop="name"><?=$bc['name']?></span></a>
-						    <meta itemprop="position" content="<?=$position?>" />
-						</li>
-						<li><span> / </span></li>
-					<?php } ?>
-					<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-						<span itemscope itemtype="http://schema.org/Thing" itemid="<?=$bc['url']?>" itemprop="item">
-							<span itemprop="name"><?=$bcLast['name']?></span>
-						</span>
-				    	<meta itemprop="position" content="<?=$position + 1?>" />
-					</li>
-				</ul>
-			<?php } ?>
+	<div class="">
+    <div class=" clearfix">
+      <!-- Хлебные крошки -->
+      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 ">
+        <?php if(count($breadcrumbs)) { ?>
+        <?php $bcLast = array_pop($breadcrumbs); ?>
+        <?php $position = 0; ?>
+        <?php foreach($breadcrumbs as $bc) { ?>
+        <?php $position++; ?>
+        <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+          <?php echo $bc['name']; ?>
+        </a>
+        <span class="mx-1">›</span>
+        <?php } ?>
+        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <?php } ?>
+      </nav>
 
-			<?php if(trim($pageInf['header'])) { ?>
-				<h1 class="pagetitle"><?=$pageInf['header']?></h1>
-			<?php } ?>
-		</div>
+
+      <?php if(trim($pageInf['header'])) { ?>
+      <h1 class="pagetitle text-2xl"><?php echo $pageInf['header']; ?></h1>
+      <?php } ?>
+    </div>
+
 	</div>
 </div>
 <div id="content" class="content">
