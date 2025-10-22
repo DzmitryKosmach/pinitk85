@@ -1,0 +1,67 @@
+<div id="title" class="title">
+  <div class="">
+    <div class="centeringin clearfix">
+      <?php if(count($breadcrumbs)) { ?>
+      <?php $bcLast = array_pop($breadcrumbs); ?>
+      <ul
+        class="breadcrumb"
+        itemscope
+        itemtype="http://schema.org/BreadcrumbList"
+      >
+        <?php $position = 0; ?>
+        <?php foreach($breadcrumbs as $bc) { ?>
+        <?php $position = $position + 1; ?>
+        <li
+          itemprop="itemListElement"
+          itemscope
+          itemtype="http://schema.org/ListItem"
+        >
+          <a
+            href="<?php echo $bc['url']; ?>"
+            title="<?php echo hsch($bc['name'])?>"
+            itemscope
+            itemtype="http://schema.org/Thing"
+            itemid="<?php echo $bc['url']; ?>"
+            itemprop="item"
+          ><span itemprop="name"><?php echo $bc['name']; ?></span></a
+          >
+          <meta itemprop="position" content="<?php echo $position; ?>" />
+        </li>
+        <li><span> / </span></li>
+        <?php } ?>
+        <li
+          itemprop="itemListElement"
+          itemscope
+          itemtype="http://schema.org/ListItem"
+        >
+          <span
+            itemscope
+            itemtype="http://schema.org/Thing"
+            itemid="<?php echo $bc['url']; ?>"
+            itemprop="item"
+          >
+            <span itemprop="name"><?php echo $bcLast['name']; ?></span>
+          </span>
+          <meta itemprop="position" content="<?php echo $position + 1; ?>" />
+        </li>
+      </ul>
+      <?php } ?>
+      <?php if(trim($pageInf['header'])) { ?>
+      <h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+      <?php } ?>
+    </div>
+  </div>
+</div>
+<div id="content" class="content">
+  <div class="">
+    <div class="centeringin clearfix">
+      <?php if(trim($pageInf['text']) !== '') { ?>
+      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+      <div class="cl"></div>
+      <?php } ?>
+
+      <?php echo Pages::msgErr('В вашей корзине нет ни одного товара.'); ?>
+      <div class="cl"></div>
+    </div>
+  </div>
+</div>
