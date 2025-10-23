@@ -105,10 +105,10 @@
                   </td>
 
                   <!-- Цвет -->
-                  <td class="material !flex flex-col justify-center px-4 py-3" style="min-width: 100px;">
-                    <?php if($c['material']) { ?>
-                    <?php if($c['material']['_img_ext']) { ?>
-                    <div class="flex justify-center items-center gap-2">
+                  <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                    <?php if ($c['material']): ?>
+                    <div class="flex flex-col items-center justify-center gap-2">
+                      <?php if ($c['material']['_img_ext']): ?>
                       <a
                         href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
                         target="_blank"
@@ -119,17 +119,18 @@
                           src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
                           width="24"
                           height="24"
-                          alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>"
+                          alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
                           class="rounded border"
                         />
                       </a>
-                      <?php } ?>
-                      <div class="name">
-                        <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id']))?>
+                      <?php endif; ?>
+                      <div class="name text-xs text-gray-700">
+                        <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
                       </div>
-                      <?php } else { ?>
-                    </div>                                        &nbsp;
-                    <?php } ?>
+                    </div>
+                    <?php else: ?>
+                    &nbsp;
+                    <?php endif; ?>
                   </td>
 
                   <!-- Количество -->
@@ -184,7 +185,7 @@
                   <td class="w-1 whitespace-nowrap px-1 py-3 text-center">
                     <a
                       href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>"
-                      class="text-red-600 hover:text-red-800 text-xl leading-none no-underline hover:no-underline"
+                      class="text-red-600 hover:text-red-800 text-5xl leading-none no-underline hover:no-underline"
                       aria-label="Удалить товар"
                     >×</a>
                   </td>
@@ -277,7 +278,7 @@
                 <button
                   onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;"
                   type="submit"
-                  class="btn btn1 orderbtn !bg-main px-8 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
+                  class="btn btn1 orderbtn !bg-main px-12 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
                 >
                   Оформить
                 </button>
@@ -379,7 +380,7 @@
 
               <!-- Итоговая сумма и кнопка -->
               <div class="order-total clearfix pt-4 border-t border-gray-200">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="flex flex-col sm:justify-between gap-3">
                   <div>
                     <span class="text-gray-600">Сумма заказа:</span>
                     <strong class="ml-1 text-lg"><?php echo Catalog::priceFormat($totalPrice)?> руб.</strong>
@@ -389,7 +390,7 @@
                     </div>
                     <?php endif; ?>
                   </div>
-                  <div>
+                  <div class="flex justify-center">
                     <button
                       type="submit"
                       class="btn btn1 orderbtn !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
