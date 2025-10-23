@@ -51,6 +51,7 @@
                   <th class="custom nowrap px-4 py-3">Кол-во</th>
                   <th class="custom nowrap px-4 py-3">Цена</th>
                   <th class="custom nowrap px-4 py-3">Сумма</th>
+                  <th class="custom nowrap px-4 py-3"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -104,7 +105,7 @@
                   </td>
 
                   <!-- Цвет -->
-                  <td class="material px-4 py-3" style="min-width: 100px;">
+                  <td class="material !flex flex-col justify-center px-4 py-3" style="min-width: 100px;">
                     <?php if($c['material']) { ?>
                     <?php if($c['material']['_img_ext']) { ?>
                     <div class="flex items-center gap-2">
@@ -148,7 +149,7 @@
             />
             <span class="js-measurename text-xs text-gray-500">шт</span>
             <a
-              class="plus w-8 h-8 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
+              class="plus w-8 h-8 !flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
               href="javascript:void(0)"
               onclick="oCart.amountPlus(this); return false;"
             >+</a>
@@ -176,10 +177,17 @@
                     <div class="font-medium">
                       <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?> руб.
                     </div>
+                  </td>
+
+                  <!-- Удалить -->
+                  <td class="nowrap right px-4 py-3">
+                    <div class="font-medium">
+                      <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?> руб.
+                    </div>
                     <a
                       href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>"
-                      class="remove text-red-600 hover:text-red-800 text-xs mt-1 block"
-                    >× Удалить</a>
+                      class="remove !flex justify-center align-center text-red-600 hover:text-red-800 text-3xl mt-1"
+                    >×</a>
                   </td>
                 </tr>
                 <?php } ?>
@@ -188,7 +196,7 @@
                 <tr class="no-borders border-t border-gray-200">
                   <td colspan="4" class="px-4 py-3"></td>
                   <td class="px-4 py-3">
-                    <button type="submit" name="recalc" value="1" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition font-medium">
+                    <button type="submit" name="recalc" value="1" class="px-4 py-2 bg-main text-white rounded-md hover:bg-main_hover transition font-medium">
                       пересчитать
                     </button>
                   </td>
@@ -232,13 +240,10 @@
 
         <div class="clearfix">
           <form action="<?php echo Url::a('catalog-cart-oneclick')?>" method="post" class="form cart-step1-left" id="cart-form2" style="width: 50%;">
-            <h4>Заявка в 1 клик</h4>
+            <h4 class="flex justify-center font-medium text-2xl">Заявка в 1 клик</h4>
             <div class="body clearfix">
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Контактное лицо
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input type="text" name="quick[fio]" value="<?php echo $userInf['fio']; ?>"
                          placeholder="Контактное лицо *"
@@ -248,10 +253,7 @@
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Телефон
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input class="maskPhone" type="text" name="quick[phone]" value="<?php echo $userInf['phone']; ?>"
                          placeholder="Телефон *"
@@ -261,22 +263,21 @@
                 </div>
               </div>
               <div>
-                <button onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;" type="submit" class="btn btn1 orderbtn !bg-main">
+                <div class="flex justify-center">
+                <button onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;" type="submit" class="btn btn1 orderbtn !bg-main px-8">
                   Оформить
                 </button>
+                  <div>
               </div>
             </div>
           </form>
 
           <form method="post" class="form cart-step1-right" id="cart-form1" style="width: 50%;">
-            <h4>Заявка с реквизитами</h4>
+            <h4 class="flex justify-center font-medium text-2xl">Заявка с реквизитами</h4>
             <div class="body clearfix">
               <!--<div class="separator"></div>-->
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Контактное лицо
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input type="text" name="user[fio]"
                          placeholder="Контактное лицо *"
@@ -288,10 +289,7 @@
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Телефон
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input class="maskPhone" type="text" name="user[phone]"
                          placeholder="Телефон *"
@@ -303,10 +301,7 @@
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  E-Mail
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input type="email" name="user[email]"
                          placeholder="E-Mail *"
@@ -318,10 +313,7 @@
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Город
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input type="text" name="user[city]"
                          placeholder="Город *"
@@ -333,10 +325,7 @@
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
-                <div class="nm">
-                  Адрес доставки
-                  <span class="required">*</span>
-                </div>
+
                 <div class="vl">
                   <input type="text" name="user[address]"
                          placeholder="Адрес доставки *"
@@ -348,9 +337,7 @@
                 </div>
               </div>
               <div class="line f_textarea" data-type="TEXTAREA">
-                <div class="nm">
-                  Комментарий к заказу
-                </div>
+
                 <div class="vl">
 									<textarea rows="2" name="user[info]" placeholder="Комментарий к заказу"
                             style="min-height: 120px;"
@@ -373,9 +360,11 @@
                   руб.
                 </div>
                 <?php } ?>
-                <button type="submit" class="btn btn1 orderbtn !bg-main">
-                  Продолжить оформление
-                </button>
+                <div class="flex justify-center">
+                  <button type="submit" class="btn btn1 orderbtn !bg-main">
+                    Продолжить оформление
+                  </button>
+                </div>
               </div>
             </div>
           </form>
