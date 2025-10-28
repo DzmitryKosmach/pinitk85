@@ -301,6 +301,7 @@ function getHomeUrl() {
           },
           screens: {
             sm2: "740px",
+            sm3: "640px",
             xs: "480px",
           },
         },
@@ -318,7 +319,10 @@ function getHomeUrl() {
 	?>
 
 <!-- Header -->
-<header id="top" class="bg-header">
+<header
+  id="top"
+  class="bg-header/90 backdrop-blur-sm sticky top-0 z-[1000]"
+>
   <div
     class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-2 lg:py-2 flex-col flex sm:flex-row justify-between items-center text-base font-medium"
   >
@@ -343,25 +347,24 @@ function getHomeUrl() {
 
           <!-- Иконки -->
           <div class="flex items-center gap-5 mb:gap-6">
-            <a href="/contacts/">
-              <div
-                class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50"
+            <div
+              class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50"
+              title="г. Москва"
+            >
+              <svg
+                width="20"
+                height="24"
+                viewBox="0 0 20 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-                  width="20"
-                  height="24"
-                  viewBox="0 0 20 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"
-                    fill="#020202"
-                  />
-                </svg>
-                <span class="text-base">г. Москва</span>
-              </div>
-            </a>
+                <path
+                  d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"
+                  fill="#020202"
+                />
+              </svg>
+              <span class="text-base">г. Москва</span>
+            </div>
 
             <!-- Телефон -->
             <a
@@ -533,9 +536,7 @@ function getHomeUrl() {
             class="block px-4 py-2 hover:bg-main_hover_menu border-b border-gray-200"
           >Репутация</a
           >
-          <a
-            href="/works/"
-            class="block px-4 py-2 hover:bg-main_hover_menu"
+          <a href="/works/" class="block px-4 py-2 hover:bg-main_hover_menu"
           >Наши работы</a
           >
         </div>
@@ -628,9 +629,10 @@ function getHomeUrl() {
 
       <!-- Иконки -->
       <div class="flex items-center gap-5 mb:gap-6">
-        <a href="/contacts/">
+
           <div
             class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50"
+            title="г. Москва"
           >
             <svg
               width="20"
@@ -646,7 +648,7 @@ function getHomeUrl() {
             </svg>
             <span class="hidden xl:inline text-base">г. Москва</span>
           </div>
-        </a>
+
 
         <!-- Телефон -->
         <a
@@ -1514,15 +1516,15 @@ function getHomeUrl() {
     if (phone.length > 10) {
       jQuery("#wi_tele233").removeClass("errk");
       /*$.ajax({
-                type: "POST",
-                url: '/mail.php',
-                data: {'phone': phone},
-                success: function(data) {
-                    kclose();
-                    alert('Ждите звонка!');
-                },
-                //dataType: 'json'
-            });*/
+            type: "POST",
+            url: '/mail.php',
+            data: {'phone': phone},
+            success: function(data) {
+                kclose();
+                alert('Ждите звонка!');
+            },
+            //dataType: 'json'
+        });*/
       return true;
     } else {
       jQuery("#wi_tele233").addClass("errk");

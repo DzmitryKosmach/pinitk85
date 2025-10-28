@@ -10,11 +10,19 @@
     Наши работы
   </h1>
 
+  <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
 
+    <?php
+      for ($i = 0; $i < 16; $i++) {
+          include(Config::path('skins') . '/html/Components/work_card.htm');
+      }
+    ?>
 
+  </div>
+
+  <?php echo $toggle; ?>
 
 </section>
 
 
 
-<?php echo JsCopmress::load('slider'); ?>
