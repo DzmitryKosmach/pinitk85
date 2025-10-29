@@ -50,7 +50,6 @@
               allowfullscreen
             ></iframe>
           </div>
-
 				</div>
 				<?php } ?>
 			</div>
@@ -87,10 +86,24 @@
 		<?php } ?>
 	<?php } ?>
 
-    <?php if(!$ajaxForm) { ?>
-    <div style="margin-top: 20px;"><br></div>
+  <h2 class="text-[21px] md:text-3xl font-semibold mt-8 md:mt-16  mb-4 md:mb-8">
+    Команда профессионалов
+  </h2>
 
-    <h2 id="addresses" class="text-2xl">Адреса пунктов выдачи заказов</h2>
+  <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+
+    <?php
+      for ($i = 0; $i < 8; $i++) {
+          include(Config::path('skins') . '/html/Components/worker_card.htm');
+      }
+    ?>
+
+  </div>
+
+  <?php if(!$ajaxForm) { ?>
+    <div style="margin-top: 40px;"><br></div>
+
+    <h2 id="addresses" class="text-[21px] md:text-3xl font-semibold">Адреса пунктов выдачи заказов</h2>
 
     <div id="points">
         <?php

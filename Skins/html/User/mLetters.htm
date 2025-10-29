@@ -1,0 +1,28 @@
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+  <a href="/" class="hover:text-gray-700">Главная</a>
+  <span class="mx-1">›</span>
+  <span class="uppercase">Благодарственные письма</span>
+</nav>
+
+<section class="mb-24">
+  <h1 class="text-[21px] md:text-4xl font-semibold mb-4 md:mb-8">
+    Благодарственные письма
+  </h1>
+
+  <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+
+    <?php
+      for ($i = 0; $i < 16; $i++) {
+          include(Config::path('skins') . '/html/Components/letter_card.htm');
+      }
+    ?>
+
+  </div>
+
+  <?php echo $toggle; ?>
+
+</section>
+
+
+
