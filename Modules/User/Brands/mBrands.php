@@ -7,7 +7,7 @@ class ModuleMain
     error_log('mBrands module called');
     error_log('pageInf: ' . print_r($pageInf, true));
 
-    $tpl = Config::path('skins') . '/html/User/mLetters.htm';
+    $tpl = Config::path('skins') . '/html/User/mBrands.htm';
 
     // Проверка существования шаблона
     if (!file_exists($tpl)) {
@@ -17,8 +17,8 @@ class ModuleMain
 
     // Отладка данных
     $data = array(
-      'pageInf' => $pageInf,
-      'title' => $pageInf['name'] ?? 'Благодарственные письма'
+        'pageInf' => $pageInf,
+        'title' => $pageInf['name'] ?? 'Бренды и торговые марки'
     );
     error_log('Template data: ' . print_r($data, true));
 

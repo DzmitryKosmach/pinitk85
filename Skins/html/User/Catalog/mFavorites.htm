@@ -1,0 +1,87 @@
+<?php echo CssCopmress::load('catalog')?>
+<?php echo JsCopmress::load('catalog')?>
+
+<div id="title" class="title">
+  <div class="">
+    <?php if(count($breadcrumbs)) { ?>
+    <?php $bcLast = array_pop($breadcrumbs); ?>
+    <nav
+      class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6"
+      itemscope
+      itemtype="http://schema.org/BreadcrumbList"
+    >
+      <?php $position = 0; ?>
+      <?php foreach($breadcrumbs as $bc) { ?>
+      <?php $position++; ?>
+      <span
+        itemprop="itemListElement"
+        itemscope
+        itemtype="http://schema.org/ListItem"
+      >
+        <a
+          href="<?php echo $bc['url']; ?>"
+          title="<?php echo hsch($bc['name']); ?>"
+          class="hover:text-gray-700"
+          itemscope
+          itemtype="http://schema.org/Thing"
+          itemprop="item"
+          itemid="<?php echo $bc['url']; ?>"
+        >
+          <span itemprop="name"><?php echo $bc['name']; ?></span>
+        </a>
+        <meta itemprop="position" content="<?php echo $position; ?>" />
+      </span>
+      <span class="mx-1" aria-hidden="true">›</span>
+      <?php } ?>
+      <!-- Последний элемент без ссылки -->
+      <span
+        itemprop="itemListElement"
+        itemscope
+        itemtype="http://schema.org/ListItem"
+      >
+        <span
+          itemscope
+          itemtype="http://schema.org/Thing"
+          itemprop="item"
+          itemid="<?php echo $bcLast['url']; ?>"
+        >
+          <span itemprop="name" class="text-gray-700 font-medium"
+          ><?php echo $bcLast['name']; ?></span
+          >
+        </span>
+        <meta itemprop="position" content="<?php echo $position + 1; ?>" />
+      </span>
+    </nav>
+    <?php } ?>
+  </div>
+</div>
+<div id="content" class="content">
+  <div class="">
+    <div class="centeringin clearfix">
+      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+      <div class="cl"></div>
+
+      <?php if(count($series)) { ?>
+      <div id="ajaxpages_gmci" class="ajaxpages_gmci">
+        <!-- showcase -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6"
+        >
+          <?php foreach($series as $sn =>
+          $s) { ?>
+          <?php include(_ROOT . Catalog_Series::$tpl)?>
+          <?php } ?>
+        </div>
+        <!-- showcase -->
+      </div>
+
+      <?php } ?>
+
+      <?php if(!count($series)) { ?>
+      <div>
+        <?php echo Pages::msgErr('Недавно просмотренные серии мебели не найдены.')?>
+      </div>
+      <?php } ?>
+    </div>
+  </div>
+</div>
