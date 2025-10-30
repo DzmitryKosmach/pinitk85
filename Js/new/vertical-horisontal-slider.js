@@ -1,21 +1,31 @@
 // Добавляем стили для скрытия скроллбара
-(function hideScrollbar() {
+(function hideScrollbarAndHideTrack() {
   const style = document.createElement("style");
   style.textContent = `
-      .slider-track::-webkit-scrollbar { display: none; }
-      .slider-track { scrollbar-width: none; -ms-overflow-style: none; }
-    `;
+    .slider-track::-webkit-scrollbar { display: none; }
+    .slider-track {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .slider-track.visible {
+      opacity: 1;
+    }
+  `;
   document.head.appendChild(style);
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".slider-thumbnails-container > .relative");
+  const container = document.querySelector(
+    ".slider-thumbnails-container > .relative"
+  );
   if (!container) return;
 
   const track = container.querySelector(".slider-track");
   const btnPrev = container.querySelector(".slider-prev");
   const btnNext = container.querySelector(".slider-next");
-  const mainImage = document.getElementById('main-product-image');
+  const mainImage = document.getElementById("main-product-image");
 
   if (!track || !btnPrev || !btnNext) return;
 
@@ -27,16 +37,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const imageHeight = mainImage.getBoundingClientRect().height;
     if (imageHeight <= 0) return;
 
-    container.style.height = imageHeight + 'px';
-    container.style.maxHeight = imageHeight + 'px';
-    container.style.width = '80px';
-    container.style.minWidth = '80px';
-    container.style.maxWidth = '80px';
+    container.style.height = imageHeight + "px";
+    container.style.maxHeight = imageHeight + "px";
+    container.style.width = "80px";
+    container.style.minWidth = "80px";
+    container.style.maxWidth = "80px";
   }
 
   function getScrollDirection() {
     const computed = window.getComputedStyle(track);
-    return computed.flexDirection.includes("column") ? "vertical" : "horizontal";
+    return computed.flexDirection.includes("column")
+      ? "vertical"
+      : "horizontal";
   }
 
   // ✅ Только размер слайда (без gap)
@@ -52,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function getGap() {
     const direction = getScrollDirection();
     const styles = window.getComputedStyle(track);
-    return parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8;
+    return (
+      parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8
+    );
   }
 
   // Обновлённая функция под новые вспомогательные
@@ -64,15 +78,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!slideSize || slideSize <= 0) return false;
 
     // ✅ Используем РЕАЛЬНЫЙ размер контейнера слайдера
-    const containerSize = direction === "vertical"
-      ? container.clientHeight
-      : container.clientWidth;
+    const containerSize =
+      direction === "vertical" ? container.clientHeight : container.clientWidth;
 
     if (containerSize <= 0) return false;
 
     // Считаем максимальное количество целых слайдов
     let visibleCount = 1;
-    while (visibleCount * slideSize + (visibleCount - 1) * gap <= containerSize) {
+    while (
+      visibleCount * slideSize + (visibleCount - 1) * gap <=
+      containerSize
+      ) {
       visibleCount++;
     }
     visibleCount = Math.max(1, visibleCount - 1);
@@ -106,7 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const gap = getGap();
 
     // Текущая позиция прокрутки
-    const currentScroll = direction === "vertical" ? track.scrollTop : track.scrollLeft;
+    const currentScroll =
+      direction === "vertical" ? track.scrollTop : track.scrollLeft;
 
     // Вычисляем, какой слайд ближе всего к началу видимой области
     // Позиция начала i-го слайда = i * (slideSize + gap)
@@ -166,10 +183,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateButtons() {
     const direction = getScrollDirection();
-    const max = direction === "vertical"
-      ? track.scrollHeight - track.clientHeight
-      : track.scrollWidth - track.clientWidth;
-    const current = direction === "vertical" ? track.scrollTop : track.scrollLeft;
+    const max =
+      direction === "vertical"
+        ? track.scrollHeight - track.clientHeight
+        : track.scrollWidth - track.clientWidth;
+    const current =
+      direction === "vertical" ? track.scrollTop : track.scrollLeft;
 
     const atStart = current <= 1;
     const atEnd = current >= max - 1;
@@ -192,9 +211,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function isSlideAtEnd(slide) {
     const direction = getScrollDirection();
     if (direction === "vertical") {
-      return slide.offsetTop + slide.offsetHeight >= track.scrollTop + track.clientHeight - 1;
+      return (
+        slide.offsetTop + slide.offsetHeight >=
+        track.scrollTop + track.clientHeight - 1
+      );
     } else {
-      return slide.offsetLeft + slide.offsetWidth >= track.scrollLeft + track.clientWidth - 1;
+      return (
+        slide.offsetLeft + slide.offsetWidth >=
+        track.scrollLeft + track.clientWidth - 1
+      );
     }
   }
 
@@ -212,7 +237,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (atTop && track.scrollTop > 1) {
         scrollPrev();
-      } else if (atBottom && track.scrollTop < track.scrollHeight - track.clientHeight - 1) {
+      } else if (
+        atBottom &&
+        track.scrollTop < track.scrollHeight - track.clientHeight - 1
+      ) {
         scrollNext();
       }
       return;
@@ -224,42 +252,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (atLeftEdge && track.scrollLeft > 1) {
       scrollPrev();
-    } else if (atRightEdge && track.scrollLeft < track.scrollWidth - track.clientWidth - 1) {
+    } else if (
+      atRightEdge &&
+      track.scrollLeft < track.scrollWidth - track.clientWidth - 1
+    ) {
       scrollNext();
     }
   }
 
   function init() {
-    requestAnimationFrame(() => {
-      // fitToFullSlides();
-      // updateButtons();
+    // Сразу скрываем трек, если ещё не скрыт
+    track.classList.remove("visible");
 
-      const slides = track.querySelectorAll("img");
-      let loadedCount = 0;
-      const total = slides.length;
+    const slides = track.querySelectorAll("img");
+    if (slides.length === 0) {
+      track.classList.add("visible");
+      return;
+    }
 
-      const checkAllLoaded = () => {
-        loadedCount++;
-        if (loadedCount === total) {
-          requestAnimationFrame(() => {
-            void track.offsetWidth; // гарантируем пересчёт layout
-            fitToFullSlides();
-            updateButtons();
-          });
-        }
-      };
+    let loadedCount = 0;
+    const total = slides.length;
 
-      slides.forEach(slide => {
-        slide.style.cursor = "pointer";
-        slide.addEventListener("click", handleSlideClick);
+    const finalize = () => {
+      requestAnimationFrame(() => {
+        // Принудительный reflow
+        void track.offsetWidth;
 
-        if (slide.complete) {
-          checkAllLoaded();
-        } else {
-          slide.addEventListener("load", checkAllLoaded);
-          slide.addEventListener("error", checkAllLoaded); // на случай ошибки загрузки
-        }
+        // Устанавливаем точный размер под N слайдов
+        const success = fitToFullSlides();
+        updateButtons();
+
+        // Показываем трек
+        track.classList.add("visible");
       });
+    };
+
+    const checkAllLoaded = () => {
+      loadedCount++;
+      if (loadedCount >= total) {
+        finalize();
+      }
+    };
+
+    slides.forEach((slide) => {
+      slide.style.cursor = "pointer";
+      slide.addEventListener("click", handleSlideClick);
+
+      if (slide.complete && slide.naturalHeight !== 0) {
+        checkAllLoaded();
+      } else {
+        slide.addEventListener("load", checkAllLoaded);
+        slide.addEventListener("error", checkAllLoaded);
+      }
     });
   }
 
@@ -333,5 +377,4 @@ document.addEventListener("DOMContentLoaded", () => {
     updateThumbnailSliderHeight();
   }
   init();
-
 });
