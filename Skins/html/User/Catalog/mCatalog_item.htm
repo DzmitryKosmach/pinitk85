@@ -34,7 +34,8 @@
           </div>
         </div>
         <?php /*<div class="zoom">
-        <i class="icon pngicons"></i>
+        <i class="icon pngicons text-red-600 hover:text-red-800 text-4xl leading-none no-underline hover:no-underline">×</i>
+
         Для увеличения картинки кликните на неё
     </div>*/ ?>
     <?php } ?>
@@ -47,7 +48,7 @@
     </div>
     <div class="item-series-name">
       Этот элемент из коллекции:
-      <a href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
+      <a class="font-medium" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
       <br><br>
     </div>
     <div class="options">
