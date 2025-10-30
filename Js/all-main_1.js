@@ -1222,7 +1222,7 @@ onLoad(function () {
       padding: 20,
       tpl: {
         closeBtn:
-          '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon pngicons"></i></a>',
+          '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon text-red-600 hover:text-red-800 !text-4xl leading-none no-underline hover:no-underline">×</i></a>',
       },
     });
     return false;

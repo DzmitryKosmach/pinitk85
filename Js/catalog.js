@@ -133,7 +133,7 @@ onLoad(function(){
 				autoSize		: true,
 				padding			: 20,
 				tpl				: {
-					closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon pngicons"></i></a>'
+					closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon text-red-600 hover:text-red-800 !text-4xl leading-none no-underline hover:no-underline">×</i></a>'
 				}
 			}
 		);
@@ -259,7 +259,7 @@ function showItemPopup1(url, itemId){
 				var matsPreviewsBlock = $$$('item1-' + itemId + '-materials-preview');
 				var matsPreviews = byTag('DIV', matsPreviewsBlock);
 				var previewNum = 1;
-				
+
 				for(var i = 0, l = matsPreviews.length; i < l; i++){
 					if(matsPreviews[i].id == 'item1-' + itemId + '-m-' + material.topId){
 						matsPreviews[i].className = 'active';
