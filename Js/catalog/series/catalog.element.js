@@ -175,7 +175,7 @@ $(document).ready(function(){
 					autoSize		: false,
 					padding			: 20,
 					tpl				: {
-						closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="icon text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline -mt-10">×</span></a>'
+						closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="icon text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline -mt-12">×</span></a>'
 					},
 					helpers			: {
 						title : {
@@ -202,7 +202,7 @@ $(document).ready(function(){
 			closeEffect		: 'none',
 			padding			: 20,
 			tpl				: {
-				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="icon text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline -mt-10">×</span></a>',
+				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="icon text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline -mt-12">×</span></a>',
 			},
 			helpers			: {
 				title : {

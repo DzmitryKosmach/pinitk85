@@ -48,36 +48,36 @@
     </div>
     <div class="item-series-name">
       Этот элемент из коллекции:
-      <a class="font-medium" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
+      <a class="font-medium text-[14px] text-black" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
       <br><br>
     </div>
     <div class="options">
-      <div class="b">Характеристики</div>
+      <div class="b text-black/90">Характеристики</div>
 
       <span>Наличие:</span>
-      <?php echo ($seriesInf['in_stock'] ? 'На складе' : 'Нет на складе')?><br>
+      <span class="!text-black font-sm"><?php echo ($seriesInf['in_stock'] ? 'На складе' : 'Нет на складе')?></span><br>
 
       <span>Артикул:</span>
       <?php echo $itemInf['art']; ?><br>
 
       <?php if(trim($itemInf['size']) !== '') { ?>
       <span>Размер:</span>
-      <?php echo $itemInf['size']; ?>
+      <span class="!text-black font-sm"><?php echo $itemInf['size']; ?></span>
       <br>
       <?php } ?>
       <?php if((float)($itemInf['weight'])) { ?>
       <span>Вес:</span>
-      <?php echo abs($itemInf['weight'])?> кг
+      <span class="!text-black font-sm"><?php echo abs($itemInf['weight'])?> кг</span>
       <br>
       <?php } ?>
       <?php if((float)($itemInf['volume'])) { ?>
       <span>Объём:</span>
-      <?php echo abs($itemInf['volume'])?> м&sup3;
+      <span class="!text-black font-sm"><?php echo abs($itemInf['volume'])?> м&sup3;</span>
       <br>
       <?php } ?>
       <?php if(trim($seriesInf['delivery_time']) !== '') { ?>
       <span>Срок доставки:</span>
-      <?php echo $seriesInf['delivery_time']; ?>
+      <span class="!text-black font-sm"><?php echo $seriesInf['delivery_time']; ?></span>
       <br>
       <?php } ?>
       <?php $c = implode(', ', $seriesInf['tags']); ?>
@@ -104,7 +104,7 @@
                 </div>
               </td>
               <td class="nowrap">
-											<span class="price gen">
+											<span class="price gen text-black/90 font-medium">
 												<span id="item-<?php echo $itemInf['id']; ?>-price" <?php if(!abs($itemInf['price_min'])) { ?>class="price-by-request"<?php } ?>>
                         <?php if(abs($itemInf['price_min'])) { ?>
                         <?php echo Catalog::priceFormat($itemInf['price_min'])?>
@@ -112,7 +112,6 @@
                         по запросу
                         <?php } ?>
 												</span>
-                руб.
                 </span>
               </td>
             </tr>
