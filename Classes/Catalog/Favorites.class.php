@@ -6,7 +6,8 @@
  * @author	Seka
  */
 
-class Catalog_Favorites {
+class Catalog_Favorites
+{
 
 	/**
 	 * Массив серий хранится в сессии:
@@ -19,14 +20,15 @@ class Catalog_Favorites {
 	 * @static
 	 * @param	int	$seriesId
 	 */
-	static function add($seriesId){
+	static function add($seriesId)
+	{
 		$seriesId = intval($seriesId);
 
-		if(!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
-		if(isset($_SESSION[self::SESS_KEY][$seriesId])) return;
+		if (!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
+		if (isset($_SESSION[self::SESS_KEY][$seriesId])) return;
 
 		$oSeries = new Catalog_Series();
-		if($oSeries->getCell('id', '`id` = ' . $seriesId)){
+		if ($oSeries->getCell('id', '`id` = ' . $seriesId)) {
 			$_SESSION[self::SESS_KEY][$seriesId] = 1;
 		}
 	}
@@ -36,7 +38,8 @@ class Catalog_Favorites {
 	 * @static
 	 * @param	int	$seriesId
 	 */
-	static function remove($seriesId){
+	static function remove($seriesId)
+	{
 		$seriesId = intval($seriesId);
 		unset($_SESSION[self::SESS_KEY][$seriesId]);
 	}
@@ -46,8 +49,9 @@ class Catalog_Favorites {
 	 * @static
 	 * @return	array
 	 */
-	static function get(){
-		if(!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
+	static function get()
+	{
+		if (!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
 		return array_keys($_SESSION[self::SESS_KEY]);
 	}
 
@@ -57,7 +61,8 @@ class Catalog_Favorites {
 	 * @param	int	$seriesId
 	 * @return	bool
 	 */
-	static function check($seriesId){
+	static function check($seriesId)
+	{
 		$seriesId = intval($seriesId);
 		return isset($_SESSION[self::SESS_KEY][$seriesId]);
 	}
@@ -67,10 +72,9 @@ class Catalog_Favorites {
 	 * @static
 	 * @return int
 	 */
-	static function count(){
-		if(!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
+	static function count()
+	{
+		if (!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
 		return count($_SESSION[self::SESS_KEY]);
 	}
 }
-
-?>

@@ -1,7 +1,6 @@
 <!-- Карточка товара -->
 <div
-  class="js-element simple propvision1 bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300"
->
+  class="js-element simple propvision1 bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
   <!-- Изображение + маркер -->
   <div class="relative">
     <?php if (!empty($s['marker'])) { ?>
@@ -10,8 +9,7 @@
         class="absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
         style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
-                       white-space: normal;"
-      >
+                       white-space: normal;">
         <?php
               $text = $s['marker']['text'];
               // Заменяем <br>, <br/>, <br/> и т.п. на пробел
@@ -27,33 +25,24 @@
     <?php } ?>
 
     <a class="flex justify-center" href="<?php echo Catalog_Series::a($s); ?>" target="_blank"
-       rel="noopener noreferrer">
-      <img
-        src="<?php echo Catalog::photoUrl(
+      rel="noopener noreferrer">
+      <img src="<?php echo Catalog::photoUrl(
                 Catalog_Series_Photos::$imagePath,
                 $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
-            ); ?>"
-        alt="<?php echo hsch(
+            ); ?>" alt="<?php echo hsch(
                 mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
-            ); ?>"
-        title="<?php echo hsch(
+            ); ?>" title="<?php echo hsch(
                 mb_strtolower(Catalog_Categories::name1($s['category_id'])) . ' ' . mb_strtolower($s['name'])
-            ); ?>"
-        class="max-w-full h-auto object-contain rounded-md mb-4"
-      />
+            ); ?>" class="max-w-full h-auto object-contain rounded-md mb-4" />
     </a>
   </div>
 
   <!-- Название -->
   <div class="relative mb-1" style="height: 2.5em">
     <h3
-      class="font-medium text-sm sm2:text-base lg:text-lg leading-5 line-clamp-2 transition-all duration-200 absolute top-0 left-0 right-0 hover:line-clamp-none hover:z-10 hover:bg-white hover:shadow-lg hover:rounded hover:px-2 hover:py-1"
-    >
-      <a
-        href="<?php echo Catalog_Series::a($s); ?>"
-        class="text-inherit hover:text-inherit block" target="_blank"
-        rel="noopener noreferrer"
-      >
+      class="font-medium text-sm sm2:text-base lg:text-lg leading-5 line-clamp-2 transition-all duration-200 absolute top-0 left-0 right-0 hover:line-clamp-none hover:z-10 hover:bg-white hover:shadow-lg hover:rounded hover:px-2 hover:py-1">
+      <a href="<?php echo Catalog_Series::a($s); ?>" class="text-inherit hover:text-inherit block" target="_blank"
+        rel="noopener noreferrer">
         <?php echo htmlspecialchars($s['name']); ?>
       </a>
     </h3>
@@ -74,14 +63,10 @@
     <?php $count = 0; ?>
     <?php foreach ($materials as $m): ?>
     <?php if ($count >= 7) break; // Ограничиваем 7 цветами ?>
-    <span
-      class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
-      style="
+    <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block" style="
         background-image: url('<?php echo htmlspecialchars($m['img']); ?>');
         background-size: cover;
-      "
-      title="<?php echo htmlspecialchars($m['name']); ?>"
-    >
+      " title="<?php echo htmlspecialchars($m['name']); ?>">
     </span>
     <?php $count++; ?>
     <?php endforeach; ?>
@@ -90,32 +75,21 @@
     <?php if (count($materials) >
     7): ?>
     <div class="relative group">
-      <svg
-        width="16"
-        height="9"
-        viewBox="0 0 16 9"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M7.29289 8.70721C7.68342 9.09773 8.31658 9.09773 8.70711 8.70721L15.0711 2.34325C15.4616 1.95272 15.4616 1.31956 15.0711 0.929032C14.6805 0.538508 14.0474 0.538508 13.6569 0.929032L8 6.58589L2.34315 0.929032C1.95262 0.538508 1.31946 0.538508 0.928932 0.929032C0.538408 1.31956 0.538408 1.95272 0.928932 2.34325L7.29289 8.70721ZM8 8H7V8.0001H8H9V8H8Z"
-          fill="#020202"
-        />
+          fill="#020202" />
       </svg>
 
       <!-- Всплывающее окно с оставшимися цветами -->
       <div
-        class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2"
-      >
+        class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2">
         <?php for ($i = 7; $i < count($materials); $i++): ?>
-        <span
-          class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
+        <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
           style="
             background-image: url('<?php echo htmlspecialchars($materials[$i]['img']); ?>');
             background-size: cover;
-          "
-          title="<?php echo htmlspecialchars($materials[$i]['name']); ?>"
-        >
+          " title="<?php echo htmlspecialchars($materials[$i]['name']); ?>">
         </span>
         <?php endfor; ?>
       </div>
@@ -137,97 +111,66 @@
       <?php endif; ?>
     </div>
 
-    <div
-      class="flex w-full sm:w-auto justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3"
-    >
+    <div class="flex w-full sm:w-auto justify-between gap-2 items-center mt-auto text-gray-500 text-sm mb-3">
       <!-- Избранное -->
-      <div>
-        <a
-          href="javascript:void(0)"
-          class="hover:opacity-50"
-          title="В избранное"
-        >
-          <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
-<!--            <g-->
-<!--              stroke="#FF0000"-->
-<!--              stroke-width="2.5"-->
-<!--              stroke-linecap="round"-->
-<!--              stroke-linejoin="round"-->
-<!--              transform="translate(0, -2)"-->
-<!--            >-->
-<!--              <line x1="7" y1="7" x2="15" y2="15" />-->
-<!--              <line x1="15" y1="7" x2="7" y2="15" />-->
-<!--            </g>-->
+      <div class="threeblock clearfix favorite">
+        <!-- Кнопка "Добавить в избранное" -->
+        <div class="series-favorite-add <?php if (Catalog_Favorites::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2favorite hover:opacity-50" href="javascript:void(0)"
+            onclick="oFavorite.add(<?php echo $s['id']; ?>); return false;" title="Добавить в избранное">
+            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z"
+                fill="#3C3C3A" />
+            </svg>
+          </a>
+        </div>
 
-
-          </svg>
-        </a>
+        <!-- Кнопка "Убрать из избранного" -->
+        <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="remove-favorite hover:opacity-50" href="javascript:void(0)"
+            onclick="oFavorite.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из избранного">
+            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z"
+                fill="#FF0000" />
+            </svg>
+          </a>
+        </div>
       </div>
 
       <!-- Сравнение -->
       <div class="threeblock clearfix compare">
         <!-- Кнопка "Добавить к сравнению" -->
-        <div
-          class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
-          data-id="<?php echo (int)$s['id']; ?>"
-        >
-          <a
-            rel="nofollow"
-            class="add2compare hover:opacity-50"
-            href="javascript:void(0)"
-            onclick="oCompare.add(<?php echo $s['id']; ?>); return false;"
-            title="Добавить к сравнению"
-          >
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 34 34"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+        <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+            onclick="oCompare.add(<?php echo $s['id']; ?>); return false;" title="Добавить к сравнению">
+            <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-                fill="#3C3C3A"
-              />
+                fill="#3C3C3A" />
             </svg>
           </a>
         </div>
 
         <!-- Кнопка "Убрать из сравнения" -->
-        <div
-          class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
-          data-id="<?php echo (int)$s['id']; ?>"
-        >
-          <a
-            rel="nofollow"
-            class="add2compare hover:opacity-50"
-            href="javascript:void(0)"
-            onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;"
-            title="Убрать из сравнения"
-          >
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 34 34"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                stroke="#FF0000"
-                stroke-width="3.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                transform="translate(8,0)"
-              >
+        <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
+          data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
+            onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из сравнения">
+            <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+                transform="translate(8,0)">
                 <line x1="13" y1="2" x2="21" y2="10" />
                 <line x1="21" y1="2" x2="13" y2="10" />
               </g>
               <g transform="translate(0,3)">
                 <path
                   d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
-                  fill="#3C3C3A"
-                />
+                  fill="#3C3C3A" />
               </g>
             </svg>
           </a>
@@ -237,12 +180,9 @@
   </div>
 
   <!-- Кнопка "Подробнее" -->
-  <a
-    href="<?php echo Catalog_Series::a($s); ?>"
+  <a href="<?php echo Catalog_Series::a($s); ?>"
     class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
+    target="_blank" rel="noopener noreferrer">
     Подробнее
   </a>
 </div>
