@@ -92,7 +92,7 @@ $(document).ready(function(){
 	if(RSDevFunc_PHONETABLET) {
 		$('.elementdetail').find('.zoom').hide();
 	}
-	
+
 	// add this element to viewed list
 	/*$(window).load(function(){
 		setTimeout(function(){
@@ -114,7 +114,7 @@ $(document).ready(function(){
 			});
 		},500);
 	});*/
-	
+
 	// change general image
 	$(document).on('click','a.changeimage', function(){
 		/* neoways */
@@ -150,7 +150,7 @@ $(document).ready(function(){
 			return false;
 		}
 	});
-	
+
 	// jScrollPane -> images and prices
 	RSGoPro_ScrollInit('.d_jscrollpane');
 	RSGoPro_ScrollInit('.popd_jscrollpane');
@@ -160,7 +160,7 @@ $(document).ready(function(){
 		RSGoPro_ScrollReinit('.popd_jscrollpane');
 		RSGoPro_ScrollReinit('.prs_jscrollpane');
 	});
-	
+
 	// Fancybox -> gallery
 	if(!RSDevFunc_PHONETABLET) {
 		//$(document).on('click','.glass_lupa',function(){
@@ -175,7 +175,7 @@ $(document).ready(function(){
 					autoSize		: false,
 					padding			: 20,
 					tpl				: {
-						closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon pngicons"></i></a>'
+						closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon text-red-600 hover:text-red-800 !text-4xl leading-none no-underline hover:no-underline">×</i></a>'
 					},
 					helpers			: {
 						title : {
@@ -188,10 +188,10 @@ $(document).ready(function(){
 					onUpdate		: function(){ RSGoPro_FancyImagesOnUpdate();RSGoPro_DetailJScrollPaneReinitialize(); }
 				}
 			);
-			
+
 			return false;
 		});
-		
+
 		// stores
 		$('.genamount:not(.cantopen)').fancybox({
 			maxWidth		: 800,
@@ -202,7 +202,7 @@ $(document).ready(function(){
 			closeEffect		: 'none',
 			padding			: 20,
 			tpl				: {
-				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon pngicons"></i></a>',
+				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><i class="icon text-red-600 hover:text-red-800 !text-4xl leading-none no-underline hover:no-underline">×</i></a>',
 			},
 			helpers			: {
 				title : {
@@ -218,7 +218,7 @@ $(document).ready(function(){
 			return false;
 		});
 	}
-	
+
 	// tabs
 	$(document).on('click','.tabs .switcher',function(){
 		var $switcher = $(this);
@@ -275,7 +275,7 @@ $(document).ready(function(){
 		$('#detailreviews').find('.reviewform').toggleClass('noned');
 		return false;
 	});
-	
+
 	// change offer
 	$(document).on('RSGoProOnOfferChange',function(e,elementObj){
 		RSGoPro_OnOfferChangeDetail(elementObj);
@@ -287,7 +287,7 @@ $(document).ready(function(){
 			}
 		}
 	});
-	
+
 	// buy1click
 	$(document).on('click','.buy1click.detail',function(e){
 		RSGoPro_DetailBuy1Click = true;
@@ -304,7 +304,7 @@ $(document).ready(function(){
 		}
 		RSGoPro_DetailBuy1Click = false;
 	});
-	
+
 	// cheaper
 	$(document).on('click','.cheaper.detail',function(e){
 		RSGoPro_DetailCheaper = true;
@@ -323,11 +323,11 @@ $(document).ready(function(){
 		}
 		RSGoPro_DetailCheaper = false;
 	});
-	
+
 	$(document).on('click','.go2detailfrompreview',function(){
 		$('.detailtabs.tabs').find('.switcher[href="#detailtext"]').trigger('click');
 		RSGoPro_ScrollToSelector( '.switcher[href="#detailtext"]' );
 		return false;
 	});
-	
+
 });
