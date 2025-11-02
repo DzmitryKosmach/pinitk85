@@ -56,7 +56,7 @@ class Catalog_Favorites
 	 */
 	static function get()
 	{
-		if (!is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
+		if (!isset($_SESSION[self::SESS_KEY]) || !is_array($_SESSION[self::SESS_KEY])) $_SESSION[self::SESS_KEY] = array();
 		$sIds = array_keys($_SESSION[self::SESS_KEY]);
 
 		if (count($sIds)) {

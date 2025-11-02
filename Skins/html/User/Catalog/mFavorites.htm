@@ -1,6 +1,10 @@
 <?php echo CssCopmress::load('catalog')?>
 <?php echo JsCopmress::load('catalog')?>
 
+<script>
+  oFavorite.url = '<?php echo Url::a('catalog-favorite'); ?>';
+</script>
+
 <div id="title" class="title">
   <div class="">
     <?php if(count($breadcrumbs)) { ?>
