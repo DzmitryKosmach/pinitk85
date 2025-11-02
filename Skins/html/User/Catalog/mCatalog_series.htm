@@ -6,6 +6,7 @@
 
 <script>
   oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
+  oFavorite.url = '<?php echo Url::a('catalog-favorite'); ?>';
 </script>
 
 <script>
@@ -46,17 +47,19 @@
           <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
             <!-- Избранное -->
             <div>
-              <a
-                href="javascript:void(0)"
-                class="hover:opacity-50"
-                title="В избранное"
-              >
-                <img
-                  src="/images/index/izbr_small.png"
-                  alt="Избранное"
-                  class="w-5 h-5"
-                />
-              </a>
+              <!-- Кнопка "Добавить в избранное" -->
+              <div class="series-favorite-add <?php if (Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
+                <a rel="nofollow" href="javascript:void(0)" class="hover:opacity-50" onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
+                  <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5" />
+                </a>
+              </div>
+              
+              <!-- Кнопка "Убрать из избранного" -->
+              <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
+                <a rel="nofollow" href="javascript:void(0)" class="hover:opacity-50" onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
+                  <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5" />
+                </a>
+              </div>
             </div>
 
             <!-- Сравнение -->
