@@ -53,7 +53,7 @@
                   <img src="/images/index/izbr_small.png" alt="Избранное" class="w-5 h-5" />
                 </a>
               </div>
-              
+
               <!-- Кнопка "Убрать из избранного" -->
               <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>" data-id="<?php echo (int)$seriesInf['id']; ?>">
                 <a rel="nofollow" href="javascript:void(0)" class="hover:opacity-50" onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
