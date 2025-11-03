@@ -2177,95 +2177,68 @@ var oMaterials = new (function () {
   }
 })();
 
+
 /**
  * Избранное
  */
-var oFavorite = new function() {
-  /**
-   * {string}
-   */
-  this.url = '';
+var oFavorite = new (function () {
+  this.url = "";
 
-  /**
-   * @param  {int}  seriesId
-   */
   this.add = function (seriesId) {
-    // Находим все кнопки "Добавить" для этого товара
     var addButtons = document.querySelectorAll('.series-favorite-add[data-id="' + seriesId + '"]');
     var removeButtons = document.querySelectorAll('.series-favorite-remove[data-id="' + seriesId + '"]');
 
-    // Скрываем "Добавить", показываем "Убрать" через классы вместо прямого изменения стилей
-    addButtons.forEach(function (btn) {
-      btn.classList.add('hidden');
-    });
-    removeButtons.forEach(function (btn) {
-      btn.classList.remove('hidden');
-    });
+    addButtons.forEach(btn => btn.classList.add("hidden"));
+    removeButtons.forEach(btn => btn.classList.remove("hidden"));
 
-    // Отправляем AJAX
-    AJAX.lookup(
-      this.url + '?add=' + seriesId + '&ajax=1',
-      function (cnt) {
-        // Обновление счётчиков
-        $$$('series-favorite-cnt').innerHTML = cnt;
-        var spans = find('span.series-favorite-cnt');
-        for (var i = 0, l = spans.length; i < l; i++) {
-          if (typeof spans[i] !== 'undefined') spans[i].innerHTML = cnt;
-        }
-
-        // Обновление бейджей в header
-        var desktopBadge = $$$('favorite-badge-count-desktop');
-        var mobileBadge = $$$('favorite-badge-count-mobile');
-        if (desktopBadge) {
-          desktopBadge.innerHTML = cnt;
-        }
-        if (mobileBadge) {
-          mobileBadge.innerHTML = cnt;
-        }
+    AJAX.lookup(this.url + "?add=" + seriesId + "&ajax=1", function (cnt) {
+      $$$("series-favorite-cnt").innerHTML = cnt;
+      var spans = find("span.series-favorite-cnt");
+      for (var i = 0, l = spans.length; i < l; i++) {
+        if (typeof spans[i] !== "undefined") spans[i].innerHTML = cnt;
       }
-    );
+
+      // Обновление бейджей в header с учётом видимости
+      var desktopBadge = $$$("favorite-badge-count-desktop");
+      var mobileBadge = $$$("favorite-badge-count-mobile");
+      if (desktopBadge) {
+        desktopBadge.innerHTML = cnt;
+        cnt > 0 ? desktopBadge.classList.remove('hidden') : desktopBadge.classList.add('hidden');
+      }
+      if (mobileBadge) {
+        mobileBadge.innerHTML = cnt;
+        cnt > 0 ? mobileBadge.classList.remove('hidden') : mobileBadge.classList.add('hidden');
+      }
+    });
   };
 
-  /**
-   * @param  {int}  seriesId
-   */
   this.remove = function (seriesId) {
-    // Находим все кнопки "Убрать" для этого товара
     var addButtons = document.querySelectorAll('.series-favorite-add[data-id="' + seriesId + '"]');
     var removeButtons = document.querySelectorAll('.series-favorite-remove[data-id="' + seriesId + '"]');
 
-    // Показываем "Добавить", скрываем "Убрать" через классы вместо прямого изменения стилей
-    addButtons.forEach(function (btn) {
-      btn.classList.remove('hidden');
-    });
-    removeButtons.forEach(function (btn) {
-      btn.classList.add('hidden');
-    });
+    removeButtons.forEach(btn => btn.classList.add("hidden"));
+    addButtons.forEach(btn => btn.classList.remove("hidden"));
 
-    // Отправляем AJAX
-    AJAX.lookup(
-      this.url + '?remove=' + seriesId + '&ajax=1',
-      function (cnt) {
-        // Обновление счётчиков
-        $$$('series-favorite-cnt').innerHTML = cnt;
-        var spans = find('span.series-favorite-cnt');
-        for (var i = 0, l = spans.length; i < l; i++) {
-          if (typeof spans[i] !== 'undefined') spans[i].innerHTML = cnt;
-        }
-
-        // Обновление бейджей в header
-        var desktopBadge = $$$('favorite-badge-count-desktop');
-        var mobileBadge = $$$('favorite-badge-count-mobile');
-        if (desktopBadge) {
-          desktopBadge.innerHTML = cnt;
-        }
-        if (mobileBadge) {
-          mobileBadge.innerHTML = cnt;
-        }
+    AJAX.lookup(this.url + "?remove=" + seriesId + "&ajax=1", function (cnt) {
+      $$$("series-favorite-cnt").innerHTML = cnt;
+      var spans = find("span.series-favorite-cnt");
+      for (var i = 0, l = spans.length; i < l; i++) {
+        if (typeof spans[i] !== "undefined") spans[i].innerHTML = cnt;
       }
-    );
+
+      var desktopBadge = $$$("favorite-badge-count-desktop");
+      var mobileBadge = $$$("favorite-badge-count-mobile");
+      if (desktopBadge) {
+        desktopBadge.innerHTML = cnt;
+        cnt > 0 ? desktopBadge.classList.remove('hidden') : desktopBadge.classList.add('hidden');
+      }
+      if (mobileBadge) {
+        mobileBadge.innerHTML = cnt;
+        cnt > 0 ? mobileBadge.classList.remove('hidden') : mobileBadge.classList.add('hidden');
+      }
+    });
   };
-};
+})();
 
 /*  catalog/compare.js */
 /**
