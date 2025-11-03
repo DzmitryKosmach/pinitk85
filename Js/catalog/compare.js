@@ -7,7 +7,6 @@ var oCompare = new function() {
    */
   this.url = '';
 
-
   /**
    * @param  {int}  seriesId
    */
