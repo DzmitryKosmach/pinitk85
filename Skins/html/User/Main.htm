@@ -377,8 +377,6 @@ function getHomeUrl() {
               </div>
 
               <!-- Избранное -->
-
-              <!-- Сравнение -->
               <div class="relative inline-block">
                 <a href="<?php echo Url::a('catalog-favorite')?>">
                   <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -389,8 +387,8 @@ function getHomeUrl() {
                   </svg>
                   <!-- Бейдж с количеством товаров в избранном -->
                   <?php
-                                $favoriteCount = Catalog_Favorites::count();
-                                ?>
+                    $favoriteCount = Catalog_Favorites::count();
+                  ?>
                   <span id="favorite-badge-count-desktop"
                     class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
                     <?php echo $favoriteCount; ?>
