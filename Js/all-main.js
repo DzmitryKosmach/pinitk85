@@ -2152,13 +2152,8 @@ var oMaterials = new function(){
     return html;
   }
 };
-/*  catalog/compare.js */
-/**
- * Сравнение серий
- */
-/**
- * Сравнение серий
- */
+
+
 /**
  * Избранное
  */
@@ -2166,7 +2161,7 @@ var oFavorite = new function() {
   /**
    * {string}
    */
-  this.url = '/pinitk85/catalog-favorite';
+  this.url = '';
 
   /**
    * @param  {int}  seriesId
@@ -2249,6 +2244,7 @@ var oFavorite = new function() {
   };
 };
 
+/*  catalog/compare.js */
 /**
  * Сравнение серий
  */
