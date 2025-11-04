@@ -2158,7 +2158,7 @@ var oMaterials = new function(){
  * Избранное
  */
 var oFavorite = new function () {
-  this.url = "";
+  this.url = "/favorite/";
 
   this.add = function (seriesId) {
     var addButtons = document.querySelectorAll('.series-favorite-add[data-id="' + seriesId + '"]');

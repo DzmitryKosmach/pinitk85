@@ -4,7 +4,7 @@
  * @author	Seka
  */
 
-class mFavorites
+class mFavorite
 {
 
     /**
