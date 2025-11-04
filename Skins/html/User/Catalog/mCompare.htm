@@ -23,37 +23,6 @@
   <?php } ?>
 </div>
 
-<div id="title" class="title py-4 px-4 sm:px-6">
-  <div class="">
-    <div class="centeringin clearfix">
-      <?php if(count($breadcrumbs)) { ?>
-      <?php $bcLast = array_pop($breadcrumbs); ?>
-      <ul class="breadcrumb flex flex-wrap text-sm text-gray-600 mb-2" itemscope itemtype="http://schema.org/BreadcrumbList">
-        <?php $position = 0; ?>
-        <?php foreach($breadcrumbs as $bc) { ?>
-        <?php $position = $position + 1 ?>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" class="inline">
-          <a href="<?php echo $bc['url']; ?>" title="<?php echo hsch($bc['name'])?>" itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
-            <span itemprop="name"><?php echo $bc['name']; ?></span>
-          </a>
-          <meta itemprop="position" content="<?php echo $position?>" />
-        </li>
-        <li class="mx-1">/</li>
-        <?php } ?>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" class="inline">
-            <span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
-              <span itemprop="name"><?php echo $bcLast['name']; ?></span>
-            </span>
-          <meta itemprop="position" content="<?php echo $position + 1?>" />
-        </li>
-      </ul>
-      <?php } ?>
-      <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-2xl font-bold text-gray-900"><?php echo $pageInf['header']; ?></h1>
-      <?php } ?>
-    </div>
-  </div>
-</div>
 
 <div id="content" class="content ">
   <div class="">
@@ -115,7 +84,7 @@
               ?>
 
           <!-- Цена комплекта -->
-          <tr <?php if(Catalog_Compare::isEqual($prices)) { ?> class="bg-gray-50"<?php } ?>>
+          <tr <?php if(Catalog_Compare::isEqual($prices)) { ?> class="bg-blue-50"<?php } ?>>
           <td class="p-3 text-left align-top font-medium text-gray-700">Цена комплекта:</td>
           <?php foreach($series as $s) { ?>
           <td class="p-3 align-top border-t border-gray-100">
@@ -126,7 +95,7 @@
 
           <!-- Опции -->
           <?php foreach($options as $optName => $series2val) { ?>
-          <tr <?php if(Catalog_Compare::isEqual($series2val)) { ?> class="bg-gray-50"<?php } ?>>
+          <tr <?php if(Catalog_Compare::isEqual($series2val)) { ?> class="bg-blue-50"<?php } ?>>
           <td class="p-3 text-left align-top font-medium text-gray-700"><?php echo $optName?></td>
           <?php foreach($series as $s) { ?>
           <td class="p-3 align-top border-t border-gray-100">
@@ -137,7 +106,7 @@
           <?php } ?>
 
           <!-- Цветовая гамма -->
-          <tr <?php if(Catalog_Compare::isEqual($matsBySeries)) { ?> class="bg-gray-50"<?php } ?>>
+          <tr <?php if(Catalog_Compare::isEqual($matsBySeries)) { ?> class="bg-blue-50"<?php } ?>>
           <td class="p-3 text-left align-top font-medium text-gray-700">Цветовая гамма</td>
           <?php foreach($series as $s) { ?>
           <td class="p-3 align-top border-t border-gray-100">
