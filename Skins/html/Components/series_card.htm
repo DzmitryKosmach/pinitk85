@@ -132,13 +132,31 @@
     <div
       class="flex w-full sm:w-auto justify-between gap-4 items-center mt-auto text-gray-500 text-sm mb-3"
     >
-      <button>
-        <a title="Добавить в избранное">
-        <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
-        </svg>
-        </a>
-      </button>
+      <!-- Избранное -->
+      <div class="threeblock clearfix favorite">
+        <!-- Кнопка "Добавить в избранное" -->
+        <div class="series-favorite-add <?php if (Catalog_Favorites::check($s['id'])): ?>hidden<?php endif; ?>"
+             data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="add2favorite hover:opacity-50" href="javascript:void(0)"
+             onclick="oFavorite.add(<?php echo $s['id']; ?>); return false;" title="Добавить в избранное">
+            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Кнопка "Убрать из избранного" -->
+        <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($s['id'])): ?>hidden<?php endif; ?>"
+             data-id="<?php echo (int)$s['id']; ?>">
+          <a rel="nofollow" class="remove-favorite hover:opacity-50" href="javascript:void(0)"
+             onclick="oFavorite.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из избранного">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 hover:text-gray-500">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
 
       <!-- Сравнение -->
       <div class="threeblock clearfix compare">
