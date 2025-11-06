@@ -303,6 +303,7 @@ function getHomeUrl() {
             sm2: "740px",
             sm3: "640px",
             xs: "480px",
+            xs2: "420px",
           },
         },
       },
@@ -504,7 +505,7 @@ function getHomeUrl() {
           </svg>
         </div>
         <div
-          class="absolute top-full left-0 bg-white leading-4 border rounded shadow-md w-72 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200"
+          class="absolute top-full left-0 bg-white leading-4 border rounded shadow-md w-64 sm:w-72 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200"
         >
           <a
             href="/about/"
@@ -574,7 +575,7 @@ function getHomeUrl() {
           </svg>
         </div>
         <div
-          class="absolute top-full left-0 bg-white border rounded shadow-md w-60 md:w-64 leading-4 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200"
+          class="absolute top-full -left-16 xs:left-0 bg-white border rounded shadow-md w-60 md:w-64 leading-4 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200"
         >
           <a
             href="/catalog/"
@@ -776,7 +777,7 @@ function getHomeUrl() {
 
 <!-- Menu catalog -->
 <div
-  class="max-w-1440 !text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3"
+  class="max-w-1440 text-[12px] xs2:text-sm  md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3"
 >
   <div
     class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white"
@@ -843,7 +844,7 @@ function getHomeUrl() {
           <?php if (is_array($c['sub']) && count($c['sub'])): ?>
           <!-- Подменю 2 уровня -->
           <ul
-            class="absolute top-0 w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full left-48 -mt-12"
+            class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12"
           >
             <?php foreach ($c['sub'] as $c2): ?>
             <li class="relative hover:bg-main_hover_menu group/l3">
