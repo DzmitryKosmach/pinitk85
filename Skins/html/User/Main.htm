@@ -331,7 +331,7 @@ function getHomeUrl() {
           <img
             src="<?php echo getImagePath('/images/index/logo.png'); ?>"
             alt="Логотип"
-            class="inline-block w-[162px] h-[34px] lg:w-[340px] lg:h-[71px]"
+            class="inline-block w-[162px] lg:w-[340px] h-full"
           />
         </a>
       </div>
@@ -629,13 +629,28 @@ function getHomeUrl() {
     <!-- Правая часть -->
     <div class="hidden sm:flex flex-col xl:flex-row items-center text-base">
       <!-- Телефоны -->
-      <div
-        class="hidden lg:inline-block text-center lg:text-right mr-2 xl:mr-12"
-      >
-        <div class="leading-3 xl:leading-4">
-          <a href="tel:+74959204824">+7 (495) 920-48-24</a>
+      <div class="hidden lg:inline-block text-center lg:text-right mr-2 xl:mr-12">
+        <!-- Контейнер для дропдауна -->
+        <div class="relative inline-block group">
+          <!-- Верхний телефон -->
+          <div class="flex items-center justify-end gap-1 cursor-pointer">
+            <a href="tel:+74959204824" class="hover:underline">+7 (495) 920-48-24</a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+
+          <!-- Второй телефон — показывается при наведении -->
+          <div class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 z-10">
+            <div class="px-3 py-1 text-sm text-gray-700">8 (800) 234-90-84</div>
+          </div>
         </div>
-        <div>8 (800) 234-90-84</div>
       </div>
 
       <!-- Иконки -->
