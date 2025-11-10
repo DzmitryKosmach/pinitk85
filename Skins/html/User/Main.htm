@@ -331,20 +331,15 @@ function getHomeUrl() {
           <img
             src="<?php echo getImagePath('/images/index/logo.png'); ?>"
             alt="Логотип"
-            class="inline-block w-[162px] lg:w-[340px] h-full"
+            class="inline-block w-[132px] lg:w-[340px] aspect-[162/32]"
           />
         </a>
       </div>
       <div class="block sm:hidden">
         <!-- Правая часть (sm) -->
-        <div class="flex flex-col lg:flex-row items-center text-base mb-2">
-          <!-- Телефоны -->
-          <div class="text-center">
-            <a href="tel:+74959204824">+7 (495) 920-48-24</a>
-          </div>
-
+        <div class="flex flex-col lg:flex-row items-center text-base mb-1">
           <!-- Иконки -->
-          <div class="flex items-center gap-5 mb:gap-6">
+          <div class="flex items-center gap-2 sm:gap-4 mb:gap-6">
             <div
               class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50"
               title="г. Москва"
@@ -364,25 +359,47 @@ function getHomeUrl() {
               <span class="text-base">г. Москва</span>
             </div>
 
-            <!-- Телефон -->
-            <a
-              href="/contacts/callback/"
-              class="fancyajax fancybox.ajax recall callback"
-            >
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50"
+            <!-- Телефон (иконка с дропдауном) -->
+            <div class="relative inline-block group">
+              <!-- Иконка -->
+              <a
+                href="#"
+                class="fancyajax fancybox.ajax recall callback block"
+                aria-label="Позвонить или заказать обратный звонок"
               >
-                <path
-                  d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
-                  fill="#020202"
-                />
-              </svg>
-            </a>
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 26 26"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50 transition-opacity"
+                >
+                  <path
+                    d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
+                    fill="#020202"
+                  />
+                </svg>
+              </a>
+
+              <!-- Выпадающий список -->
+              <div
+                class="absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]"
+              >
+                <a
+                  href="tel:+74959204824"
+                  class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+                >
+                  +7 (495) 920-48-24
+                </a>
+                <a
+                  href="tel:88002349084"
+                  class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+                >
+                  8 (800) 234-90-84
+                </a>
+              </div>
+            </div>
 
             <!-- Корзина -->
 
@@ -629,26 +646,51 @@ function getHomeUrl() {
     <!-- Правая часть -->
     <div class="hidden sm:flex flex-col xl:flex-row items-center text-base">
       <!-- Телефоны -->
-      <div class="hidden lg:inline-block text-center lg:text-right mr-2 xl:mr-12">
+      <div
+        class="hidden lg:inline-block text-center lg:text-right mr-2 xl:mr-12"
+      >
         <!-- Контейнер для дропдауна -->
         <div class="relative inline-block group">
-          <!-- Верхний телефон -->
-          <div class="flex items-center justify-end gap-1 cursor-pointer">
-            <a href="tel:+74959204824" class="hover:underline">+7 (495) 920-48-24</a>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+          <!-- Общий hover-контейнер -->
+          <div class="flex flex-col items-end">
+            <!-- Верхний телефон -->
+            <div class="flex items-center justify-end gap-1 cursor-pointer">
+              <a href="tel:+74959204824" class="hover:underline"
+              >+7 (495) 920-48-24</a
+              >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
 
-          <!-- Второй телефон — показывается при наведении -->
-          <div class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 z-10">
-            <div class="px-3 py-1 text-sm text-gray-700">8 (800) 234-90-84</div>
+            <!-- Выпадающий список -->
+            <div
+              class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-10"
+            >
+              <a
+                href="tel:+74959204824"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+              >
+                +7 (495) 920-48-24
+              </a>
+              <a
+                href="tel:88002349084"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+              >
+                8 (800) 234-90-84
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -674,25 +716,47 @@ function getHomeUrl() {
           <span class="hidden xl:inline text-base">г. Москва</span>
         </div>
 
-        <!-- Телефон -->
-        <a
-          href="/contacts/callback/"
-          class="fancyajax fancybox.ajax recall callback"
-        >
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 26 26"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50"
+        <!-- Телефон (иконка с дропдауном) -->
+        <div class="relative inline-block group">
+          <!-- Иконка -->
+          <a
+            href="#"
+            class="fancyajax fancybox.ajax recall callback block"
+            aria-label="Позвонить или заказать обратный звонок"
           >
-            <path
-              d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
-              fill="#020202"
-            />
-          </svg>
-        </a>
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 26 26"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50 transition-opacity"
+            >
+              <path
+                d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
+                fill="#020202"
+              />
+            </svg>
+          </a>
+
+          <!-- Выпадающий список -->
+          <div
+            class="absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-10"
+          >
+            <a
+              href="tel:+74959204824"
+              class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+            >
+              +7 (495) 920-48-24
+            </a>
+            <a
+              href="tel:88002349084"
+              class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline"
+            >
+              8 (800) 234-90-84
+            </a>
+          </div>
+        </div>
 
         <!-- Корзина -->
 
@@ -792,7 +856,7 @@ function getHomeUrl() {
 
 <!-- Menu catalog -->
 <div
-  class="max-w-1440 text-[12px] xs2:text-sm  md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3"
+  class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3"
 >
   <div
     class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white"
@@ -1564,15 +1628,15 @@ function getHomeUrl() {
     if (phone.length > 10) {
       jQuery("#wi_tele233").removeClass("errk");
       /*$.ajax({
-          type: "POST",
-          url: '/mail.php',
-          data: {'phone': phone},
-          success: function(data) {
-              kclose();
-              alert('Ждите звонка!');
-          },
-          //dataType: 'json'
-      });*/
+      type: "POST",
+      url: '/mail.php',
+      data: {'phone': phone},
+      success: function(data) {
+          kclose();
+          alert('Ждите звонка!');
+      },
+      //dataType: 'json'
+  });*/
       return true;
     } else {
       jQuery("#wi_tele233").addClass("errk");

@@ -191,200 +191,200 @@
         <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
 
       </div>
-<!--      &lt;!&ndash; JavaScript для смены изображения &ndash;&gt;-->
-<!--      <script>-->
-<!--        // Функция смены основного изображения-->
-<!--        function changeMainImage(thumb) {-->
-<!--          const mainImg = document.getElementById('main-product-image');-->
-<!--          const infoDots = document.getElementById('infoDots'); // или 'series-set-points', если так называется-->
-<!--          const bigImage = thumb.dataset.bigimage;-->
-<!--          const alt = thumb.alt;-->
+      <!--      &lt;!&ndash; JavaScript для смены изображения &ndash;&gt;-->
+      <!--      <script>-->
+      <!--        // Функция смены основного изображения-->
+      <!--        function changeMainImage(thumb) {-->
+      <!--          const mainImg = document.getElementById('main-product-image');-->
+      <!--          const infoDots = document.getElementById('infoDots'); // или 'series-set-points', если так называется-->
+      <!--          const bigImage = thumb.dataset.bigimage;-->
+      <!--          const alt = thumb.alt;-->
 
-<!--          // Меняем главное изображение-->
-<!--          if (mainImg && bigImage) {-->
-<!--            mainImg.src = bigImage;-->
-<!--            mainImg.alt = alt;-->
-<!--          }-->
+      <!--          // Меняем главное изображение-->
+      <!--          if (mainImg && bigImage) {-->
+      <!--            mainImg.src = bigImage;-->
+      <!--            mainImg.alt = alt;-->
+      <!--          }-->
 
-<!--          // Получаем все миниатюры-->
-<!--          const thumbnails = document.querySelectorAll('.slider-track img');-->
+      <!--          // Получаем все миниатюры-->
+      <!--          const thumbnails = document.querySelectorAll('.slider-track img');-->
 
-<!--          // Определяем индекс текущей миниатюры-->
-<!--          const thumbIndex = Array.from(thumbnails).indexOf(thumb);-->
+      <!--          // Определяем индекс текущей миниатюры-->
+      <!--          const thumbIndex = Array.from(thumbnails).indexOf(thumb);-->
 
-<!--          // Показываем точки ТОЛЬКО если выбрана первая миниатюра-->
-<!--          if (thumbIndex === 0) {-->
-<!--            infoDots.classList.remove('hidden'); // показываем-->
-<!--          } else {-->
-<!--            infoDots.classList.add('hidden');    // скрываем-->
-<!--          }-->
+      <!--          // Показываем точки ТОЛЬКО если выбрана первая миниатюра-->
+      <!--          if (thumbIndex === 0) {-->
+      <!--            infoDots.classList.remove('hidden'); // показываем-->
+      <!--          } else {-->
+      <!--            infoDots.classList.add('hidden');    // скрываем-->
+      <!--          }-->
 
-<!--          // Подсветка активной миниатюры-->
-<!--          thumbnails.forEach(img => {-->
-<!--            img.classList.remove('border-blue-600');-->
-<!--          });-->
-<!--          thumb.classList.add('border-blue-600');-->
-<!--        }-->
+      <!--          // Подсветка активной миниатюры-->
+      <!--          thumbnails.forEach(img => {-->
+      <!--            img.classList.remove('border-blue-600');-->
+      <!--          });-->
+      <!--          thumb.classList.add('border-blue-600');-->
+      <!--        }-->
 
-<!--        // Инициализация при загрузке-->
-<!--        document.addEventListener('DOMContentLoaded', function () {-->
-<!--          const firstThumb = document.querySelector('.slider-track img');-->
-<!--          if (firstThumb) {-->
-<!--            changeMainImage(firstThumb);-->
-<!--          }-->
+      <!--        // Инициализация при загрузке-->
+      <!--        document.addEventListener('DOMContentLoaded', function () {-->
+      <!--          const firstThumb = document.querySelector('.slider-track img');-->
+      <!--          if (firstThumb) {-->
+      <!--            changeMainImage(firstThumb);-->
+      <!--          }-->
 
-<!--          // Подсветка миниатюр при клике-->
-<!--          document.querySelectorAll('.slider-track img').forEach(img => {-->
-<!--            img.addEventListener('click', function () {-->
-<!--              changeMainImage(this);-->
-<!--            });-->
-<!--          });-->
+      <!--          // Подсветка миниатюр при клике-->
+      <!--          document.querySelectorAll('.slider-track img').forEach(img => {-->
+      <!--            img.addEventListener('click', function () {-->
+      <!--              changeMainImage(this);-->
+      <!--            });-->
+      <!--          });-->
 
-<!--          // Инициализация fancybox для модального окна-->
-<!--          // if (typeof $.fancybox !== 'undefined') {-->
-<!--          //   $('[data-fancybox]').fancybox({-->
-<!--          //     animationEffect: "zoom",-->
-<!--          //     transitionEffect: "slide",-->
-<!--          //     buttons: ["close"],-->
-<!--          //     thumbs: { autoStart: true },-->
-<!--          //     loop: true,-->
-<!--          //     clickContent: false-->
-<!--          //   });-->
-<!--          // }-->
-<!--        });-->
+      <!--          // Инициализация fancybox для модального окна-->
+      <!--          // if (typeof $.fancybox !== 'undefined') {-->
+      <!--          //   $('[data-fancybox]').fancybox({-->
+      <!--          //     animationEffect: "zoom",-->
+      <!--          //     transitionEffect: "slide",-->
+      <!--          //     buttons: ["close"],-->
+      <!--          //     thumbs: { autoStart: true },-->
+      <!--          //     loop: true,-->
+      <!--          //     clickContent: false-->
+      <!--          //   });-->
+      <!--          // }-->
+      <!--        });-->
 
-<!--        // Функция обновления высоты слайдера миниатюр-->
-<!--        function updateThumbnailSliderHeight() {-->
-<!--          const track = document.querySelector('.slider-track');-->
-<!--          const container = document.querySelector('.slider-thumbnails-container');-->
+      <!--        // Функция обновления высоты слайдера миниатюр-->
+      <!--        function updateThumbnailSliderHeight() {-->
+      <!--          const track = document.querySelector('.slider-track');-->
+      <!--          const container = document.querySelector('.slider-thumbnails-container');-->
 
-<!--          // Если элементов нет — выходим-->
-<!--          if (!track || !container) return;-->
+      <!--          // Если элементов нет — выходим-->
+      <!--          if (!track || !container) return;-->
 
-<!--          if (window.innerWidth < 1024) {-->
-<!--            // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===-->
-<!--            track.style.height = '';-->
-<!--            track.style.maxHeight = '';-->
-<!--            track.style.width = '';-->
-<!--            track.style.minWidth = '';-->
-<!--            track.style.maxWidth = '';-->
+      <!--          if (window.innerWidth < 1024) {-->
+      <!--            // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===-->
+      <!--            track.style.height = '';-->
+      <!--            track.style.maxHeight = '';-->
+      <!--            track.style.width = '';-->
+      <!--            track.style.minWidth = '';-->
+      <!--            track.style.maxWidth = '';-->
 
-<!--            container.style.height = '';-->
-<!--            container.style.maxHeight = '';-->
-<!--            container.style.width = '';-->
-<!--            container.style.minWidth = '';-->
-<!--            container.style.maxWidth = '';-->
+      <!--            container.style.height = '';-->
+      <!--            container.style.maxHeight = '';-->
+      <!--            container.style.width = '';-->
+      <!--            container.style.minWidth = '';-->
+      <!--            container.style.maxWidth = '';-->
 
-<!--            return;-->
-<!--          }-->
+      <!--            return;-->
+      <!--          }-->
 
-<!--          // === Десктопный режим (>=1024px) ===-->
-<!--          const mainImageEl = document.querySelector('.w-full > img');-->
-<!--          if (!mainImageEl) return;-->
+      <!--          // === Десктопный режим (>=1024px) ===-->
+      <!--          const mainImageEl = document.querySelector('.w-full > img');-->
+      <!--          if (!mainImageEl) return;-->
 
-<!--          const imageHeight = mainImageEl.getBoundingClientRect().height;-->
-<!--          if (imageHeight <= 0) return;-->
+      <!--          const imageHeight = mainImageEl.getBoundingClientRect().height;-->
+      <!--          if (imageHeight <= 0) return;-->
 
-<!--          const btnHeight = 20; // высота кнопок "вверх/вниз"-->
-<!--          const gap = 16;       // суммарный gap между кнопками и треком-->
-<!--          const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;-->
-<!--          const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;-->
+      <!--          const btnHeight = 20; // высота кнопок "вверх/вниз"-->
+      <!--          const gap = 16;       // суммарный gap между кнопками и треком-->
+      <!--          const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;-->
+      <!--          const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;-->
 
-<!--          // -&#45;&#45; Устанавливаем стили для ТРЕКА (слайдер миниатюр) -&#45;&#45;-->
-<!--          track.style.height = finalTrackHeight + 'px';-->
-<!--          track.style.maxHeight = finalTrackHeight + 'px';-->
-<!--          track.style.width = '80px';      // 🔥 фиксированная ширина-->
-<!--          track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше-->
-<!--          track.style.maxWidth = '80px';   // 🔥 и не расшириться больше-->
+      <!--          // -&#45;&#45; Устанавливаем стили для ТРЕКА (слайдер миниатюр) -&#45;&#45;-->
+      <!--          track.style.height = finalTrackHeight + 'px';-->
+      <!--          track.style.maxHeight = finalTrackHeight + 'px';-->
+      <!--          track.style.width = '80px';      // 🔥 фиксированная ширина-->
+      <!--          track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше-->
+      <!--          track.style.maxWidth = '80px';   // 🔥 и не расшириться больше-->
 
-<!--          // -&#45;&#45; Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) -&#45;&#45;-->
-<!--          container.style.height = imageHeight + 'px';-->
-<!--          container.style.maxHeight = imageHeight + 'px';-->
-<!--          container.style.width = '80px';-->
-<!--          container.style.minWidth = '80px';-->
-<!--          container.style.maxWidth = '80px';-->
-<!--        }-->
+      <!--          // -&#45;&#45; Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) -&#45;&#45;-->
+      <!--          container.style.height = imageHeight + 'px';-->
+      <!--          container.style.maxHeight = imageHeight + 'px';-->
+      <!--          container.style.width = '80px';-->
+      <!--          container.style.minWidth = '80px';-->
+      <!--          container.style.maxWidth = '80px';-->
+      <!--        }-->
 
-<!--        // Вызов при загрузке-->
-<!--        window.addEventListener('load', () => {-->
-<!--          updateThumbnailSliderHeight();-->
-<!--          updateButtons(); // твоя функция обновления кнопок-->
-<!--        });-->
+      <!--        // Вызов при загрузке-->
+      <!--        window.addEventListener('load', () => {-->
+      <!--          updateThumbnailSliderHeight();-->
+      <!--          updateButtons(); // твоя функция обновления кнопок-->
+      <!--        });-->
 
-<!--        // При ресайзе-->
-<!--        window.addEventListener('resize', () => {-->
-<!--          updateThumbnailSliderHeight();-->
-<!--          updateButtons();-->
-<!--        });-->
+      <!--        // При ресайзе-->
+      <!--        window.addEventListener('resize', () => {-->
+      <!--          updateThumbnailSliderHeight();-->
+      <!--          updateButtons();-->
+      <!--        });-->
 
-<!--        // Если главное изображение загружается позже-->
-<!--        document.querySelector('.w-full > img')?.addEventListener('load', updateThumbnailSliderHeight);-->
+      <!--        // Если главное изображение загружается позже-->
+      <!--        document.querySelector('.w-full > img')?.addEventListener('load', updateThumbnailSliderHeight);-->
 
-<!--        // &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+      <!--        // &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
 
-<!--        // Модальное изображение-->
-<!--        // document.addEventListener("DOMContentLoaded", () => {-->
-<!--        //   const mainImageContainer = document.getElementById("mainImageContainer");-->
-<!--        //   const mainImage = document.getElementById("main-product-image");-->
-<!--        //   const modalOverlay = document.querySelector(".modal-overlay");-->
-<!--        //   const zoomedImage = document.getElementById("zoomedImage");-->
-<!--        //-->
-<!--        //   // Открытие-->
-<!--        //   mainImageContainer.addEventListener("click", () => {-->
-<!--        //     if (modalOverlay.classList.contains("flex")) return;-->
-<!--        //-->
-<!--        //     // Устанавливаем src-->
-<!--        //     zoomedImage.src = mainImage.src;-->
-<!--        //-->
-<!--        //     // 1. Показываем оверлей (но без анимации пока)-->
-<!--        //     modalOverlay.classList.remove("hidden");-->
-<!--        //     modalOverlay.classList.add("flex");-->
-<!--        //-->
-<!--        //     // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации-->
-<!--        //     zoomedImage.classList.remove("scale-100", "opacity-100");-->
-<!--        //     zoomedImage.classList.add("scale-95", "opacity-0");-->
-<!--        //-->
-<!--        //     // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние-->
-<!--        //     zoomedImage.offsetHeight; // это триггерит reflow-->
-<!--        //-->
-<!--        //     // 4. Запускаем анимацию появления-->
-<!--        //     requestAnimationFrame(() => {-->
-<!--        //       zoomedImage.classList.remove("scale-95", "opacity-0");-->
-<!--        //       zoomedImage.classList.add("scale-100", "opacity-100");-->
-<!--        //     });-->
-<!--        //   });-->
-<!--        //-->
-<!--        //   // Закрытие-->
-<!--        //   function closeModal() {-->
-<!--        //     // Убираем увеличение-->
-<!--        //     zoomedImage.classList.remove("scale-100", "opacity-100");-->
-<!--        //     zoomedImage.classList.add("scale-95", "opacity-0");-->
-<!--        //-->
-<!--        //     // Ждём завершения анимации-->
-<!--        //     setTimeout(() => {-->
-<!--        //       modalOverlay.classList.remove("flex");-->
-<!--        //       modalOverlay.classList.add("hidden");-->
-<!--        //       zoomedImage.src = ""; // очищаем-->
-<!--        //     }, 300);-->
-<!--        //   }-->
-<!--        //-->
-<!--        //   // Клик по изображению — закрывает-->
-<!--        //   zoomedImage.addEventListener("click", (e) => {-->
-<!--        //     e.stopPropagation();-->
-<!--        //     closeModal();-->
-<!--        //   });-->
-<!--        //-->
-<!--        //   // Клик по фону — закрывает-->
-<!--        //   modalOverlay.addEventListener("click", closeModal);-->
-<!--        //-->
-<!--        //   // Закрытие на Escape (опционально, но полезно)-->
-<!--        //   window.addEventListener("keydown", (e) => {-->
-<!--        //     if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {-->
-<!--        //       closeModal();-->
-<!--        //     }-->
-<!--        //   });-->
-<!--        // });-->
-<!--      </script>-->
+      <!--        // Модальное изображение-->
+      <!--        // document.addEventListener("DOMContentLoaded", () => {-->
+      <!--        //   const mainImageContainer = document.getElementById("mainImageContainer");-->
+      <!--        //   const mainImage = document.getElementById("main-product-image");-->
+      <!--        //   const modalOverlay = document.querySelector(".modal-overlay");-->
+      <!--        //   const zoomedImage = document.getElementById("zoomedImage");-->
+      <!--        //-->
+      <!--        //   // Открытие-->
+      <!--        //   mainImageContainer.addEventListener("click", () => {-->
+      <!--        //     if (modalOverlay.classList.contains("flex")) return;-->
+      <!--        //-->
+      <!--        //     // Устанавливаем src-->
+      <!--        //     zoomedImage.src = mainImage.src;-->
+      <!--        //-->
+      <!--        //     // 1. Показываем оверлей (но без анимации пока)-->
+      <!--        //     modalOverlay.classList.remove("hidden");-->
+      <!--        //     modalOverlay.classList.add("flex");-->
+      <!--        //-->
+      <!--        //     // 2. Обнуляем стиль, чтобы сбросить возможные предыдущие анимации-->
+      <!--        //     zoomedImage.classList.remove("scale-100", "opacity-100");-->
+      <!--        //     zoomedImage.classList.add("scale-95", "opacity-0");-->
+      <!--        //-->
+      <!--        //     // 3. Принудительный reflow — заставляем браузер "увидеть" начальное состояние-->
+      <!--        //     zoomedImage.offsetHeight; // это триггерит reflow-->
+      <!--        //-->
+      <!--        //     // 4. Запускаем анимацию появления-->
+      <!--        //     requestAnimationFrame(() => {-->
+      <!--        //       zoomedImage.classList.remove("scale-95", "opacity-0");-->
+      <!--        //       zoomedImage.classList.add("scale-100", "opacity-100");-->
+      <!--        //     });-->
+      <!--        //   });-->
+      <!--        //-->
+      <!--        //   // Закрытие-->
+      <!--        //   function closeModal() {-->
+      <!--        //     // Убираем увеличение-->
+      <!--        //     zoomedImage.classList.remove("scale-100", "opacity-100");-->
+      <!--        //     zoomedImage.classList.add("scale-95", "opacity-0");-->
+      <!--        //-->
+      <!--        //     // Ждём завершения анимации-->
+      <!--        //     setTimeout(() => {-->
+      <!--        //       modalOverlay.classList.remove("flex");-->
+      <!--        //       modalOverlay.classList.add("hidden");-->
+      <!--        //       zoomedImage.src = ""; // очищаем-->
+      <!--        //     }, 300);-->
+      <!--        //   }-->
+      <!--        //-->
+      <!--        //   // Клик по изображению — закрывает-->
+      <!--        //   zoomedImage.addEventListener("click", (e) => {-->
+      <!--        //     e.stopPropagation();-->
+      <!--        //     closeModal();-->
+      <!--        //   });-->
+      <!--        //-->
+      <!--        //   // Клик по фону — закрывает-->
+      <!--        //   modalOverlay.addEventListener("click", closeModal);-->
+      <!--        //-->
+      <!--        //   // Закрытие на Escape (опционально, но полезно)-->
+      <!--        //   window.addEventListener("keydown", (e) => {-->
+      <!--        //     if (e.key === "Escape" && modalOverlay.classList.contains("flex")) {-->
+      <!--        //       closeModal();-->
+      <!--        //     }-->
+      <!--        //   });-->
+      <!--        // });-->
+      <!--      </script>-->
       <?php } ?>
 
       <div class="info sm2:w-1/2">
@@ -535,10 +535,15 @@
               const targetElement = document.getElementById(targetId);
 
               if (targetElement) {
-                // Плавный скролл
-                targetElement.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start'
+                // Получаем позицию элемента
+                const elementTop = targetElement.getBoundingClientRect().top;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const finalScrollPosition = scrollTop + elementTop - 76; // смещение на 76px вверх
+
+                // Плавная прокрутка
+                window.scrollTo({
+                  top: finalScrollPosition,
+                  behavior: 'smooth'
                 });
               }
             });
@@ -547,24 +552,7 @@
       </div>
 
       <div>
-        <!-- Итоговая цена -->
-        <div>
-          <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
-            <?php
-                            $d = abs($itemInf['discount']);
-                            if ($d != 1 && $d != 0) {
-                                echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
-                            }
-                        ?>
-          </p>
-          <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl font-bold text-black">
-            <?php if(abs($itemInf['price_min'])): ?>
-            <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
-            <?php else: ?>
-            Цена по запросу
-            <?php endif; ?>
-          </div>
-        </div>
+
 
 
         <!-- Кнопки -->
@@ -585,22 +573,46 @@
           >
             <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
-            <span class="flex items-center w-fit gap-6 !py-4 px-4 bg-white border border-[#E4E4E4] rounded-lg mt-2 mb-4">
-						<a class="minus js-minus text-4xl text-gray-600 cursor-pointer">−</a>
-              <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
+            <div class="flex flex-row gap-4" >
+              <!-- Итоговая цена -->
               <div>
+                <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
+                  <?php
+                            $d = abs($itemInf['discount']);
+                            if ($d != 1 && $d != 0) {
+                                echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
+                            }
+                        ?>
+                </p>
+                <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl whitespace-nowrap font-bold text-black">
+                  <?php if(abs($itemInf['price_min'])): ?>
+                  <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
+                  <?php else: ?>
+                  Цена по запросу
+                  <?php endif; ?>
+                </div>
+              </div>
+
+
+              <div>
+        <span class="flex items-center w-fit gap-6 !py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
+						<a class="minus js-minus text-4xl text-gray-600 cursor-pointer">−</a>
+          <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
+          <div>
             <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
             <span class="js-measurename">шт</span>
-          </div>
-              <?php } else { ?>
-              <div>
+              </div>
+          <?php } else { ?>
+          <div>
             <input type="text" class="js-quantity w-6 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
             <span class="js-measurename">шт</span>
-          </div>
-              <?php } ?>
+             </div>
+          <?php } ?>
 
-              <a class="plus js-plus text-3xl text-gray-600 cursor-pointer">+</a>
-				</span>
+          <a class="plus js-plus text-3xl text-gray-600 cursor-pointer">+</a>
+				    </span>
+              </div>
+            </div>
 
             <div class="button-block flex self-end pt-2">
               <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
