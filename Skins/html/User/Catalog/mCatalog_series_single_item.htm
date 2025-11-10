@@ -556,7 +556,7 @@
 
 
         <!-- Кнопки -->
-        <div class="flex flex-col sm:flex-row gap-3 mt-6 mb-8">
+        <div class="flex flex-col sm3:flex-row sm2:flex-col lg:flex-row gap-3 mt-6 mb-8">
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
           <button type="button"
                   class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
@@ -595,7 +595,7 @@
 
 
               <div>
-        <span class="flex items-center w-fit gap-6 !py-2 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
+        <span class="flex items-center w-fit gap-5 !py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
 						<a class="minus js-minus text-4xl text-gray-600 cursor-pointer">−</a>
           <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
           <div>
@@ -627,7 +627,7 @@
               <?php } else { ?>
               <button
                 type="submit"
-                class="submit add2basket w-full !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                class="submit add2basket w-full max-w-[325px] !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
               <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
               title="Отложить в 1 клик со СКИДКОЙ"
               >
@@ -700,13 +700,14 @@
             }
           </script>
 
-          <div class="flex self-end">
+          <div class="flex self-start sm3:self-end sm2:self-start lg:self-end">
             <a rel="nofollow"
                class="block w-full border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
                href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
                title="Нашли дешевле?">
               Нашли дешевле?
-            </a></div>
+            </a>
+          </div>
         </div>
 
         <!-- Условия доставки и контакты -->
