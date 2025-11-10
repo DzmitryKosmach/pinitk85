@@ -12,7 +12,7 @@
 <div>
   <div>
     <!-- Хлебные крошки -->
-    <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
+    <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 md:mb-10">
       <?php if(count($breadcrumbs)) { ?>
       <?php $bcLast = array_pop($breadcrumbs); ?>
       <?php $position = 0; ?>
@@ -31,20 +31,20 @@
 
     <section class="">
       <div>
-        <h1 class="text-2xl font-bold mb-8">
+        <h1 class="text-2xl font-bold mb-4 md:mb-8">
           <?php echo $pageInf['header']; ?>
         </h1>
 
         <!-- Табы -->
         <div
-          class="sticky top-[56px] sm3:top-[32px] lg:top-[75px] pt-4 z-20 bg-body"
+          class="sticky top-[56px] sm3:top-[32px] lg:top-[75px] pt-2 z-20 bg-body"
         >
-          <div class="text-sm mb-12">
+          <div class="text-[11px] sm3:text-sm lg:text-base mb-12">
             <?php
-      $visibleCount = 3;
-      $visiblePages = array_slice($pages, 0, $visibleCount);
-      $hiddenPages = array_slice($pages, $visibleCount);
-    ?>
+              $visibleCount = 3;
+              $visiblePages = array_slice($pages, 0, $visibleCount);
+              $hiddenPages = array_slice($pages, $visibleCount);
+            ?>
 
             <!-- Основной ряд: видимые табы + кнопка "Ещё" -->
             <div class="flex flex-wrap items-center gap-1 sm:gap-2">
@@ -53,7 +53,7 @@
               <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
               <?php if ($isActive): ?>
               <span
-                class="flex-1 min-h-8 px-2 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
+                class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
               >
                 <?php echo htmlspecialchars($p['name']); ?>
               </span>
@@ -71,7 +71,7 @@
               <?php if (!empty($hiddenPages)): ?>
               <button
                 id="showMoreBtn"
-                class="flext align-middle attention min-h-8 px-1 text-xs md:px-4 lg:min-h-12 lg:px-6 rounded-xl bg-blue-600 text-white shadow hover:bg-blue-700 flex items-center justify-center gap-1 transition whitespace-nowrap"
+                class="flex align-middle attention min-h-8 px-1 text-[11px] sm3:text-sm md:px-4 lg:min-h-12 lg:px-6 rounded-xl bg-blue-600 text-white shadow hover:bg-blue-700 flex items-center justify-center gap-1 transition whitespace-nowrap"
               >
                 <span id="btnText">Ещё</span>
                 <svg
@@ -103,14 +103,14 @@
                 <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
                 <?php if ($isActive): ?>
                 <span
-                  class="flex-1 min-h-8 px-2 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
+                  class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
                 >
                   <?php echo htmlspecialchars($p['name']); ?>
                 </span>
                 <?php else: ?>
                 <a
                   href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                  class="flex-1 min-h-8 px-2 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
+                  class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
                 >
                   <?php echo htmlspecialchars($p['name']); ?>
                 </a>
