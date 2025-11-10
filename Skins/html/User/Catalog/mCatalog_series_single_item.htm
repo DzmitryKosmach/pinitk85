@@ -595,8 +595,8 @@
 
 
               <div>
-        <span class="flex items-center w-fit gap-5 !py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
-						<a class="minus js-minus text-4xl text-gray-600 cursor-pointer">−</a>
+        <span class="flex items-center w-fit gap-5 !py-3 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
+						<a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
           <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
           <div>
             <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
@@ -609,7 +609,7 @@
              </div>
           <?php } ?>
 
-          <a class="plus js-plus text-3xl text-gray-600 cursor-pointer">+</a>
+          <a class="plus js-plus text-3xl !py-1 text-gray-600 cursor-pointer">+</a>
 				    </span>
               </div>
             </div>
@@ -773,7 +773,7 @@
 
 
         <?php
-                        foreach($itemInf['materials'] as $n => $im){
+foreach($itemInf['materials'] as $n => $im){
         if(!isset($materials[$im['material_id']])){
         unset($itemInf['materials'][$n]);
         }
@@ -800,8 +800,6 @@ if(count($itemInf['materials'])) {
         }
     }
 }
-
-// Теперь безопасно использовать $mActiveName — он всегда массив!
 ?>
 
         <?php if(count($itemInf['materials'])) { ?>
@@ -822,11 +820,49 @@ if(count($itemInf['materials'])) {
           <div class="b">Цветовая гамма</div>
 
           <div id="materials-popup">
-            <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
+            <!-- Основной контейнер -->
+            <div class="materials-level1" id="materials-popup-content" data-counts="0">
+              <?php
+      $allMaterials = $itemInf['materials'];
+      $firstLevelMaterials = [];
+      $hasSubLevels = false;
+
+      // Собираем только материалы первого уровня
+      foreach ($allMaterials as $im) {
+          $material = $materials[$im['material_id']];
+          if (!$material) continue;
+
+          // Если у материала есть подуровни — помечаем
+          if ($material['has_sub'] && !empty($material['sub'])) {
+              $hasSubLevels = true;
+          }
+
+          $firstLevelMaterials[] = $im;
+      }
+
+      // Выводим только первый уровень
+      foreach ($firstLevelMaterials as $im) {
+          $m = $materials[$im['material_id']];
+          if (!$m) continue;
+          ?>
+              <div class="material-item">
+                <!-- Тут можно вывести элемент первого уровня -->
+                <span><?php echo htmlspecialchars($m['name']); ?></span>
+                <!-- Или изображение, если есть -->
+                <?php if($m['image']['ext']): ?>
+                <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_50x50_0.<?php echo $m['image']['ext']; ?>" alt="<?php echo htmlspecialchars($m['name']); ?>">
+                <?php endif; ?>
+              </div>
+              <?php } ?>
+            </div>
+
+            <?php if ($hasSubLevels): ?>
             <a href="javascript:void(0)" class="klink-dashed"
                onclick="oMaterials.openrows(); return false;">Показать все</a>
+            <?php endif; ?>
           </div>
         </div>
+
 
         <script>
           <?php
