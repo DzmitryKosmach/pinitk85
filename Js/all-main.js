@@ -2059,12 +2059,12 @@ var oMaterials = new function(){
     // добавляем уровень
     if (level === 1) {
       html +=
-        '<div class="materials-level2" id="materials-level2" style="display: none">' +
+        '<div class="materials-level2 !w-fit" id="materials-level2" style="display: none">' +
         '<div class="level-tail" id="materials-level2-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
         '<strong class="level-title" id="materials-level2-title"></strong>' +
         '<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
-        '<div id="materials-level2-content"></div>' +
+        '<div id="materials-level2-content" class="!w-fit"></div>' +
         '</div>';
     } else {
       html +=
