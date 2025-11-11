@@ -592,24 +592,26 @@ var oMaterials = new (function () {
       matsInRow = matsInRowLevel3;
     }
 
-    // Показываем кнопку "Показать все", если материалов больше, чем в одном ряду
-    if (mIds.length <= matsInRow) {
-      $(".klink-dashed").hide();
-    } else {
+    // Показываем кнопку "Показать все" только для уровня 1
+    if (level === 1 && mIds.length > matsInRow) {
       $(".klink-dashed").show();
+    } else {
+      $(".klink-dashed").hide();
     }
 
     var html = "";
     var rowHtml = "";
-    var rowIndex = 0; // индекс текущей строки
+    var rowIndex = 0; // счётчик строк
 
     for (var i = 0; i < mIds.length; i++) {
       // начало новой строки
-      if (i % matsInRow === 0 && i !== 0) {
-        // определяем класс строки: первая видна, остальные скрыты
-        var rowClass = rowIndex === 0 ? "" : "dis";
+      if (i > 0 && i % matsInRow === 0) {
+        // для level 1: только первая строка видна, остальные — dis
+        var rowClass = (level === 1 && rowIndex > 0) ? "dis" : "";
         html +=
-          '<div class="materials-row ' + rowClass + '">' +
+          '<div class="materials-row ' +
+          rowClass +
+          '">' +
           rowHtml +
           '<div class="cl"></div></div>';
         rowHtml = "";
@@ -622,9 +624,11 @@ var oMaterials = new (function () {
 
     // добавляем последнюю строку
     if (rowHtml) {
-      var lastRowClass = rowIndex === 0 ? "" : "dis";
+      var lastRowClass = (level === 1 && rowIndex > 0) ? "dis" : "";
       html +=
-        '<div class="materials-row ' + lastRowClass + '">' +
+        '<div class="materials-row ' +
+        lastRowClass +
+        '">' +
         rowHtml +
         '<div class="cl"></div></div>';
     }
@@ -651,6 +655,7 @@ var oMaterials = new (function () {
 
     return html;
   }
+
 
 
   /**
