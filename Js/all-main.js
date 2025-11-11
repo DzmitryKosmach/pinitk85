@@ -2004,71 +2004,79 @@ var oMaterials = new function(){
 	 * @param	{int}		level	Уровень вложенности этих материалов
 	 * @param	{boolean}	hidden	Скрывать или нет
 	 */
-	function materialsHtml(mIds, level, hidden = true){
-		var matsInRow = 7;
-		if(level == 1){
-			matsInRow = matsInRowLevel1;
-		}else if(level == 2){
-			matsInRow = matsInRowLevel2;
-		}else if(level == 3){
-			matsInRow = matsInRowLevel3;
-		}
+  function materialsHtml(mIds, level, hidden = true) {
+    var matsInRow = 7;
+    if (level == 1) {
+      matsInRow = matsInRowLevel1;
+    } else if (level == 2) {
+      matsInRow = matsInRowLevel2;
+    } else if (level == 3) {
+      matsInRow = matsInRowLevel3;
+    }
 
-		if(mIds.length < matsInRow*2){
-            const el = document.getElementById("materials-popup-content");
-            if ( Number(el.dataset.counts) <=6 ) {
-                $('.klink-dashed').hide();
-            }
-		}
+    // Показываем кнопку "Показать все", если материалов больше, чем в одном ряду
+    if (mIds.length <= matsInRow) {
+      $(".klink-dashed").hide();
+    } else {
+      $(".klink-dashed").show();
+    }
 
-		var html = '', rowHtml = '', rclass = '';
+    var html = "",
+      rowHtml = "",
+      rclass = "";
+    for (var i = 0, l = mIds.length; i < l; i++) {
+      // Скрываем всё, начиная с 4-го элемента (для первого уровня)
+      if (i >= matsInRow && level === 1) {
+        rclass = "dis";
+      } else {
+        rclass = "";
+      }
 
-		for(var i = 0, l = mIds.length; i < l; i++)
-        {
-			if(i > matsInRow*2 && mIds.length > matsInRow*2) {
-                // скрывает позицию
-                //rclass = hidden ? 'dis' : '';
-                // обновление: если уровень больше или равен второму уровню вложенности, то ничего не скрываем
-                rclass = level < 2 ? 'dis' : '';
-            }
+      if (i != 0 && i % matsInRow == 0) {
+        html +=
+          '<div class="materials-row ' +
+          rclass +
+          '">' +
+          rowHtml +
+          '<div class="cl"></div></div>';
+        rowHtml = "";
+      }
+      rowHtml += oneMaterialHtml(mIds[i]);
+    }
 
-			if( i != 0 && i % matsInRow == 0 ) {
-				html += '<div class="materials-row '+rclass+'">' + rowHtml + '<div class="cl"></div></div>';
-				rowHtml = '';
-			}
-			rowHtml += oneMaterialHtml(mIds[i]);
-		}
+    // Добавляем последнюю строку, если она не пустая
+    if (rowHtml) {
+      html +=
+        '<div class="materials-row ' +
+        rclass +
+        '">' +
+        rowHtml +
+        '<div class="cl"></div></div>';
+    }
 
-        // последний элемент должен быть скрыт, если кол-во элементов больше кол-ва строк
-		if( mIds.length > matsInRow*2) {
-            rclass = hidden ? 'dis' : '';
-        }
+    if (level == 1) {
+      html +=
+        '<div class="materials-level2" id="materials-level2" style="display: none">' +
+        '<div class="level-tail" id="materials-level2-tail"></div>' +
+        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
+        '<strong class="level-title" id="materials-level2-title"></strong>' +
+        '<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
+        '<div id="materials-level2-content">' +
+        "</div>" +
+        "</div>";
+    } else {
+      html +=
+        '<div class="materials-level3" id="materials-level3" style="display: none">' +
+        '<div class="level-tail" id="materials-level3-tail"></div>' +
+        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
+        '<strong class="level-title" id="materials-level3-title"></strong>' +
+        '<div id="materials-level3-content">' +
+        "</div>" +
+        "</div>";
+    }
 
-		html += '<div class="materials-row '+rclass+'">' + rowHtml + '<div class="cl"></div></div>';
-
-		if(level === 1){
-			html +=
-				'<div class="materials-level2" id="materials-level2" style="display: none">' +
-					'<div class="level-tail" id="materials-level2-tail"></div>' +
-					'<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
-					'<strong class="level-title" id="materials-level2-title"></strong>' +
-					'<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
-					'<div id="materials-level2-content">' +
-					'</div>' +
-				'</div>';
-		}else{
-			html +=
-				'<div class="materials-level3" id="materials-level3" style="display: none">' +
-					'<div class="level-tail" id="materials-level3-tail"></div>' +
-					'<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
-					'<strong class="level-title" id="materials-level3-title"></strong>' +
-					'<div id="materials-level3-content">' +
-					'</div>' +
-				'</div>';
-		}
-
-		return html;
-	}
+    return html;
+  }
 
 	/**
 	 * Получаем HTML-код для отображения одного материала в попапе
