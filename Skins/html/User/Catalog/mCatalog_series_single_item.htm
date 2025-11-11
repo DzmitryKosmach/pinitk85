@@ -840,9 +840,8 @@
           $firstLevelMaterials[] = $im;
       }
 
-      // Показываем только первый ряд (первые 3 материала)
-      $initialMaterials = array_slice($firstLevelMaterials, 0, 3);
-      foreach ($initialMaterials as $im) {
+      // Выводим только первый уровень
+      foreach ($firstLevelMaterials as $im) {
           $m = $materials[$im['material_id']];
           if (!$m) continue;
           ?>
@@ -857,7 +856,7 @@
               <?php } ?>
             </div>
 
-            <?php if (count($firstLevelMaterials) > 3): ?>
+            <?php if ($hasSubLevels): ?>
             <a href="javascript:void(0)" class="klink-dashed"
                onclick="oMaterials.openrows(); return false;">Показать все</a>
             <?php endif; ?>

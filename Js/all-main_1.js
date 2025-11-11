@@ -2041,15 +2041,24 @@ var oMaterials = new (function () {
       matsInRow = matsInRowLevel3;
     }
 
-    if (mIds.length < matsInRow * 2) {
+    // Показываем кнопку "Показать все", если материалов больше, чем в одном ряду
+    if (mIds.length <= matsInRow) {
       $(".klink-dashed").hide();
+    } else {
+      $(".klink-dashed").show();
     }
 
     var html = "",
       rowHtml = "",
       rclass = "";
     for (var i = 0, l = mIds.length; i < l; i++) {
-      if (i > matsInRow * 2 && mIds.length > matsInRow * 2) rclass = "dis";
+      // Скрываем всё, начиная с 4-го элемента (для первого уровня)
+      if (i >= matsInRow && level === 1) {
+        rclass = "dis";
+      } else {
+        rclass = "";
+      }
+
       if (i != 0 && i % matsInRow == 0) {
         html +=
           '<div class="materials-row ' +
@@ -2062,13 +2071,15 @@ var oMaterials = new (function () {
       rowHtml += oneMaterialHtml(mIds[i]);
     }
 
-    if (mIds.length > matsInRow * 2) rclass = "dis";
-    html +=
-      '<div class="materials-row ' +
-      rclass +
-      '">' +
-      rowHtml +
-      '<div class="cl"></div></div>';
+    // Добавляем последнюю строку, если она не пустая
+    if (rowHtml) {
+      html +=
+        '<div class="materials-row ' +
+        rclass +
+        '">' +
+        rowHtml +
+        '<div class="cl"></div></div>';
+    }
 
     if (level == 1) {
       html +=
