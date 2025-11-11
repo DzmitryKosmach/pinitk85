@@ -137,7 +137,7 @@
 <div id="content" class="content">
   <div>
     <div>
-      <div class="flex flex-col sm2:flex-row gap-6 lg:gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
+      <div class="flex flex-col sm2:flex-row gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
         <?php if(count($photos)) { ?>
         <div class="pictures sm2:w-1/2 changegenimage">
           <div class="flex lg:flex-row flex-col-reverse gap-4">
@@ -821,7 +821,7 @@
 
           <div id="materials-popup">
             <!-- Основной контейнер -->
-            <div class="materials-level1" id="materials-popup-content" data-counts="0" style="transition: max-height 0.3s ease-out; overflow: hidden;">
+            <div class="materials-level1" id="materials-popup-content" data-counts="0">
               <?php
       $allMaterials = $itemInf['materials'];
       $firstLevelMaterials = [];
@@ -840,13 +840,12 @@
           $firstLevelMaterials[] = $im;
       }
 
-      // Выводим только первый уровень (ограничение до 3 элементов)
-      $counter = 0;
-      foreach ($firstLevelMaterials as $im) {
-          if ($counter >= 3) break; // Ограничиваем до 3 элементов
-              $m = $materials[$im['material_id']];
-              if (!$m) continue;
-              ?>
+      // Показываем только первый ряд (первые 3 материала)
+      $initialMaterials = array_slice($firstLevelMaterials, 0, 3);
+      foreach ($initialMaterials as $im) {
+          $m = $materials[$im['material_id']];
+          if (!$m) continue;
+          ?>
               <div class="material-item">
                 <!-- Тут можно вывести элемент первого уровня -->
                 <span><?php echo htmlspecialchars($m['name']); ?></span>
@@ -855,15 +854,10 @@
                 <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_50x50_0.<?php echo $m['image']['ext']; ?>" alt="<?php echo htmlspecialchars($m['name']); ?>">
                 <?php endif; ?>
               </div>
-              <?php
-              $counter++;
-              } ?>
+              <?php } ?>
             </div>
 
             <?php if (count($firstLevelMaterials) > 3): ?>
-            <a href="javascript:void(0)" class="klink-dashed show-all-materials"
-               onclick="toggleMaterialsDisplay(); return false;">Показать все</a>
-            <?php elseif ($hasSubLevels): ?>
             <a href="javascript:void(0)" class="klink-dashed"
                onclick="oMaterials.openrows(); return false;">Показать все</a>
             <?php endif; ?>
@@ -889,34 +883,6 @@
           onLoad(function () {
             //oMaterials.setRowSize(1, 4);
             oMaterials.open(<?php echo $itemInf['id']; ?>);
-          });
-
-          // Функция для переключения отображения всех материалов
-          function toggleMaterialsDisplay() {
-            const container = document.getElementById('materials-popup-content');
-            const link = document.querySelector('.show-all-materials');
-
-            if (container && link) {
-              // Проверяем текущее состояние
-              if (container.style.maxHeight) {
-                // Скрываем дополнительные материалы
-                container.style.maxHeight = null;
-                link.textContent = 'Показать все';
-              } else {
-                // Показываем все материалы
-                container.style.maxHeight = '500px'; // Достаточная высота для всех материалов
-                link.textContent = 'Скрыть';
-              }
-            }
-          }
-
-          // Установим начальную высоту для отображения только одного ряда материалов
-          document.addEventListener('DOMContentLoaded', function() {
-            const container = document.getElementById('materials-popup-content');
-            if (container) {
-              // Установим максимальную высоту для отображения только одного ряда (примерно 100px)
-              container.style.maxHeight = '100px';
-            }
           });
         </script>
         <?php } else { ?>
@@ -1404,3 +1370,4 @@ $benefits = [
 </div>
 </div>
 </div>
+
