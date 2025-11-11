@@ -2049,36 +2049,34 @@ var oMaterials = new (function () {
     }
 
     var html = "",
-      rowHtml = "",
-      rclass = "";
+      rowHtml = "";
+
     for (var i = 0, l = mIds.length; i < l; i++) {
-      // Скрываем всё, начиная с 4-го элемента (для первого уровня)
-      if (i >= matsInRow && level === 1) {
-        rclass = "dis";
-      } else {
-        rclass = "";
+      // Определяем, нужно ли скрывать текущую строку
+      var shouldHideRow = false;
+
+      // Для первого уровня: скрываем строки, начиная со второй (т.е. после первого ряда)
+      if (level === 1 && i >= matsInRow) {
+        shouldHideRow = true;
       }
 
+      // Если это начало новой строки (кроме первой), то закрываем предыдущую
       if (i != 0 && i % matsInRow == 0) {
+        var rowClass = shouldHideRow ? "dis" : "";
         html +=
-          '<div class="materials-row ' +
-          rclass +
-          '">' +
-          rowHtml +
-          '<div class="cl"></div></div>';
+          '<div class="materials-row ' + rowClass + '">' + rowHtml + '<div class="cl"></div></div>';
         rowHtml = "";
       }
+
+      // Добавляем текущий материал
       rowHtml += oneMaterialHtml(mIds[i]);
     }
 
-    // Добавляем последнюю строку, если она не пустая
+    // Добавляем последнюю строку
     if (rowHtml) {
+      var lastRowClass = (level === 1 && mIds.length > matsInRow) ? "dis" : "";
       html +=
-        '<div class="materials-row ' +
-        rclass +
-        '">' +
-        rowHtml +
-        '<div class="cl"></div></div>';
+        '<div class="materials-row ' + lastRowClass + '">' + rowHtml + '<div class="cl"></div></div>';
     }
 
     if (level == 1) {
