@@ -2006,11 +2006,12 @@ var oMaterials = new function(){
 	 */
   function materialsHtml(mIds, level, hidden = true) {
     var matsInRow = 7;
-    if (level == 1) {
+
+    if (level === 1) {
       matsInRow = matsInRowLevel1;
-    } else if (level == 2) {
+    } else if (level === 2) {
       matsInRow = matsInRowLevel2;
-    } else if (level == 3) {
+    } else if (level === 3) {
       matsInRow = matsInRowLevel3;
     }
 
@@ -2021,62 +2022,61 @@ var oMaterials = new function(){
       $(".klink-dashed").show();
     }
 
-    var html = "",
-      rowHtml = "";
+    var html = "";
+    var rowHtml = "";
+    var rowIndex = 0; // индекс текущей строки
 
-    for (var i = 0, l = mIds.length; i < l; i++) {
-      // Определяем, нужно ли скрывать текущую строку
-      var shouldHideRow = false;
-
-      // Для первого уровня: скрываем строки, начиная со второй (т.е. после первого ряда)
-      if (level === 1 && i >= matsInRow) {
-        shouldHideRow = true;
-      }
-
-      // Если это начало новой строки (кроме первой), то закрываем предыдущую
-      if (i != 0 && i % matsInRow == 0) {
-        var rowClass = shouldHideRow ? "dis" : "";
+    for (var i = 0; i < mIds.length; i++) {
+      // начало новой строки
+      if (i % matsInRow === 0 && i !== 0) {
+        // определяем класс строки: первая видна, остальные скрыты
+        var rowClass = rowIndex === 0 ? "" : "dis";
         html +=
-          '<div class="materials-row ' + rowClass + '">' + rowHtml + '<div class="cl"></div></div>';
+          '<div class="materials-row ' + rowClass + '">' +
+          rowHtml +
+          '<div class="cl"></div></div>';
         rowHtml = "";
+        rowIndex++;
       }
 
-      // Добавляем текущий материал
+      // добавляем материал
       rowHtml += oneMaterialHtml(mIds[i]);
     }
 
-    // Добавляем последнюю строку
+    // добавляем последнюю строку
     if (rowHtml) {
-      var lastRowClass = (level === 1 && mIds.length > matsInRow) ? "dis" : "";
+      var lastRowClass = rowIndex === 0 ? "" : "dis";
       html +=
-        '<div class="materials-row ' + lastRowClass + '">' + rowHtml + '<div class="cl"></div></div>';
+        '<div class="materials-row ' + lastRowClass + '">' +
+        rowHtml +
+        '<div class="cl"></div></div>';
     }
 
-    if (level == 1) {
+    // добавляем уровень
+    if (level === 1) {
       html +=
         '<div class="materials-level2" id="materials-level2" style="display: none">' +
         '<div class="level-tail" id="materials-level2-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
         '<strong class="level-title" id="materials-level2-title"></strong>' +
         '<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
-        '<div id="materials-level2-content">' +
-        "</div>" +
-        "</div>";
+        '<div id="materials-level2-content"></div>' +
+        '</div>';
     } else {
       html +=
         '<div class="materials-level3" id="materials-level3" style="display: none">' +
         '<div class="level-tail" id="materials-level3-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
         '<strong class="level-title" id="materials-level3-title"></strong>' +
-        '<div id="materials-level3-content">' +
-        "</div>" +
-        "</div>";
+        '<div id="materials-level3-content"></div>' +
+        '</div>';
     }
 
     return html;
   }
 
-	/**
+
+  /**
 	 * Получаем HTML-код для отображения одного материала в попапе
 	 * @param	{int}	mId
 	 * @return	{string}
