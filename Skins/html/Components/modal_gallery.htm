@@ -1,222 +1,437 @@
 <!-- Модальное окно галереи -->
-<div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
-  <!-- Обёртка для центрирования -->
-  <div class="relative max-w-full max-h-[90vh] flex items-center justify-center">
-    <!-- Контейнер изображения (ограничивает позиционирование кнопок) -->
-    <div class="relative inline-block max-w-full max-h-[90vh]">
-      <img
-        id="gallery-main-img"
-        src=""
-        alt=""
-        class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-      />
-
-      <!-- Кнопка закрытия (в правом верхнем углу изображения) -->
-      <button
-        id="gallery-close"
-        class="absolute top-2 right-2 text-white/90 hover:text-white text-lg font-light z-51 bg-black/40 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 ease-in-out"
-        aria-label="Закрыть"
-      >
-        ✕
-      </button>
-
-      <!-- Стрелка "назад" -->
-      <button
-        id="gallery-prev"
-        class="absolute left-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
-        aria-label="Предыдущее изображение"
-      >
-        <
-      </button>
-
-      <!-- Стрелка "вперёд" -->
-      <button
-        id="gallery-next"
-        class="absolute right-2 top-1/2 -translate-y-1/2 text-white/90 hover:text-white text-3xl z-51 bg-black/40 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110"
-        aria-label="Следующее изображение"
-      >
-        >
-      </button>
-    </div>
+<div
+  id="gallery-modal"
+  class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
+>
+  <!-- Центральное изображение -->
+  <div
+    id="gallery-image-container"
+    class="relative max-w-full max-h-[90vh] flex items-center justify-center overflow-hidden"
+  >
+    <img
+      id="gallery-main-img"
+      src=""
+      alt=""
+      class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
+    />
   </div>
 
-  <!-- Счётчик (под изображением, по центру) -->
-  <div id="gallery-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-base font-mono tracking-wide bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm"></div>
+  <!-- Кнопка закрытия (в правом верхнем углу экрана) -->
+  <button
+    id="gallery-close"
+    class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-51 bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
+    aria-label="Закрыть галерею"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+
+  <!-- Стрелка "назад" — по левому краю -->
+  <button
+    id="gallery-prev"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-51 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    aria-label="Предыдущее изображение"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-8 w-8"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M15 19l-7-7 7-7"
+      />
+    </svg>
+  </button>
+
+  <!-- Стрелка "вперёд" — по правому краю -->
+  <button
+    id="gallery-next"
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-51 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    aria-label="Следующее изображение"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-8 w-8"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <!-- Счётчик (по центру снизу) -->
+  <div
+    id="gallery-counter"
+    class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm"
+  ></div>
+
+  <!-- Индикатор масштаба -->
+  <div
+    id="gallery-zoom-indicator"
+    class="absolute top-4 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden"
+  >
+    100%
+  </div>
 </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // === ГАЛЕРЕЯ: данные ===
-        const photos = <?php echo json_encode(array_map(function($p) use ($catInf, $seriesInf) {
-          return [
-            'src' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]),
-            'thumb' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
-            'alt' => hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])
-        ];
-        }, $photos)); ?>;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // === ГАЛЕРЕЯ: данные ===
+    const photos = <?php echo json_encode(array_map(function($p) use ($catInf, $seriesInf) {
+      return [
+        'src' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]),
+        'thumb' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
+        'alt' => hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])
+    ];
+    }, $photos)); ?>;
 
-        let currentGalleryIndex = 0;
+    let currentGalleryIndex = 0;
+    let isZoomed = false;
+    let isDragging = false;
+    let startX, startY;
+    let translateX = 0, translateY = 0;
+    let currentScale = 1;
 
-        // === Элементы DOM ===
-        const mainImage = document.getElementById('main-product-image');
-        const mainImageContainer = document.getElementById('mainImageContainer');
-        const galleryModal = document.getElementById('gallery-modal');
-        const galleryImg = document.getElementById('gallery-main-img');
-        const galleryClose = document.getElementById('gallery-close');
-        const galleryPrev = document.getElementById('gallery-prev');
-        const galleryNext = document.getElementById('gallery-next');
-        const galleryCounter = document.getElementById('gallery-counter');
+    // === Элементы DOM ===
+    const mainImage = document.getElementById('main-product-image');
+    const mainImageContainer = document.getElementById('mainImageContainer');
+    const galleryModal = document.getElementById('gallery-modal');
+    const galleryImg = document.getElementById('gallery-main-img');
+    const galleryImageContainer = document.getElementById('gallery-image-container');
+    const galleryClose = document.getElementById('gallery-close');
+    const galleryPrev = document.getElementById('gallery-prev');
+    const galleryNext = document.getElementById('gallery-next');
+    const galleryCounter = document.getElementById('gallery-counter');
+    const galleryZoomIndicator = document.getElementById('gallery-zoom-indicator');
 
-        // === Открытие галереи ===
-        mainImageContainer.addEventListener('click', () => {
-          currentGalleryIndex = 0; // всегда начинаем с первого изображения
-          updateGalleryImage();
-          galleryModal.classList.remove('hidden', 'pointer-events-none');
-          setTimeout(() => galleryModal.classList.add('opacity-100', 'pointer-events-auto'), 10);
-        });
+    // === Открытие галереи ===
+    mainImageContainer.addEventListener('click', () => {
+      currentGalleryIndex = 0; // всегда начинаем с первого изображения
+      resetZoom(); // сбрасываем масштаб при открытии
+      updateGalleryImage();
+      galleryModal.classList.remove('hidden', 'pointer-events-none');
+      setTimeout(() => galleryModal.classList.add('opacity-100', 'pointer-events-auto'), 10);
+    });
 
-        // === Закрытие галереи ===
-        function closeGallery() {
-          galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
-          setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
+    // === Закрытие галереи ===
+    function closeGallery() {
+      resetZoom(); // сбрасываем масштаб при закрытии
+      galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
+      setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
+    }
+
+    galleryClose.addEventListener('click', closeGallery);
+    galleryModal.addEventListener('click', (e) => {
+      if (e.target === galleryModal) closeGallery();
+    });
+
+    // === Навигация ===
+    galleryPrev.addEventListener('click', () => {
+      resetZoom(); // сбрасываем масштаб при смене изображения
+      currentGalleryIndex = (currentGalleryIndex - 1 + photos.length) % photos.length;
+      updateGalleryImage();
+    });
+
+    galleryNext.addEventListener('click', () => {
+      resetZoom(); // сбрасываем масштаб при смене изображения
+      currentGalleryIndex = (currentGalleryIndex + 1) % photos.length;
+      updateGalleryImage();
+    });
+
+    // === Обновление изображения в галерее ===
+    function updateGalleryImage() {
+      const photo = photos[currentGalleryIndex];
+      galleryImg.src = photo.src;
+      galleryImg.alt = photo.alt;
+
+      // Сбрасываем курсор при смене изображения
+      resetCursor();
+
+      if (galleryCounter) {
+        galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
+      }
+    }
+
+    // === Функции управления курсором ===
+    function setZoomInCursor() {
+      galleryImg.classList.remove('cursor-grab', 'cursor-grabbing');
+      galleryImg.classList.add('cursor-zoom-in');
+    }
+
+    function setGrabCursor() {
+      galleryImg.classList.remove('cursor-zoom-in', 'cursor-grabbing');
+      galleryImg.classList.add('cursor-grab');
+    }
+
+    function setGrabbingCursor() {
+      galleryImg.classList.remove('cursor-zoom-in', 'cursor-grab');
+      galleryImg.classList.add('cursor-grabbing');
+    }
+
+    function resetCursor() {
+      galleryImg.classList.remove('cursor-grab', 'cursor-grabbing', 'cursor-zoom-in');
+      if (!isZoomed) {
+        setZoomInCursor();
+      } else {
+        setGrabCursor();
+      }
+    }
+
+    // === Функции масштабирования ===
+    function toggleZoom() {
+      if (isZoomed) {
+        resetZoom();
+      } else {
+        zoomTo100Percent();
+      }
+    }
+
+    function zoomTo100Percent() {
+      const imgRect = galleryImg.getBoundingClientRect();
+      const containerRect = galleryImageContainer.getBoundingClientRect();
+
+      // Рассчитываем масштаб для 100% размера изображения
+      const naturalWidth = galleryImg.naturalWidth;
+      const naturalHeight = galleryImg.naturalHeight;
+
+      // Если изображение меньше контейнера, не увеличиваем
+      if (naturalWidth <= containerRect.width && naturalHeight <= containerRect.height) {
+        return;
+      }
+
+      currentScale = Math.max(naturalWidth / imgRect.width, naturalHeight / imgRect.height);
+      isZoomed = true;
+
+      applyTransform();
+      updateZoomIndicator();
+      setGrabCursor(); // меняем курсор на руку
+    }
+
+    function resetZoom() {
+      currentScale = 1;
+      translateX = 0;
+      translateY = 0;
+      isZoomed = false;
+
+      applyTransform();
+      updateZoomIndicator();
+      setZoomInCursor(); // возвращаем курсор zoom-in
+    }
+
+    function applyTransform() {
+      galleryImg.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+    }
+
+    function updateZoomIndicator() {
+      if (galleryZoomIndicator) {
+        if (isZoomed) {
+          galleryZoomIndicator.textContent = Math.round(currentScale * 100) + '%';
+          galleryZoomIndicator.classList.remove('hidden');
+        } else {
+          galleryZoomIndicator.classList.add('hidden');
         }
+      }
+    }
 
-        galleryClose.addEventListener('click', closeGallery);
-        galleryModal.addEventListener('click', (e) => {
-          if (e.target === galleryModal) closeGallery();
-        });
+    // === Обработчики для масштабирования ===
+    galleryImg.addEventListener('click', (e) => {
+      e.stopPropagation(); // предотвращаем закрытие галереи
+      toggleZoom();
+    });
 
-        // === Навигация ===
-        galleryPrev.addEventListener('click', () => {
-          currentGalleryIndex = (currentGalleryIndex - 1 + photos.length) % photos.length;
-          updateGalleryImage();
-        });
+    // === Drag functionality ===
+    galleryImg.addEventListener('mousedown', startDrag);
+    galleryImg.addEventListener('touchstart', startDrag);
 
-        galleryNext.addEventListener('click', () => {
-          currentGalleryIndex = (currentGalleryIndex + 1) % photos.length;
-          updateGalleryImage();
-        });
+    function startDrag(e) {
+      if (!isZoomed) return;
 
-        // === Обновление изображения в галерее ===
-        function updateGalleryImage() {
-          const photo = photos[currentGalleryIndex];
-          galleryImg.src = photo.src;
-          galleryImg.alt = photo.alt;
-          if (galleryCounter) {
-            galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
-          }
+      e.preventDefault();
+      isDragging = true;
+
+      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+      startX = clientX - translateX;
+      startY = clientY - translateY;
+
+      setGrabbingCursor(); // меняем курсор на схваченный
+
+      // Добавляем обработчики для движения и окончания drag
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+    }
+
+    function drag(e) {
+      if (!isDragging) return;
+
+      e.preventDefault();
+
+      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+      // Рассчитываем новые координаты
+      const newTranslateX = clientX - startX;
+      const newTranslateY = clientY - startY;
+
+      // Ограничиваем перемещение, чтобы не уходить слишком далеко от изображения
+      const imgRect = galleryImg.getBoundingClientRect();
+      const containerRect = galleryImageContainer.getBoundingClientRect();
+
+      const maxX = Math.max(0, (imgRect.width * currentScale - containerRect.width) / 2);
+      const maxY = Math.max(0, (imgRect.height * currentScale - containerRect.height) / 2);
+
+      translateX = Math.max(-maxX, Math.min(maxX, newTranslateX));
+      translateY = Math.max(-maxY, Math.min(maxY, newTranslateY));
+
+      applyTransform();
+    }
+
+    function endDrag() {
+      if (!isDragging) return;
+
+      isDragging = false;
+      setGrabCursor(); // возвращаем обычную руку
+
+      // Удаляем обработчики
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', endDrag);
+      document.removeEventListener('touchend', endDrag);
+    }
+
+    // === Клавиатура ===
+    window.addEventListener('keydown', (e) => {
+      if (!galleryModal.classList.contains('opacity-100')) return;
+
+      if (e.key === 'Escape') {
+        if (isZoomed) {
+          resetZoom();
+        } else {
+          closeGallery();
         }
+      }
+      else if (e.key === 'ArrowLeft') galleryPrev.click();
+      else if (e.key === 'ArrowRight') galleryNext.click();
+      else if (e.key === '0' || e.key === 'Num0') resetZoom();
+      else if (e.key === '1' || e.key === 'Num1') zoomTo100Percent();
+    });
 
-        // === Клавиатура ===
-        window.addEventListener('keydown', (e) => {
-          if (!galleryModal.classList.contains('opacity-100')) return;
+    // === Смена основного изображения (миниатюры) ===
+    const infoDots = document.getElementById('infoDots');
 
-          if (e.key === 'Escape') closeGallery();
-          else if (e.key === 'ArrowLeft') galleryPrev.click();
-          else if (e.key === 'ArrowRight') galleryNext.click();
-        });
+    function changeMainImage(thumb) {
+      const bigImage = thumb.dataset.bigimage;
+      const alt = thumb.alt;
 
-        // === Смена основного изображения (миниатюры) ===
-        const infoDots = document.getElementById('infoDots');
+      if (!mainImage || !bigImage) return;
 
-        function changeMainImage(thumb) {
-          const bigImage = thumb.dataset.bigimage;
-          const alt = thumb.alt;
-
-          if (!mainImage || !bigImage) return;
-
-          // Обновляем подсветку миниатюр
-          document.querySelectorAll('.slider-track img').forEach(img => {
-            img.style.borderColor = ''; // сбрасываем инлайновый цвет
-          });
-          thumb.style.setProperty('border-color', '#2563eb', 'important');
-
-          // Управление точками
-          const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-          if (infoDots) {
-            infoDots.classList.toggle('hidden', thumbIndex !== 0);
-          }
-
-          // Ждём загрузки изображения перед обновлением высоты
-          mainImage.onload = () => {
-            mainImage.onload = null; // отписываемся
-            requestAnimationFrame(refreshSlider);
-          };
-
-          // Меняем изображение
-          mainImage.src = bigImage;
-          mainImage.alt = alt;
-        }
-
-        // Инициализация миниатюр
-        const firstThumb = document.querySelector('.slider-track img');
-        if (firstThumb) changeMainImage(firstThumb);
-
-        document.querySelectorAll('.slider-track img').forEach(img => {
-          img.addEventListener('click', () => changeMainImage(img));
-        });
-
-        // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
-        function updateThumbnailSliderHeight() {
-          const track = document.querySelector('.slider-track');
-          const container = document.querySelector(".slider-thumbnails-container > .relative");
-
-          // Если элементов нет — выходим
-          if (!track || !container) return;
-
-          if (window.innerWidth < 1024) {
-            // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
-            track.style.height = '';
-            track.style.maxHeight = '';
-            track.style.width = '';
-            track.style.minWidth = '';
-            track.style.maxWidth = '';
-
-            container.style.height = '';
-            container.style.maxHeight = '';
-            container.style.width = '';
-            container.style.minWidth = '';
-            container.style.maxWidth = '';
-
-            return;
-          }
-
-
-          // === Десктопный режим (>=1024px) ===
-          const mainImageEl = document.querySelector('#mainImageContainer > img');
-          if (!mainImageEl) return;
-
-          const imageHeight = mainImageEl.getBoundingClientRect().height;
-          if (imageHeight <= 0) return;
-
-          // const btnHeight = 20; // высота кнопок "вверх/вниз"
-          // const gap = 16;       // суммарный gap между кнопками и треком
-          // const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
-          const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
-          const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
-
-          // --- Устанавливаем стили для ТРЕКА (слайдер миниатюр) ---
-          // track.style.height = finalTrackHeight + 'px';
-          // track.style.maxHeight = finalTrackHeight + 'px';
-          // track.style.width = '80px';      // 🔥 фиксированная ширина
-          // track.style.minWidth = '80px';   // 🔥 не даём сжаться меньше
-          // track.style.maxWidth = '80px';   // 🔥 и не расшириться больше
-
-          // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
-          container.style.height = imageHeight + 'px';
-          container.style.maxHeight = imageHeight + 'px';
-          container.style.width = '80px';
-          container.style.minWidth = '80px';
-          container.style.maxWidth = '80px';
-        }
-
-        function refreshSlider() {
-          updateThumbnailSliderHeight();
-          // fitToFullSlides();
-        }
-
-        window.addEventListener('load', refreshSlider);
-        window.addEventListener('resize', refreshSlider);
-        mainImage?.addEventListener('load', refreshSlider);
+      // Обновляем подсветку миниатюр
+      document.querySelectorAll('.slider-track img').forEach(img => {
+        img.style.borderColor = ''; // сбрасываем инлайновый цвет
       });
-    </script>
+      thumb.style.setProperty('border-color', '#2563eb', 'important');
+
+      // Управление точками
+      const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+      if (infoDots) {
+        infoDots.classList.toggle('hidden', thumbIndex !== 0);
+      }
+
+      // Ждём загрузки изображения перед обновлением высоты
+      mainImage.onload = () => {
+        mainImage.onload = null; // отписываемся
+        requestAnimationFrame(refreshSlider);
+      };
+
+      // Меняем изображение
+      mainImage.src = bigImage;
+      mainImage.alt = alt;
+    }
+
+    // Инициализация миниатюр
+    const firstThumb = document.querySelector('.slider-track img');
+    if (firstThumb) changeMainImage(firstThumb);
+
+    document.querySelectorAll('.slider-track img').forEach(img => {
+      img.addEventListener('click', () => changeMainImage(img));
+    });
+
+    // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
+    function updateThumbnailSliderHeight() {
+      const track = document.querySelector('.slider-track');
+      const container = document.querySelector(".slider-thumbnails-container > .relative");
+
+      // Если элементов нет — выходим
+      if (!track || !container) return;
+
+      if (window.innerWidth < 1024) {
+        // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
+        track.style.height = '';
+        track.style.maxHeight = '';
+        track.style.width = '';
+        track.style.minWidth = '';
+        track.style.maxWidth = '';
+
+        container.style.height = '';
+        container.style.maxHeight = '';
+        container.style.width = '';
+        container.style.minWidth = '';
+        container.style.maxWidth = '';
+
+        return;
+      }
+
+      // === Десктопный режим (>=1024px) ===
+      const mainImageEl = document.querySelector('#mainImageContainer > img');
+      if (!mainImageEl) return;
+
+      const imageHeight = mainImageEl.getBoundingClientRect().height;
+      if (imageHeight <= 0) return;
+
+      const btnHeight = 20; // высота кнопок "вверх/вниз"
+      const gap = 16;       // суммарный gap между кнопками и треком
+      const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
+      const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
+
+      // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
+      container.style.height = imageHeight + 'px';
+      container.style.maxHeight = imageHeight + 'px';
+      container.style.width = '80px';
+      container.style.minWidth = '80px';
+      container.style.maxWidth = '80px';
+    }
+
+    function refreshSlider() {
+      updateThumbnailSliderHeight();
+    }
+
+    window.addEventListener('load', refreshSlider);
+    window.addEventListener('resize', refreshSlider);
+    mainImage?.addEventListener('load', refreshSlider);
+
+    // Инициализация курсора при загрузке
+    setZoomInCursor();
+  });
+</script>
