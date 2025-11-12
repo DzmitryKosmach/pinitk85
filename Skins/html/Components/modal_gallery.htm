@@ -6,13 +6,13 @@
   <!-- Центральное изображение -->
   <div
     id="gallery-image-container"
-    class="relative max-w-full max-h-[90vh] flex items-center justify-center overflow-hidden"
+    class="relative max-w-full max-h-[90vh] flex items-center justify-center rounded-xl overflow-hidden"
   >
     <img
       id="gallery-main-img"
       src=""
       alt=""
-      class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in transform-origin-center"
+      class="max-w-full max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
     />
   </div>
 
@@ -93,33 +93,6 @@
   </div>
 </div>
 
-<style>
-  /* Дополнительные стили для адаптивного масштабирования */
-  .transform-origin-center {
-    transform-origin: center center;
-  }
-
-  #gallery-main-img {
-    /* Обеспечиваем адаптивное поведение */
-    width: auto;
-    height: auto;
-    display: block;
-  }
-
-  /* Для мобильных устройств - дополнительные корректировки */
-  @media (max-width: 768px) {
-    #gallery-image-container {
-      max-width: 95vw;
-      max-height: 85vh;
-    }
-
-    #gallery-main-img {
-      max-width: 95vw;
-      max-height: 85vh;
-    }
-  }
-</style>
-
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // === ГАЛЕРЕЯ: данные ===
@@ -187,50 +160,14 @@
     // === Обновление изображения в галерее ===
     function updateGalleryImage() {
       const photo = photos[currentGalleryIndex];
+      galleryImg.src = photo.src;
+      galleryImg.alt = photo.alt;
 
-      // Создаем новое изображение для плавной загрузки
-      const newImage = new Image();
-      newImage.onload = function() {
-        galleryImg.src = photo.src;
-        galleryImg.alt = photo.alt;
-
-        // Адаптируем размеры после загрузки
-        adaptImageSize();
-
-        // Сбрасываем курсор при смене изображения
-        resetCursor();
-      };
-      newImage.src = photo.src;
+      // Сбрасываем курсор при смене изображения
+      resetCursor();
 
       if (galleryCounter) {
         galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
-      }
-    }
-
-    // === Функция адаптации размеров изображения ===
-    function adaptImageSize() {
-      if (!galleryImg.complete) return;
-
-      const containerRect = galleryImageContainer.getBoundingClientRect();
-      const imgNaturalWidth = galleryImg.naturalWidth;
-      const imgNaturalHeight = galleryImg.naturalHeight;
-
-      // Рассчитываем оптимальный размер для отображения в контейнере
-      const containerRatio = containerRect.width / containerRect.height;
-      const imageRatio = imgNaturalWidth / imgNaturalHeight;
-
-      if (imageRatio > containerRatio) {
-        // Широкое изображение
-        galleryImg.style.width = 'auto';
-        galleryImg.style.height = '100%';
-        galleryImg.style.maxWidth = 'none';
-        galleryImg.style.maxHeight = '100%';
-      } else {
-        // Высокое изображение
-        galleryImg.style.width = '100%';
-        galleryImg.style.height = 'auto';
-        galleryImg.style.maxWidth = '100%';
-        galleryImg.style.maxHeight = 'none';
       }
     }
 
@@ -281,11 +218,7 @@
         return;
       }
 
-      // Рассчитываем масштаб на основе естественных размеров
-      const scaleX = naturalWidth / imgRect.width;
-      const scaleY = naturalHeight / imgRect.height;
-      currentScale = Math.max(scaleX, scaleY);
-
+      currentScale = Math.max(naturalWidth / imgRect.width, naturalHeight / imgRect.height);
       isZoomed = true;
 
       applyTransform();
@@ -302,9 +235,6 @@
       applyTransform();
       updateZoomIndicator();
       setZoomInCursor(); // возвращаем курсор zoom-in
-
-      // Восстанавливаем адаптивные размеры
-      adaptImageSize();
     }
 
     function applyTransform() {
@@ -390,13 +320,6 @@
       document.removeEventListener('mouseup', endDrag);
       document.removeEventListener('touchend', endDrag);
     }
-
-    // === Обработчик изменения размера окна ===
-    window.addEventListener('resize', () => {
-      if (!isZoomed) {
-        adaptImageSize();
-      }
-    });
 
     // === Клавиатура ===
     window.addEventListener('keydown', (e) => {
