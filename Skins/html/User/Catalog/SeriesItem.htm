@@ -1,12 +1,12 @@
 <!-- Карточка товара -->
 <div
-  class="js-element simple propvision1 bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+  class="js-element simple propvision1 bg-white rounded-lg shadow p-2 sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
   <!-- Изображение + маркер -->
   <div class="relative">
     <?php if (!empty($s['marker'])) { ?>
     <div>
       <span
-        class="absolute top-[-14px] left-[-14px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
+        class="absolute top-[-7px] left-[-7px] lg:top-[-20px] lg:left-[-20px] bg-[#f0f0f0] rounded-md text-xs lg:text-sm font-semibold text-white px-2 lg:px-4 py-1"
         style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
                        white-space: normal;">
@@ -25,7 +25,7 @@
     <?php } ?>
 
     <a class="flex justify-center" href="<?php echo Catalog_Series::a($s); ?>" target="_blank"
-      rel="noopener noreferrer">
+       rel="noopener noreferrer">
       <img src="<?php echo Catalog::photoUrl(
                 Catalog_Series_Photos::$imagePath,
                 $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
@@ -42,7 +42,7 @@
     <h3
       class="font-medium text-sm sm2:text-base lg:text-lg leading-5 line-clamp-2 transition-all duration-200 absolute top-0 left-0 right-0 hover:line-clamp-none hover:z-10 hover:bg-white hover:shadow-lg hover:rounded hover:px-2 hover:py-1">
       <a href="<?php echo Catalog_Series::a($s); ?>" class="text-inherit hover:text-inherit block" target="_blank"
-        rel="noopener noreferrer">
+         rel="noopener noreferrer">
         <?php echo htmlspecialchars($s['name']); ?>
       </a>
     </h3>
@@ -86,7 +86,7 @@
         class="absolute left-0 top-full mt-2 hidden group-hover:block z-10 bg-white border rounded-lg shadow-md w-40 p-2">
         <?php for ($i = 7; $i < count($materials); $i++): ?>
         <span class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block mr-1"
-          style="
+              style="
             background-image: url('<?php echo htmlspecialchars($materials[$i]['img']); ?>');
             background-size: cover;
           " title="<?php echo htmlspecialchars($materials[$i]['name']); ?>">
@@ -142,9 +142,9 @@
       <div class="threeblock clearfix compare">
         <!-- Кнопка "Добавить к сравнению" -->
         <div class="series-compare-add <?php if (Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
-          data-id="<?php echo (int)$s['id']; ?>">
+             data-id="<?php echo (int)$s['id']; ?>">
           <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-            onclick="oCompare.add(<?php echo $s['id']; ?>); return false;" title="Добавить к сравнению">
+             onclick="oCompare.add(<?php echo $s['id']; ?>); return false;" title="Добавить к сравнению">
             <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M4.25 16.9987H7.08333V29.7487H4.25V16.9987ZM26.9167 11.332H29.75V29.7487H26.9167V11.332ZM15.5833 2.83203H18.4167V29.7487H15.5833V2.83203Z"
@@ -155,12 +155,12 @@
 
         <!-- Кнопка "Убрать из сравнения" -->
         <div class="series-compare-remove <?php if (!Catalog_Compare::check($s['id'])): ?>hidden<?php endif; ?>"
-          data-id="<?php echo (int)$s['id']; ?>">
+             data-id="<?php echo (int)$s['id']; ?>">
           <a rel="nofollow" class="add2compare hover:opacity-50" href="javascript:void(0)"
-            onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из сравнения">
+             onclick="oCompare.remove(<?php echo $s['id']; ?>); return false;" title="Убрать из сравнения">
             <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g stroke="#FF0000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
-                transform="translate(8,0)">
+                 transform="translate(8,0)">
                 <line x1="13" y1="2" x2="21" y2="10" />
                 <line x1="21" y1="2" x2="13" y2="10" />
               </g>
@@ -177,9 +177,12 @@
   </div>
 
   <!-- Кнопка "Подробнее" -->
-  <a href="<?php echo Catalog_Series::a($s); ?>"
-    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition"
-    target="_blank" rel="noopener noreferrer">
+  <a
+    href="<?php echo Catalog_Series::a($s); ?>"
+    class="mt-auto text-center text-sm sm:text-base border-[3px] border-blue-600 text-blue-600 rounded-md sm:px-4 px-2 py-2 hover:bg-blue-50 transition"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     Подробнее
   </a>
 </div>
