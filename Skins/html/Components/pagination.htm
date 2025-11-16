@@ -13,7 +13,7 @@ function addOrReplaceQueryParam($key, $value) {
 }
 ?>
 
-<div class="flex w-full justify-center items-center flex-col mt-8">
+<div class="flex w-full justify-center items-center flex-col mt-4">
   <?php if($totalPages >
   1) { ?>
 
@@ -82,11 +82,11 @@ function addOrReplaceQueryParam($key, $value) {
     $totalPages - 4) { $start = $totalPages - $maxPages + 1; $end = $totalPages;
     } else { $start = $currentPage - 3; $end = $currentPage + 4; } } for($i =
     $start; $i <= $end; $i++) { if($i == $currentPage) { echo '<span
-    class="px-3 sm:px-4 py-2 border rounded-md bg-blue-600 text-white font-bold"
+    class="px-2 sm:px-4 py-2 border rounded-md bg-blue-600 text-white font-bold"
   >' . $i . '</span
   >'; } else { echo '<a
     href="' . addOrReplaceQueryParam('page', $i) . '"
-    class="px-3 sm:px-4 py-2 hover:bg-gray-200 rounded transition"
+    class="px-2 sm:px-4 py-2 hover:bg-gray-200 rounded transition"
   >' . $i . '</a
   >'; } } ?>
 

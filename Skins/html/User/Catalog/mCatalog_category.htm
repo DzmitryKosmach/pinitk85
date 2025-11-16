@@ -12,7 +12,9 @@
 <div>
   <div>
     <!-- Хлебные крошки -->
-    <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 md:mb-10">
+    <nav
+      class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 md:mb-10"
+    >
       <?php if(count($breadcrumbs)) { ?>
       <?php $bcLast = array_pop($breadcrumbs); ?>
       <?php $position = 0; ?>
@@ -60,7 +62,7 @@
               <?php else: ?>
               <a
                 href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                class="flex-1 min-h-8 px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
+                class="flex-1 min-h-8 px-2 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
               >
                 <?php echo htmlspecialchars($p['name']); ?>
               </a>
@@ -238,7 +240,7 @@
 
     <section>
       <!-- Наши преимущества -->
-      <h2 class="text-xl xl:text-2xl font-bold mt-32 mb-12">
+      <h2 class="text-xl xl:text-2xl font-bold mt-16 mb-8">
         Наши преимущества
       </h2>
 
@@ -324,7 +326,7 @@
       </div>
     </section>
 
-    <section class="mt-24">
+    <section class="mt-16">
       <!-- Двухколоночное размещение -->
       <div class="flex flex-col md:flex-row gap-20 lg:gap-32">
         <!-- Левая колонка -->
