@@ -216,17 +216,20 @@
                     <!-- Подпись — появляется при hover -->
                     <div
                       id="series-set-point2-<?php echo $i['id']; ?>"
-                      class="absolute w-36 sm:w-56 md:w-64 max-w-[90vw] flex flex-wrap flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black
+                      class="series-set-label absolute max-w-[116px] md:max-w-[260px] flex flex-wrap flex-row items-center space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-40 text-xs font-medium text-black
                       opacity-0 pointer-events-none transition-opacity duration-200
                       whitespace-normal break-words"
                       style="
-                        left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4) + 2 ?>%;
-                        top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4) ?>%;
-                        transform: translate(0, -50%);
+                        /* Позиционирование по умолчанию (для мобильных < 640px): под точкой */
+                        left: 50%;
+                        top: 100%;
+                        transform: translate(-50%, 0);
+                        /* Отступ от точки */
+                        margin-top: 4px; /* или другое значение по вашему усмотрению */
                       "
                       onmouseout="hideLabel(<?php echo $i['id']; ?>)"
                     >
-                  <span class="leading-none">
+                  <span class="leading-none max-w-[90px] md:max-w-[280px]">
                     <span class="font-semibold"><?php echo hsch($i['name']); ?></span>
                     <?php if (!empty($i['art'])): ?>
                     <span> <?php echo hsch($i['art']); ?></span>
@@ -240,7 +243,6 @@
                   <?php } ?>
                 </div>
                 <?php } ?>
-
 
 
                 <script>
@@ -1165,7 +1167,7 @@ $benefits = [
 
     <!<!-- Меню групп (вкладки) -->
     <?php if (count($itemsGroups) > 1) { ?>
-    <div class="sticky top-[56px] sm3:top-[32px] lg:top-[75px] bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
+    <div class="sticky top-[54px] sm3:top-[32px] lg:top-[75px] bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
       <div class="flex flex-wrap gap-3">
         <!-- Кнопка "Наверх" -->
         <div  class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition cursor-pointer"
