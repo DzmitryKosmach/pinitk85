@@ -712,45 +712,45 @@
             </button>
           </div>
 
-<!--          <script>-->
-<!--            // Функция для обновления состояния кнопок после добавления в корзину-->
-<!--            function updateCartButtons() {-->
-<!--              const forms = document.querySelectorAll('.add2basketform');-->
+          <!--          <script>-->
+          <!--            // Функция для обновления состояния кнопок после добавления в корзину-->
+          <!--            function updateCartButtons() {-->
+          <!--              const forms = document.querySelectorAll('.add2basketform');-->
 
-<!--              forms.forEach(form => {-->
-<!--                const button = form.querySelector('button[type="submit"]');-->
-<!--                const hiddenInputs = form.querySelectorAll('input[name="add[]"]');-->
-<!--                const itemIds = Array.from(hiddenInputs).map(input => input.value);-->
+          <!--              forms.forEach(form => {-->
+          <!--                const button = form.querySelector('button[type="submit"]');-->
+          <!--                const hiddenInputs = form.querySelectorAll('input[name="add[]"]');-->
+          <!--                const itemIds = Array.from(hiddenInputs).map(input => input.value);-->
 
-<!--                // Проверяем статус корзины (это упрощенная версия, может потребоваться адаптация)-->
-<!--                const isInCart = <?php echo Catalog_Cart::isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;-->
+          <!--                // Проверяем статус корзины (это упрощенная версия, может потребоваться адаптация)-->
+          <!--                const isInCart = <?php echo Catalog_Cart::isSetInCart($seriesSetItemsIds) ? 'true' : 'false'; ?>;-->
 
-<!--                if (isInCart && button) {-->
-<!--                  button.classList.remove('bg-blue-600', 'hover:bg-blue-700');-->
-<!--                  button.classList.add('bg-green-600', 'hover:bg-green-700', 'cursor-not-allowed');-->
-<!--                  button.innerHTML = '✓ В корзине';-->
-<!--                  button.disabled = true;-->
-<!--                  button.type = 'button';-->
-<!--                }-->
-<!--              });-->
-<!--            }-->
+          <!--                if (isInCart && button) {-->
+          <!--                  button.classList.remove('bg-blue-600', 'hover:bg-blue-700');-->
+          <!--                  button.classList.add('bg-green-600', 'hover:bg-green-700', 'cursor-not-allowed');-->
+          <!--                  button.innerHTML = '✓ В корзине';-->
+          <!--                  button.disabled = true;-->
+          <!--                  button.type = 'button';-->
+          <!--                }-->
+          <!--              });-->
+          <!--            }-->
 
-<!--            // Обновляем кнопки при загрузке-->
-<!--            document.addEventListener('DOMContentLoaded', function() {-->
-<!--              updateCartButtons();-->
+          <!--            // Обновляем кнопки при загрузке-->
+          <!--            document.addEventListener('DOMContentLoaded', function() {-->
+          <!--              updateCartButtons();-->
 
-<!--              // Можно также обновлять после AJAX операций-->
-<!--              if (typeof oCart !== 'undefined') {-->
-<!--                const originalAdd = oCart.add;-->
-<!--                oCart.add = function() {-->
-<!--                  const result = originalAdd.apply(this, arguments);-->
-<!--                  // Обновляем кнопки после добавления в корзину-->
-<!--                  setTimeout(updateCartButtons, 100);-->
-<!--                  return result;-->
-<!--                };-->
-<!--              }-->
-<!--            });-->
-<!--          </script>-->
+          <!--              // Можно также обновлять после AJAX операций-->
+          <!--              if (typeof oCart !== 'undefined') {-->
+          <!--                const originalAdd = oCart.add;-->
+          <!--                oCart.add = function() {-->
+          <!--                  const result = originalAdd.apply(this, arguments);-->
+          <!--                  // Обновляем кнопки после добавления в корзину-->
+          <!--                  setTimeout(updateCartButtons, 100);-->
+          <!--                  return result;-->
+          <!--                };-->
+          <!--              }-->
+          <!--            });-->
+          <!--          </script>-->
 
           <div class="flex flex-wrap gap-6">
             <!-- Условия доставки -->
@@ -1166,100 +1166,236 @@ $benefits = [
 
 <?php if (count($itemsGroups)) { ?>
 <section id="section-prices" class="series-items mt-20">
-  <div >
+  <div>
     <!-- Заголовок -->
     <h2 class="text-2xl font-bold mb-6">
       Элементы мебели
       <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesInf['name']); ?></span>
     </h2>
 
-    <!<!-- Меню групп (вкладки) -->
     <?php if (count($itemsGroups) > 1) { ?>
-    <div class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm">
-      <div class="flex flex-wrap gap-3">
-        <!-- Кнопка "Наверх" -->
-        <div  class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition cursor-pointer"
-          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
-          Наверх
+    <div class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] bg-body z-10 pt-4 pb-2 -mx-4 px-4 shadow-sm relative">
+
+      <div id="tabsWrapper" class="relative overflow-hidden">
+
+        <!-- Fade справа -->
+        <div id="fadeRight" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-body z-10 transition-opacity duration-300 opacity-0"></div>
+
+        <!-- Область табов -->
+        <div id="tabsScroller"
+             class="flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-2 px-2 transition-transform duration-300 will-change-transform [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+
+          <?php foreach ($itemsGroups as $g) {
+        $groupId = (int)$g['id'];
+        $groupName = htmlspecialchars(trim($g['name']) !== '' ? $g['name'] : 'Разное');
+      ?>
+          <a
+            href="#group-<?php echo $groupId; ?>"
+            id="menu-group-<?php echo $groupId; ?>"
+            class="group-tab-link flex-shrink-0 w-[120px] sm:w-[150px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm bg-white hover:bg-gray-50 text-center transition whitespace-nowrap overflow-hidden text-ellipsis"
+            data-target="group-<?php echo $groupId; ?>"
+          >
+            <?php echo $groupName; ?>
+          </a>
+          <?php } ?>
+
         </div>
 
-        <?php foreach ($itemsGroups as $g) {
-                $groupId = (int)$g['id'];
-                $groupName = htmlspecialchars(trim($g['name']) !== '' ? $g['name'] : 'Разное');
-            ?>
-        <a
-          href="#group-<?php echo $groupId; ?>"
-          onclick="return oItemsScroll.navTo(this.href)"
-          id="menu-group-<?php echo $groupId; ?>"
-          class="min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link"
-          data-target="group-<?php echo $groupId; ?>"
-        >
-          <?php echo $groupName; ?>
-        </a>
-        <?php } ?>
       </div>
     </div>
     <?php } ?>
 
+
+
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+
         const links = document.querySelectorAll('.group-tab-link');
+        const tabsWrapper = document.getElementById('tabsWrapper');
+        const tabsScroller = document.getElementById('tabsScroller');
+        const fadeRight = document.getElementById('fadeRight');
+
         const sections = [];
 
-        // Собираем все ссылки и соответствующие блоки
-        links.forEach(link => {
-          const targetId = link.getAttribute('data-target');
-          const section = document.getElementById(targetId);
-          if (section) {
-            sections.push({ link, element: section });
+        // Вычисляем высоту sticky-меню для offset
+        const getStickyMenuHeight = () => {
+          const stickyMenu = document.querySelector('.sticky.top-\\[54px\\]');
+          return stickyMenu ? stickyMenu.offsetHeight + 10 : 80; // +10px для небольшого отступа
+        };
 
-            // Добавляем обработчик клика для плавного скролла
-            link.addEventListener('click', function (e) {
-              e.preventDefault(); // Отменяем дефолтное поведение
+        // Функция для получения ширины таба в зависимости от экрана
+        const getTabWidth = () => {
+          return window.innerWidth < 640 ? 120 : 150;
+        };
 
-              // Плавно скроллим к секции
-              section.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-                inline: 'nearest'
-              });
-            });
+        // классы
+        const getBaseClass = () =>
+          `flex-shrink-0 w-[${getTabWidth()}px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm bg-white hover:bg-gray-50 text-center transition whitespace-nowrap overflow-hidden text-ellipsis`;
+
+        const getActiveClass = () =>
+          `flex-shrink-0 w-[${getTabWidth()}px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm border-2 border-blue-600 text-blue-600 text-center transition whitespace-nowrap overflow-hidden text-ellipsis`;
+
+        const resetStyles = () => links.forEach(l => l.className = getBaseClass());
+        const setActive   = l  => { resetStyles(); l.className = getActiveClass(); };
+
+        // Функция для обновления fade-эффекта
+        const updateFade = () => {
+          if (!tabsScroller || !fadeRight) return;
+
+          const scrollLeft = tabsScroller.scrollLeft;
+          const scrollWidth = tabsScroller.scrollWidth;
+          const clientWidth = tabsScroller.clientWidth;
+
+          // Показываем fade, если есть контент справа
+          const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10; // 10px допуск
+          fadeRight.style.opacity = isAtEnd ? '0' : '1';
+        };
+
+        //--------------------------------------------------
+        // УМНОЕ ПОЗИЦИОНИРОВАНИЕ - ТАБ СТАНОВИТСЯ ВТОРЫМ
+        //--------------------------------------------------
+        function positionTabSmart(tab) {
+          if (!tabsScroller || !tabsWrapper) return;
+
+          const wrapperRect = tabsWrapper.getBoundingClientRect();
+          const scrollerRect = tabsScroller.getBoundingClientRect();
+          const tabRect = tab.getBoundingClientRect();
+
+          const wrapperWidth = wrapperRect.width;
+          const tabWidth = getTabWidth();
+          const gap = window.innerWidth < 640 ? 8 : 12; // gap-2 = 8px, gap-3 = 12px
+
+          // Определяем позицию для скролла - таб становится вторым
+          let targetScrollLeft = tabsScroller.scrollLeft;
+
+          // Позиция таба относительно контейнера скролла
+          const tabOffsetLeft = tab.offsetLeft;
+
+          // Если таб не первый, позиционируем его как второй
+          if (tabOffsetLeft > 0) {
+            // Смещаем так, чтобы таб был вторым (оставляем один таб слева)
+            const firstTabWidth = tabWidth;
+            targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
+          } else {
+            // Если это первый таб, просто на начало
+            targetScrollLeft = 0;
           }
+
+          // Ограничения скролла
+          const maxScrollLeft = tabsScroller.scrollWidth - tabsScroller.clientWidth;
+          targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScrollLeft));
+
+          // Плавный скролл
+          tabsScroller.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+          });
+
+          // Обновляем fade после скролла
+          setTimeout(updateFade, 300);
+        }
+
+        //--------------------------------------------------
+        // ФУНКЦИЯ СКРОЛЛА К СЕКЦИИ С OFFSET
+        //--------------------------------------------------
+        function scrollToSectionWithOffset(section) {
+          const offset = getStickyMenuHeight() - 12; //12 корректировка смещения
+          const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+
+          window.scrollTo({
+            top: sectionTop - offset,
+            behavior: 'smooth'
+          });
+        }
+
+        //--------------------------------------------------
+        // ОБРАБОТКА КЛИКОВ ПО ТАБАМ
+        //--------------------------------------------------
+        links.forEach(link => {
+          const targetId = link.dataset.target;
+          const section  = document.getElementById(targetId);
+
+          if (!section) return;
+
+          sections.push({ link, element: section });
+
+          link.addEventListener('click', e => {
+            e.preventDefault();
+
+            // Скролл к секции с offset
+            scrollToSectionWithOffset(section);
+
+            setActive(link);
+            positionTabSmart(link);
+          });
         });
 
-        // Функция: сбросить все стили
-        const resetStyles = () => {
-          links.forEach(link => {
-            link.className = 'min-w-[120px] px-4 py-1 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center transition group-tab-link';
-          });
-        };
-
-        // Функция: установить стиль активной вкладки
-        const setActive = (link) => {
-          link.className = 'min-w-[120px] px-4 py-1 rounded-lg shadow text-sm border-2 border-blue-600 text-blue-600 text-center transition';
-        };
-
-        // Наблюдатель за видимостью секций
-        // Наблюдатель за видимостью секций
+        //--------------------------------------------------
+        // OBSERVER — при скролле ставит активный таб
+        //--------------------------------------------------
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              resetStyles();
-              const activeLink = sections.find(s => s.element === entry.target)?.link;
-              if (activeLink) {
-                setActive(activeLink);
-              }
+            if (!entry.isIntersecting) return;
+
+            const activeLink = sections.find(s => s.element === entry.target)?.link;
+            if (activeLink) {
+              setActive(activeLink);
+              positionTabSmart(activeLink);
             }
           });
         }, {
-          rootMargin: '0px 0px -99% 0px', // срабатывает, когда верх секции у верхней границы окна
+          rootMargin: '0px 0px -90% 0px',
           threshold: 0
         });
 
-        // Наблюдаем за каждой секцией
         sections.forEach(s => observer.observe(s.element));
+
+        // Инициализация fade и обработчиков скролла
+        setTimeout(updateFade, 100);
+
+        // Обновляем fade при скролле
+        if (tabsScroller) {
+          tabsScroller.addEventListener('scroll', updateFade);
+        }
+
+        // Обновляем при ресайзе
+        window.addEventListener('resize', () => {
+          updateFade();
+          // Обновляем классы при изменении размера экрана
+          resetStyles();
+          // Находим активный таб и обновляем его стиль
+          const activeTab = document.querySelector('.group-tab-link.border-blue-600');
+          if (activeTab) {
+            setActive(activeTab);
+          }
+        });
+
+        // Дополнительные CSS-правила для скрытия скроллбара
+        const style = document.createElement('style');
+        style.textContent = `
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          #tabsScroller {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          #tabsScroller::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+            background: transparent;
+          }
+        `;
+        document.head.appendChild(style);
       });
     </script>
+
+
 
     <!-- Контейнер групп -->
     <div class="groups-tabs">
