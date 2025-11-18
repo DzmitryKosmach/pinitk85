@@ -338,32 +338,34 @@ function getHomeUrl() {
 
         <!-- Иконки каталога и поиска (при прокрутке) -->
         <div id="header-icons-scrolled" class="hidden transition-all duration-300">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-4">
             <!-- Иконка каталога -->
-            <div class="relative group">
-              <button
-                class="flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
-                aria-label="Открыть каталог"
-              >
-                <svg
-                  width="20"
-                  height="14"
-                  viewBox="0 0 20 14"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+            <div class="flex align-middle gap-2">
+              <p class="hidden md:block">Каталог</p>
+              <div class="relative group">
+                <button
+                  class="flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                  aria-label="Открыть каталог"
                 >
-                  <path d="M0 1H20" stroke="white" stroke-width="2" />
-                  <path d="M0 7H20" stroke="white" stroke-width="2" />
-                  <path d="M0 13H20" stroke="white" stroke-width="2" />
-                </svg>
-              </button>
+                  <svg
+                    width="20"
+                    height="14"
+                    viewBox="0 0 20 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M0 1H20" stroke="white" stroke-width="2" />
+                    <path d="M0 7H20" stroke="white" stroke-width="2" />
+                    <path d="M0 13H20" stroke="white" stroke-width="2" />
+                  </svg>
+                </button>
 
-              <!-- Выпадающее меню каталога (1 уровень) -->
-              <ul
-                class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[200]"
-              >
-                <?php foreach($catsMenu as $c): ?>
-                <?php
+                <!-- Выпадающее меню каталога (1 уровень) -->
+                <ul
+                  class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[200]"
+                >
+                  <?php foreach($catsMenu as $c): ?>
+                  <?php
                             // Собираем все ID текущей категории и её подкатегорий
                             $catIds = [$c['id']];
                             if (is_array($c['sub']) && count($c['sub'])) {
@@ -372,103 +374,107 @@ function getHomeUrl() {
                                 }
                             }
                             ?>
-                <li class="relative hover:bg-main_hover_menu group/l2">
-                  <a
-                    href="<?php echo Catalog_Categories::a($c['id']); ?>"
-                    class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100"
-                  >
-                    <?php echo htmlspecialchars($c['name']); ?>
-                    <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-                    <svg
-                      class="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <li class="relative hover:bg-main_hover_menu group/l2">
+                    <a
+                      href="<?php echo Catalog_Categories::a($c['id']); ?>"
+                      class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                    <?php endif; ?>
-                  </a>
-
-                  <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-                  <!-- Подменю 2 уровня -->
-                  <ul
-                    class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12"
-                  >
-                    <?php foreach ($c['sub'] as $c2): ?>
-                    <li class="relative hover:bg-main_hover_menu group/l3">
-                      <a
-                        href="<?php echo Catalog_Categories::a($c2['id']); ?>"
-                        class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100"
+                      <?php echo htmlspecialchars($c['name']); ?>
+                      <?php if (is_array($c['sub']) && count($c['sub'])): ?>
+                      <svg
+                        class="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <?php echo htmlspecialchars($c2['name']); ?>
-                        <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                        <svg
-                          class="w-4 h-4 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                        <?php endif; ?>
-                      </a>
-
-                      <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                      <!-- Подменю 3 уровня -->
-                      <ul
-                        class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50"
-                      >
-                        <?php foreach ($c2['sub'] as $c3): ?>
-                        <li>
-                          <a
-                            href="<?php echo Catalog_Categories::a($c3['id']); ?>"
-                            class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100"
-                          >
-                            <?php echo htmlspecialchars($c3['name']); ?>
-                          </a>
-                        </li>
-                        <?php endforeach; ?>
-                      </ul>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                       <?php endif; ?>
-                    </li>
-                    <?php endforeach; ?>
-                  </ul>
-                  <?php endif; ?>
-                </li>
-                <?php endforeach; ?>
-              </ul>
+                    </a>
+
+                    <?php if (is_array($c['sub']) && count($c['sub'])): ?>
+                    <!-- Подменю 2 уровня -->
+                    <ul
+                      class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12"
+                    >
+                      <?php foreach ($c['sub'] as $c2): ?>
+                      <li class="relative hover:bg-main_hover_menu group/l3">
+                        <a
+                          href="<?php echo Catalog_Categories::a($c2['id']); ?>"
+                          class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100"
+                        >
+                          <?php echo htmlspecialchars($c2['name']); ?>
+                          <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+                          <svg
+                            class="w-4 h-4 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          <?php endif; ?>
+                        </a>
+
+                        <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+                        <!-- Подменю 3 уровня -->
+                        <ul
+                          class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50"
+                        >
+                          <?php foreach ($c2['sub'] as $c3): ?>
+                          <li>
+                            <a
+                              href="<?php echo Catalog_Categories::a($c3['id']); ?>"
+                              class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100"
+                            >
+                              <?php echo htmlspecialchars($c3['name']); ?>
+                            </a>
+                          </li>
+                          <?php endforeach; ?>
+                        </ul>
+                        <?php endif; ?>
+                      </li>
+                      <?php endforeach; ?>
+                    </ul>
+                    <?php endif; ?>
+                  </li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
             </div>
 
             <!-- Иконка поиска -->
-            <button
-              id="search-toggle-scrolled"
-              class="w-[26px] h-[26px] flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors border border-gray-300 rounded-md hover:border-blue-600"
-              aria-label="Поиск"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <div class="flex align-middle gap-2">
+              <p class="hidden md:block">Поиск</p>
+              <button
+                id="search-toggle-scrolled"
+                class="w-[26px] h-[26px] flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors border border-gray-300 rounded-md hover:border-blue-600"
+                aria-label="Поиск"
               >
-                <path
-                  d="M9 3C5.68629 3 3 5.68629 3 9C3 12.3137 5.68629 15 9 15C10.6569 15 12.1569 14.3271 13.2426 13.2426C14.3271 12.1569 15 10.6569 15 9C15 5.68629 12.3137 3 9 3ZM1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9C17 10.8487 16.3729 12.551 15.3199 13.9056L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L13.9056 15.3199C12.551 16.3729 10.8487 17 9 17C4.58172 17 1 13.4183 1 9Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 3C5.68629 3 3 5.68629 3 9C3 12.3137 5.68629 15 9 15C10.6569 15 12.1569 14.3271 13.2426 13.2426C14.3271 12.1569 15 10.6569 15 9C15 5.68629 12.3137 3 9 3ZM1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9C17 10.8487 16.3729 12.551 15.3199 13.9056L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L13.9056 15.3199C12.551 16.3729 10.8487 17 9 17C4.58172 17 1 13.4183 1 9Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1150,34 +1156,49 @@ function getHomeUrl() {
     const searchBar = document.getElementById('search-bar');
 
     // Функция для переключения состояния хедера при прокрутке
-    function toggleHeaderOnScroll() {
-      if (window.scrollY > 100) {
+    let scrollTimeout = null;
+    let isScrolled = false; // текущее состояние хедера
+    function updateHeaderState() {
+      const currentScroll = window.scrollY;
+
+      if (!isScrolled && currentScroll > 140) {
         // Состояние при прокрутке
         logoMain.classList.add('hidden');
         headerIconsScrolled.classList.remove('hidden');
         // Центральная навигация остается видимой
         headerRight.classList.remove('hidden', 'sm:flex');
         catalogMenu.classList.add('hidden');
-      } else {
+        isScrolled = true;
+      } else if (isScrolled && currentScroll < 60) {
         // Обычное состояние
         logoMain.classList.remove('hidden');
         headerIconsScrolled.classList.add('hidden');
         headerRight.classList.remove('hidden', 'sm:flex');
         catalogMenu.classList.remove('hidden');
-
         // Закрываем поле поиска
         searchBar.classList.add('hidden');
+        isScrolled = false;
       }
     }
+
+    function handleScroll() {
+      // Отменяем предыдущий таймер
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+
+      // Запускаем обновление состояния с небольшой задержкой
+      scrollTimeout = setTimeout(updateHeaderState, 150); // 80 мс — баланс между отзывчивостью и стабильностью
+    }
+
+    // Инициализация
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    updateHeaderState(); // Вызываем сразу для начального состояния
 
     // Обработчики для переключения поля поиска
     function toggleSearchBar() {
       searchBar.classList.toggle('hidden');
     }
-
-    // Инициализация
-    window.addEventListener('scroll', toggleHeaderOnScroll);
-    toggleHeaderOnScroll(); // Вызываем сразу для начального состояния
 
     if (searchToggleScrolled) {
       searchToggleScrolled.addEventListener('click', toggleSearchBar);
