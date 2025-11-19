@@ -39,88 +39,50 @@
 
         <!-- Табы -->
         <div
-          class="sticky top-[56px] sm3:top-[32px] lg:top-[36px] pt-2 z-20 bg-body"
+          class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] pt-2 z-20 bg-body"
         >
           <div class="text-[11px] sm3:text-sm lg:text-base mb-6 lg:mb-12">
-            <?php
-              $visibleCount = 3;
-              $visiblePages = array_slice($pages, 0, $visibleCount);
-              $hiddenPages = array_slice($pages, $visibleCount);
-            ?>
-
-            <!-- Основной ряд: видимые табы + кнопка "Ещё" -->
-            <div class="flex flex-wrap items-center gap-1 sm:gap-2">
-              <!-- Видимые табы -->
-              <?php foreach ($visiblePages as $p): ?>
+            <!-- Контейнер для всех табов (скрытый) -->
+            <div id="allTabsContainer" class="hidden">
+              <?php foreach ($pages as $p): ?>
               <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
               <?php if ($isActive): ?>
               <span
-                class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
+                class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
+                data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                data-tab-href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                data-is-active="true"
               >
-                <?php echo htmlspecialchars($p['name']); ?>
-              </span>
+            <?php echo htmlspecialchars($p['name']); ?>
+          </span>
               <?php else: ?>
               <a
                 href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                class="flex-1 min-h-8 px-2 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
+                class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
+                data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                data-tab-href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                data-is-active="false"
               >
                 <?php echo htmlspecialchars($p['name']); ?>
               </a>
               <?php endif; ?>
               <?php endforeach; ?>
+            </div>
 
-              <!-- Кнопка "Ещё" — только если есть скрытые табы -->
-              <?php if (!empty($hiddenPages)): ?>
-              <button
-                id="showMoreBtn"
-                class="flex align-middle attention min-h-8 px-1 text-[11px] sm3:text-sm md:px-4 lg:min-h-12 lg:px-6 rounded-xl bg-blue-600 text-white shadow hover:bg-blue-700 flex items-center justify-center gap-1 transition whitespace-nowrap"
-              >
-                <span id="btnText">Ещё</span>
-                <svg
-                  id="btnIcon"
-                  class="w-4 h-4 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              <?php endif; ?>
+            <!-- Основной ряд: видимые табы + кнопка "Ещё/Свернуть" -->
+            <div id="visibleTabsRow" class="flex flex-wrap items-center gap-1 sm:gap-2">
+              <!-- Табы и кнопка "Ещё/Свернуть" будут вставлены сюда JS -->
             </div>
 
             <!-- Скрытые табы (изначально скрыты) -->
-            <?php if (!empty($hiddenPages)): ?>
             <div
               id="hiddenWrapper"
               class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out mt-2"
             >
-              <div class="flex flex-wrap gap-1 sm:gap-2 pb-2">
-                <?php foreach ($hiddenPages as $p): ?>
-                <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
-                <?php if ($isActive): ?>
-                <span
-                  class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
-                >
-                  <?php echo htmlspecialchars($p['name']); ?>
-                </span>
-                <?php else: ?>
-                <a
-                  href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                  class="flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
-                >
-                  <?php echo htmlspecialchars($p['name']); ?>
-                </a>
-                <?php endif; ?>
-                <?php endforeach; ?>
+              <div id="hiddenTabsContainer" class="flex flex-wrap gap-1 sm:gap-2 pb-2">
+                <!-- Скрытые табы будут вставлены сюда JS -->
               </div>
             </div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -142,59 +104,195 @@
 
         <script>
           document.addEventListener("DOMContentLoaded", () => {
-            const btn = document.getElementById("showMoreBtn");
-            const btnText = document.getElementById("btnText");
-            const btnIcon = document.getElementById("btnIcon");
+            // --- Конфигурация ---
+            const MIN_VISIBLE_TABS = 1; // Минимальное количество видимых табов
+            const TAB_GAP = 8; // Приблизительный зазор между табами в px (gap-1 ~ 4px, gap-2 ~ 8px на sm+)
+            const SHOW_MORE_BTN_WIDTH = 60; // Приблизительная ширина кнопки "Ещё" в px
+
+            // --- DOM элементы ---
+            const allTabsContainer = document.getElementById('allTabsContainer');
+            const visibleTabsRow = document.getElementById('visibleTabsRow');
+            const hiddenTabsContainer = document.getElementById('hiddenTabsContainer');
             const hiddenWrapper = document.getElementById("hiddenWrapper");
 
-            if (!btn || !hiddenWrapper) return;
-
-            // Восстановление состояния из localStorage
-            const isExpanded = localStorage.getItem("tabsExpanded") === "true";
-            if (isExpanded) {
-              hiddenWrapper.classList.remove("max-h-0", "opacity-0");
-              hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
-              btnText.textContent = "Свернуть";
-              btn.classList.remove(
-                "bg-blue-600",
-                "hover:bg-blue-700",
-                "attention"
-              );
-              btn.classList.add("bg-gray-600", "hover:bg-gray-700");
-              btnIcon.classList.add("rotate-180");
+            if (!allTabsContainer || !visibleTabsRow || !hiddenTabsContainer || !hiddenWrapper) {
+              console.error("Не найдены необходимые DOM элементы для управления табами.");
+              return;
             }
 
-            btn.addEventListener("click", () => {
-              const isCollapsed = hiddenWrapper.classList.contains("max-h-0");
+            // --- Хранилище данных ---
+            let allTabsData = []; // [{name, href, isActive, element}, ...]
+            let isExpanded = localStorage.getItem("tabsExpanded") === "true";
+            let currentVisibleCount = MIN_VISIBLE_TABS; // Начальное значение
 
-              if (isCollapsed) {
-                // раскрыть
-                hiddenWrapper.classList.remove("max-h-0", "opacity-0");
-                hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100");
-                btnText.textContent = "Скрыть";
-                btn.classList.remove(
-                  "bg-blue-600",
-                  "hover:bg-blue-700",
-                  "attention"
-                );
-                btn.classList.add("bg-gray-600", "hover:bg-gray-700");
-                btnIcon.classList.add("rotate-180");
-                localStorage.setItem("tabsExpanded", "true");
-              } else {
-                // свернуть
+            // --- Функции ---
+
+            // Создание кнопки "Ещё/Свернуть"
+            function createShowMoreButton() {
+              const buttonContainer = document.createElement('div');
+              buttonContainer.innerHTML = `
+        <button
+          id="showMoreBtn"
+          class="flex align-middle text-white min-h-8 px-1 text-[11px] sm3:text-sm md:px-4 lg:min-h-12 lg:px-6 rounded-xl shadow flex items-center justify-center gap-1 transition whitespace-nowrap"
+        >
+          <span id="btnText">Ещё</span>
+          <svg
+            id="btnIcon"
+            class="w-4 h-4 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+      `;
+              return buttonContainer.firstElementChild;
+            }
+
+            // Инициализация данных табов из DOM
+            function initializeTabsData() {
+              const allTabElements = allTabsContainer.querySelectorAll('.all-tab-item');
+              allTabsData = Array.from(allTabElements).map(el => ({
+                name: el.getAttribute('data-tab-name'),
+                href: el.getAttribute('data-tab-href'),
+                isActive: el.getAttribute('data-is-active') === 'true',
+                element: el // Сохраняем оригинальный элемент
+              }));
+            }
+
+            // Расчет максимального количества табов, помещающихся в видимый ряд
+            function calculateVisibleTabsCount() {
+              const containerWidth = visibleTabsRow.offsetWidth;
+              if (containerWidth <= 0) return MIN_VISIBLE_TABS; // Если ширина не определена, возвращаем минимум
+
+              // Создаем временный элемент для замеров ширины таба
+              const tempTab = allTabsData[0]?.element.cloneNode(true);
+              if (!tempTab) return MIN_VISIBLE_TABS;
+              tempTab.style.visibility = 'hidden';
+              tempTab.style.position = 'absolute';
+              tempTab.style.width = ''; // Сбрасываем фиксированную ширину, если была
+              tempTab.classList.remove('flex-1'); // Убираем flex-grow для точного замера
+              document.body.appendChild(tempTab);
+
+              const approxTabWidth = tempTab.offsetWidth;
+              document.body.removeChild(tempTab);
+
+              // Рассчитываем количество табов
+              // Учитываем зазоры: между N табами N-1 зазоров
+              // Также приблизительно учитываем ширину кнопки
+              const availableWidth = containerWidth - SHOW_MORE_BTN_WIDTH; // Приблизительно учитываем кнопку
+              const approxTabsFitting = Math.floor((availableWidth + TAB_GAP) / (approxTabWidth + TAB_GAP));
+
+              return Math.max(MIN_VISIBLE_TABS, approxTabsFitting);
+            }
+
+            // Обновление отображения табов на основе currentVisibleCount и isExpanded
+            function updateTabsDisplay() {
+              visibleTabsRow.innerHTML = ''; // Очищаем видимый ряд
+              hiddenTabsContainer.innerHTML = ''; // Очищаем скрытый контейнер
+
+              const totalTabs = allTabsData.length;
+
+              if (totalTabs === 0) {
+                // Если нет табов, просто убедимся, что кнопка скрыта
+                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
+                if (existingBtn) {
+                  existingBtn.remove();
+                }
                 hiddenWrapper.classList.add("max-h-0", "opacity-0");
                 hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
-                btnText.textContent = "Ещё";
-                btn.classList.remove("bg-gray-600", "hover:bg-gray-700");
-                btn.classList.add(
-                  "bg-blue-600",
-                  "hover:bg-blue-700",
-                  "attention"
-                );
-                btnIcon.classList.remove("rotate-180");
-                localStorage.setItem("tabsExpanded", "false");
+                return;
               }
-            });
+
+              const visibleCount = Math.min(currentVisibleCount, totalTabs);
+              const needsMoreButton = totalTabs > visibleCount;
+
+              // Заполняем видимый ряд табами
+              for (let i = 0; i < visibleCount; i++) {
+                const tabData = allTabsData[i];
+                const clone = tabData.element.cloneNode(true); // Клонируем элемент
+                visibleTabsRow.appendChild(clone);
+              }
+
+              // Создаем и добавляем кнопку "Ещё/Свернуть" в видимый ряд, если нужно
+              if (needsMoreButton) {
+                const showMoreBtn = createShowMoreButton();
+                visibleTabsRow.appendChild(showMoreBtn);
+
+                // Управляем состоянием кнопки и скрытого блока
+                if (isExpanded) {
+                  hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+                  hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100"); // max-h-[1000px] или другое значение
+                  document.getElementById("btnText").textContent = "Свернуть";
+                  showMoreBtn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                  showMoreBtn.classList.add("bg-gray-600", "hover:bg-gray-700");
+                  document.getElementById("btnIcon").classList.add("rotate-180");
+                } else {
+                  hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                  hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                  document.getElementById("btnText").textContent = "Ещё";
+                  showMoreBtn.classList.remove("bg-gray-600", "hover:bg-gray-700");
+                  showMoreBtn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+                  document.getElementById("btnIcon").classList.remove("rotate-180");
+                }
+
+                // Добавляем обработчик клика к новой кнопке
+                showMoreBtn.addEventListener("click", () => {
+                  isExpanded = !isExpanded; // Переключаем состояние
+                  updateTabsDisplay(); // Обновляем отображение
+                  localStorage.setItem("tabsExpanded", isExpanded.toString()); // Сохраняем состояние
+                });
+
+              } else {
+                // Если кнопка не нужна, убедимся, что она удалена из видимого ряда
+                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
+                if (existingBtn) {
+                  existingBtn.remove();
+                }
+                // Убедимся, что скрытый блок скрыт, если кнопка не нужна
+                hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+              }
+
+              // Заполняем скрытый контейнер оставшимися табами
+              for (let i = visibleCount; i < totalTabs; i++) {
+                const tabData = allTabsData[i];
+                const clone = tabData.element.cloneNode(true); // Клонируем элемент
+                hiddenTabsContainer.appendChild(clone);
+              }
+            }
+
+            // Обработчик изменения размера окна
+            function handleResize() {
+              // Используем setTimeout, чтобы дать браузеру время обновить размеры элементов
+              setTimeout(() => {
+                const newVisibleCount = calculateVisibleTabsCount();
+                if (newVisibleCount !== currentVisibleCount) {
+                  currentVisibleCount = newVisibleCount;
+                  updateTabsDisplay();
+                }
+              }, 10); // Небольшая задержка для стабильности
+            }
+
+            // --- Инициализация ---
+            initializeTabsData();
+            // Восстановливаем состояние из localStorage
+            if (isExpanded && allTabsData.length > currentVisibleCount) {
+              // Если сохранено состояние "развернуто", и есть табы для скрытия
+              // оставляем isExpanded = true, но пересчитаем количество видимых табов при первом рендере
+            }
+            updateTabsDisplay(); // Первичный рендер
+            handleResize(); // Рассчитать начальное количество табов после отображения
+
+            // --- Слушатели событий ---
+            window.addEventListener('resize', handleResize);
+
           });
         </script>
 

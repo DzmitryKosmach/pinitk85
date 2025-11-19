@@ -469,16 +469,16 @@
               <div class="artables w-full table clearfix">
                 <div class="arproducts w-full space-y-2">
                   <?php
-                                    $seriesOrig = $seriesInf;
-                                    $seriesSetItemsIds = array();
-                                    $offer_price = 0;
-                                    ?>
+      $seriesOrig = $seriesInf;
+      $seriesSetItemsIds = array();
+      $offer_price = 0;
+      ?>
                   <?php foreach($seriesSet as $in => $i) { ?>
                   <?php
-                                    $seriesSetItemsIds[] = $i['id'];
-                                    $seriesInf = ($i['series_id'] == $seriesOrig['id'] ? $seriesOrig : $crossSeries[$i['series_id']]);
-                                    $offer_price += (str_replace(" ", '', Catalog::priceFormat($i['price_min'])) * $i['in_series_set_amount']);
-                                    ?>
+      $seriesSetItemsIds[] = $i['id'];
+      $seriesInf = ($i['series_id'] == $seriesOrig['id'] ? $seriesOrig : $crossSeries[$i['series_id']]);
+      $offer_price += (str_replace(" ", '', Catalog::priceFormat($i['price_min'])) * $i['in_series_set_amount']);
+      ?>
 
                   <style>
                     .series-item {
@@ -500,7 +500,7 @@
                   <div id="series-set-row-<?php echo $i['id']; ?>"
                        onmouseover="seriesSetHoverTable(<?php echo $i['id']; ?>, true)"
                        onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)"
-                  <?php if($in >= 3) { ?>class="series-item hidden"<?php } else { ?>class="series-item"<?php } ?>
+                  <?php if($in >= 2) { ?>class="series-item hidden"<?php } else { ?>class="series-item"<?php } ?>
                   class="flex flex-col gap-[6px] p-3 rounded-lg border border-gray-200
                   hover:shadow-sm transition"
                   >
@@ -513,7 +513,7 @@
                         <?php if(!is_null($i['size']) && trim($i['size']) !== '') { ?>
                         <span class="text-xs text-gray-500">(
                           <?php echo $i['size']; ?>)
-                                                    </span>
+                                    </span>
                         <?php } ?>
                       </p>
                     </div>
@@ -522,7 +522,7 @@
 
 
                       <?php
-							        foreach($i['materials'] as $n => $im){
+          foreach($i['materials'] as $n => $im){
                       if(!isset($materials[$im['material_id']])){
                       unset($i['materials'][$n]);
                       }
@@ -546,8 +546,8 @@
                            title="<?php echo hsch(implode(' / ', $mActiveName))?>">
                       <?php } elseif($mActive) { ?>
                       <span class="text-xs text-gray-600 cursor-pointer">
-                                                    <?php echo implode(' / ', $mActiveName)?>
-                                                </span>
+                                    <?php echo implode(' / ', $mActiveName)?>
+                                </span>
                       <?php } ?>
 
 
@@ -595,16 +595,18 @@
                 </div>
                 <?php } ?>
 
+                <?php if(count($seriesSet) > 2) { ?>
                 <button class="text-sm text-gray-400 underline" onclick="setShowAll(this)">
                   Показать все
                 </button>
+                <?php } ?>
               </div>
             </div>
             <script>
               function setShowAll(button) {
                 const items = document.querySelectorAll('.arproducts > .series-item');
-                const initiallyVisible = Array.from(items).slice(0, 3); // первые 3 — всегда видны
-                const toggleItems = Array.from(items).slice(3);         // остальные — переключаем
+                const initiallyVisible = Array.from(items).slice(0, 2); // первые 2 — всегда видны
+                const toggleItems = Array.from(items).slice(2);         // остальные — переключаем
 
                 const isCurrentlyHidden = toggleItems.some(item => item.classList.contains('hidden'));
 
