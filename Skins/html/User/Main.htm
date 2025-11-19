@@ -1155,30 +1155,42 @@ function getHomeUrl() {
     const searchToggleMobile = document.getElementById('search-toggle-mobile');
     const searchBar = document.getElementById('search-bar');
 
+    // --- Настройка порогов с гистерезисом ---
+    const SCROLL_THRESHOLD_DOWN = 120; // Порог для перехода в состояние "при прокрутке" (сделать хедер маленьким)
+    const SCROLL_THRESHOLD_UP = 20;   // Порог для возврата к нормальному состоянию (сделать хедер большим)
+    // Убедитесь, что SCROLL_THRESHOLD_DOWN > SCROLL_THRESHOLD_UP
+
     // Функция для переключения состояния хедера при прокрутке
     let scrollTimeout = null;
     let isScrolled = false; // текущее состояние хедера
     function updateHeaderState() {
       const currentScroll = window.scrollY;
 
-      if (!isScrolled && currentScroll > 140) {
+      // Проверяем, нужно ли переключить состояние в "при прокрутке"
+      if (!isScrolled && currentScroll > SCROLL_THRESHOLD_DOWN) {
         // Состояние при прокрутке
         logoMain.classList.add('hidden');
         headerIconsScrolled.classList.remove('hidden');
-        // Центральная навигация остается видимой
-        headerRight.classList.remove('hidden', 'sm:flex');
+        // Центральная навигация остается видимой (предположительно, она уже так настроена)
+        headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
         catalogMenu.classList.add('hidden');
-        isScrolled = true;
-      } else if (isScrolled && currentScroll < 60) {
+        isScrolled = true; // Запоминаем новое состояние
+        // console.log('Переключено в состояние прокрутки (маленький хедер)'); // Для отладки
+      }
+      // Проверяем, нужно ли переключить состояние обратно к нормальному
+      else if (isScrolled && currentScroll <= SCROLL_THRESHOLD_UP) {
         // Обычное состояние
         logoMain.classList.remove('hidden');
         headerIconsScrolled.classList.add('hidden');
-        headerRight.classList.remove('hidden', 'sm:flex');
+        headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
         catalogMenu.classList.remove('hidden');
-        // Закрываем поле поиска
+        // Закрываем поле поиска при возврате к нормальному состоянию (если было открыто)
         searchBar.classList.add('hidden');
-        isScrolled = false;
+        isScrolled = false; // Запоминаем новое состояние
+        // console.log('Переключено в обычное состояние (большой хедер)'); // Для отладки
       }
+      // Если currentScroll находится между SCROLL_THRESHOLD_UP и SCROLL_THRESHOLD_DOWN,
+      // состояние не меняется, что и предотвращает дергание.
     }
 
     function handleScroll() {
@@ -1188,12 +1200,12 @@ function getHomeUrl() {
       }
 
       // Запускаем обновление состояния с небольшой задержкой
-      scrollTimeout = setTimeout(updateHeaderState, 150); // 80 мс — баланс между отзывчивостью и стабильностью
+      scrollTimeout = setTimeout(updateHeaderState, 100); // 100 мс — баланс между отзывчивостью и стабильностью
     }
 
     // Инициализация
     window.addEventListener('scroll', handleScroll, { passive: true });
-    updateHeaderState(); // Вызываем сразу для начального состояния
+    updateHeaderState(); // Вызываем сразу для начального состояния на случай, если страница загружена с прокруткой
 
     // Обработчики для переключения поля поиска
     function toggleSearchBar() {

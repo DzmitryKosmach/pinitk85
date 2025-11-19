@@ -403,7 +403,7 @@
             <!-- Табы -->
             <div class="flex gap-2 text-sm">
               <button
-                class="tab-btn
+                class="tab-btn1
            px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
            shadow-[0_0_8px_rgba(59,130,246,0.3)]
            hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
@@ -414,7 +414,7 @@
               </button>
 
               <button
-                class="tab-btn break-all
+                class="tab-btn1 break-all
            px-4 py-2 rounded-lg bg-white border border-gray-200
            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
@@ -425,7 +425,7 @@
               </button>
 
               <button
-                class="tab-btn
+                class="tab-btn1
            px-4 py-2 rounded-lg bg-white border border-gray-200
            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
@@ -437,10 +437,10 @@
             </div>
 
             <script>
-              document.querySelectorAll('.tab-btn').forEach(button => {
+              document.querySelectorAll('.tab-btn1').forEach(button => {
                 button.addEventListener('click', function () {
                   // Убираем активный класс со всех
-                  document.querySelectorAll('.tab-btn').forEach(btn => {
+                  document.querySelectorAll('.tab-btn1').forEach(btn => {
                     btn.classList.remove('active', 'bg-blue-600', 'text-white');
                     btn.classList.add('bg-white', 'text-gray-700');
                   });
@@ -454,10 +454,26 @@
                   const targetElement = document.getElementById(targetId);
 
                   if (targetElement) {
-                    // Плавный скролл
+                    // Плавный скролл с отступом для sticky header
                     targetElement.scrollIntoView({
                       behavior: 'smooth',
-                      block: 'start'
+                      block: 'start',
+                      // Добавляем отступ, равный высоте sticky header
+                      // Укажите здесь высоту вашего header, например, '56px' или '4rem'
+                      // или рассчитайте динамически
+                      // inline: 'nearest' // Оставляем по умолчанию
+                    });
+
+                    // --- Добавляем отступ вручную ---
+                    // Рассчитываем смещение
+                    const headerOffset = 60; // Замените на высоту вашего sticky header
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    // Прокручиваем с учетом смещения
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
                     });
                   }
                 });
