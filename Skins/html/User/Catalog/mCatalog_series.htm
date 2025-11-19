@@ -869,57 +869,60 @@
 <!-- Верхние вкладки -->
 <div class="elementdetail" id="options-block">
   <!-- Кнопки-вкладки -->
-  <div class="flex flex-wrap gap-3 mt-10 mb-6">
-    <?php if (count($options)) { ?>
-    <button id="section-specs"
-            class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-            data-tab="options"
-            onclick="showTab('options')">
-      Характеристики
-    </button>
-    <?php } ?>
+  <div class="relative mt-10 mb-6">
+    <div id="tabsWrapper" class="relative overflow-hidden">
+      <!-- Fade справа -->
+      <div id="fadeRight" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="delivery"
-      onclick="showTab('delivery')">
-      Доставка и оплата
-    </button>
+      <!-- Область табов -->
+      <div id="tabsScroller"
+           class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-2 px-2">
+        <?php if (count($options)) { ?>
+        <button
+          id="section-specs"
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="options">
+          Характеристики
+        </button>
+        <?php } ?>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="commercial"
-      onclick="showTab('commercial')">
-      Ком. Пред
-    </button>
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="delivery">
+          Доставка и оплата
+        </button>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="sets"
-      onclick="showTab('sets')">
-      Комплекты
-    </button>
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="commercial">
+          Ком. Пред
+        </button>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="download"
-      onclick="showTab('download')">
-      Скачать
-    </button>
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="sets">
+          Комплекты
+        </button>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="questions"
-      onclick="showTab('questions')">
-      Вопросы
-    </button>
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="download">
+          Скачать
+        </button>
 
-    <button
-      class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-      data-tab="reviews"
-      onclick="showTab('reviews')">
-      Отзывы
-    </button>
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="questions">
+          Вопросы
+        </button>
+
+        <button
+          class="tab-btn px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+          data-tab="reviews">
+          Отзывы
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Контент вкладок -->
@@ -1070,39 +1073,91 @@
 
 <script>
   function showTab(tabName) {
-    // Скрываем все вкладки контента
     document.querySelectorAll('.description1 .text').forEach(div => {
       div.style.display = 'none';
     });
 
-    // Показываем нужную вкладку
     const contentTab = document.getElementById('tab-' + tabName);
     if (contentTab) {
       contentTab.style.display = 'block';
     }
 
-    // Убираем активный класс у всех кнопок
-    document.querySelectorAll('[data-tab]').forEach(btn => {
-      btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
-      // Возвращаем базовые стили (если нужно)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600');
       btn.classList.add('bg-white', 'text-gray-900');
     });
 
-    // Добавляем активный класс к текущей кнопке
-    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+    const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
     if (activeButton) {
-      activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
+      activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600');
       activeButton.classList.remove('bg-white');
+      positionTabSmart(activeButton);
     }
   }
 
-  // Инициализация при загрузке страницы
+  function positionTabSmart(tab) {
+    const tabsScroller = document.getElementById('tabsScroller');
+    if (!tabsScroller) return;
+
+    const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
+    const isFirstTab = allTabs[0] === tab;
+
+    if (isFirstTab) {
+      tabsScroller.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      const tabOffsetLeft = tab.offsetLeft;
+      const firstTab = allTabs[0];
+      const firstTabWidth = firstTab ? firstTab.offsetWidth : 0;
+      const gap = parseInt(getComputedStyle(tabsScroller).gap) || 12;
+      let targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
+      const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
+      targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+      tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+    }
+
+    setTimeout(updateFade, 300);
+  }
+
+  function updateFade() {
+    const tabsScroller = document.getElementById('tabsScroller');
+    const fadeRight = document.getElementById('fadeRight');
+    if (!tabsScroller || !fadeRight) return;
+    const isAtEnd = tabsScroller.scrollLeft + tabsScroller.clientWidth >= tabsScroller.scrollWidth - 10;
+    fadeRight.style.opacity = isAtEnd ? '0' : '1';
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showTab(btn.dataset.tab);
+      });
+    });
+
     <?php if (count($options)) { ?>
       showTab('options');
       <?php } else { ?>
       showTab('delivery');
       <?php } ?>
+
+    setTimeout(updateFade, 100);
+    const tabsScroller = document.getElementById('tabsScroller');
+    if (tabsScroller) {
+      tabsScroller.addEventListener('scroll', updateFade);
+      window.addEventListener('resize', updateFade);
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+    document.head.appendChild(style);
   });
 </script>
 
