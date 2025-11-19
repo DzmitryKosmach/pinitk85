@@ -1,25 +1,22 @@
 <!-- Карточка работника -->
-<div
-  class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300"
->
+<div class="worker-card bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col transition-shadow duration-300 hover:shadow-lg relative overflow-hidden">
   <div class="flex justify-center">
-    <img
-      src="/images/contacts/worker.jpg"
-      alt="Бренд"
-      class="max-w-full h-auto object-contain rounded-md mb-4"
-    />
+    <img src="/images/contacts/worker.jpg" alt="Петров Илья Владимирович"
+         class="max-w-full h-auto object-contain rounded-md mb-4">
   </div>
 
+  <div class="font-medium mb-2 text-base md:text-2xl text-center">
+    Петров Илья Владимирович
+  </div>
 
-  <!-- имя -->
-    <div class="font-medium mb-2 text-base md:text-2xl">
-      Петров Илья Владимирович
-    </div>
+  <div class="text-sm md:text-base text-center text-gray-600 mb-2">
+    Директор
+  </div>
 
-  <!-- должность -->
-    <div class="text-sm md:text-base">
-      Директор
-    </div>
-
-
+  <div class="">
+    <a href="mailto:i.petrov@company.com"
+       class="block text-center text-blue-600 hover:text-blue-800 text-sm md:text-base py-2 border-t border-gray-200 mt-2">
+      i.petrov@company.com
+    </a>
+  </div>
 </div>
