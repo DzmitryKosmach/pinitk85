@@ -112,8 +112,9 @@
     let currentScale = 1;
 
     // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
-    const MIN_ZOOM = 2.0;   // 200% минимальный масштаб
-    const MAX_ZOOM = 3.0;   // 300% максимальный масштаб
+    const MIN_ZOOM = 1.8;   // 180% минимальный масштаб
+    const MAX_ZOOM = 2.2;   // 220% максимальный масштаб
+    const ZOOM_STEP = 0.1;  // шаг масштабирования
 
     // === Элементы DOM ===
     const mainImage = document.getElementById('main-product-image');
@@ -210,36 +211,46 @@
     }
 
     function zoomToDefault() {
-      const imgRect = galleryImg.getBoundingClientRect();
-      const containerRect = galleryImageContainer.getBoundingClientRect();
-
-      // Рассчитываем оптимальный масштаб в пределах MIN_ZOOM - MAX_ZOOM
-      const naturalWidth = galleryImg.naturalWidth;
-      const naturalHeight = galleryImg.naturalHeight;
-
-      // Если изображение меньше контейнера, используем минимальный масштаб
-      if (naturalWidth <= containerRect.width && naturalHeight <= containerRect.height) {
-        currentScale = MIN_ZOOM;
-      } else {
-        // Рассчитываем масштаб для 100% размера изображения
-        const scaleToFit = Math.max(naturalWidth / imgRect.width, naturalHeight / imgRect.height);
-
-        // Ограничиваем масштаб в пределах MIN_ZOOM - MAX_ZOOM
-        currentScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scaleToFit));
-
-        // Если рассчитанный масштаб меньше минимального, используем минимальный
-        if (currentScale < MIN_ZOOM) {
-          currentScale = MIN_ZOOM;
-        }
-      }
-
+      // Устанавливаем масштаб по умолчанию в середине диапазона
+      currentScale = (MIN_ZOOM + MAX_ZOOM) / 2;
       isZoomed = true;
 
       // Расширяем контейнер при увеличении
       expandContainer();
       applyTransform();
       updateZoomIndicator();
-      setGrabCursor(); // меняем курсор на руку
+      setGrabCursor();
+    }
+
+    function zoomIn() {
+      const newScale = Math.min(currentScale + ZOOM_STEP, MAX_ZOOM);
+      if (newScale !== currentScale) {
+        currentScale = newScale;
+        isZoomed = true;
+
+        expandContainer();
+        applyTransform();
+        updateZoomIndicator();
+        setGrabCursor();
+      }
+    }
+
+    function zoomOut() {
+      const newScale = Math.max(currentScale - ZOOM_STEP, MIN_ZOOM);
+      if (newScale !== currentScale) {
+        currentScale = newScale;
+
+        // Если масштаб вернулся к 1, считаем что зум сброшен
+        if (currentScale <= 1) {
+          resetZoom();
+        } else {
+          isZoomed = true;
+          expandContainer();
+          applyTransform();
+          updateZoomIndicator();
+          setGrabCursor();
+        }
+      }
     }
 
     function resetZoom() {
@@ -252,7 +263,7 @@
       resetContainer();
       applyTransform();
       updateZoomIndicator();
-      setZoomInCursor(); // возвращаем курсор zoom-in
+      setZoomInCursor();
     }
 
     function expandContainer() {
@@ -299,12 +310,71 @@
       toggleZoom();
     });
 
+    // === Zoom колесиком мыши ===
+    galleryImageContainer.addEventListener('wheel', (e) => {
+      if (!isZoomed) return;
+
+      e.preventDefault();
+
+      if (e.deltaY < 0) {
+        // Скролл вверх - увеличение
+        zoomIn();
+      } else {
+        // Скролл вниз - уменьшение
+        zoomOut();
+      }
+    }, { passive: false });
+
+    // === Мобильный зум (жесты) ===
+    let initialDistance = 0;
+    let initialScale = 1;
+
+    galleryImageContainer.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        // Запоминаем начальное расстояние между пальцами и текущий масштаб
+        initialDistance = getDistance(e.touches[0], e.touches[1]);
+        initialScale = currentScale;
+      }
+    });
+
+    galleryImageContainer.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+
+        const currentDistance = getDistance(e.touches[0], e.touches[1]);
+        const scaleFactor = currentDistance / initialDistance;
+
+        // Применяем масштабирование с ограничениями
+        const newScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initialScale * scaleFactor));
+
+        if (newScale !== currentScale) {
+          currentScale = newScale;
+          isZoomed = true;
+
+          expandContainer();
+          applyTransform();
+          updateZoomIndicator();
+          setGrabCursor();
+        }
+      }
+    });
+
+    function getDistance(touch1, touch2) {
+      const dx = touch1.clientX - touch2.clientX;
+      const dy = touch1.clientY - touch2.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
     // === Drag functionality ===
     galleryImg.addEventListener('mousedown', startDrag);
     galleryImg.addEventListener('touchstart', startDrag);
 
     function startDrag(e) {
       if (!isZoomed) return;
+
+      // Если это мультитач (зум), не начинаем drag
+      if (e.touches && e.touches.length > 1) return;
 
       e.preventDefault();
       isDragging = true;
@@ -315,7 +385,7 @@
       startX = clientX - translateX;
       startY = clientY - translateY;
 
-      setGrabbingCursor(); // меняем курсор на схваченный
+      setGrabbingCursor();
 
       // Добавляем обработчики для движения и окончания drag
       document.addEventListener('mousemove', drag);
@@ -326,6 +396,12 @@
 
     function drag(e) {
       if (!isDragging) return;
+
+      // Если это мультитач (зум), прерываем drag
+      if (e.touches && e.touches.length > 1) {
+        endDrag();
+        return;
+      }
 
       e.preventDefault();
 
@@ -353,7 +429,7 @@
       if (!isDragging) return;
 
       isDragging = false;
-      setGrabCursor(); // возвращаем обычную руку
+      setGrabCursor();
 
       // Удаляем обработчики
       document.removeEventListener('mousemove', drag);
@@ -377,6 +453,8 @@
       else if (e.key === 'ArrowRight') galleryNext.click();
       else if (e.key === '0' || e.key === 'Num0') resetZoom();
       else if (e.key === '1' || e.key === 'Num1') zoomToDefault();
+      else if (e.key === '+' || e.key === '=') zoomIn();
+      else if (e.key === '-' || e.key === '_') zoomOut();
     });
 
     // === Смена основного изображения (миниатюры) ===
