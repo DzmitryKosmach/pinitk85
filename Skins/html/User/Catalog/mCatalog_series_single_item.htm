@@ -528,7 +528,7 @@
         <!-- Табы -->
         <div class="flex gap-2 text-sm mb-8">
 
-          <button class="tab-btn
+          <button class="tab-btn1
                             px-4 py-2 rounded-lg break-all bg-white border border-gray-200
                             shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
                             hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
@@ -540,10 +540,10 @@
         </div>
 
         <script>
-          document.querySelectorAll('.tab-btn').forEach(button => {
+          document.querySelectorAll('.tab-btn1').forEach(button => {
             button.addEventListener('click', function () {
               // Убираем активный класс со всех
-              document.querySelectorAll('.tab-btn').forEach(btn => {
+              document.querySelectorAll('.tab-btn1').forEach(btn => {
                 btn.classList.remove('active', 'bg-blue-600', 'text-white');
                 btn.classList.add('bg-white', 'text-gray-700');
               });
@@ -578,7 +578,7 @@
 
 
         <!-- Кнопки -->
-        <div class="flex flex-col sm3:flex-row sm2:flex-col lg:flex-row gap-3 mt-6 mb-8">
+        <div >
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
           <button type="button"
                   class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
@@ -595,69 +595,88 @@
           >
             <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
-            <div class="flex flex-row gap-4" >
+            <div class="flex flex-row flex-wrap gap-6" >
               <!-- Итоговая цена -->
-              <div>
-                <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
-                  <?php
-                            $d = abs($itemInf['discount']);
-                            if ($d != 1 && $d != 0) {
-                                echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
-                            }
-                        ?>
-                </p>
-                <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl whitespace-nowrap font-bold text-black">
-                  <?php if(abs($itemInf['price_min'])): ?>
-                  <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
-                  <?php else: ?>
-                  Цена по запросу
-                  <?php endif; ?>
+              <div class="flex flex-row gap-2 align-middle">
+                <span class="flex font-normal items-center text-xl">Цена</span>
+                <div>
+                  <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
+                    <?php
+                              $d = abs($itemInf['discount']);
+                              if ($d != 1 && $d != 0) {
+                                  echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
+                              }
+                          ?>
+                  </p>
+
+                  <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl whitespace-nowrap font-bold text-black">
+                    <?php if(abs($itemInf['price_min'])): ?>
+                    <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
+                    <?php else: ?>
+                    Цена по запросу
+                    <?php endif; ?>
+                  </div>
+
                 </div>
               </div>
 
 
-              <div>
-        <span class="flex items-center w-fit gap-5 !py-3 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
-						<a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
-          <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
-          <div>
-            <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
-            <span class="js-measurename">шт</span>
-              </div>
-          <?php } else { ?>
-          <div>
-            <input type="text" class="js-quantity w-6 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
-            <span class="js-measurename">шт</span>
-             </div>
-          <?php } ?>
+              <div class="flex flex-row gap-2 align-middle">
+                <span class="flex items-center font-normal text-xl">Купить</span>
+                <span class="flex items-center w-fit gap-5 !py-0 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
+                    <a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
+                  <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
+                  <div>
+                    <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
+                    <span class="js-measurename">шт</span>
+                      </div>
+                  <?php } else { ?>
+                  <div>
+                    <input type="text" class="js-quantity w-6 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
+                    <span class="js-measurename">шт</span>
+                    </div>
+                  <?php } ?>
 
-          <a class="plus js-plus text-3xl !py-1 text-gray-600 cursor-pointer">+</a>
-				    </span>
+                  <a class="plus js-plus text-3xl !py-0 text-gray-600 cursor-pointer">+</a>
+                </span>
+
               </div>
             </div>
 
-            <div class="button-block flex self-end pt-2">
-              <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
-              <button
-                type="submit"
-                class="submit inbasket w-full bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-              <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-              title="В корзине"
-              >
-              <i class="icon pngicons"></i>В корзине
-              </button>
-              <?php } else { ?>
-              <button
-                type="submit"
-                class="submit add2basket w-full max-w-[325px] !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-              <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-              title="Отложить в 1 клик со СКИДКОЙ"
-              >
-              <i class="icon pngicons"></i>Отложить в 1 клик со СКИДКОЙ
-              </button>
-              <?php } ?>
+            <div class="flex gap-4 flex-wrap mt-2 mb-4">
 
-              <input type="submit" name="submit" class="noned" value="">
+              <div class="button-block flex self-end ">
+                <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
+                <button
+                  type="submit"
+                  class="submit inbasket w-full bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+                title="В корзине"
+                >
+                <i class="icon pngicons"></i>В корзине
+                </button>
+                <?php } else { ?>
+                <button
+                  type="submit"
+                  class="submit add2basket w-full max-w-[325px] !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+                title="Отложить в 1 клик со СКИДКОЙ"
+                >
+                <i class="icon pngicons"></i>Отложить в 1 клик со СКИДКОЙ
+                </button>
+                <?php } ?>
+
+                <input type="submit" name="submit" class="noned" value="">
+              </div>
+
+              <div>
+                <a rel="nofollow"
+                   class="inline-block border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+                   href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
+                   title="Нашли дешевле?">
+                  Нашли дешевле?
+                </a>
+              </div>
             </div>
 
 
@@ -722,14 +741,7 @@
             }
           </script>
 
-          <div class="flex self-start sm3:self-end sm2:self-start lg:self-end">
-            <a rel="nofollow"
-               class="block w-full border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
-               href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
-               title="Нашли дешевле?">
-              Нашли дешевле?
-            </a>
-          </div>
+
         </div>
 
         <!-- Условия доставки и контакты -->
@@ -826,26 +838,26 @@
 
         <?php if(count($itemInf['materials'])) { ?>
         <div class="flex flex-col xl:flex-row gap-0 xl:gap-20 ">
-        <div class="item-current-material max-w-[140px] mt-8" style="float: none">
-          <span class="b2">Выбран цвет:</span>
-          <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
-            <?php if($mActive && $mActive['image']['ext']) { ?>
-            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
-                 width="107" height="87" alt="">
-            <?php } ?>
+          <div class="item-current-material max-w-[140px] mt-8" style="float: none">
+            <span class="b2">Выбран цвет:</span>
+            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
+              <?php if($mActive && $mActive['image']['ext']) { ?>
+              <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
+                   width="107" height="87" alt="">
+              <?php } ?>
+            </div>
+            <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
+              <?php echo implode(' / ', $mActiveName); ?>
+            </div>
           </div>
-          <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
-            <?php echo implode(' / ', $mActiveName); ?>
-          </div>
-        </div>
 
-        <div class="item-materials" style="margin-top: 30px;">
-          <div class="b">Цветовая гамма</div>
+          <div class="item-materials" style="margin-top: 30px;">
+            <div class="b">Цветовая гамма</div>
 
-          <div id="materials-popup">
-            <!-- Основной контейнер -->
-            <div class="materials-level1" id="materials-popup-content" data-counts="0">
-              <?php
+            <div id="materials-popup">
+              <!-- Основной контейнер -->
+              <div class="materials-level1" id="materials-popup-content" data-counts="0">
+                <?php
       $allMaterials = $itemInf['materials'];
       $firstLevelMaterials = [];
       $hasSubLevels = false;
@@ -868,23 +880,23 @@
           $m = $materials[$im['material_id']];
           if (!$m) continue;
           ?>
-              <div class="material-item">
-                <!-- Тут можно вывести элемент первого уровня -->
-                <span><?php echo htmlspecialchars($m['name']); ?></span>
-                <!-- Или изображение, если есть -->
-                <?php if($m['image']['ext']): ?>
-                <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_50x50_0.<?php echo $m['image']['ext']; ?>" alt="<?php echo htmlspecialchars($m['name']); ?>">
-                <?php endif; ?>
+                <div class="material-item">
+                  <!-- Тут можно вывести элемент первого уровня -->
+                  <span><?php echo htmlspecialchars($m['name']); ?></span>
+                  <!-- Или изображение, если есть -->
+                  <?php if($m['image']['ext']): ?>
+                  <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_50x50_0.<?php echo $m['image']['ext']; ?>" alt="<?php echo htmlspecialchars($m['name']); ?>">
+                  <?php endif; ?>
+                </div>
+                <?php } ?>
               </div>
-              <?php } ?>
-            </div>
 
-            <?php if ($hasSubLevels): ?>
-            <a href="javascript:void(0)" class="klink-dashed"
-               onclick="oMaterials.openrows(); return false;">Показать все</a>
-            <?php endif; ?>
+              <?php if ($hasSubLevels): ?>
+              <a href="javascript:void(0)" class="klink-dashed"
+                 onclick="oMaterials.openrows(); return false;">Показать все</a>
+              <?php endif; ?>
+            </div>
           </div>
-        </div>
 
         </div>
 
@@ -924,55 +936,64 @@
   <!-- Верхние вкладки -->
   <div class="elementdetail" id="options-block">
     <!-- Кнопки-вкладки -->
-    <div class="flex flex-wrap gap-3 mt-10 mb-6">
-      <?php if (count($options)) { ?>
-      <button id="section-specs"
-              class="px-4 py-2 overflow-wrap break-words rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="options"
-              onclick="showTab('options')">
-        Характеристики
-      </button>
-      <?php } ?>
+    <div class="relative mt-10 mb-6">
+      <div id="tabsWrapper" class="relative overflow-hidden">
+        <!-- Fade справа -->
+        <div id="fadeRight1" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="delivery"
-              onclick="showTab('delivery')">
-        Доставка и оплата
-      </button>
+        <!-- Область табов -->
+        <div id="tabsScroller1"
+             class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
+          <?php if (count($options)) { ?>
+          <button
+            id="section-specs"
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="options">
+            Характеристики
+          </button>
+          <?php } ?>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="commercial"
-              onclick="showTab('commercial')">
-        Ком. Пред
-      </button>
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="delivery">
+            Доставка и оплата
+          </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="sets"
-              onclick="showTab('sets')">
-        Комплекты
-      </button>
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="commercial">
+            Ком. Пред
+          </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="download"
-              onclick="showTab('download')">
-        Скачать
-      </button>
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="sets">
+            Комплекты
+          </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="questions"
-              onclick="showTab('questions')">
-        Вопросы
-      </button>
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="download">
+            Скачать
+          </button>
 
-      <button class="px-4 py-2 rounded-lg shadow text-sm bg-white hover:bg-gray-50"
-              data-tab="reviews"
-              onclick="showTab('reviews')">
-        Отзывы
-      </button>
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="questions">
+            Вопросы
+          </button>
+
+          <button
+            class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+            data-tab="reviews">
+            Отзывы
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Контент вкладок -->
-    <div class="description2">
+    <div class="description1">
 
       <!-- Характеристики -->
       <div class="text options" id="tab-options" style="display: none;" itemprop="description">
@@ -1009,7 +1030,7 @@
             class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
             <?= $o['name'] ?>:
           </div>
-          <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+          <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
             <?= $o['value'] ?>
           </div>
           <?php endforeach; ?>
@@ -1025,7 +1046,7 @@
               class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
               <?= $o['name'] ?>:
             </div>
-            <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+            <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
               <?= $o['value'] ?>
             </div>
             <?php endforeach; ?>
@@ -1119,39 +1140,91 @@
 
   <script>
     function showTab(tabName) {
-      // Скрываем все вкладки контента
-      document.querySelectorAll('.description2 .text').forEach(div => {
+      document.querySelectorAll('.description1 .text').forEach(div => {
         div.style.display = 'none';
       });
 
-      // Показываем нужную
-      const tabContent = document.getElementById('tab-' + tabName);
-      if (tabContent) {
-        tabContent.style.display = 'block';
+      const contentTab = document.getElementById('tab-' + tabName);
+      if (contentTab) {
+        contentTab.style.display = 'block';
       }
 
-      // Снимаем активный стиль со всех кнопок
-      document.querySelectorAll('[data-tab]').forEach(btn => {
-        btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
-        // Возвращаем базовые стили (если нужно)
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600');
         btn.classList.add('bg-white', 'text-gray-900');
       });
 
-      // Находим и активируем текущую кнопку
-      const activeBtn = document.querySelector(`button[data-tab="${tabName}"]`);
-      if (activeBtn) {
-        activeBtn.classList.add('border-2', 'border-blue-600', 'text-blue-600', 'text-center');
-        activeBtn.classList.remove('bg-white');
+      const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+      if (activeButton) {
+        activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600');
+        activeButton.classList.remove('bg-white');
+        positionTabSmart(activeButton);
       }
     }
 
-    // Инициализация при загрузке
+    function positionTabSmart(tab) {
+      const tabsScroller = document.getElementById('tabsScroller1');
+      if (!tabsScroller) return;
+
+      const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
+      const isFirstTab = allTabs[0] === tab;
+
+      if (isFirstTab) {
+        tabsScroller.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        const tabOffsetLeft = tab.offsetLeft;
+        const firstTab = allTabs[0];
+        const firstTabWidth = firstTab ? firstTab.offsetWidth : 0;
+        const gap = parseInt(getComputedStyle(tabsScroller).gap) || 12;
+        let targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
+        const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
+        targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+        tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+      }
+
+      setTimeout(updateFade, 300);
+    }
+
+    function updateFade() {
+      const tabsScroller = document.getElementById('tabsScroller1');
+      const fadeRight = document.getElementById('fadeRight1');
+      if (!tabsScroller || !fadeRight) return;
+      const isAtEnd = tabsScroller.scrollLeft + tabsScroller.clientWidth >= tabsScroller.scrollWidth - 10;
+      fadeRight.style.opacity = isAtEnd ? '0' : '1';
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          showTab(btn.dataset.tab);
+        });
+      });
+
       <?php if (count($options)) { ?>
         showTab('options');
         <?php } else { ?>
         showTab('delivery');
         <?php } ?>
+
+      setTimeout(updateFade, 100);
+      const tabsScroller = document.getElementById('tabsScroller1');
+      if (tabsScroller) {
+        tabsScroller.addEventListener('scroll', updateFade);
+        window.addEventListener('resize', updateFade);
+      }
+
+      const style = document.createElement('style');
+      style.textContent = `
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+      document.head.appendChild(style);
     });
   </script>
 
