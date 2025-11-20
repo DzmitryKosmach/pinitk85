@@ -3,10 +3,10 @@
   id="gallery-modal"
   class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
 >
-  <!-- Центральное изображение -->
+  <!-- Центральное изображение - теперь контейнер может расширяться -->
   <div
     id="gallery-image-container"
-    class="relative max-w-full max-h-[90vh] flex items-center justify-center rounded-xl overflow-hidden"
+    class="relative flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out"
   >
     <img
       id="gallery-main-img"
@@ -114,7 +114,6 @@
     // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
     const MIN_ZOOM = 2.0;   // 200% минимальный масштаб
     const MAX_ZOOM = 3.0;   // 300% максимальный масштаб
-    const DEFAULT_ZOOM = 2.0; // масштаб по умолчанию при клике
 
     // === Элементы DOM ===
     const mainImage = document.getElementById('main-product-image');
@@ -236,6 +235,8 @@
 
       isZoomed = true;
 
+      // Расширяем контейнер при увеличении
+      expandContainer();
       applyTransform();
       updateZoomIndicator();
       setGrabCursor(); // меняем курсор на руку
@@ -247,9 +248,34 @@
       translateY = 0;
       isZoomed = false;
 
+      // Возвращаем контейнер к исходному размеру
+      resetContainer();
       applyTransform();
       updateZoomIndicator();
       setZoomInCursor(); // возвращаем курсор zoom-in
+    }
+
+    function expandContainer() {
+      // Убираем ограничения по размеру для контейнера при увеличении
+      galleryImageContainer.classList.remove('max-w-full', 'max-h-[90vh]');
+      galleryImageContainer.classList.add('max-w-[95vw]', 'max-h-[95vh]');
+
+      // Добавляем возможность прокрутки если изображение не помещается
+      galleryImageContainer.classList.add('overflow-auto');
+
+      // Убираем ограничения для изображения
+      galleryImg.classList.remove('max-w-full', 'max-h-[90vh]');
+      galleryImg.classList.add('max-w-none', 'max-h-none');
+    }
+
+    function resetContainer() {
+      // Возвращаем исходные ограничения для контейнера
+      galleryImageContainer.classList.remove('max-w-[95vw]', 'max-h-[95vh]', 'overflow-auto');
+      galleryImageContainer.classList.add('max-w-full', 'max-h-[90vh]');
+
+      // Возвращаем ограничения для изображения
+      galleryImg.classList.remove('max-w-none', 'max-h-none');
+      galleryImg.classList.add('max-w-full', 'max-h-[90vh]');
     }
 
     function applyTransform() {
