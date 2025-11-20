@@ -648,18 +648,21 @@
 
 
           <!-- Итоговая цена -->
-          <div>
-            <p id="series-set-price-old" class="text-xs text-gray-500 line-through">
-              <!--will replace by JS-->
-            </p>
-            <div id="series-set-price" class="text-3xl font-bold text-black">
-              <!--will replace by JS-->
+          <div class="flex flex-wrap gap-4">
+            <div class="flex items-center text-lg">Цена комплекта:</div>
+            <div>
+              <p id="series-set-price-old" class="text-xs text-gray-500 line-through">
+                <!--will replace by JS-->
+              </p>
+              <div id="series-set-price" class="text-3xl font-bold text-black">
+                <!--will replace by JS-->
+              </div>
             </div>
           </div>
 
 
           <!-- Кнопки -->
-          <div class="flex flex-col sm:flex-row gap-2">
+          <div class="flex flex-col flex-wrap lg:flex-nowrap sm:flex-row gap-2">
             <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
             <button type="button"
                     class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
@@ -888,10 +891,10 @@
   <div class="relative mt-10 mb-6">
     <div id="tabsWrapper" class="relative overflow-hidden">
       <!-- Fade справа -->
-      <div id="fadeRight" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
+      <div id="fadeRight1" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
 
       <!-- Область табов -->
-      <div id="tabsScroller"
+      <div id="tabsScroller1"
            class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
         <?php if (count($options)) { ?>
         <button
@@ -979,7 +982,7 @@
           class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
           <?= $o['name'] ?>:
         </div>
-        <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+        <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
           <?= $o['value'] ?>
         </div>
         <?php endforeach; ?>
@@ -995,7 +998,7 @@
             class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
             <?= $o['name'] ?>:
           </div>
-          <div class="text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
+          <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
             <?= $o['value'] ?>
           </div>
           <?php endforeach; ?>
@@ -1112,7 +1115,7 @@
   }
 
   function positionTabSmart(tab) {
-    const tabsScroller = document.getElementById('tabsScroller');
+    const tabsScroller = document.getElementById('tabsScroller1');
     if (!tabsScroller) return;
 
     const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
@@ -1135,8 +1138,8 @@
   }
 
   function updateFade() {
-    const tabsScroller = document.getElementById('tabsScroller');
-    const fadeRight = document.getElementById('fadeRight');
+    const tabsScroller = document.getElementById('tabsScroller1');
+    const fadeRight = document.getElementById('fadeRight1');
     if (!tabsScroller || !fadeRight) return;
     const isAtEnd = tabsScroller.scrollLeft + tabsScroller.clientWidth >= tabsScroller.scrollWidth - 10;
     fadeRight.style.opacity = isAtEnd ? '0' : '1';
@@ -1157,7 +1160,7 @@
       <?php } ?>
 
     setTimeout(updateFade, 100);
-    const tabsScroller = document.getElementById('tabsScroller');
+    const tabsScroller = document.getElementById('tabsScroller1');
     if (tabsScroller) {
       tabsScroller.addEventListener('scroll', updateFade);
       window.addEventListener('resize', updateFade);
