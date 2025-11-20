@@ -598,7 +598,7 @@
             <div class="flex flex-row flex-wrap gap-x-6 gap-y-2" >
               <!-- Итоговая цена -->
               <div class="flex flex-row gap-2 align-middle">
-                <span class="flex font-normal items-center text-xl">Цена</span>
+                <span class="flex font-normal items-center text-base sm:text-xl">Цена</span>
                 <div>
                   <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-sm text-gray-500 line-through">
                     <?php
@@ -609,7 +609,7 @@
                           ?>
                   </p>
 
-                  <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-3xl whitespace-nowrap font-bold text-black">
+                  <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-2xl md:text-3xl whitespace-nowrap font-bold text-black">
                     <?php if(abs($itemInf['price_min'])): ?>
                     <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
                     <?php else: ?>
@@ -622,7 +622,7 @@
 
 
               <div class="flex flex-row gap-2 align-middle">
-                <span class="flex items-center font-normal text-xl">Купить</span>
+                <span class="flex items-center font-normal text-base sm:text-xl">Купить</span>
                 <span class="flex items-center w-fit gap-5 !py-0 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
                     <a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
                   <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
@@ -1267,7 +1267,7 @@ $benefits = [
 
   <section>
     <!-- Почему у нас -->
-    <h2 class="text-2xl font-bold mt-12 mb-6 md:mt-16 md:mb-8">Почему стоит заказать у нас</h2>
+    <h2 class="text-2xl font-bold mt-8 mb-6 md:mt-16 md:mb-8">Почему стоит заказать у нас</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium mb-10">
       <?php foreach ($benefits as $item): ?>
