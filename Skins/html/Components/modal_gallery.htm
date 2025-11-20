@@ -111,6 +111,11 @@
     let translateX = 0, translateY = 0;
     let currentScale = 1;
 
+    // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
+    const MIN_ZOOM = 2.0;   // 200% минимальный масштаб
+    const MAX_ZOOM = 3.0;   // 300% максимальный масштаб
+    const DEFAULT_ZOOM = 2.0; // масштаб по умолчанию при клике
+
     // === Элементы DOM ===
     const mainImage = document.getElementById('main-product-image');
     const mainImageContainer = document.getElementById('mainImageContainer');
@@ -201,24 +206,34 @@
       if (isZoomed) {
         resetZoom();
       } else {
-        zoomTo100Percent();
+        zoomToDefault();
       }
     }
 
-    function zoomTo100Percent() {
+    function zoomToDefault() {
       const imgRect = galleryImg.getBoundingClientRect();
       const containerRect = galleryImageContainer.getBoundingClientRect();
 
-      // Рассчитываем масштаб для 100% размера изображения
+      // Рассчитываем оптимальный масштаб в пределах MIN_ZOOM - MAX_ZOOM
       const naturalWidth = galleryImg.naturalWidth;
       const naturalHeight = galleryImg.naturalHeight;
 
-      // Если изображение меньше контейнера, не увеличиваем
+      // Если изображение меньше контейнера, используем минимальный масштаб
       if (naturalWidth <= containerRect.width && naturalHeight <= containerRect.height) {
-        return;
+        currentScale = MIN_ZOOM;
+      } else {
+        // Рассчитываем масштаб для 100% размера изображения
+        const scaleToFit = Math.max(naturalWidth / imgRect.width, naturalHeight / imgRect.height);
+
+        // Ограничиваем масштаб в пределах MIN_ZOOM - MAX_ZOOM
+        currentScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scaleToFit));
+
+        // Если рассчитанный масштаб меньше минимального, используем минимальный
+        if (currentScale < MIN_ZOOM) {
+          currentScale = MIN_ZOOM;
+        }
       }
 
-      currentScale = Math.max(naturalWidth / imgRect.width, naturalHeight / imgRect.height);
       isZoomed = true;
 
       applyTransform();
@@ -335,7 +350,7 @@
       else if (e.key === 'ArrowLeft') galleryPrev.click();
       else if (e.key === 'ArrowRight') galleryNext.click();
       else if (e.key === '0' || e.key === 'Num0') resetZoom();
-      else if (e.key === '1' || e.key === 'Num1') zoomTo100Percent();
+      else if (e.key === '1' || e.key === 'Num1') zoomToDefault();
     });
 
     // === Смена основного изображения (миниатюры) ===
