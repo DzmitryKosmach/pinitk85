@@ -595,7 +595,7 @@
           >
             <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
 
-            <div class="flex flex-row flex-wrap gap-6" >
+            <div class="flex flex-row flex-wrap gap-x-6 gap-y-2" >
               <!-- Итоговая цена -->
               <div class="flex flex-row gap-2 align-middle">
                 <span class="flex font-normal items-center text-xl">Цена</span>
@@ -645,7 +645,7 @@
 
             <div class="flex gap-4 flex-wrap mt-2 mb-4">
 
-              <div class="button-block flex self-end ">
+              <div class="button-block pt-0">
                 <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
                 <button
                   type="submit"
@@ -1267,7 +1267,7 @@ $benefits = [
 
   <section>
     <!-- Почему у нас -->
-    <h2 class="text-2xl font-bold mt-20 mb-12">Почему стоит заказать у нас</h2>
+    <h2 class="text-2xl font-bold mt-12 mb-6 md:mt-16 md:mb-8">Почему стоит заказать у нас</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium mb-10">
       <?php foreach ($benefits as $item): ?>
@@ -1309,7 +1309,7 @@ $benefits = [
 
 
   <noindex>
-    <section class="mt-24 mb-10">
+    <section class="mt-16 mb-8">
       <div class="series_options bg-white px-4 md:px-8 lg:px-16 py-10 rounded-lg shadow-md flex flex-col lg:flex-row gap-8 md:gap-16">
         <div class="flex-1">
           <div class="series_options_item text-base">
