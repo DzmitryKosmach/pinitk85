@@ -580,11 +580,13 @@
         <!-- Кнопки -->
         <div >
           <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
-          <button type="button"
-                  class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-not-allowed opacity-90"
-                  disabled>
-            ✓ В корзине
-          </button>
+          <a href="/cart/">
+            <button type="button"
+                    class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-pointer opacity-90"
+                    disabled>
+              ✓ В корзину
+            </button>
+          </a>
           <?php else: ?>
           <form
             class="add2basketform clearfix main-cart-form"
@@ -623,7 +625,7 @@
 
               <div class="flex flex-row gap-2 align-middle">
                 <span class="flex items-center font-normal text-base sm:text-xl">Купить</span>
-                <span class="flex items-center w-fit gap-5 !py-0 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
+                <span class="flex items-center w-fit gap-5 !py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
                     <a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
                   <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
                   <div>
@@ -637,7 +639,7 @@
                     </div>
                   <?php } ?>
 
-                  <a class="plus js-plus text-3xl !py-0 text-gray-600 cursor-pointer">+</a>
+                  <a class="plus js-plus text-3xl !py-1 text-gray-600 cursor-pointer">+</a>
                 </span>
 
               </div>
@@ -645,20 +647,22 @@
 
             <div class="flex gap-4 flex-wrap mt-2 mb-4">
 
-              <div class="button-block pt-0">
+              <div class="button-block w-full sm:w-fit pt-0">
                 <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
-                <button
-                  type="submit"
-                  class="submit inbasket w-full bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-                title="В корзине"
-                >
-                <i class="icon pngicons"></i>В корзине
-                </button>
+                <a href="/cart/">
+                  <button
+                    type="submit"
+                    class="submit inbasket w-full bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                  <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+                  title="В корзину"
+                  >
+                  <i class="icon pngicons"></i>В корзину
+                  </button>
+                </a>
                 <?php } else { ?>
                 <button
                   type="submit"
-                  class="submit add2basket w-full max-w-[325px] !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                  class="submit add2basket w-full sm:w-fit !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                 <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
                 title="Отложить в 1 клик со СКИДКОЙ"
                 >
@@ -669,9 +673,9 @@
                 <input type="submit" name="submit" class="noned" value="">
               </div>
 
-              <div>
+              <div class="w-full sm:w-fit">
                 <a rel="nofollow"
-                   class="inline-block border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+                   class="w-full block sm:inline-block sm:w-fit border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
                    href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
                    title="Нашли дешевле?">
                   Нашли дешевле?
@@ -734,9 +738,9 @@
 
               if (btn) {
                 btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
-                btn.classList.add("!bg-green-600", "cursor-not-allowed", "opacity-90");
+                btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
                 btn.disabled = true;
-                btn.textContent = "✓ В корзине";
+                btn.textContent = "✓ В корзину";
               }
             }
           </script>
