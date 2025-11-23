@@ -5,7 +5,7 @@
   <?php if (!empty($s['marker'])): ?>
   <div class="relative mb-2">
     <span
-      class="absolute top-[-16px] left-[-7px] lg:top-[-36px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
+      class="absolute top-[-16px] left-[-7px] sm:top-[-22px] sm:left-[-12px] md:top-[-22px] md:left-[-14px] lg:top-[-36px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
       style="background-color: #f0f0f0; color: <?php echo htmlspecialchars($s['marker']['color']); ?>;"
     >
       <?php
@@ -108,7 +108,7 @@
     <?php endif; ?>
   </div>
 
-  <div class="flex flex-col sm:flex-row justify-between items-center mb-1">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-1">
     <div>
       <?php if (isset($s['price_search_min_old']) && $s['price_search_min_old'] >
       0): ?>
