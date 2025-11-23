@@ -6,7 +6,7 @@
     <?php if (!empty($s['marker'])) { ?>
     <div>
       <span
-        class="absolute top-[-16px] left-[-7px] lg:top-[-36px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
+        class="absolute top-[-16px] left-[-7px] sm:top-[-22px] sm:left-[-12px] md:top-[-22px] md:left-[-14px] lg:top-[-36px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
         style="color: <?php echo htmlspecialchars($s['marker']['color']); ?>;
                        /*<?php if (!empty($s['marker']['shadow'])) echo 'text-shadow: 0 1px 1px rgba(0,0,0, 0.7);' ?>*/
                        white-space: normal;">
@@ -97,7 +97,7 @@
     <?php endif; ?>
   </div>
 
-  <div class="flex flex-col sm:flex-row justify-between items-center mb-1">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-1">
     <!-- Цена -->
     <div class="font-bold text-base sm:text-lg leading-2 mt-[-6px]">
       <?php if (abs($s['price_search_min']) || abs($s['price_search_max'])): ?>
