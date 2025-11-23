@@ -169,28 +169,32 @@
             // Расчет максимального количества табов, помещающихся в видимый ряд
             function calculateVisibleTabsCount() {
               const containerWidth = visibleTabsRow.offsetWidth;
-              if (containerWidth <= 0) return MIN_VISIBLE_TABS; // Если ширина не определена, возвращаем минимум
+              if (containerWidth <= 0) return MIN_VISIBLE_TABS;
 
-              // Создаем временный элемент для замеров ширины таба
-              const tempTab = allTabsData[0]?.element.cloneNode(true);
-              if (!tempTab) return MIN_VISIBLE_TABS;
-              tempTab.style.visibility = 'hidden';
-              tempTab.style.position = 'absolute';
-              tempTab.style.width = ''; // Сбрасываем фиксированную ширину, если была
-              tempTab.classList.remove('flex-1'); // Убираем flex-grow для точного замера
-              document.body.appendChild(tempTab);
+              // измеряем ВСЕ табы
+              const widths = allTabsData.map(t => {
+                const clone = t.element.cloneNode(true);
+                clone.style.visibility = 'hidden';
+                clone.style.position = 'absolute';
+                clone.classList.remove('flex-1');
+                document.body.appendChild(clone);
+                const w = clone.offsetWidth;
+                document.body.removeChild(clone);
+                return w;
+              });
 
-              const approxTabWidth = tempTab.offsetWidth;
-              document.body.removeChild(tempTab);
+              let used = SHOW_MORE_BTN_WIDTH; // сразу учитываем кнопку
+              let count = 0;
 
-              // Рассчитываем количество табов
-              // Учитываем зазоры: между N табами N-1 зазоров
-              // Также приблизительно учитываем ширину кнопки
-              const availableWidth = containerWidth - SHOW_MORE_BTN_WIDTH; // Приблизительно учитываем кнопку
-              const approxTabsFitting = Math.floor((availableWidth + TAB_GAP) / (approxTabWidth + TAB_GAP));
+              for (let w of widths) {
+                if (used + w > containerWidth) break;
+                used += w + TAB_GAP;
+                count++;
+              }
 
-              return Math.max(MIN_VISIBLE_TABS, approxTabsFitting);
+              return Math.max(MIN_VISIBLE_TABS, count);
             }
+
 
             // Обновление отображения табов на основе currentVisibleCount и isExpanded
             function updateTabsDisplay() {
