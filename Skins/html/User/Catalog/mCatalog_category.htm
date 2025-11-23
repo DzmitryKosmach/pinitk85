@@ -47,16 +47,15 @@
               <?php foreach ($pages as $p): ?>
               <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
               <?php if ($isActive): ?>
-              <a href="<?php echo $bc['url']; ?>">
-                <span
+                <a href="<?php echo $bc['url']; ?>"
                   class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-12 lg:px-8 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
                   data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
                   data-tab-href="<?php echo $bc['url']; ?>"
                   data-is-active="true"
                 >
                   <?php echo htmlspecialchars($p['name']); ?>
-                </span>
-              </a>
+                </a>
+
               <?php else: ?>
               <a
                 href="<?php echo Catalog_Pages::a($p['id']); ?>"
