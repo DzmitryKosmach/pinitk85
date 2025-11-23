@@ -147,19 +147,33 @@
       const containerRect = galleryImageContainer.getBoundingClientRect();
       const imgRect = galleryImg.getBoundingClientRect();
 
-      const containerCenterX = containerRect.left + containerRect.width / 2;
-      const containerCenterY = containerRect.top + containerRect.height / 2;
+      // Размеры видимой области и полного масштабированного изображения
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+      const scaledImgWidth = imgRect.width * currentScale;
+      const scaledImgHeight = imgRect.height * currentScale;
 
-      const deltaX = e.clientX - containerCenterX;
-      const deltaY = e.clientY - containerCenterY;
+      // Если изображение не выходит за границы — ничего не двигаем
+      if (scaledImgWidth <= containerWidth && scaledImgHeight <= containerHeight) {
+        translateX = 0;
+        translateY = 0;
+        applyTransform();
+        return;
+      }
 
-      const SENSITIVITY = 0.3;
+      // Позиция курсора относительно контейнера (0..1)
+      const mouseX = e.clientX - containerRect.left;
+      const mouseY = e.clientY - containerRect.top;
+      const posX = mouseX / containerWidth; // 0 = слева, 1 = справа
+      const posY = mouseY / containerHeight; // 0 = сверху, 1 = снизу
 
-      const maxOffsetX = (imgRect.width * currentScale - containerRect.width) / 2;
-      const maxOffsetY = (imgRect.height * currentScale - containerRect.height) / 2;
+      // Максимальное смещение (на сколько можно двигать)
+      const maxOffsetX = Math.max(0, (scaledImgWidth - containerWidth) / 2);
+      const maxOffsetY = Math.max(0, (scaledImgHeight - containerHeight) / 2);
 
-      translateX = Math.max(-maxOffsetX, Math.min(maxOffsetX, deltaX * SENSITIVITY));
-      translateY = Math.max(-maxOffsetY, Math.min(maxOffsetY, deltaY * SENSITIVITY));
+      // Рассчитываем смещение: когда курсор слева — изображение уходит вправо и наоборот
+      translateX = maxOffsetX - posX * (maxOffsetX * 2);
+      translateY = maxOffsetY - posY * (maxOffsetY * 2);
 
       applyTransform();
     }
