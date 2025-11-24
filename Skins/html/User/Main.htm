@@ -879,7 +879,7 @@ function getHomeUrl() {
         <div class="relative inline-block group">
           <!-- Иконка -->
           <a
-            href="contacts/callback/"
+            href="/contacts/callback/"
             class="fancyajax fancybox.ajax recall callback block"
             aria-label="Позвонить или заказать обратный звонок"
           >
@@ -1047,13 +1047,13 @@ function getHomeUrl() {
     <div class="relative group" id="catalog-container">
       <!-- Кнопка -->
 
-        <div
-          class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg"
-        >
-          <a href="/catalog/" id="catalog-link">
+      <div
+        class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg"
+      >
+        <a href="/catalog/" id="catalog-link">
           <span class="hidden sm:block">Каталог</span>
-          </a>
-          <div id="catalog-toggle" class="cursor-pointer">
+        </a>
+        <div id="catalog-toggle" class="cursor-pointer">
           <svg
             width="26"
             height="14"
@@ -1065,8 +1065,8 @@ function getHomeUrl() {
             <path d="M0 7H26" stroke="currentColor" stroke-width="2" />
             <path d="M0 13H26" stroke="currentColor" stroke-width="2" />
           </svg>
-          </div>
         </div>
+      </div>
 
 
       <!-- Выпадающее меню (1 уровень) -->
@@ -1248,7 +1248,7 @@ function getHomeUrl() {
     const logoMain = document.getElementById('logo-main');
     const headerIconsScrolled = document.getElementById('header-icons-scrolled');
     const mainNav = document.getElementById('main-nav');
-    const headerRight = document.getElementById('header-right');
+    //const headerRight = document.getElementById('header-right');
     const catalogMenu = document.getElementById('catalog-menu');
     const searchToggleScrolled = document.getElementById('search-toggle-scrolled');
     const searchToggleMobile = document.getElementById('search-toggle-mobile');
@@ -1271,7 +1271,7 @@ function getHomeUrl() {
         logoMain.classList.add('hidden');
         headerIconsScrolled.classList.remove('hidden');
         // Центральная навигация остается видимой (предположительно, она уже так настроена)
-        headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
+        //headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
         catalogMenu.classList.add('hidden');
         isScrolled = true; // Запоминаем новое состояние
         // console.log('Переключено в состояние прокрутки (маленький хедер)'); // Для отладки
@@ -1281,7 +1281,7 @@ function getHomeUrl() {
         // Обычное состояние
         logoMain.classList.remove('hidden');
         headerIconsScrolled.classList.add('hidden');
-        headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
+        //headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
         catalogMenu.classList.remove('hidden');
         // Закрываем поле поиска при возврате к нормальному состоянию (если было открыто)
         searchBar.classList.add('hidden');

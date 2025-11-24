@@ -1,11 +1,11 @@
 <!-- Карточка товара -->
 <div
-  class="bg-white rounded-lg shadow p-2 sm:p-4 lg:p-6 pt-4 sm:pt-6 lg:pt-8 flex flex-col shadow hover:shadow-lg transition-shadow duration-300"
+  class="bg-white rounded-lg p-2 sm:p-4 lg:p-6 pt-4 sm:pt-6 lg:pt-8 flex flex-col shadow hover:shadow-lg transition-shadow duration-300"
 >
   <?php if (!empty($s['marker'])): ?>
   <div class="relative mb-2">
     <span
-      class="absolute top-[-16px] left-[-7px] sm:top-[-22px] sm:left-[-12px] md:top-[-22px] md:left-[-14px] lg:top-[-29px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
+      class="absolute top-[-14px] left-[-7px] sm:top-[-22px] sm:left-[-12px] md:top-[-22px] md:left-[-14px] lg:top-[-29px] lg:left-[-20px] bg-[rgba(0,0,0,0.1)] rounded-md leading-3 text-[11px] xs2:text-xs lg:text-sm font-semibold text-white px-1 xs2:px-2 lg:px-4 py-1"
       style="background-color: #f0f0f0; color: <?php echo htmlspecialchars($s['marker']['color']); ?>;"
     >
       <?php
@@ -45,7 +45,7 @@
   </div>
 
   <!-- Цвета -->
-  <div class="flex gap-[6px] justify-start items-center mt-8 mb-3">
+  <div class="flex gap-[6px] justify-start items-center mt-4 sm2:mt-7 mb-3">
     <?php
         $materials = [];
         foreach ($s['materials'] as $m) {
@@ -231,7 +231,7 @@
 
   <a
     href="<?php echo htmlspecialchars(Catalog_Series::a($s ?? '#')); ?>"
-    class="mt-auto text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition"
+    class="mt-auto text-center text-[11px] xs2:text-sm sm:text-base border-[2px] sm:border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition"
     target="_blank"
     rel="noopener noreferrer"
   >

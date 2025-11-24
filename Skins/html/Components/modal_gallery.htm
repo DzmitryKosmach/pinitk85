@@ -416,6 +416,99 @@
       else if (e.key === '-' || e.key === '_') zoomOut();
     });
 
+    // === Смена основного изображения (миниатюры) ===
+    const infoDots = document.getElementById('infoDots');
+
+    function changeMainImage(thumb) {
+      const bigImage = thumb.dataset.bigimage;
+      const alt = thumb.alt;
+
+      if (!mainImage || !bigImage) return;
+
+      // Обновляем подсветку миниатюр
+      document.querySelectorAll('.slider-track img').forEach(img => {
+        img.style.borderColor = ''; // сбрасываем инлайновый цвет
+      });
+      thumb.style.setProperty('border-color', '#2563eb', 'important');
+
+      // Управление точками
+      const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+      if (infoDots) {
+        infoDots.classList.toggle('hidden', thumbIndex !== 0);
+      }
+
+      // Ждём загрузки изображения перед обновлением высоты
+      mainImage.onload = () => {
+        mainImage.onload = null; // отписываемся
+        requestAnimationFrame(refreshSlider);
+      };
+
+      // Меняем изображение
+      mainImage.src = bigImage;
+      mainImage.alt = alt;
+    }
+
+    // Инициализация миниатюр
+    const firstThumb = document.querySelector('.slider-track img');
+    if (firstThumb) changeMainImage(firstThumb);
+
+    document.querySelectorAll('.slider-track img').forEach(img => {
+      img.addEventListener('click', () => changeMainImage(img));
+    });
+
+    // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
+    function updateThumbnailSliderHeight() {
+      const track = document.querySelector('.slider-track');
+      const container = document.querySelector(".slider-thumbnails-container > .relative");
+
+      // Если элементов нет — выходим
+      if (!track || !container) return;
+
+      if (window.innerWidth < 1024) {
+        // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
+        track.style.height = '';
+        track.style.maxHeight = '';
+        track.style.width = '';
+        track.style.minWidth = '';
+        track.style.maxWidth = '';
+
+        container.style.height = '';
+        container.style.maxHeight = '';
+        container.style.width = '';
+        container.style.minWidth = '';
+        container.style.maxWidth = '';
+
+        return;
+      }
+
+      // === Десктопный режим (>=1024px) ===
+      const mainImageEl = document.querySelector('#mainImageContainer > img');
+      if (!mainImageEl) return;
+
+      const imageHeight = mainImageEl.getBoundingClientRect().height;
+      if (imageHeight <= 0) return;
+
+      const btnHeight = 20; // высота кнопок "вверх/вниз"
+      const gap = 16;       // суммарный gap между кнопками и треком
+      const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
+      const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
+
+      // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
+      container.style.height = imageHeight + 'px';
+      container.style.maxHeight = imageHeight + 'px';
+      container.style.width = '80px';
+      container.style.minWidth = '80px';
+      container.style.maxWidth = '80px';
+    }
+
+    function refreshSlider() {
+      updateThumbnailSliderHeight();
+    }
+
+    window.addEventListener('load', refreshSlider);
+    window.addEventListener('resize', refreshSlider);
+    mainImage?.addEventListener('load', refreshSlider);
+
     // Инициализация
     setZoomInCursor();
   });
