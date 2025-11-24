@@ -861,7 +861,7 @@
 <div class="elementdetail" id="options-block">
   <!-- Кнопки-вкладки -->
   <div class="relative mt-10 mb-6">
-    <div id="tabsWrapper" class="relative overflow-hidden">
+    <div id="tabsWrapper1" class="relative overflow-hidden">
       <!-- Fade справа -->
       <div id="fadeRight1" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
 
@@ -1090,6 +1090,21 @@
     const tabsScroller = document.getElementById('tabsScroller1');
     if (!tabsScroller) return;
 
+    // ⭐ Если экран меньше 400px — центрируем активный таб
+    if (window.innerWidth < 400) {
+      const tabCenter = tab.offsetLeft + tab.offsetWidth / 2;
+      const scrollTo = tabCenter - tabsScroller.clientWidth / 2;
+
+      const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
+      const targetScrollLeft = Math.max(0, Math.min(scrollTo, maxScroll));
+
+      tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+
+      setTimeout(updateFade, 300);
+      return;
+    }
+
+    // ⭐ Поведение для ширины > 400px — ваше прежнее
     const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
     const isFirstTab = allTabs[0] === tab;
 
@@ -1100,14 +1115,17 @@
       const firstTab = allTabs[0];
       const firstTabWidth = firstTab ? firstTab.offsetWidth : 0;
       const gap = parseInt(getComputedStyle(tabsScroller).gap) || 12;
+
       let targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
       const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
       targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+
       tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
     }
 
     setTimeout(updateFade, 300);
   }
+
 
   function updateFade() {
     const tabsScroller = document.getElementById('tabsScroller1');
@@ -1202,7 +1220,7 @@ $benefits = [
              class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
              alt="<?php echo htmlspecialchars($item['title']); ?>" />
       </div>
-      <p class="text-lg font-medium">
+      <p class="text-base sm:text-lg font-medium">
         <?php echo htmlspecialchars($item['title']); ?>
         <span class="block font-normal"><?php echo htmlspecialchars($item['text']); ?></span>
       </p>
@@ -1477,7 +1495,7 @@ $benefits = [
                                 : ($crossSeries[$item['series_id']] ?? $seriesOrig);
                             ?>
 
-        <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+        <div class="bg-white rounded-lg shadow p-2 sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
           <!-- Изображение -->
           <?php if (!empty($item['_img_ext'])): ?>
 
@@ -1525,7 +1543,7 @@ $benefits = [
 
           <!-- Габариты -->
           <?php if (!empty($item['size'])): ?>
-          <p class="text-gray-400 text-sm mt-6">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
+          <p class="text-gray-400 text-sm mt-2 md:mt-4">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
           <?php endif; ?>
 
           <!-- Цвета -->
@@ -1582,7 +1600,7 @@ $benefits = [
         <a
           href="javascript:void(0)"
           onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-          class="mt-4 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+          class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
         >
           <!--          <a-->
           <!--            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"-->

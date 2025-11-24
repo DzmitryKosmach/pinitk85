@@ -1,6 +1,6 @@
 <!-- Карточка товара -->
 
-<div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+<div class="bg-white rounded-lg shadow p-2  sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
   <!-- Изображение -->
   <?php if (!empty($i['_img_ext'])): ?>
 
@@ -49,7 +49,7 @@
 
   <!-- Габариты -->
   <?php if (!empty($i['size'])): ?>
-  <p class="text-gray-400 text-sm mt-6">Ш/В/Д: <?php echo htmlspecialchars($i['size']); ?></p>
+  <p class="text-gray-400 text-sm mt-4">Ш/В/Д: <?php echo htmlspecialchars($i['size']); ?></p>
   <?php endif; ?>
 
   <!-- Цвета -->
@@ -106,7 +106,7 @@
 <a
   href="javascript:void(0)"
   onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-  class="mt-4 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+  class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
 >
   <!--          <a-->
   <!--            href="<?php echo Catalog_Items::a($seriesInf, $i); ?>"-->
