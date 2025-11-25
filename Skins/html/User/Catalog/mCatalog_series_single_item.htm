@@ -1170,6 +1170,21 @@
       const tabsScroller = document.getElementById('tabsScroller1');
       if (!tabsScroller) return;
 
+      // ⭐ Если экран меньше 400px — центрируем активный таб
+      if (window.innerWidth < 400) {
+        const tabCenter = tab.offsetLeft + tab.offsetWidth / 2;
+        const scrollTo = tabCenter - tabsScroller.clientWidth / 2;
+
+        const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
+        const targetScrollLeft = Math.max(0, Math.min(scrollTo, maxScroll));
+
+        tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+
+        setTimeout(updateFade, 300);
+        return;
+      }
+
+      // ⭐ Поведение для ширины > 400px — ваше прежнее
       const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
       const isFirstTab = allTabs[0] === tab;
 
@@ -1180,9 +1195,11 @@
         const firstTab = allTabs[0];
         const firstTabWidth = firstTab ? firstTab.offsetWidth : 0;
         const gap = parseInt(getComputedStyle(tabsScroller).gap) || 12;
+
         let targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
         const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
         targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+
         tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
       }
 
@@ -1271,7 +1288,7 @@ $benefits = [
 
   <section>
     <!-- Почему у нас -->
-    <h2 class="text-2xl font-bold mt-8 mb-6 md:mt-16 md:mb-8">Почему стоит заказать у нас</h2>
+    <h2 class="text-2xl font-bold mt-8 mb-4 md:mt-12 md:mb-6">Почему стоит заказать у нас</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium mb-10">
       <?php foreach ($benefits as $item): ?>
