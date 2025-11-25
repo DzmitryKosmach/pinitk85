@@ -1,28 +1,24 @@
-<?php if(trim($pageInf['header'])) { ?>
-	<h1>
-		<span style="white-space: nowrap">
-			<?php echo $pageInf['header']; ?>
-		</span>
-		<span style="font-size: 19px;">/</span>
-		<span style="font-size: 19px; white-space: nowrap">
-			<a href="<?php echo Url::a(Clients_Letters::LETTERS_PAGE_ID); ?>"><?php echo $lettersHeader; ?></a>
-		</span>
-	</h1>
-<?php } ?>
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+  <a href="/" class="hover:text-gray-700">Главная</a>
+  <span class="mx-1">›</span>
+  <span class="uppercase">Наши работы</span>
+</nav>
 
-<div class="projects">
-	<?php foreach($projects as $p) { ?>
-		<div class="projects-item">
-			<a href="<?php echo Clients_Projects::a($p['id']); ?>">
-				<div class="photo">
-					<img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['1st_photo']['id']; ?>_290x255_0_wm.<?php echo $p['1st_photo']['_img_ext']; ?>" width="290" height="255" alt="<?php echo hsch($p['name']); ?>">
-				</div>
-			</a>
-			<span class="date"><?php echo News::date(MySQL::fromDate($p['date']), false); ?></span>
-			<span><?php echo $p['city']; ?></span>
-		</div>
-	<?php } ?>
-	<div class="cl"></div>
-</div>
+<section class="mb-24">
+  <h1 class="text-[21px] md:text-3xl font-semibold mb-4 md:mb-8">
+    Наши работы
+  </h1>
 
-<?php echo $toggle; ?>
+  <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+
+    <?php foreach($projects as $p) {
+      include(Config::path('skins') . '/html/Components/work_card.htm');
+    } ?>
+
+  </div>
+
+  <?php echo $toggle; ?>
+
+</section>
+

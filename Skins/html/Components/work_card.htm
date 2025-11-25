@@ -2,12 +2,11 @@
 <div
   class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300"
 >
-  <a href="#" target="_blank"
+  <a href="<?php echo Clients_Projects::a($p['id']); ?>" target="_blank"
      class="flex justify-center"
      rel="noopener noreferrer">
-    <img
-      src="/images/works/image.jpg"
-      alt="Товар"
+    <img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['1st_photo']['id']; ?>_290x255_0_wm.<?php echo $p['1st_photo']['_img_ext']; ?>" width="290" height="255" alt="<?php echo hsch($p['name']); ?>"
+      alt="Наша работа"
       class="max-w-full h-auto object-contain rounded-md mb-4"
     />
   </a>
