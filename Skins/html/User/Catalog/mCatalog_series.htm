@@ -805,15 +805,19 @@
           <?php foreach($materials as $m) { ?>
           <?php if(!$m['current-series']) continue; ?>
           <?php if($m['has_sub']) { ?>
-          <a class="level1" href="javascript:void(0)">
-            <div class="w-[52px] h-[52px] bg-[#4E3B31] rounded-lg mb-2 flex items-center justify-center overflow-hidden">
-              <?php if($m['image']['ext']) { ?>
-              <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                   width="52" height="52"
-                   alt="<?php echo hsch($m['name'])?>"
-                   class="w-full h-full object-cover"
-              >
-              <?php } ?>
+          <a class="level1 !w-auto !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
+            <div class="flex gap-3 flex-wrap">
+              <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
+                <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
+                  <?php if($m['image']['ext']) { ?>
+                  <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
+                       width="70" height="70"
+                       alt="<?php echo hsch($m['name'])?>"
+                       class="w-full h-full object-cover"
+                  >
+                  <?php } ?>
+                </div>
+              </div>
             </div>
             <div class="name hidden"><?php echo $m['name']; ?></div>
           </a>
@@ -1170,7 +1174,7 @@
   });
 </script>
 
-<hr class="mb-6 border-gray-300 mt-12" />
+<hr class="mb-6 border-gray-300 mt-10" />
 
 <?php
 // Базовый URL
@@ -1207,7 +1211,7 @@ $benefits = [
 
 <section>
   <!-- Почему у нас -->
-  <h2 class="text-2xl font-bold mt-28 mb-12">Почему стоит заказать у нас</h2>
+  <h2 class="text-2xl font-bold mt-8 mb-4 md:mt-12 md:mb-6">Почему стоит заказать у нас</h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium">
     <?php foreach ($benefits as $item): ?>
@@ -1231,10 +1235,10 @@ $benefits = [
 
 
 <?php if (count($itemsGroups)) { ?>
-<section id="section-prices" class="series-items mt-20">
+<section id="section-prices" class="series-items mt-16">
   <div>
     <!-- Заголовок -->
-    <h2 class="text-2xl font-bold mb-6">
+    <h2 class="text-2xl font-bold mb-4">
       Элементы мебели
       <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesInf['name']); ?></span>
     </h2>
@@ -1481,7 +1485,7 @@ $benefits = [
         <span class="font-normal text-gray-500"><?php echo htmlspecialchars($seriesOrig['name']); ?></span>
       </h3>
       <?php } else { ?>
-      <h4 class="text-lg font-medium mb-5 text-gray-700 border-t pt-6 mt-0">
+      <h4 class="text-lg font-medium mb-3 text-gray-700 border-t pt-4 mt-0">
         <?php echo htmlspecialchars($groupName); ?>
       </h4>
       <?php } ?>
@@ -1639,7 +1643,7 @@ $benefits = [
 
 
 <noindex>
-  <section class="mt-16 md:mt-20">
+  <section class="mt-12 md:mt-16">
     <div class="series_options bg-white px-4 md:px-8 lg:px-16 py-10 rounded-lg shadow-md flex flex-col lg:flex-row gap-8 md:gap-16">
       <div class="flex-1">
         <div class="series_options_item">
