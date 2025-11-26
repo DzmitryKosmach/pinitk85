@@ -1,6 +1,5 @@
 <?php
 $photosUnified = [];
-$useHighslide = false;
 
 // --- Если это ФОТО ТОВАРОВ ---
 if (isset($photos[0]['rm'])) {
@@ -15,7 +14,6 @@ if (isset($photos[0]['rm'])) {
 
 // --- Если это ФОТО ПРОЕКТА ---
 else {
-    $useHighslide = true;
 
     foreach ($photos as $pn => $p) {
       $big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
@@ -30,7 +28,6 @@ else {
   }
 ?>
 
-
 <!-- Галерея миниатюр с кнопками прокрутки -->
 <div class="slider-thumbnails-container">
   <!-- Относительный контейнер для позиционирования кнопок -->
@@ -43,7 +40,6 @@ else {
          style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
 
       <?php foreach ($photosUnified as $i => $p): ?>
-      <?php if ($useHighslide): ?>
 
         <img
           src="<?= $p['small'] ?>"
@@ -53,15 +49,6 @@ else {
           onclick="changeMainImage(this)"
         />
 
-      <?php else: ?>
-        <img
-          src="<?= $p['small'] ?>"
-          data-bigimage="<?= $p['big'] ?>"
-          alt="<?= $p['alt'] ?>"
-          class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-zoom-in transition-transform hover:scale-105"
-          onclick="changeMainImage(this)"
-        />
-      <?php endif; ?>
       <?php endforeach; ?>
 
     </div>
