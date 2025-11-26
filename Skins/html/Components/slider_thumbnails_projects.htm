@@ -1,36 +1,76 @@
+<?php
+$photosUnified = [];
+$useHighslide = false;
+
+// --- Если это ФОТО ТОВАРОВ ---
+if (isset($photos[0]['rm'])) {
+    foreach ($photos as $pn => $p) {
+$photosUnified[] = [
+'big'   => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']),
+'small' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
+'alt'   => hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name']),
+];
+}
+}
+
+// --- Если это ФОТО ПРОЕКТА ---
+else {
+$useHighslide = true;
+
+foreach ($photos as $pn => $p) {
+$big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
+$small = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . ($pn === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') . $p['_img_ext'];
+
+$photosUnified[] = [
+'big'   => $big,
+'small' => $small,
+'alt'   => hsch($p['alt']),
+];
+}
+}
+?>
+
+
 <!-- Галерея миниатюр с кнопками прокрутки -->
-<?php if (!empty($photos)): ?>
 <div class="slider-thumbnails-container">
+  <!-- Относительный контейнер для позиционирования кнопок -->
   <div class="relative h-full flex justify-center items-center lg:max-w-[80px] overflow-hidden">
+
+    <!-- Слайдер миниатюр (основной контент) -->
     <div class="slider-track flex flex-row lg:flex-col gap-2
                 overflow-x-auto lg:overflow-y-auto
                 scroll-smooth scrollbar-none"
          style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
-      <?php foreach($photos as $pn => $p): ?>
-      <?php
-          // URL большой версии (для lightbox и замены основного изображения)
-          $bigUrl = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
-          // URL миниатюры 90x90 — по аналогии с 197x153, просто другой размер
-          $thumbUrl = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_90x90_0_wm.' . $p['_img_ext'];
-          // Alt/title
-          $alt = hsch($p['alt'] ?: $projectInf['name'] . ($pn > 0 ? ' - фото ' . ($pn + 1) : ''));
-      ?>
+
+      <?php foreach ($photosUnified as $i => $p): ?>
+      <?php if ($useHighslide): ?>
+
       <img
-        src="<?php echo $thumbUrl; ?>"
-        data-bigimage="<?php echo $bigUrl; ?>"
-        alt="<?php echo $alt; ?>"
-        title="<?php echo $alt; ?>"
-        class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-pointer transition-transform hover:scale-105"
+        src="<?= $p['small'] ?>"
+        data-bigimage="<?= $p['big'] ?>"
+        alt="<?= $p['alt'] ?>"
+        class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 transition-transform hover:scale-105 cursor-zoom-in"
         onclick="changeMainImage(this)"
       />
+
+      <?php else: ?>
+      <img
+        src="<?= $p['small'] ?>"
+        data-bigimage="<?= $p['big'] ?>"
+        alt="<?= $p['alt'] ?>"
+        class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-zoom-in transition-transform hover:scale-105"
+        onclick="changeMainImage(this)"
+      />
+      <?php endif; ?>
       <?php endforeach; ?>
+
     </div>
 
-    <!-- Кнопка "назад" -->
+    <!-- Кнопка "назад" (влево на мобильных, вверх на lg) -->
     <button type="button"
             class="slider-prev absolute z-10 flex items-center justify-center
                    w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
-                   top-1/2 -translate-y-1/2 left-0 lg:top-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0"
+                   top-1/2 -translate-y-1/2 left-0 lg:top-0 lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-0 "
             aria-label="Предыдущее изображение">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-[-90deg] lg:rotate-0"
            fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,7 +78,7 @@
       </svg>
     </button>
 
-    <!-- Кнопка "вперёд" -->
+    <!-- Кнопка "вперёд" (вправо на мобильных, вниз на lg) -->
     <button type="button"
             class="slider-next absolute z-10 flex items-center justify-center
                    w-8 h-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-black focus:outline-none
@@ -49,8 +89,8 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
       </svg>
     </button>
+
   </div>
 </div>
-<?php endif; ?>
 
 <?php echo JsCopmress::load('slider-vertical'); ?>
