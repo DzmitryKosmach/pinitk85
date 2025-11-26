@@ -34,7 +34,7 @@
         <div class="md:w-1/2">
           <div class="flex lg:flex-row flex-col-reverse gap-4">
 
-            <?php include(Config::path('skins') . '/html/Components/slider_thumbnails_projects.htm');  ?>
+            <?php include(Config::path('skins') . '/html/Components/slider_thumbnails.htm');  ?>
 
             <!-- Основное изображение -->
             <div id="section-photo" class="w-full relative">
@@ -42,18 +42,18 @@
               <div class="relative w-full" id="mainImageContainer">
 
                 <img
-                  src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p[0]['id']?>_290x255_0_wm.<?php echo $p[0]['_img_ext']?>"
-                  alt="<?php echo hsch($p[0]['alt'])?>"
-                  title="<?php echo hsch($p[0]['alt'])?>"
-                  class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
-                  id="main-product-image"
+                        src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p[0]['id']?>_290x255_0_wm.<?php echo $p[0]['_img_ext']?>"
+                        alt="<?php echo hsch($p[0]['alt'])?>"
+                        title="<?php echo hsch($p[0]['alt'])?>"
+                        class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
+                        id="main-product-image"
                 />
 
               </div>
             </div>
           </div>
 
-          <!-- cздесь нужно будет подключить: include(Config::path('skins') . '/html/Components/modal_gallery.htm');   -->
+          <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
         </div>
 
@@ -111,7 +111,6 @@
       </div>
     </div>
   </div>
-
 
 
 </div>

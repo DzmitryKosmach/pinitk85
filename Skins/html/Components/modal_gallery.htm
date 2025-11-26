@@ -64,16 +64,69 @@
   </div>
 </div>
 
+<?php
+$photosUnified = [];
+$useHighslide = false;
+
+// --- Если это ФОТО ТОВАРА (присутствует rm) ---
+if (isset($photos[0]['rm'])) {
+
+    foreach ($photos as $p) {
+        $photosUnified[] = [
+            'src'   => Catalog::photoUrl(
+Catalog_Series_Photos::$imagePath,
+$p['id'], 0, 0, 0, $p['_img_ext'],
+[$catInf['url'], $seriesInf['url']]
+),
+'thumb' => Catalog::photoUrl(
+Catalog_Series_Photos::$imagePath,
+$p['id'], 90, 90, $p['rm'], $p['_img_ext']
+),
+'alt'   => hsch(
+trim($p['alt'])
+? $p['alt']
+: $catInf['name'] . ' ' . $seriesInf['name']
+),
+'highslide' => false
+];
+}
+}
+
+// --- Если это ФОТО ПРОЕКТА ---
+else {
+
+$useHighslide = true;
+
+foreach ($photos as $i => $p) {
+
+// большие изображения
+$src = Config::pathRel('images') .
+Clients_Projects_Pics::$imagePath .
+$p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
+
+// миниатюры
+$thumb = Config::pathRel('images') .
+Clients_Projects_Pics::$imagePath .
+$p['id'] .
+($i === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') .
+$p['_img_ext'];
+
+$photosUnified[] = [
+'src'       => $src,
+'thumb'     => $thumb,
+'alt'       => hsch($p['alt']),
+'highslide' => true
+];
+}
+}
+?>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // === ГАЛЕРЕЯ: данные ===
-    const photos = <?php echo json_encode(array_map(function($p) use ($catInf, $seriesInf) {
-      return [
-        'src' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext'], [$catInf['url'], $seriesInf['url']]),
-        'thumb' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
-        'alt' => hsch(trim($p['alt']) ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name'])
-    ];
-    }, $photos)); ?>;
+
+    const photos = <?= json_encode($photosUnified, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+    const useHighslide = <?= $useHighslide ? 'true' : 'false' ?>;
 
     let currentGalleryIndex = 0;
     let isZoomed = false;
