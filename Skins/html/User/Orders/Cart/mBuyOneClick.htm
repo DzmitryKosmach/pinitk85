@@ -1,7 +1,7 @@
 <?php if(!$ajaxForm) { ?>
 	<div id="title" class="title">
-		<div class="centering">
-			<div class="centeringin clearfix">
+		<div class="centering max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-4">
+			<div class="centeringin clearfix flex flex-col gap-3">
 				<?php if(count($breadcrumbs)) { ?>
 					<?php $bcLast = array_pop($breadcrumbs); ?>
 					<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
@@ -25,17 +25,17 @@
 					</ul>
 				<?php } ?>
 				<?php if(trim($pageInf['header'])) { ?>
-					<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+					<h1 class="pagetitle text-2xl md:text-3xl font-semibold"><?php echo $pageInf['header']; ?></h1>
 				<?php } ?>
 			</div>
 		</div>
 	</div>
 	<div id="content" class="content">
-		<div class="centering">
+		<div class="centering max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-6">
 			<div class="centeringin clearfix">
 <?php } ?>
 
-<div>
+<div class="space-y-6">
 	<?php if(trim($pageInf['text']) !== '') { ?>
 		<div>
 			<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
@@ -45,8 +45,8 @@
 	<?php } ?>
 
 	<div id="form-errors" class="errortext"></div>
-	<div class="someform clearfix">
-		<form id="contacts-form1" onsubmit="yaCounter19019251.reachGoal('zakaz_oformlen_1click'); return true;">
+	<div class="someform clearfix max-w-xl mx-auto">
+		<form id="contacts-form1" onsubmit="yaCounter19019251.reachGoal('zakaz_oformlen_1click'); return true;" class="space-y-4">
 			<?php if($ajaxForm) { ?>
 				<input type="hidden" name="XMLHttpRequest" value="1">
 			<?php } ?>
@@ -101,10 +101,11 @@
 					   msg_maxlen="Имя не должно превышать 100 символов"
 					   required
 					   msg_required="Вы не ввели ваше имя"
-					>
+					 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+				>
 			</div>
 			<div class="line clearfix">
-				<input class="maskPhone" required type="text" name="phone" value="" placeholder="Номер телефона:"
+				<input class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required type="text" name="phone" value="" placeholder="Номер телефона:"
 					   maxlength="20"
 					   msg_maxlen="Номер телефона не должен превышать 20 символов"
 					>
@@ -114,7 +115,7 @@
 			</div>
 			<div class="line buttons clearfix">
 				<input type="hidden" name="set">
-				<input class="btn btn1" type="submit" name="submit" value="Я жду звонка">
+				<input class="btn btn1 !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition" type="submit" name="submit" value="Я жду звонка">
 			</div>
 		</form>
 	</div>

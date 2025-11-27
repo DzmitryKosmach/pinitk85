@@ -1,12 +1,12 @@
 <?php echo CssCopmress::load('cart'); ?>
 
 <div id="title" class="title">
-  <div class="">
-    <div class="centeringin clearfix">
+  <div class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="centeringin clearfix flex flex-col gap-3">
       <?php if(count($breadcrumbs)) { ?>
       <?php $bcLast = array_pop($breadcrumbs); ?>
       <ul
-        class="breadcrumb"
+        class="breadcrumb flex flex-wrap items-center gap-1 text-sm text-gray-500"
         itemscope
         itemtype="http://schema.org/BreadcrumbList"
       >
@@ -49,13 +49,13 @@
       </ul>
       <?php } ?>
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-2xl md:text-3xl font-semibold"><?php echo $pageInf['header']; ?></h1>
       <?php } ?>
     </div>
   </div>
 </div>
 <div id="content" class="content">
-  <div class="">
+  <div class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="centeringin clearfix">
       <?php if(trim($pageInf['text']) !== '') { ?>
       <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
@@ -63,21 +63,21 @@
       <?php } ?>
 
       <div class="order_form_div someform orderforma order-checkout">
-        <div class="clearfix">
+        <div class="clearfix flex flex-col lg:flex-row gap-6">
           <form
             method="post"
-            class="cart-step3-left section paysystem"
+            class="cart-step3-left section paysystem flex-1 w-full"
             id="cart-form"
             style="width: 100%"
           >
             <div class="payment_method-step3" style="width: 50%; float: left">
-              <h4>Способ оплаты</h4>
+              <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
               <div class="body clearfix">
                 <?php foreach(Orders::$paymethods as $pm =>
                 $name) { ?>
                 <?php if($pm === Orders::PAYMETHOD_NO) continue; ?>
                 <div class="item clearfix">
-                  <table>
+                  <table class="w-full">
                     <tr>
                       <td>
                         <input
@@ -85,6 +85,7 @@
                           name="paymethod"
                           value="<?php echo $pm?>"
                           id="paymethod-<?php echo $pm?>"
+                          class="accent-blue-600"
                         />
                         <label for="paymethod-<?php echo $pm?>"></label>
                       </td>
@@ -100,12 +101,8 @@
                       <td>
                         <div class="data">
                           <label for="paymethod-<?php echo $pm?>">
-                            <strong>
-                              <?php echo $name?>
-                            </strong>
-                            <p class="note">
-                              <?php echo Orders::$paymethodsComments[$pm]; ?>
-                            </p>
+                            <strong class="text-gray-900"><?php echo $name?></strong>
+                            <p class="note text-gray-600 text-sm"><?php echo Orders::$paymethodsComments[$pm]; ?></p>
                           </label>
                         </div>
                       </td>
@@ -116,43 +113,43 @@
               </div>
             </div>
 
-            <div class="cart-step3-right">
-              <h4>Итоговая стоимость</h4>
+            <div class="cart-step3-right flex-1 w-full">
+              <h4 class="text-2xl font-semibold mb-4">Итоговая стоимость</h4>
               <div class="body clearfix">
-                <div class="order-total clearfix">
-                  <div style="margin-bottom: 5px">
+                <div class="order-total clearfix space-y-4">
+                  <div>
                     Сумма заказа:
-                    <strong>
+                    <strong class="ml-1">
                       <?php echo Catalog::priceFormat($totalPrice); ?>
                       руб.
                     </strong>
                   </div>
-                  <div style="margin-bottom: 15px">
+                  <div>
                     Доставка/сборка:
-                    <strong>
+                    <strong class="ml-1">
                       <span id="options-price2">
                         <?php echo Catalog::priceFormat(
-												$optionsPrices[Orders_Options::DELIVERY]['price'] +
-												$optionsPrices[Orders_Options::UNLOADING]['price'] +
-												$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
-												$optionsPrices[Orders_Options::GARBAGE]['price']
-											); ?>
+											$optionsPrices[Orders_Options::DELIVERY]['price'] +
+											$optionsPrices[Orders_Options::UNLOADING]['price'] +
+											$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
+											$optionsPrices[Orders_Options::GARBAGE]['price']
+										); ?>
                       </span>
                       руб.
                     </strong>
                   </div>
-                  <div class="clearfix" style="margin-bottom: 15px">
+                  <div class="clearfix">
                     <div class="price">
                       Итого:
-                      <strong>
+                      <strong class="ml-1">
                         <span id="total-price">
                           <?php echo Catalog::priceFormat(
-													$totalPrice +
-													$optionsPrices[Orders_Options::DELIVERY]['price'] +
-													$optionsPrices[Orders_Options::UNLOADING]['price'] +
-													$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
-													$optionsPrices[Orders_Options::GARBAGE]['price']
-												); ?>
+											$totalPrice +
+											$optionsPrices[Orders_Options::DELIVERY]['price'] +
+											$optionsPrices[Orders_Options::UNLOADING]['price'] +
+											$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
+											$optionsPrices[Orders_Options::GARBAGE]['price']
+										); ?>
                         </span>
                         руб.
                       </strong>
@@ -161,7 +158,7 @@
                   <button
                     onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;"
                     type="submit"
-                    class="btn btn1"
+                    class="btn btn1 px-6 py-3 !bg-main text-white rounded-md hover:bg-opacity-90 transition"
                     form="cart-form"
                   >
                     Оформить заказ

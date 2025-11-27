@@ -1,10 +1,10 @@
 <div id="title" class="title">
-  <div class="">
-    <div class="centeringin clearfix">
+  <div class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="centeringin clearfix flex flex-col gap-3">
       <?php if(count($breadcrumbs)) { ?>
       <?php $bcLast = array_pop($breadcrumbs); ?>
       <ul
-        class="breadcrumb"
+        class="breadcrumb flex flex-wrap items-center gap-1 text-sm text-gray-500"
         itemscope
         itemtype="http://schema.org/BreadcrumbList"
       >
@@ -47,13 +47,13 @@
       </ul>
       <?php } ?>
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-2xl md:text-3xl font-semibold"><?php echo $pageInf['header']; ?></h1>
       <?php } ?>
     </div>
   </div>
 </div>
 <div id="content" class="content">
-  <div class="">
+  <div class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="centeringin clearfix">
       <?php if(trim($pageInf['text']) !== '') { ?>
       <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
