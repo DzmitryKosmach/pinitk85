@@ -4,28 +4,28 @@ $photosUnified = [];
 // --- Если это ФОТО ТОВАРОВ ---
 if (isset($photos[0]['rm'])) {
     foreach ($photos as $pn => $p) {
-      $photosUnified[] = [
-        'big'   => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']),
-        'small' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
-        'alt'   => hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name']),
-      ];
-    }
+$photosUnified[] = [
+'big'   => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']),
+'small' => Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 90, 90, $p['rm'], $p['_img_ext']),
+'alt'   => hsch($p['alt'] ?: $catInf['name'] . ' ' . $seriesInf['name']),
+];
+}
 }
 
 // --- Если это ФОТО ПРОЕКТА ---
 else {
 
-    foreach ($photos as $pn => $p) {
-      $big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
-      $small = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . ($pn === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') . $p['_img_ext'];
+foreach ($photos as $pn => $p) {
+$big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
+$small = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . ($pn === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') . $p['_img_ext'];
 
-      $photosUnified[] = [
-        'big'   => $big,
-        'small' => $small,
-        'alt'   => hsch($p['alt']),
-      ];
-    }
-  }
+$photosUnified[] = [
+'big'   => $big,
+'small' => $small,
+'alt'   => hsch($p['alt']),
+];
+}
+}
 ?>
 
 <!-- Галерея миниатюр с кнопками прокрутки -->
@@ -39,15 +39,16 @@ else {
                 scroll-smooth scrollbar-none"
          style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
 
-      <?php foreach ($photosUnified as $i => $p): ?>
+      <?php foreach ($photosUnified as $index => $p): ?>
 
-        <img
-          src="<?= $p['small'] ?>"
-          data-bigimage="<?= $p['big'] ?>"
-          alt="<?= $p['alt'] ?>"
-          class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 transition-transform hover:scale-105 cursor-zoom-in"
-          onclick="changeMainImage(this)"
-        />
+      <img
+        src="<?= $p['small'] ?>"
+        data-bigimage="<?= $p['big'] ?>"
+        data-index="<?= $index ?>"
+        alt="<?= $p['alt'] ?>"
+        class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 transition-transform hover:scale-105 cursor-zoom-in"
+        onclick="changeMainImage(this)"
+      />
 
       <?php endforeach; ?>
 

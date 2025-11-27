@@ -1,7 +1,7 @@
 <!-- Модальное окно галереи -->
 <div
   id="gallery-modal"
-  class="fixed inset-0 bg-black bg-opacity-90 z-[999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
+  class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
 >
   <!-- Центральное изображение -->
   <div
@@ -19,7 +19,7 @@
   <!-- Кнопка закрытия -->
   <button
     id="gallery-close"
-    class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-61 bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
+    class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-[61] bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
     aria-label="Закрыть галерею"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -30,7 +30,7 @@
   <!-- Стрелка "назад" -->
   <button
     id="gallery-prev"
-    class="absolute left-4 top-1/2 -translate-y-1/2 z-61 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
     aria-label="Предыдущее изображение"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -41,7 +41,7 @@
   <!-- Стрелка "вперёд" -->
   <button
     id="gallery-next"
-    class="absolute right-4 top-1/2 -translate-y-1/2 z-61 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
     aria-label="Следующее изображение"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -132,6 +132,7 @@ $photosUnified[] = [
     let translateX = 0, translateY = 0;
     let currentScale = 1;
     let isDesktopZoomMode = false;
+    let currentMainIndex = 0;
 
     // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
     const MIN_ZOOM = 1.2;
@@ -323,7 +324,7 @@ $photosUnified[] = [
 
     // === Открытие/закрытие галереи ===
     mainImageContainer?.addEventListener('click', () => {
-      currentGalleryIndex = 0;
+      currentGalleryIndex = currentMainIndex;
       resetZoom();
       updateGalleryImage();
       galleryModal.classList.remove('hidden', 'pointer-events-none');
@@ -469,38 +470,77 @@ $photosUnified[] = [
     // === Смена основного изображения (миниатюры) ===
     const infoDots = document.getElementById('infoDots');
 
+    // function changeMainImage(thumb) {
+    //   const bigImage = thumb.dataset.bigimage;
+    //   const alt = thumb.alt;
+
+    //   if (!mainImage || !bigImage) return;
+
+    //   // Обновляем подсветку миниатюр
+    //   document.querySelectorAll('.slider-track img').forEach(img => {
+    //     img.style.borderColor = ''; // сбрасываем инлайновый цвет
+    //   });
+    //   thumb.style.setProperty('border-color', '#2563eb', 'important');
+
+    //   // Управление точками
+    //   const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+    //   if (infoDots) {
+    //     infoDots.classList.toggle('hidden', thumbIndex !== 0);
+    //   }
+
+    //   // Ждём загрузки изображения перед обновлением высоты
+    //   mainImage.onload = () => {
+    //     mainImage.onload = null; // отписываемся
+    //     requestAnimationFrame(refreshSlider);
+    //   };
+
+    //   // Меняем изображение
+    //   mainImage.src = bigImage;
+    //   mainImage.alt = alt;
+    // }
+
     function changeMainImage(thumb) {
       const bigImage = thumb.dataset.bigimage;
       const alt = thumb.alt;
+      const index = parseInt(thumb.dataset.index, 10);
 
-      if (!mainImage || !bigImage) return;
+      if (!mainImage || !bigImage || isNaN(index)) return;
 
-      // Обновляем подсветку миниатюр
+      // Обновляем подсветку
       document.querySelectorAll('.slider-track img').forEach(img => {
-        img.style.borderColor = ''; // сбрасываем инлайновый цвет
+        img.style.borderColor = '';
       });
       thumb.style.setProperty('border-color', '#2563eb', 'important');
 
-      // Управление точками
-      const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
+      // Обновляем индекс
+      currentMainIndex = index;
+
+      // Обновляем точки (если нужно)
       if (infoDots) {
-        infoDots.classList.toggle('hidden', thumbIndex !== 0);
+        infoDots.classList.toggle('hidden', index !== 0);
       }
 
-      // Ждём загрузки изображения перед обновлением высоты
-      mainImage.onload = () => {
-        mainImage.onload = null; // отписываемся
+      // Загружаем изображение
+      const tempImg = new Image();
+      tempImg.onload = () => {
+        mainImage.src = bigImage; // только после успешной загрузки
+        mainImage.alt = alt;
         requestAnimationFrame(refreshSlider);
       };
-
-      // Меняем изображение
-      mainImage.src = bigImage;
-      mainImage.alt = alt;
+      tempImg.onerror = () => {
+        mainImage.src = bigImage;
+        mainImage.alt = alt;
+        requestAnimationFrame(refreshSlider);
+      };
+      tempImg.src = bigImage; // запуск загрузки
     }
 
     // Инициализация миниатюр
     const firstThumb = document.querySelector('.slider-track img');
-    if (firstThumb) changeMainImage(firstThumb);
+    if (firstThumb) {
+      currentMainIndex = parseInt(firstThumb.dataset.index, 10) || 0;
+      changeMainImage(firstThumb);
+    }
 
     document.querySelectorAll('.slider-track img').forEach(img => {
       img.addEventListener('click', () => changeMainImage(img));
