@@ -1383,63 +1383,72 @@ function getHomeUrl() {
     </button>
   </div>
 
-  <div class="modal modal--order-call" id="kmodal">
-    <a href="javascript:void(0);" class="modal__close modal__close--big-margin" onclick="kclose(); return false;">
-      <img src="<?php echo getImagePath('/img/icons/modal-close.png'); ?>" alt="" />
+  <div class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] !rounded-lg !shadow-xl fixed !left-[50%] !top-[36%] !ml-[-176px] !mt-[-118px] md:!left-[50%] md:!top-[50%] md:!ml-[-335px] md:!mt-[-118px]" id="kmodal">
+    <a href="javascript:void(0);" class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors" onclick="kclose(); return false;">
+      ×
     </a>
 
     <div id="vibiliunasnasaite" style="display: none">
-      <p style="margin-bottom: 10px">
+      <p class="mb-4 text-gray-700" style="margin-bottom: 10px">
         Вы у нас на сайте <span id="livetimespan"></span>. <br />Вы нашли, что
         искали?
       </p>
 
-      <a class="yes" style="margin-top: 46px"
-        onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-        href="#">Да</a>
-      <a class="no" style="margin-top: 46px"
-        onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-        href="#">Нет</a>
+      <div class="flex flex-col md:flex-row gap-4 mt-8">
+        <a class="yes flex-1 text-center py-3 px-4 bg-main text-white rounded-lg hover:bg-main_hover transition-colors font-medium"
+           onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+           href="#">Да</a>
+        <a class="no flex-1 text-center py-3 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+           onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+           href="#">Нет</a>
+      </div>
 
-      <div style="margin-left: 45px; padding-top: 20px; clear: both">
+      <div class="mt-6 pt-5 border-t border-gray-200 text-gray-600 text-sm">
         Мы искренне ценим ваше время. И нам очень важно ваше мнение!
       </div>
     </div>
 
-    <div id="wix_call" class="modal-order-call" style="display: block">
-      <div class="modal-order-call__caption" id="timertext">
+    <div id="wix_call" class="modal-order-call p-6 md:p-8 !pt-14" style="display: block">
+      <div class="modal-order-call__caption text-lg font-semibold text-start mb-6" id="timertext">
         Хотите мы вам перезвоним через 15 секунд?
       </div>
-      <div class="modal-order-call__label">
-        <label id="design-order-phone-modal" class="label">Телефон:<sup>*</sup></label>
+      <div class="modal-order-call__label mb-2">
+        <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup class="text-red-500">*</sup></label>
       </div>
 
       <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
-        <div class="modal-order-call-form">
-          <div class="modal-order-call-form__input">
-            <input class="maskPhone" type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20"
-              required="" />
-            <input type="hidden" name="name" value="жду звонка" />
-            <input type="hidden" name="XMLHttpRequest" value="1" />
+        <div class="modal-order-call-form space-y-4">
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="modal-order-call-form__input">
+              <div>
+                <input class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all" type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20"
+                       required="" />
+                <input type="hidden" name="name" value="жду звонка" />
+                <input type="hidden" name="XMLHttpRequest" value="1" />
+                <div class="text-xs text-gray-400 mt-1">
+                  Внимание! Не забудьте указать код города
+                </div>
+              </div>
+            </div>
+            <div class="modal-order-call-form__button !p-0">
+              <!--<a href="#">Жду звонка</a>-->
+              <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
+              <button type="submit" class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
+                Жду звонка
+              </button>
+            </div>
+            <div id="yatimer" class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
+              <img class="mr-2" src="<?php echo getImagePath('/img/icons/timer.png'); ?>" />
+              <div class="!flex !items-center">
+                <span class="text-2xl ">00</span>
+                <span class="text-2xl">:</span>
+                <span class="text-2xl ">15</span>
+                <span class="text-2xl">,</span>
+                <span class="text-2xl ">00</span>
+              </div>
+            </div>
           </div>
-          <div class="modal-order-call-form__button">
-            <!--<a href="#">Жду звонка</a>-->
-            <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
-            <button type="submit" class="form_2calls_button" style="cursor: pointer">
-              Жду звонка
-            </button>
-          </div>
-          <div id="yatimer" class="modal-order-call-form__timer">
-            <p>00</p>
-            :
-            <p>15</p>
-            ,
-            <p>00</p>
-          </div>
-          <div class="modal-order-call__hint">
-            Внимание! Не забудьте указать код города
-          </div>
-          <div class="captcha-item" style="width: 230px; overflow: hidden; height: 34px" id="captcha_callback-left">
+          <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px" id="captcha_callback-left">
           </div>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>" />
