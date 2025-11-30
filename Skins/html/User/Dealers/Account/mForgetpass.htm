@@ -1,6 +1,8 @@
 <div class="content-text">
 	<?php if(trim($pageInf['header'])) { ?>
-		<h1><?php echo $pageInf['header']; ?></h1>
+	<h1 class="text-2xl md:text-3xl font-semibold mb-4">
+		<?php echo $pageInf['header']; ?>
+	</h1>
 	<?php } ?>
 	<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
 	<div class="cl"></div>
@@ -13,19 +15,18 @@
 						E-mail:
 					</td>
 					<td>
-						<input name="email" type="email" class="text"
-							   maxlength="1000"
-							   msg_maxlen="Длина адреса E-mail не должна превышать 1000 символов"
-							   required
-							   msg_required="Вы не указали ваш адрес E-mail"
-							>
+						<input name="email" type="email"
+							class="text w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+							maxlength="1000" msg_maxlen="Длина адреса E-mail не должна превышать 1000 символов" required
+							msg_required="Вы не указали ваш адрес E-mail">
 					</td>
 				</tr>
 
 				<tr>
 					<td>&nbsp;</td>
 					<td>
-						<button type="submit" class="button button-orange">Ok</button>
+						<button type="submit"
+							class="button button-orange !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition">Ok</button>
 					</td>
 				</tr>
 			</table>

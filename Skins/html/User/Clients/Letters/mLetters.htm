@@ -1,22 +1,22 @@
 <?php if(trim($pageInf['header'])) { ?>
-	<h1>
-		<span style="font-size: 19px; white-space: nowrap">
-			<a href="<?php echo Url::a(Clients_Projects::PROJECTS_PAGE_ID); ?>"><?php echo $projectsHeader; ?></a>
+	<h1 class="text-[21px] md:text-3xl font-semibold mb-4 md:mb-8">
+		<span class="whitespace-nowrap text-[19px]">
+			<a href="<?php echo Url::a(Clients_Projects::PROJECTS_PAGE_ID); ?>" class="hover:underline"><?php echo $projectsHeader; ?></a>
 		</span>
-		<span style="font-size: 19px">/</span>
-		<span style="white-space: nowrap">
+		<span class="text-[19px] mx-2">/</span>
+		<span class="whitespace-nowrap">
 			<?php echo $pageInf['header']; ?>
 		</span>
 	</h1>
 <?php } ?>
 
-<div class="letters">
+<div class="letters grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
 	<?php foreach($letters as $l) { ?>
-		<div class="letters-item">
+		<div class="letters-item flex flex-col items-center">
 			<a href="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']?>.<?php echo $l['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
-				<img src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']?>_120x170_0.<?php echo $l['_img_ext']; ?>" width="120" height="170" alt="">
+				<img src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $l['id']?>_120x170_0.<?php echo $l['_img_ext']; ?>" width="120" height="170" alt="" class="rounded shadow">
 			</a>
-			<span><?php echo $l['comment']; ?></span>
+			<span class="mt-2 text-sm text-gray-700 text-center"><?php echo $l['comment']; ?></span>
 		</div>
 	<?php } ?>
 	<div class="cl"></div>

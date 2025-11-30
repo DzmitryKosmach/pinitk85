@@ -1,4 +1,4 @@
-﻿<!-- <?php echo CssCopmress::load('news')?>
+<!-- <?php echo CssCopmress::load('news')?>
 <?php echo CssCopmress::load('catalog')?>
 
 <?php echo JsCopmress::load('index')?>
@@ -6,8 +6,8 @@
 <?php echo JsCopmress::load('catalog')?> -->
 
 <div id="content" class="content">
-	<div class="centering">
-		<div class="centeringin clearfix">
+    <div class="">
+		<div class="clearfix">
 			<?php if(count($slides)) { ?>
 			<div class="aroundjssorslider1">
 				<div id="jssor_slider1" style="position:relative;top:0;left:0;width:990px;height:402px;">
@@ -78,8 +78,8 @@
 				</ul>
 			</div>
 
-			<div class="presscentermainn clearfix">
-				<div class="in clearfix">
+            <div class="presscentermainn clearfix">
+                <div class="in clearfix">
 					<?php if(count($news)) { ?>
 					<?php foreach($news as $n) { ?>
 					<div class="item <?php if($n === count($news)-1) { ?>last<?php } ?>"
@@ -205,16 +205,16 @@
 <div class="spacer"><img src="/Skins/img/blank.gif" width="10" alt=""></div>-->
 
 <div class="index-benefits">
-	<h2>Преимущества работы с нами</h2>
-	<div class="centering">
-		<?php for($i = 1; $i <= 8; $i++) { ?>
-		<div class="block">
-			<span class="text">
-				<?php echo Options::name('head-benefit' . $i )?>
-			</span>
-		</div>
-		<?php } ?>
-	</div>
+    <h2>Преимущества работы с нами</h2>
+    <div class="">
+        <?php for($i = 1; $i <= 8; $i++) { ?>
+        <div class="block">
+            <span class="text">
+                <?php echo Options::name('head-benefit' . $i )?>
+            </span>
+        </div>
+        <?php } ?>
+    </div>
 </div>
 
 <div class="spacer"><img src="/Skins/img/blank.gif" width="10" alt=""></div>

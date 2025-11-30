@@ -1,26 +1,31 @@
-<div class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+<div class="breadcrumbs text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6" itemscope
+	itemtype="http://schema.org/BreadcrumbList">
 	<span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-		<a href="<?php echo Url::a('index')?>" itemscope itemtype="http://schema.org/Thing" itemid="<?php echo Url::a('index')?>"
-			itemprop="item"><span itemprop="name">Главная</span></a>
+		<a href="<?php echo Url::a('index')?>" itemscope itemtype="http://schema.org/Thing"
+			itemid="<?php echo Url::a('index')?>" itemprop="item"><span itemprop="name">Главная</span></a>
 	</span>
-	<span class="nolnk"><?php echo $pageInf['header']; ?></span>
+	<span class="nolnk text-gray-700">
+		<?php echo $pageInf['header']; ?>
+	</span>
 </div>
 <?php if(trim($pageInf['header'])) { ?>
-	<h1><?php echo $pageInf['header']; ?></h1>
+<h1 class="text-2xl md:text-3xl font-semibold mb-4">
+	<?php echo $pageInf['header']; ?>
+</h1>
 <?php } ?>
 <?php if(trim($pageInf['text']) !== '') { ?>
-	<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-	<div class="cl"></div>
+<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+<div class="cl"></div>
 <?php } ?>
 
 <script>
-	oCart.totalPrice = <?php echo $totalPrice; ?>;
+	oCart.totalPrice = <? php echo $totalPrice; ?>;
 </script>
 
-<div class="content-text">
+<div class="content-text max-w-[1240px] mx-auto px-4">
 	<div class="cart-step2">
 		<form action="<?php echo Url::a('catalog-cart')?>" method="post" class="cart-step2-left form" id="offer-form1">
-			<table class="cart-options" id="cart-options">
+			<table class="cart-options w-full text-sm" id="cart-options">
 				<tr>
 					<th colspan="2">
 						Доставка:
@@ -29,28 +34,23 @@
 				<tr>
 					<td class="radio-block" colspan="2">
 						<input type="radio" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-0"
-							   value="<?php echo Orders_Options::DELIVERY_NO?>"
-							   onchange="oCart.calcOptions()"
-							   <?php if($totalPrice < Orders_Options::pickupMinSum()) { ?>disabled<?php } ?>
-							>
+							value="<?php echo Orders_Options::DELIVERY_NO?>" onchange="oCart.calcOptions()" <?php
+							if($totalPrice < Orders_Options::pickupMinSum()) { ?>disabled
+						<?php } ?>
+						>
 						<label for="delivery-0">самовывоз</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-1"
-							   value="<?php echo Orders_Options::DELIVERY_MSK?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::DELIVERY_MSK?>" onchange="oCart.calcOptions()">
 						<label for="delivery-1">по Москве</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-2"
-							   value="<?php echo Orders_Options::DELIVERY_OUTMSK?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::DELIVERY_OUTMSK?>" onchange="oCart.calcOptions()">
 						<label for="delivery-2">за МКАД</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-3"
-							   value="<?php echo Orders_Options::DELIVERY_TO_SHIPPING_COMPANY?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::DELIVERY_TO_SHIPPING_COMPANY?>"
+							onchange="oCart.calcOptions()">
 						<label for="delivery-3" class="big">до транспортной компании</label>
 					</td>
 				</tr>
@@ -58,20 +58,27 @@
 					<td class="range-block" colspan="2">
 						<div class="range-title">Расстояние:</div>
 						<div class="range-element">
-							<input type="range" id="delivery-distance-r" min="<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>" max="<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>">
-							<div class="min"><?php echo Orders_Options::DELIVERY_DISTANCE_MIN?></div>
-							<div class="max"><?php echo Orders_Options::DELIVERY_DISTANCE_MAX?></div>
+							<input type="range" id="delivery-distance-r"
+								min="<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>"
+								max="<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>">
+							<div class="min">
+								<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>
+							</div>
+							<div class="max">
+								<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>
+							</div>
 						</div>
-						<input type="text" name="options[<?php echo Orders_Options::DELIVERY_DISTANCE?>]" id="delivery-distance-t" class="text">
+						<input type="text" name="options[<?php echo Orders_Options::DELIVERY_DISTANCE?>]"
+							id="delivery-distance-t" class="text">
 						<div class="units">
 							&nbsp;км
 						</div>
 						<script>
-							onLoad(function(){
+							onLoad(function () {
 								rangeInput(
 									$$$('delivery-distance-r'),
 									$$$('delivery-distance-t'),
-									function(){
+									function () {
 										oCart.calcOptions();
 									}
 								);
@@ -87,42 +94,43 @@
 				<tr>
 					<td class="radio-block" colspan="2">
 						<input type="radio" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-0"
-							   value="<?php echo Orders_Options::UNLOADING_NO?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::UNLOADING_NO?>" onchange="oCart.calcOptions()">
 						<label for="unloading-0">не нужна</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-1"
-							   value="<?php echo Orders_Options::UNLOADING_ELEVATOR?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::UNLOADING_ELEVATOR?>" onchange="oCart.calcOptions()">
 						<label for="unloading-1">нужна, есть лифт</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-2"
-							   value="<?php echo Orders_Options::UNLOADING_STAIRS?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::UNLOADING_STAIRS?>" onchange="oCart.calcOptions()">
 						<label for="unloading-2">нужна, нет лифта</label>
 					</td>
 				</tr>
 				<tr id="unloading-floor-block">
 					<td class="range-block" colspan="2">
 						<div class="range-title">Этаж:</div>
-						<div class="range-element" >
-							<input type="range" id="unloading-floor-r" min="<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>" max="<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>">
-							<div class="min"><?php echo Orders_Options::UNLOADING_FLOOR_MIN?></div>
-							<div class="max"><?php echo Orders_Options::UNLOADING_FLOOR_MAX?></div>
+						<div class="range-element">
+							<input type="range" id="unloading-floor-r"
+								min="<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>"
+								max="<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>">
+							<div class="min">
+								<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>
+							</div>
+							<div class="max">
+								<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>
+							</div>
 						</div>
-						<input type="text" name="options[<?php echo Orders_Options::UNLOADING_FLOOR?>]" id="unloading-floor-t" class="text" value="1">
+						<input type="text" name="options[<?php echo Orders_Options::UNLOADING_FLOOR?>]"
+							id="unloading-floor-t" class="text" value="1">
 						<div class="units">
 							&nbsp;эт
 						</div>
 						<script>
-							onLoad(function(){
+							onLoad(function () {
 								rangeInput(
 									$$$('unloading-floor-r'),
 									$$$('unloading-floor-t'),
-									function(){
+									function () {
 										oCart.calcOptions();
 									}
 								);
@@ -137,28 +145,20 @@
 				<tr>
 					<td class="radio-block">
 						<input type="radio" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-0"
-							   value="<?php echo Orders_Options::ASSEMBLY_NO?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::ASSEMBLY_NO?>" onchange="oCart.calcOptions()">
 						<label for="assembly-0" class="small">не нужна</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-1"
-							   value="<?php echo Orders_Options::ASSEMBLY_YES?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::ASSEMBLY_YES?>" onchange="oCart.calcOptions()">
 						<label for="assembly-1" class="small">нужна</label>
 					</td>
 					<td class="radio-block">
 						<input type="radio" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-0"
-							   value="<?php echo Orders_Options::GARBAGE_NO?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::GARBAGE_NO?>" onchange="oCart.calcOptions()">
 						<label for="garbage-0" class="small">не нужен</label>
 
 						<input type="radio" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-1"
-							   value="<?php echo Orders_Options::GARBAGE_YES?>"
-							   onchange="oCart.calcOptions()"
-							>
+							value="<?php echo Orders_Options::GARBAGE_YES?>" onchange="oCart.calcOptions()">
 						<label for="garbage-1" class="small">нужен</label>
 						<br>
 						<span class="text-small">(до 10 куб.м. или 1500 кг)</span>
@@ -166,7 +166,9 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<button type="submit" class="button button-grey fs14" name="options-calc" value="1" id="options-calc-nojs">
+						<button type="submit"
+							class="button button-grey fs14 px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+							name="options-calc" value="1" id="options-calc-nojs">
 							рассчитать
 						</button>
 					</td>
@@ -257,12 +259,12 @@
 	<h1>Состав заказа</h1>
 
 	<script>
-		function setAllDiscounts(){
+		function setAllDiscounts() {
 			var d = parseFloat($$$('all-discounts').value);
-			if(!isNaN(d)){
+			if (!isNaN(d)) {
 				var inputs = byTag('INPUT', $$$('offer-form2'));
-				for(var i = 0, l = inputs.length; i < l; i++){
-					if(inputs[i].name.indexOf('discount[') === 0){
+				for (var i = 0, l = inputs.length; i < l; i++) {
+					if (inputs[i].name.indexOf('discount[') === 0) {
 						inputs[i].value = d;
 					}
 				}
@@ -271,13 +273,14 @@
 		}
 	</script>
 
-	<form action="<?php echo Url::a('catalog-cart')?>" method="get" class="cart-table-form" id="offer-form2" style="padding-bottom: 80px;">
+	<form action="<?php echo Url::a('catalog-cart')?>" method="get" class="cart-table-form" id="offer-form2"
+		style="padding-bottom: 80px;">
 		<input type="hidden" name="recalc" value="1">
 
 		<?php /* Это здесь для того, Чтобы по нажатии Enter запускался пересчёт формы (основное действие), а не очистка */?>
 		<div style="display: none"><input type="submit" value="1"></div>
 
-		<table class="cart-table">
+		<table class="cart-table w-full text-sm">
 			<tr>
 				<th>Серия</th>
 				<th>Наименование</th>
@@ -289,57 +292,69 @@
 				<th id="cart-items-price-col">Сумма</th>
 			</tr>
 			<?php foreach($cart as $c) { ?>
-				<tr>
-					<td>
-						<?php if($c['series']) { ?>
-							<a href="<?php echo Catalog_Series::a($c['series'])?>"><?php echo $c['series']['name']; ?></a>
-						<?php } ?>
-					</td>
-					<td>
-						<?php echo $c['item']['name']; ?>
-					</td>
-					<td>
-						<?php echo $c['item']['art']; ?>
-					</td>
-					<td>
-						<?php if($c['material']) { ?>
-							<div class="material">
-								<div class="image">
-									<?php if($c['material']['_img_ext']) { ?>
-										<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
-											<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>" width="24" height="24" alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>">
-										</a>
-									<?php } ?>
-								</div>
-								<div class="name"><?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id']))?></div>
-							</div>
-						<?php } else { ?>
-							&nbsp;
-						<?php } ?>
-					</td>
-					<td>
-						<?php echo $c['item']['size']; ?>
-					</td>
-					<td class="price">
-						<?php $d = $discounts[intval($c['item']['id'])][intval($c['material']['id'])]; ?>
+			<tr>
+				<td>
+					<?php if($c['series']) { ?>
+					<a href="<?php echo Catalog_Series::a($c['series'])?>">
+						<?php echo $c['series']['name']; ?>
+					</a>
+					<?php } ?>
+				</td>
+				<td>
+					<?php echo $c['item']['name']; ?>
+				</td>
+				<td>
+					<?php echo $c['item']['art']; ?>
+				</td>
+				<td>
+					<?php if($c['material']) { ?>
+					<div class="material">
+						<div class="image">
+							<?php if($c['material']['_img_ext']) { ?>
+							<a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+								target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+								<img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+									width="24" height="24"
+									alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>">
+							</a>
+							<?php } ?>
+						</div>
+						<div class="name">
+							<?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id']))?>
+						</div>
+					</div>
+					<?php } else { ?>
+					&nbsp;
+					<?php } ?>
+				</td>
+				<td>
+					<?php echo $c['item']['size']; ?>
+				</td>
+				<td class="price">
+					<?php $d = $discounts[intval($c['item']['id'])][intval($c['material']['id'])]; ?>
 
-						<?php echo Catalog::priceFormat($c['price'])?>
-						<span class="rub">р</span>
-						<br>
-						-
-						<input type="text" class="number" name="discount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id'])?>]" value="<?php echo Catalog::num2percent($d, Catalog::PC_DECREASE)?>">
-						%
-					</td>
-					<td class="amount">
-						<input type="text" class="number" name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id'])?>]" value="<?php echo $c['amount']; ?>">
-						шт
-					</td>
-					<td class="total">
-						<?php echo Catalog::priceFormat($c['price'] * $c['amount'])?>
-						<span class="rub">р</span>
-						<a href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>" class="remove"></a>
-					</td>
-				</tr>
+					<?php echo Catalog::priceFormat($c['price'])?>
+					<span class="rub">р</span>
+					<br>
+					-
+					<input type="text" class="number"
+						name="discount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id'])?>]"
+						value="<?php echo Catalog::num2percent($d, Catalog::PC_DECREASE)?>">
+					%
+				</td>
+				<td class="amount">
+					<input type="text" class="number"
+						name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id'])?>]"
+						value="<?php echo $c['amount']; ?>">
+					шт
+				</td>
+				<td class="total">
+					<?php echo Catalog::priceFormat($c['price'] * $c['amount'])?>
+					<span class="rub">р</span>
+					<a href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>"
+						class="remove"></a>
+				</td>
+			</tr>
 			<?php } ?>
 			<tr>
 				<td colspan="3">
@@ -354,18 +369,24 @@
 					<input type="text" class="number" id="all-discounts" value="">
 					%
 					&nbsp;&nbsp;
-					<button type="button" value="1" class="button button-grey fs14 button-apply-discounts" onclick="setAllDiscounts()">Ok</button>
+					<button type="button" value="1"
+						class="button button-grey fs14 button-apply-discounts px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+						onclick="setAllDiscounts()">Ok</button>
 				</td>
 				<td colspan="2">
 					&nbsp;
 				</td>
 			</tr>
 		</table>
-		<a class="cart-clear" href="<?php echo Url::a('catalog-cart')?>?clear=1" onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')">очистить корзину</a>
+		<a class="cart-clear" href="<?php echo Url::a('catalog-cart')?>?clear=1"
+			onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')">очистить
+			корзину</a>
 
 		<div class="cart-table-total">
 			<div class="text">Итого:</div>
-			<div class="amount"><?php echo $totalAmount?> шт</div>
+			<div class="amount">
+				<?php echo $totalAmount?> шт
+			</div>
 			<div class="price" id="cart-total-price-col">
 				<?php echo Catalog::priceFormat($totalPrice)?>
 				<span class="rub">р</span>
@@ -376,7 +397,8 @@
 			<div class="note">
 				Окончательная стоимость доставки уточняется оператором
 			</div>
-			<button type="submit" value="1" class="button button-grey fs14">пересчитать</button>
+			<button type="submit" value="1"
+				class="button button-grey fs14 px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition">пересчитать</button>
 			<div class="cl"></div>
 		</div>
 	</form>
@@ -384,33 +406,36 @@
 
 	<form action="<?php echo Url::a('dealer-offer')?>" method="post" id="offer-form3">
 		<?php if(count($seriesPhotos)) { ?>
-			<div style="padding-bottom: 80px;">
-				<h1>Включить в КП фотографии серий</h1>
-				<?php foreach($seriesPhotos as $s) { ?>
-					<strong><?php echo $s['name']; ?></strong>
-					<div class="cart-offer-photos">
-						<?php foreach($s['photos'] as  $p) { ?>
-							<div class="photo">
-								<input type="checkbox" name="photos[]" value="<?php echo $p['id']; ?>"
-									<?php if(in_array($p['id'], $selectedPhotos)) { ?>checked<?php } ?>
-									>
-								<a href="<?php echo Catalog::photoUrl(
+		<div style="padding-bottom: 80px;">
+			<h1>Включить в КП фотографии серий</h1>
+			<?php foreach($seriesPhotos as $s) { ?>
+			<strong>
+				<?php echo $s['name']; ?>
+			</strong>
+			<div class="cart-offer-photos">
+				<?php foreach($s['photos'] as  $p) { ?>
+				<div class="photo">
+					<input type="checkbox" name="photos[]" value="<?php echo $p['id']; ?>" <?php if(in_array($p['id'],
+						$selectedPhotos)) { ?>checked
+					<?php } ?>
+					>
+					<a href="<?php echo Catalog::photoUrl(
 									Catalog_Series_Photos::$imagePath,
 									$p['id'], 0,0,0, $p['_img_ext'],
 									$p['name']
 								)?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
-									<img src="<?php echo Catalog::photoUrl(
+						<img src="<?php echo Catalog::photoUrl(
 										Catalog_Series_Photos::$imagePath,
 										$p['id'], 60, 60, $p['rm'], $p['_img_ext'],
 										$p['name']
 									)?>" width="60" height="60" alt="">
-								</a>
-							</div>
-						<?php } ?>
-						<div class="cl"></div>
-					</div>
+					</a>
+				</div>
 				<?php } ?>
+				<div class="cl"></div>
 			</div>
+			<?php } ?>
+		</div>
 		<?php } ?>
 
 		<div class="cart-total-block">
@@ -424,10 +449,10 @@
 								<span class="rub">Р</span>
 
 								<?php if($totalPriceOld) { ?>
-									<div class="price-old">
-										<?php echo Catalog::priceFormat(round($totalPriceOld))?>
-										<span class="rub">Р</span>
-									</div>
+								<div class="price-old">
+									<?php echo Catalog::priceFormat(round($totalPriceOld))?>
+									<span class="rub">Р</span>
+								</div>
 								<?php } ?>
 							</td>
 						</tr>
@@ -464,9 +489,11 @@
 				</div>
 				<div class="cart-total-button">
 					<?php if(intval($_SESSION['offer-edit'])) { ?>
-						<button type="submit" class="button button-green">Сохранить КП №<?php echo intval($_SESSION['offer-edit'])?></button>
+					<button type="submit" class="button button-green">Сохранить КП №
+						<?php echo intval($_SESSION['offer-edit'])?>
+					</button>
 					<?php } else { ?>
-						<button type="submit" class="button button-green">Оформить КП</button>
+					<button type="submit" class="button button-green">Оформить КП</button>
 					<?php } ?>
 				</div>
 			</div>

@@ -1,39 +1,46 @@
-<div id="search-res-count" style="display: none"><?php echo count($series)?></div>
-<div class="stitle">
-	<div class="iblock"><div class="title first">Каталог товаров</div>
+<div id="search-res-count" style="display: none">
+	<?php echo count($series)?>
+</div>
+<div class="stitle space-y-2">
+	<div class="iblock">
+		<div class="title first">Каталог товаров</div>
 		<?php foreach($series as $sn => $s) { ?>
-			<a href="<?php echo Catalog_Series::a($s)?>" class="item catitem">
-				<div class="inner clearfix">
-					<span class="name">
-						<span class="pic">
-							<img
-								class="icon"
-								src="<?php echo Catalog::photoUrl(
-									Catalog_Series_Photos::$imagePath,
-									$s['1st_photo']['id'], 14, 14, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext'],
-									$s['1st_photo']['name']
-								); ?>"
-								>
-						</span>
-						<?php echo $s['name']?>
+		<a href="<?php echo Catalog_Series::a($s)?>" class="item catitem block">
+			<div class="inner clearfix flex items-center justify-between gap-3 p-2 hover:bg-gray-50 rounded">
+				<span class="name flex items-center gap-2 text-sm text-gray-800">
+					<span class="pic shrink-0">
+						<img class="icon" src="<?php echo Catalog::photoUrl(
+										Catalog_Series_Photos::$imagePath,
+										$s['1st_photo']['id'], 14, 14, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext'],
+										$s['1st_photo']['name']
+									); ?>" class="w-4 h-4">
 					</span>
-					<span class="prs nowrap">
-						<?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) { ?>
-							<?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от'); ?>
-							<?php echo Catalog::priceFormat(floor($s['price_search_min'])); ?>
-							руб.
-						<?php } elseif(abs($s['price_min'])) { ?>
-							от
-							<?php echo Catalog::priceFormat(floor($s['price_min'])); ?>
-							руб.
-						<?php } ?>
-					</span>
-				</div>
-			</a>
+					<?php echo $s['name']?>
+				</span>
+				<span class="prs nowrap text-xs text-gray-600">
+					<?php if(abs($s['price_search_min']) || abs($s['price_search_max'])) { ?>
+					<?php echo ($s['price_search_title'] ? $s['price_search_title'] : 'от'); ?>
+					<?php echo Catalog::priceFormat(floor($s['price_search_min'])); ?>
+					руб.
+					<?php } elseif(abs($s['price_min'])) { ?>
+					от
+					<?php echo Catalog::priceFormat(floor($s['price_min'])); ?>
+					руб.
+					<?php } ?>
+				</span>
+			</div>
+		</a>
+		<?php } ?>
+
+		<?php if(!count($series)) { ?>
+		<div class="text-center py-2 text-gray-600">
+			<?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
+		</div>
 		<?php } ?>
 
 	</div>
 	<div class="iblock">
-		<a class="item" href="<?php echo Url::a('catalog-search')?>?text=<?php echo urlencode($text); ?>">Все результаты</a>
+		<a class="item inline-block px-3 py-2 text-blue-600 border border-blue-600 rounded hover:bg-blue-50 transition"
+			href="<?php echo Url::a('catalog-search')?>?text=<?php echo urlencode($text); ?>">Все результаты</a>
 	</div>
 </div>

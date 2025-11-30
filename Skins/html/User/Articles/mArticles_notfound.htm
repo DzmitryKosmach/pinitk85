@@ -1,9 +1,15 @@
 <div class="content-text">
 	<?php if(trim($pageInf['header'])) { ?>
-		<h1><?php echo $pageInf['header']; ?></h1>
+	<h1 class="text-2xl md:text-3xl font-semibold mb-4">
+		<?php echo $pageInf['header']; ?>
+	</h1>
 	<?php } ?>
-	<?php echo Pages::msgErr('Запрошенная статья не найдена')?>
+	<div class="p-4 bg-red-50 border border-red-200 rounded text-red-700 text-center py-8">
+		<?php echo Pages::msgErr('Запрошенная статья не найдена')?>
+	</div>
 
 	<br><br><br>
-	<a href="<?php echo Url::a('articles'); ?>">&larr; Все статьи</a>
+	<a href="<?php echo Url::a('articles'); ?>"
+		class="inline-flex items-center px-4 py-2 bg-white border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition font-medium">&larr;
+		Все статьи</a>
 </div>
