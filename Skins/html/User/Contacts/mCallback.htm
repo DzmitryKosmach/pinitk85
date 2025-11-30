@@ -33,11 +33,11 @@
     </script>
 
 	<div id="title" class="title">
-		<div class="centering">
-			<div class="centeringin clearfix">
+		<div class="">
+			<div class="clearfix">
 				<?php if(count($breadcrumbs)) { ?>
 					<?php $bcLast = array_pop($breadcrumbs); ?>
-					<ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <ul class="breadcrumb text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6" itemscope itemtype="http://schema.org/BreadcrumbList">
 						<?php $position = 0; ?>
 						<?php foreach($breadcrumbs as $bc) { ?>
 						<?php $position = $position + 1 ?>
@@ -46,7 +46,7 @@
 								itemid="<?php echo $bc['url']; ?>" itemprop="item"><span itemprop="name"><?php echo $bc['name']; ?></span></a>
 							<meta itemprop="position" content="<?php echo $position?>" />
 						</li>
-						<li><span> / </span></li>
+                        <li><span class="mx-1">/</span></li>
 						<?php } ?>
 						<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 							<span itemscope itemtype="http://schema.org/Thing" itemid="<?php echo $bc['url']; ?>" itemprop="item">
@@ -58,7 +58,7 @@
 				<?php } ?>
 
 				<?php if(trim($pageInf['header'])) { ?>
-					<h1 class="pagetitle"><?php echo $pageInf['header']; ?></h1>
+                    <h1 class="pagetitle text-2xl font-semibold mb-4"><?php echo $pageInf['header']; ?></h1>
 				<?php } ?>
 			</div>
 		</div>
@@ -69,8 +69,8 @@
 <?php } ?>
 
 <div>
-	<div id="form-errors" class="errortext"></div>
-	<div class="someform clearfix">
+    <div id="form-errors" class="errortext text-red-700 mb-4"></div>
+    <div class="someform clearfix space-y-4">
 		<form id="callback-form">
 			<?php if($ajaxForm) { ?>
 				<input type="hidden" name="XMLHttpRequest" value="1">
@@ -98,25 +98,26 @@
 				grecaptcha.render('captcha_callback-form', {'sitekey' : '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
 			</script>
 			<?php } ?>
-			<div class="line clearfix">
-				<input type="text" name="name" value="" placeholder="Ваше имя*:"
-					   maxlength="100"
-					   msg_maxlen="Имя не должно превышать 100 символов"
-					   required
-					   msg_required="Вы не ввели ваше имя"
-					>
+            <div class="line clearfix">
+                <input type="text" name="name" value="" placeholder="Ваше имя*:"
+                       maxlength="100"
+                       msg_maxlen="Имя не должно превышать 100 символов"
+                       required
+                       msg_required="Вы не ввели ваше имя"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
 			</div>
             <div style="display:none">
                 <input type="text" name="last_name" id="last_name" autocomplete="off" maxlength="100">
             </div>
-			<div class="line clearfix">
-				<input class="maskPhone" type="text" name="phone" value="" placeholder="Номер телефона*:"
-					   maxlength="20"
-					   msg_maxlen="Номер телефона не должен превышать 20 символов"
-					   required
-					   msg_required="Вы не ввели номер телефона"
-					>
-			</div>
+            <div class="line clearfix">
+                <input class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="phone" value="" placeholder="Номер телефона*:"
+                       maxlength="20"
+                       msg_maxlen="Номер телефона не должен превышать 20 символов"
+                       required
+                       msg_required="Вы не ввели номер телефона"
+                    >
+            </div>
 			<div class="line clearfix">
 				<div class="captcha-item" id="captcha_callback-form"></div>
 			</div>
@@ -124,7 +125,7 @@
             <div class="line buttons clearfix">
                 <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
                 <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>">
-                <input class="btn btn1" type="submit" name="submit" value="Отправить">
+                <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition" type="submit" name="submit" value="Отправить">
             </div>
 		</form>
 	</div>
@@ -198,10 +199,10 @@
 }
 </style>
 
-<div class="cookie_notice">
+<div class="cookie_notice fixed bottom-0 left-0 right-0 text-center text-white bg-blue-600 px-4 py-3 border-t-4 border-[#BFE2FF] text-sm">
     Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей (данные об IP-адресе, местоположении и др.) для обеспечения работоспособности и улучшения качества обслуживания. Продолжая использовать наш сайт, вы автоматически соглашаетесь с использованием данных технологий.
     <div>
-        <a class="cookie_btn" id="cookie_close" href="#close">Ок</a>
+        <a class="cookie_btn inline-block px-3 py-1.5 uppercase font-bold border-2 border-[#BFE2FF]" id="cookie_close" href="#close">Ок</a>
 
     </div>
 </div>

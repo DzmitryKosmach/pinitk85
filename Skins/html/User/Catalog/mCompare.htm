@@ -1,31 +1,36 @@
 <?php echo CssCopmress::load('cart')?>
 
 <div id="title" class="title">
-  <!-- Хлебные крошки -->
-  <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
-    <?php if(count($breadcrumbs)) { ?>
-    <?php $bcLast = array_pop($breadcrumbs); ?>
-    <?php $position = 0; ?>
-    <?php foreach($breadcrumbs as $bc) { ?>
-    <?php $position++; ?>
-    <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
-      <?php echo $bc['name']; ?>
-    </a>
-    <span class="mx-1">›</span>
-    <?php } ?>
-    <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
-    <?php } ?>
-  </nav>
+    <!-- Хлебные крошки -->
+    <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+      <?php if(count($breadcrumbs)) { ?>
+      <?php $bcLast = array_pop($breadcrumbs); ?>
+      <?php $position = 0; ?>
+      <?php foreach($breadcrumbs as $bc) { ?>
+      <?php $position++; ?>
+      <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+        <?php echo $bc['name']; ?>
+      </a>
+      <span class="mx-1">›</span>
+      <?php } ?>
+      <span class="text-gray-700">
+        <?php echo $bcLast['name']; ?>
+      </span>
+      <?php } ?>
+    </nav>
 
-  <!-- Заголовок -->
-  <?php if(trim($pageInf['header'])) { ?>
-  <h1 class="text-2xl font-bold mb-8"><?php echo $pageInf['header']; ?></h1>
-  <?php } ?>
+    <!-- Заголовок -->
+    <?php if(trim($pageInf['header'])) { ?>
+    <h1 class="text-2xl font-bold mb-8">
+      <?php echo $pageInf['header']; ?>
+    </h1>
+    <?php } ?>
+
 </div>
 
 
 <div id="content" class="content ">
-  <div class="">
+  <div>
     <div class="clearfix">
       <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
       <div class="cl mb-6"></div>
@@ -35,101 +40,113 @@
       <div class="overflow-x-auto">
         <table class="w-full min-w-[700px] border-collapse">
           <thead>
-          <tr>
-            <th class="w-48 p-3 text-left align-top font-medium text-gray-700 whitespace-nowrap"></th>
-            <?php foreach($series as $s) { ?>
-            <th class="p-3 text-left align-top border-t border-gray-200">
-              <div class="flex items-start gap-2">
-                <a href="<?php echo Catalog_Series::a($s)?>" class="font-semibold text-blue-600 hover:underline"><?php echo $s['name']; ?></a>
-                <a href="<?php echo Url::buildUrl(0, array('remove' => $s['id']))?>" class="text-red-500 hover:text-red-700" title="Удалить из сравнения">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </a>
-              </div>
-            </th>
-            <?php } ?>
-          </tr>
+            <tr>
+              <th class="w-48 p-3 text-left align-top font-medium text-gray-700 whitespace-nowrap"></th>
+              <?php foreach($series as $s) { ?>
+              <th class="p-3 text-left align-top border-t border-gray-200">
+                <div class="flex items-start gap-2">
+                  <a href="<?php echo Catalog_Series::a($s)?>" class="font-semibold text-blue-600 hover:underline">
+                    <?php echo $s['name']; ?>
+                  </a>
+                  <a href="<?php echo Url::buildUrl(0, array('remove' => $s['id']))?>"
+                    class="text-red-500 hover:text-red-700" title="Удалить из сравнения">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </a>
+                </div>
+              </th>
+              <?php } ?>
+            </tr>
           </thead>
           <tbody>
-          <!-- Фото -->
-          <tr>
-            <td class="p-3 text-left align-top font-medium text-gray-700">Фото</td>
-            <?php foreach($series as $s) { ?>
-            <td class="p-3 align-top border-t border-gray-100">
-              <?php if($s['1st_photo']) { ?>
-              <a href="<?php echo Catalog::photoUrl(
+            <!-- Фото -->
+            <tr>
+              <td class="p-3 text-left align-top font-medium text-gray-700">Фото</td>
+              <?php foreach($series as $s) { ?>
+              <td class="p-3 align-top border-t border-gray-100">
+                <?php if($s['1st_photo']) { ?>
+                <a href="<?php echo Catalog::photoUrl(
                         Catalog_Series_Photos::$imagePath,
                         $s['1st_photo']['id'], 0,0,0, $s['1st_photo']['_img_ext'],
                         $s['1st_photo']['name']
                       )?>" target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
-                <img src="<?php echo Catalog::photoUrl(
+                  <img src="<?php echo Catalog::photoUrl(
                           Catalog_Series_Photos::$imagePath,
                           $s['1st_photo']['id'], 175, 110, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext'],
                           $s['1st_photo']['name']
-                        )?>" width="175" height="110" alt="<?php echo hsch($s['name'])?>" class="object-contain max-w-full h-auto border">
-              </a>
-              <?php } else { ?>
-              <div class="w-44 h-28 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">Нет фото</div>
+                        )?>" width="175" height="110" alt="<?php echo hsch($s['name'])?>"
+                    class="object-contain max-w-full h-auto border">
+                </a>
+                <?php } else { ?>
+                <div class="w-44 h-28 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">Нет фото</div>
+                <?php } ?>
+              </td>
               <?php } ?>
-            </td>
-            <?php } ?>
-          </tr>
+            </tr>
 
-          <?php
+            <?php
                 $prices = array();
                 foreach($series as $s){
                     $prices[] = $s['price_min'];
                 }
               ?>
 
-          <!-- Цена комплекта -->
-          <tr <?php if(Catalog_Compare::isEqual($prices)) { ?> class="bg-blue-50"<?php } ?>>
-          <td class="p-3 text-left align-top font-medium text-gray-700">Цена комплекта:</td>
-          <?php foreach($series as $s) { ?>
-          <td class="p-3 align-top border-t border-gray-100">
-            <?php echo Catalog::priceFormat($s['price_min'])?> <span class="text-gray-600">р</span>
-          </td>
-          <?php } ?>
-          </tr>
+            <!-- Цена комплекта -->
+            <tr <?php if(Catalog_Compare::isEqual($prices)) { ?> class="bg-blue-50"
+              <?php } ?>>
+              <td class="p-3 text-left align-top font-medium text-gray-700">Цена комплекта:</td>
+              <?php foreach($series as $s) { ?>
+              <td class="p-3 align-top border-t border-gray-100">
+                <?php echo Catalog::priceFormat($s['price_min'])?> <span class="text-gray-600">р</span>
+              </td>
+              <?php } ?>
+            </tr>
 
-          <!-- Опции -->
-          <?php foreach($options as $optName => $series2val) { ?>
-          <tr <?php if(Catalog_Compare::isEqual($series2val)) { ?> class="bg-blue-50"<?php } ?>>
-          <td class="p-3 text-left align-top font-medium text-gray-700"><?php echo $optName?></td>
-          <?php foreach($series as $s) { ?>
-          <td class="p-3 align-top border-t border-gray-100">
-            <?php echo $series2val[$s['id']]; ?>
-          </td>
-          <?php } ?>
-          </tr>
-          <?php } ?>
+            <!-- Опции -->
+            <?php foreach($options as $optName => $series2val) { ?>
+            <tr <?php if(Catalog_Compare::isEqual($series2val)) { ?> class="bg-blue-50"
+              <?php } ?>>
+              <td class="p-3 text-left align-top font-medium text-gray-700">
+                <?php echo $optName?>
+              </td>
+              <?php foreach($series as $s) { ?>
+              <td class="p-3 align-top border-t border-gray-100">
+                <?php echo $series2val[$s['id']]; ?>
+              </td>
+              <?php } ?>
+            </tr>
+            <?php } ?>
 
-          <!-- Цветовая гамма -->
-          <tr <?php if(Catalog_Compare::isEqual($matsBySeries)) { ?> class="bg-blue-50"<?php } ?>>
-          <td class="p-3 text-left align-top font-medium text-gray-700">Цветовая гамма</td>
-          <?php foreach($series as $s) { ?>
-          <td class="p-3 align-top border-t border-gray-100">
-            <?php if(count($matsBySeries[$s['id']])) { ?>
-            <?php $mCnt = count($matsBySeries[$s['id']]) ?>
-            <?php foreach($matsBySeries[$s['id']] as $mn => $mId) { ?>
-            <?php $m = $materials[$mId]; ?>
-            <?php if($m['image']['ext']) { ?>
-            <a class="level1 underline text-blue-600 hover:text-blue-800"
-               href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"
-               target="_blank"
-               onclick="return hs.expand(this, {slideshowGroup: 'default'})">
-              <?php echo $m['name']; ?></a><?php echo ($mn == $mCnt-1 ? '' : ', ')?>
-            <?php } else { ?>
-            <?php echo $m['name']; ?><?php echo ($mn == $mCnt-1 ? '' : ', ')?>
-            <?php } ?>
-            <?php } ?>
-            <?php } else { ?>
-            -
-            <?php } ?>
-          </td>
-          <?php } ?>
-          </tr>
+            <!-- Цветовая гамма -->
+            <tr <?php if(Catalog_Compare::isEqual($matsBySeries)) { ?> class="bg-blue-50"
+              <?php } ?>>
+              <td class="p-3 text-left align-top font-medium text-gray-700">Цветовая гамма</td>
+              <?php foreach($series as $s) { ?>
+              <td class="p-3 align-top border-t border-gray-100">
+                <?php if(count($matsBySeries[$s['id']])) { ?>
+                <?php $mCnt = count($matsBySeries[$s['id']]) ?>
+                <?php foreach($matsBySeries[$s['id']] as $mn => $mId) { ?>
+                <?php $m = $materials[$mId]; ?>
+                <?php if($m['image']['ext']) { ?>
+                <a class="level1 underline text-blue-600 hover:text-blue-800"
+                  href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"
+                  target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
+                  <?php echo $m['name']; ?>
+                </a>
+                <?php echo ($mn == $mCnt-1 ? '' : ', ')?>
+                <?php } else { ?>
+                <?php echo $m['name']; ?>
+                <?php echo ($mn == $mCnt-1 ? '' : ', ')?>
+                <?php } ?>
+                <?php } ?>
+                <?php } else { ?>
+                -
+                <?php } ?>
+              </td>
+              <?php } ?>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -137,7 +154,7 @@
       <?php } ?>
 
       <?php if(!count($series)) { ?>
-      <div class="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+      <div class="p-4 bg-red-50 border border-red-200 rounded text-red-700 text-center py-8">
         <?php echo Pages::msgErr('Нет серий, выбранных для сравнения.')?>
       </div>
       <?php } ?>
