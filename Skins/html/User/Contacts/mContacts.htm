@@ -1,122 +1,121 @@
 ﻿<?php if(!$ajaxForm) { ?>
-<div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-  <!-- Хлебные крошки -->
-  <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
-    <?php if(count($breadcrumbs)) { ?>
-    <?php $bcLast = array_pop($breadcrumbs); ?>
-    <?php $position = 0; ?>
-    <?php foreach($breadcrumbs as $bc) { ?>
-    <?php $position++; ?>
-    <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
-      <?php echo $bc['name']; ?>
-    </a>
-    <span class="mx-1">›</span>
-    <?php } ?>
-    <span class="text-gray-700">
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+  <?php if(count($breadcrumbs)) { ?>
+  <?php $bcLast = array_pop($breadcrumbs); ?>
+  <?php $position = 0; ?>
+  <?php foreach($breadcrumbs as $bc) { ?>
+  <?php $position++; ?>
+  <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+    <?php echo $bc['name']; ?>
+  </a>
+  <span class="mx-1">›</span>
+  <?php } ?>
+  <span class="text-gray-700">
       <?php echo $bcLast['name']; ?>
     </span>
-    <?php } ?>
-  </nav>
-
-
-  <?php if(trim($pageInf['header'])) { ?>
-  <h1 class="pagetitle text-2xl">
-    <?php echo $pageInf['header']; ?>
-  </h1>
   <?php } ?>
+</nav>
 
 
-  <div id="content" class="content">
-    <div class="">
-      <div class="clearfix">
-        <?php } else { ?>
-        <script src="/Js/core/all-core.js"></script>
+<?php if(trim($pageInf['header'])) { ?>
+<h1 class="pagetitle text-2xl">
+  <?php echo $pageInf['header']; ?>
+</h1>
+<?php } ?>
+
+
+<div id="content" class="content">
+  <div class="">
+    <div class="clearfix">
+      <?php } else { ?>
+      <script src="/Js/core/all-core.js"></script>
+      <?php } ?>
+
+      <div>
+        <?php if(!$ajaxForm) { ?>
+        <?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
+        <div class="">
+
+
+          <div class="">
+            <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+          </div>
+
+
+          <div class="cl"></div>
+          <?php if(!$ajaxForm) { ?>
+          <div class="mt-12">
+            <p><b>Схема проезда:</b></p>
+
+            <div class="w-full"
+                 style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+              <iframe
+                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;source=constructor"
+                frameborder="0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+          <?php } ?>
+        </div>
+        <a id="form"></a>
         <?php } ?>
 
+        <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
         <div>
-          <?php if(!$ajaxForm) { ?>
-          <?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
-          <div class="">
+          <?php echo Options::name('found-cheaper')?>
+          <div class="cl"></div>
+          <br><br><br>
+        </div>
+        <a class="form"></a>
+        <?php } ?>
 
+        <script>
+          onLoad(function () {
+            if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
+              D.location.href = '#form';
+            }
+          });
+        </script>
 
-            <div class="">
-              <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-            </div>
+        <?php } else { ?>
+        <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
+        <?php $fc = trim(Options::name('found-cheaper')); ?>
+        <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
+        <div>
+          <?php echo Options::name('found-cheaper')?>
+          <div class="cl"></div>
+          <br><br>
+        </div>
+        <?php } ?>
+        <?php } ?>
+        <?php } ?>
 
+        <?php if(!$ajaxForm) { ?>
+        <h2 class="text-[21px] md:text-3xl font-semibold mt-8 md:mt-16  mb-4 md:mb-8">
+          Команда профессионалов
+        </h2>
 
-            <div class="cl"></div>
-            <?php if(!$ajaxForm) { ?>
-            <div class="mt-12">
-              <p><b>Схема проезда:</b></p>
+        <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
 
-              <div class="w-full"
-                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
-                <iframe
-                  src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;source=constructor"
-                  frameborder="0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                  allowfullscreen></iframe>
-              </div>
-            </div>
-            <?php } ?>
-          </div>
-          <a id="form"></a>
-          <?php } ?>
-
-          <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
-          <div>
-            <?php echo Options::name('found-cheaper')?>
-            <div class="cl"></div>
-            <br><br><br>
-          </div>
-          <a class="form"></a>
-          <?php } ?>
-
-          <script>
-            onLoad(function () {
-              if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
-                D.location.href = '#form';
-              }
-            });
-          </script>
-
-          <?php } else { ?>
-          <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
-          <?php $fc = trim(Options::name('found-cheaper')); ?>
-          <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
-          <div>
-            <?php echo Options::name('found-cheaper')?>
-            <div class="cl"></div>
-            <br><br>
-          </div>
-          <?php } ?>
-          <?php } ?>
-          <?php } ?>
-
-          <?php if(!$ajaxForm) { ?>
-          <h2 class="text-[21px] md:text-3xl font-semibold mt-8 md:mt-16  mb-4 md:mb-8">
-            Команда профессионалов
-          </h2>
-
-          <div class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
-
-            <?php
+          <?php
       for ($i = 0; $i < 8; $i++) {
           include(Config::path('skins') . '/html/Components/worker_card.htm');
       }
     ?>
 
-          </div>
-          <?php } ?>
+        </div>
+        <?php } ?>
 
 
-          <?php if(!$ajaxForm) { ?>
-          <div id="addresses"></div>
-          <div class="mt-[90px] sm3:mt-[40px] lg:mt-[60px]"><br></div>
+        <?php if(!$ajaxForm) { ?>
+        <div id="addresses"></div>
+        <div class="mt-[90px] sm3:mt-[40px] lg:mt-[60px]"><br></div>
 
-          <h2 class="text-[21px] md:text-3xl font-semibold">Адреса пунктов выдачи заказов</h2>
+        <h2 class="text-[21px] md:text-3xl font-semibold">Адреса пунктов выдачи заказов</h2>
 
-          <div id="points">
-            <?php
+        <div id="points">
+          <?php
         $city = '';
         $letter = '';
         $i = 0;
@@ -124,188 +123,187 @@
         foreach ($points as $c => $point) {
           $itemNumber++;
           ?>
-            <?php if($city != $c) {
+          <?php if($city != $c) {
                 ?>
-            <?php if($i == 0) { ?>
-            <div class="item">
-              <?php } ?>
-              <div>
-                <?php if (mb_substr($c, 0, 1) !== $letter) { ?>
-                <p class="letter"><b>
-                    <?php echo mb_substr($c, 0, 1); ?>
-                  </b></p>
-                <?php $letter = mb_substr($c, 0, 1); } ?>
-                <div class="toggle-container">
-                  <a href="#" class="toggle-link" data-target="#contentBlock<?php echo $itemNumber; ?>">
-                    <?php echo $c; ?>
-                  </a>
-                  <div class="content-block" id="contentBlock<?php echo $itemNumber; ?>">
-                    <?php foreach ($point as $p) { ?>
-                    <p>
-                      <?php echo $p; ?>
-                    </p>
-                    <?php } ?>
-                  </div>
+          <?php if($i == 0) { ?>
+          <div class="item">
+            <?php } ?>
+            <div>
+              <?php if (mb_substr($c, 0, 1) !== $letter) { ?>
+              <p class="letter"><b>
+                <?php echo mb_substr($c, 0, 1); ?>
+              </b></p>
+              <?php $letter = mb_substr($c, 0, 1); } ?>
+              <div class="toggle-container">
+                <a href="#" class="toggle-link" data-target="#contentBlock<?php echo $itemNumber; ?>">
+                  <?php echo $c; ?>
+                </a>
+                <div class="content-block" id="contentBlock<?php echo $itemNumber; ?>">
+                  <?php foreach ($point as $p) { ?>
+                  <p>
+                    <?php echo $p; ?>
+                  </p>
+                  <?php } ?>
                 </div>
               </div>
-              <?php if($i == 101) { ?>
             </div>
-            <?php } ?>
-            <?php
+            <?php if($i == 101) { ?>
+          </div>
+          <?php } ?>
+          <?php
             $city = $c;
             } ?>
-            <?php
+          <?php
             $i++;
             if ($i > 101) {
           $i = 0;
           }
           } ?>
-            <?php if ($i < 100) { echo "</div>"; } ?>
-          </div>
+          <?php if ($i < 100) { echo "</div>"; } ?>
+        </div>
 
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              const toggleLinks = document.querySelectorAll('.toggle-link');
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const toggleLinks = document.querySelectorAll('.toggle-link');
 
-              toggleLinks.forEach(link => {
-                link.addEventListener('click', function (event) {
-                  event.preventDefault();
+            toggleLinks.forEach(link => {
+              link.addEventListener('click', function (event) {
+                event.preventDefault();
 
-                  // Получаем целевой блок из атрибута data-target
-                  const targetBlockId = this.getAttribute('data-target');
-                  const targetBlock = document.querySelector(targetBlockId);
+                // Получаем целевой блок из атрибута data-target
+                const targetBlockId = this.getAttribute('data-target');
+                const targetBlock = document.querySelector(targetBlockId);
 
-                  document.querySelectorAll('.toggle-link.bold').forEach(block => {
-                    block.classList.remove('bold');
-                  });
-
-
-                  // Переключаем жирный текст ссылки
-                  link.classList.toggle('bold');
-
-                  // Скрываем все блоки, которые были открыты для других ссылок
-                  document.querySelectorAll('.content-block.show').forEach(block => {
-                    if (block !== targetBlock) {
-                      block.classList.remove('show');
-                    }
-                  });
-
-                  // Переключаем класс 'show' для целевого блока
-                  targetBlock.classList.toggle('show');
+                document.querySelectorAll('.toggle-link.bold').forEach(block => {
+                  block.classList.remove('bold');
                 });
+
+
+                // Переключаем жирный текст ссылки
+                link.classList.toggle('bold');
+
+                // Скрываем все блоки, которые были открыты для других ссылок
+                document.querySelectorAll('.content-block.show').forEach(block => {
+                  if (block !== targetBlock) {
+                    block.classList.remove('show');
+                  }
+                });
+
+                // Переключаем класс 'show' для целевого блока
+                targetBlock.classList.toggle('show');
               });
             });
+          });
 
-          </script>
+        </script>
 
-          <div style="margin-top: 20px;"><br></div>
+        <div style="margin-top: 20px;"><br></div>
 
-          <h2>Есть вопросы? Напишите нам!</h2>
-          <p><br><br></p>
-          <?php } ?>
+        <h2>Есть вопросы? Напишите нам!</h2>
+        <p><br><br></p>
+        <?php } ?>
 
-          <div id="form-errors" class="errortext text-red-700 mb-4"></div>
-          <div class="someform clearfix space-y-4">
-            <?php if($ajaxForm) { ?>
-            <form id="contacts-form1" class="flex flex-col gap-2">
-              <?php } else { ?>
-              <form id="contacts-form" class="flex flex-col gap-2">
-                <?php } ?>
-                <?php if($ajaxForm) { ?>
-                <input type="hidden" name="XMLHttpRequest" value="1">
-                <script>
-                  function _processform_contacts() {
-                    var obForm = top.BX('contacts-form1');
-                    top.BX.bind(
-                      obForm,
-                      'submit',
-                      function () {
-                        BX.ajax.submitComponentForm(this, 'contacts-form1', true);
-                      }
-                    );
-                    top.BX.removeCustomEvent('onAjaxSuccess', _processform_contacts);
-                  }
-                  if (top.BX('contacts-form1')) {
-                    _processform_contacts();
-                  } else {
-                    top.BX.addCustomEvent('onAjaxSuccess', _processform_contacts);
-                  }
-                </script>
+        <div id="form-errors" class="errortext text-red-700 mb-4"></div>
+        <div class="someform clearfix space-y-4">
+          <?php if($ajaxForm) { ?>
+          <form id="contacts-form1" class="flex flex-col gap-2">
+            <?php } else { ?>
+            <form id="contacts-form" class="flex flex-col gap-2">
+              <?php } ?>
+              <?php if($ajaxForm) { ?>
+              <input type="hidden" name="XMLHttpRequest" value="1">
+              <script>
+                function _processform_contacts() {
+                  var obForm = top.BX('contacts-form1');
+                  top.BX.bind(
+                    obForm,
+                    'submit',
+                    function () {
+                      BX.ajax.submitComponentForm(this, 'contacts-form1', true);
+                    }
+                  );
+                  top.BX.removeCustomEvent('onAjaxSuccess', _processform_contacts);
+                }
+                if (top.BX('contacts-form1')) {
+                  _processform_contacts();
+                } else {
+                  top.BX.addCustomEvent('onAjaxSuccess', _processform_contacts);
+                }
+              </script>
 
-                <script>
-                  grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
-                </script>
-                <?php } ?>
-                <div class="line clearfix">
-                  <input type="text" name="name" value="" placeholder="Ваше имя*:" maxlength="100"
-                    msg_maxlen="Имя не должно превышать 100 символов" required msg_required="Вы не ввели ваше имя"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="line clearfix">
-                  <input type="text" name="email" value="" placeholder="Ваш E-mail:" maxlength="1000"
-                    msg_maxlen="E-mail не должен превышать 1000 символов"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="line clearfix">
-                  <input
-                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    type="text" name="phone" value="" placeholder="Номер телефона:" maxlength="20" required
-                    msg_maxlen="Номер телефона не должен превышать 20 символов">
-                </div>
-                <div class="line clearfix">
+              <script>
+                grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
+              </script>
+              <?php } ?>
+              <div class="line clearfix">
+                <input type="text" name="name" value="" placeholder="Ваше имя*:" maxlength="100"
+                       msg_maxlen="Имя не должно превышать 100 символов" required msg_required="Вы не ввели ваше имя"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+              <div class="line clearfix">
+                <input type="text" name="email" value="" placeholder="Ваш E-mail:" maxlength="1000"
+                       msg_maxlen="E-mail не должен превышать 1000 символов"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+              <div class="line clearfix">
+                <input
+                  class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text" name="phone" value="" placeholder="Номер телефона:" maxlength="20" required
+                  msg_maxlen="Номер телефона не должен превышать 20 символов">
+              </div>
+              <div class="line clearfix">
                   <textarea name="text" placeholder="Текст сообщения:" maxlength="5000"
-                    msg_maxlen="Текст сообщения не должен превышать 5000 символов"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="line clearfix">
-                  <?php if($ajaxForm) { ?>
-                  <div class="captcha-item" id="captcha_contacts-form1"></div>
-                  <?php } else { ?>
-                  <div class="captcha-item" id="captcha_contacts-form"></div>
-                  <?php } ?>
-                  <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
-                  <input type="hidden" name="enigma<?php echo time(); ?>"
-                    value="<?php echo bin2hex(random_bytes(8)) ?>">
-                </div>
+                            msg_maxlen="Текст сообщения не должен превышать 5000 символов"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+              </div>
+              <div class="line clearfix">
+                <?php if($ajaxForm) { ?>
+                <div class="captcha-item" id="captcha_contacts-form1"></div>
+                <?php } else { ?>
+                <div class="captcha-item" id="captcha_contacts-form"></div>
+                <?php } ?>
+                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
+                <input type="hidden" name="enigma<?php echo time(); ?>"
+                       value="<?php echo bin2hex(random_bytes(8)) ?>">
+              </div>
 
-                <?php
-header('Content-Type: text/html; charset=utf-8');
-$asdkapcha1 = mt_rand(11, 20);
-$asdkapcha2 = mt_rand(1, 10);
-$asdkapcha3 = mt_rand(1, 2);
-if ($asdkapcha3 == 1) $asdkapcha3 = "+";
-if ($asdkapcha3 == 2) $asdkapcha3 = "-";
-$randkapcha = $asdkapcha1.$asdkapcha3.$asdkapcha2;
-$randkapchasrav = $asdkapcha1.','.$asdkapcha3.','.$asdkapcha2;
+              <?php
+        header('Content-Type: text/html; charset=utf-8');
+        $asdkapcha1 = mt_rand(11, 20);
+        $asdkapcha2 = mt_rand(1, 10);
+        $asdkapcha3 = mt_rand(1, 2);
+        if ($asdkapcha3 == 1) $asdkapcha3 = "+";
+        if ($asdkapcha3 == 2) $asdkapcha3 = "-";
+        $randkapcha = $asdkapcha1.$asdkapcha3.$asdkapcha2;
+        $randkapchasrav = $asdkapcha1.','.$asdkapcha3.','.$asdkapcha2;
 
-if (isset($_POST["butkapcha"])) {
-    $randkapchasravall = explode(',', $_POST["randkapchasrav"]);
-    if ($randkapchasravall[1] == "+") $randkapchasravalls = $randkapchasravall[0] + $randkapchasravall[2];
-    if ($randkapchasravall[1] == "-") $randkapchasravalls = $randkapchasravall[0] - $randkapchasravall[2];
-}
-/*
+        if (isset($_POST["butkapcha"])) {
+            $randkapchasravall = explode(',', $_POST["randkapchasrav"]);
+            if ($randkapchasravall[1] == "+") $randkapchasravalls = $randkapchasravall[0] + $randkapchasravall[2];
+            if ($randkapchasravall[1] == "-") $randkapchasravalls = $randkapchasravall[0] - $randkapchasravall[2];
+        }
+        /*
         <div class="line clearfix">
-          Сколько будет: <?php echo $randkapcha;? >?
-          <input type="text" required   name="randkapcha" />
-          <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
+              Сколько будет: <?php echo $randkapcha;? >?
+              <input type="text" required   name="randkapcha" />
+              <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
         </div>
 
         */
         ?>
-                <div class="line buttons clearfix">
-                  <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition"
-                    type="submit" name="submit" value="Отправить">
-                </div>
-              </form>
-
-          </div>
+        <div class="line buttons clearfix">
+          <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition"
+                 type="submit" name="submit" value="Отправить">
         </div>
+        </form>
+
       </div>
-      <?php if(!$ajaxForm) { ?>
     </div>
   </div>
+  <?php if(!$ajaxForm) { ?>
 </div>
 </div>
+
 <?php } ?>
 
 <style>
