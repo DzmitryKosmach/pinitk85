@@ -597,39 +597,25 @@ $photosUnified[] = [
 
     // === Функция обновления выбранной миниатюры ===
     function updateThumbnailSelection() {
-      // Десктопные миниатюры
+      // Обновляем десктоп
       if (galleryThumbnailsDesktop) {
-        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
-        desktopThumbs.forEach((thumb, index) => {
-          if (index === currentGalleryIndex) {
-            thumb.style.borderColor = '#3b82f6'; // blue-500
-            thumb.style.borderWidth = '2px';
-            thumb.classList.add('active');
-          } else {
-            thumb.style.borderColor = 'transparent';
-            thumb.style.borderWidth = '2px';
-            thumb.classList.remove('active');
-          }
+        Array.from(galleryThumbnailsDesktop.children).forEach((thumb, i) => {
+          const isActive = i === currentGalleryIndex;
+          thumb.classList.toggle('active', isActive);
+          thumb.style.borderColor = isActive ? '#3b82f6' : 'transparent';
         });
       }
 
-      // Мобильные миниатюры
+      // Обновляем мобильные
       if (galleryThumbnailsMobile) {
-        const mobileThumbs = galleryThumbnailsMobile.querySelectorAll('div');
-        mobileThumbs.forEach((thumb, index) => {
-          if (index === currentGalleryIndex) {
-            thumb.style.borderColor = '#3b82f6'; // blue-500
-            thumb.style.borderWidth = '2px';
-            thumb.classList.add('active');
-          } else {
-            thumb.style.borderColor = 'transparent';
-            thumb.style.borderWidth = '2px';
-            thumb.classList.remove('active');
-          }
+        Array.from(galleryThumbnailsMobile.children).forEach((thumb, i) => {
+          const isActive = i === currentGalleryIndex;
+          thumb.classList.toggle('active', isActive);
+          thumb.style.borderColor = isActive ? '#3b82f6' : 'transparent';
         });
       }
 
-      // Автоматический скролл к выбранной миниатюре
+      // Скролл
       if (window.innerWidth < 1024) {
         scrollToThumbnailIfNeeded(currentGalleryIndex, 'mobile');
       } else {
