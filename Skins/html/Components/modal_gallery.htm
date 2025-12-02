@@ -650,95 +650,17 @@ $photosUnified[] = [
 
     // === Функция "умного" переключения по стрелкам ===
     function smartNavigate(direction) {
-      // direction: -1 для prev, 1 для next
+      // direction: -1 для prev, +1 для next
+      const newIndex = currentGalleryIndex + direction;
 
-      resetZoom();
-      updateInteractionTime();
+      // Ограничиваем только допустимыми индексами (без зацикливания)
+      if (newIndex < 0 || newIndex >= photos.length) return;
 
-      // Получаем текущий контейнер миниатюр
-      let container;
-      if (window.innerWidth < 1024) {
-        container = galleryThumbnailsMobile;
-      } else {
-        container = galleryThumbnailsDesktop;
-      }
-
-      if (!container) return;
-
-      const thumbnails = container.querySelectorAll('div');
-      const visibleCount = calculateVisibleThumbnails(container, window.innerWidth < 1024);
-      const currentIndex = currentGalleryIndex;
-      let newIndex;
-
-      if (window.innerWidth < 1024) {
-        // Мобильная логика - горизонтальная навигация
-        if (direction === -1) { // prev
-          if (currentIndex > 0) {
-            newIndex = currentIndex - 1;
-          } else {
-            newIndex = photos.length - 1; // зацикливание
-          }
-        } else { // next
-          if (currentIndex < photos.length - 1) {
-            newIndex = currentIndex + 1;
-          } else {
-            newIndex = 0; // зацикливание
-          }
-        }
-      } else {
-        // Десктопная логика - вертикальная навигация с учетом видимых
-        if (direction === -1) { // prev
-          if (currentIndex > 0) {
-            newIndex = currentIndex - 1;
-          } else {
-            // Переход к последней видимой группе
-            newIndex = photos.length - visibleCount;
-          }
-        } else { // next
-          if (currentIndex < photos.length - visibleCount) {
-            newIndex = currentIndex + 1;
-          } else {
-            // Если приближаемся к концу, идем к первой группе
-            newIndex = Math.min(currentIndex + 1, photos.length - 1);
-            if (newIndex === photos.length - 1) {
-              // Дошли до конца - переходим к началу
-              setTimeout(() => {
-                container.scrollTo({
-                  top: 0,
-                  behavior: 'smooth'
-                });
-              }, 300);
-            }
-          }
-        }
-      }
-
-      // Обновляем индекс и изображение
+      resetZoom(); // Сброс зума при переходе
       currentGalleryIndex = newIndex;
       updateGalleryImage();
       updateThumbnailSelection();
-
-      // Дополнительная логика для плавного скролла
-      const containerRect = container.getBoundingClientRect();
-      const thumbnail = thumbnails[newIndex];
-
-      if (thumbnail) {
-        if (window.innerWidth < 1024) {
-          // Мобильные: центрируем выбранную миниатюру
-          const targetLeft = thumbnail.offsetLeft - (containerRect.width / 2) + (thumbnail.offsetWidth / 2);
-          container.scrollTo({
-            left: targetLeft,
-            behavior: 'smooth'
-          });
-        } else {
-          // Десктоп: центрируем по вертикали
-          const targetTop = thumbnail.offsetTop - (containerRect.height / 2) + (thumbnail.offsetHeight / 2);
-          container.scrollTo({
-            top: targetTop,
-            behavior: 'smooth'
-          });
-        }
-      }
+      updateInteractionTime();
     }
 
     // === Функции управления курсором ===
