@@ -205,28 +205,37 @@ $photosUnified[] = [
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // === ГАЛЕРЕЯ: данные ===
+    // --- Данные галереи (подставляется сервером) ---
+    const photos = <?= json_encode($photosUnified, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?> || [];
 
-    const photos = <?= json_encode($photosUnified, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-
+    // --- STATE ---
     let currentGalleryIndex = 0;
-    let isZoomed = false;
-    let isDragging = false; // только для мобильных
-    let startX, startY;
-    let translateX = 0, translateY = 0;
-    let currentScale = 1;
-    let isDesktopZoomMode = false;
     let currentMainIndex = 0;
-    let autoResetZoomTimer = null;
-    let lastInteractionTime = Date.now();
 
-    // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
+    // zoom / pan state
+    let currentScale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let isZoomed = false;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let pointerId = null;
+
+    // pinch state
+    let pinchStartDistance = 0;
+    let pinchStartScale = 1;
+
+    // desktop hover-pan raf throttle
+    let rafPending = false;
+
+    // constants
     const MIN_ZOOM = 1.2;
     const MAX_ZOOM = 2.0;
     const ZOOM_STEP = 0.1;
-    const MOBILE_AUTO_RESET_DELAY = 3000; // 3 секунды бездействия
+    const MOBILE_AUTO_RESET_DELAY = 3000;
 
-    // === Элементы DOM ===
+    // --- DOM ---
     const mainImage = document.getElementById('main-product-image');
     const mainImageContainer = document.getElementById('mainImageContainer');
     const galleryModal = document.getElementById('gallery-modal');
@@ -238,16 +247,47 @@ $photosUnified[] = [
     const galleryCounter = document.getElementById('gallery-counter');
     const galleryZoomIndicator = document.getElementById('gallery-zoom-indicator');
     const galleryResetZoom = document.getElementById('gallery-reset-zoom');
-    const galleryThumbnailsDesktop = document.getElementById('gallery-thumbnails-desktop');
-    const galleryThumbnailsMobile = document.getElementById('gallery-thumbnails-mobile');
+    const thumbsDesktop = document.getElementById('gallery-thumbnails-desktop');
+    const thumbsMobile = document.getElementById('gallery-thumbnails-mobile');
 
-    // === Функция расчета видимых миниатюр ===
+    // auto reset timer
+    let autoResetZoomTimer = null;
+    let lastInteraction = Date.now();
+
+    // ---------- Utility ----------
+    function isTouchDevice() {
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+
+    function updateInteractionTime() {
+      lastInteraction = Date.now();
+      if (isTouchDevice() && isZoomed) {
+        clearTimeout(autoResetZoomTimer);
+        autoResetZoomTimer = setTimeout(() => {
+          if (Date.now() - lastInteraction >= MOBILE_AUTO_RESET_DELAY) resetZoom();
+        }, MOBILE_AUTO_RESET_DELAY);
+      }
+    }
+
+    // safe parse gap from computed style
+    function readGap(container, isMobile) {
+      const cs = getComputedStyle(container);
+      // fallback 8
+      if (isMobile) {
+        // horizontal gap might be margin-right on children; try gap/padding
+        const gap = parseInt(cs.columnGap || cs.gap || 8);
+        return Number.isFinite(gap) ? gap : 8;
+      } else {
+        const gap = parseInt(cs.rowGap || cs.gap || 8);
+        return Number.isFinite(gap) ? gap : 8;
+      }
+    }
+
+    // ---------- Thumbnails helpers ----------
     function calculateVisibleThumbnails(container, isMobile = false) {
       if (!container || !container.children.length) return 1;
-
       const first = container.children[0];
-      const style = getComputedStyle(container);
-      const gap = parseInt(style.columnGap || style.rowGap || 8);
+      const gap = readGap(container, isMobile);
 
       if (isMobile) {
         const full = first.offsetWidth + gap;
@@ -258,64 +298,6 @@ $photosUnified[] = [
       }
     }
 
-
-    // === Функция создания миниатюр ===
-    function createThumbnails() {
-      // Десктопная версия (вертикальная)
-      if (galleryThumbnailsDesktop) {
-        galleryThumbnailsDesktop.innerHTML = '';
-
-        photos.forEach((photo, index) => {
-          const thumbnail = createThumbnailElement(photo, index);
-
-          thumbnail.addEventListener('click', (e) => {
-            e.stopPropagation();
-            changeGalleryImage(index);
-          });
-
-          galleryThumbnailsDesktop.appendChild(thumbnail);
-        });
-      }
-
-      // Мобильная версия (горизонтальная)
-      if (galleryThumbnailsMobile) {
-        galleryThumbnailsMobile.innerHTML = '';
-
-        photos.forEach((photo, index) => {
-          const thumbnail = createThumbnailElement(photo, index);
-
-          thumbnail.addEventListener('click', (e) => {
-            e.stopPropagation();
-            changeGalleryImage(index);
-
-            // Умный скролл при клике на любую миниатюру
-            scrollToThumbnailIfNeeded(index, 'mobile');
-          });
-
-          galleryThumbnailsMobile.appendChild(thumbnail);
-        });
-      }
-
-      updateThumbnailSelection();
-
-      // Добавляем обработчики для умного скролла на десктопе
-      if (galleryThumbnailsDesktop) {
-        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
-        desktopThumbs.forEach((thumb, index) => {
-          thumb.addEventListener('click', () => {
-            scrollToThumbnailIfNeeded(index, 'desktop');
-          });
-        });
-      }
-
-      // Прокручиваем к активной миниатюре с задержкой
-      setTimeout(() => {
-        updateThumbnailSelection();
-        scrollToThumbnailIfNeeded(currentGalleryIndex, window.innerWidth < 1024 ? 'mobile' : 'desktop');
-      }, 100);
-    }
-
-    // === Создание элемента миниатюры ===
     function createThumbnailElement(photo, index) {
       const thumbnail = document.createElement('div');
       thumbnail.className = 'relative w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 flex-shrink-0 hover:border-blue-400 active:scale-95';
@@ -323,81 +305,56 @@ $photosUnified[] = [
       thumbnail.dataset.index = index;
 
       thumbnail.innerHTML = `
-        <img
-          src="${photo.thumb}"
-          alt="${photo.alt}"
-          class="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div class="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
-      `;
-
+      <img
+        src="${photo.thumb}"
+        alt="${photo.alt || ''}"
+        class="w-full h-full object-cover"
+        loading="lazy"
+        draggable="false"
+      />
+      <div class="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+    `;
       return thumbnail;
     }
 
-    // === Функция для умного скролла к миниатюре ===
-    function scrollToThumbnailIfNeeded(index, type = 'auto') {
-      let container, thumbnails, isMobile;
-
-      if (type === 'mobile' || (type === 'auto' && window.innerWidth < 1024)) {
-        container = galleryThumbnailsMobile;
-        isMobile = true;
-      } else {
-        container = galleryThumbnailsDesktop;
-        isMobile = false;
+    function createThumbnails() {
+      if (thumbsDesktop) {
+        thumbsDesktop.innerHTML = '';
+        photos.forEach((p, i) => {
+          const t = createThumbnailElement(p, i);
+          t.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAt(i);
+          });
+          thumbsDesktop.appendChild(t);
+        });
+      }
+      if (thumbsMobile) {
+        thumbsMobile.innerHTML = '';
+        photos.forEach((p, i) => {
+          const t = createThumbnailElement(p, i);
+          t.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAt(i);
+            scrollToThumbnailIfNeeded(i, 'mobile');
+          });
+          thumbsMobile.appendChild(t);
+        });
       }
 
-      if (!container) return;
-
-      thumbnails = Array.from(container.children);
-      const thumbnail = thumbnails[index];
-      if (!thumbnail) return;
-
-      const visibleCount = calculateVisibleThumbnails(container, isMobile);
-      const totalThumbs = thumbnails.length;
-
-      const thumbStart = thumbnail.offsetLeft;
-      const thumbEnd = thumbStart + thumbnail.offsetWidth;
-
-      const viewStart = container.scrollLeft;
-      const viewEnd = viewStart + container.clientWidth;
-
-      // === Миниатюра видна полностью? ===
-      const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
-      if (fullyVisible) return;
-
-      // === Границы скролла ===
-      const maxScroll = container.scrollWidth - container.clientWidth;
-
-      if (index <= Math.floor(visibleCount / 2)) {
-        container.scrollTo({ left: 0, behavior: "smooth" });
-        return;
-      }
-
-      if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
-        container.scrollTo({ left: maxScroll, behavior: "smooth" });
-        return;
-      }
-
-      // === Центрирование ===
-      const targetLeft =
-        thumbStart - container.clientWidth / 2 + thumbnail.offsetWidth / 2;
-
-      container.scrollTo({
-        left: Math.max(0, Math.min(maxScroll, targetLeft)),
-        behavior: "smooth"
+      // small delay to ensure layout done
+      requestAnimationFrame(() => {
+        updateThumbnailSelection();
+        scrollToThumbnailIfNeeded(currentGalleryIndex, window.innerWidth < 1024 ? 'mobile' : 'desktop');
       });
     }
 
-
-    // === Функция обновления выбранной миниатюры ===
     function updateThumbnailSelection() {
-      // Десктопные миниатюры
-      if (galleryThumbnailsDesktop) {
-        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
-        desktopThumbs.forEach((thumb, index) => {
-          if (index === currentGalleryIndex) {
-            thumb.style.borderColor = '#3b82f6'; // blue-500
+      const apply = (container) => {
+        if (!container) return;
+        Array.from(container.children).forEach((thumb, idx) => {
+          if (idx === currentGalleryIndex) {
+            thumb.style.borderColor = '#3b82f6';
             thumb.style.borderWidth = '2px';
             thumb.classList.add('active');
           } else {
@@ -406,249 +363,166 @@ $photosUnified[] = [
             thumb.classList.remove('active');
           }
         });
-      }
+      };
+      apply(thumbsDesktop);
+      apply(thumbsMobile);
 
-      // Мобильные миниатюры
-      if (galleryThumbnailsMobile) {
-        const mobileThumbs = galleryThumbnailsMobile.querySelectorAll('div');
-        mobileThumbs.forEach((thumb, index) => {
-          if (index === currentGalleryIndex) {
-            thumb.style.borderColor = '#3b82f6'; // blue-500
-            thumb.style.borderWidth = '2px';
-            thumb.classList.add('active');
-          } else {
-            thumb.style.borderColor = 'transparent';
-            thumb.style.borderWidth = '2px';
-            thumb.classList.remove('active');
-          }
-        });
-      }
-
-      // Автоматический скролл к выбранной миниатюре
-      if (window.innerWidth < 1024) {
-        scrollToThumbnailIfNeeded(currentGalleryIndex, 'mobile');
-      } else {
-        scrollToThumbnailIfNeeded(currentGalleryIndex, 'desktop');
-      }
+      // ensure visible
+      if (window.innerWidth < 1024) scrollToThumbnailIfNeeded(currentGalleryIndex, 'mobile');
+      else scrollToThumbnailIfNeeded(currentGalleryIndex, 'desktop');
     }
 
-    // === Функция смены изображения в галерее ===
-    function changeGalleryImage(index) {
-      if (index < 0 || index >= photos.length || index === currentGalleryIndex) return;
-
-      resetZoom();
-      currentGalleryIndex = index;
-      updateGalleryImage();
-      updateThumbnailSelection();
-      updateInteractionTime();
-    }
-
-    // === Функция "умного" переключения по стрелкам ===
-    function smartNavigate(direction) {
-      // direction: -1 для prev, 1 для next
-
-      resetZoom();
-      updateInteractionTime();
-
-      // Получаем текущий контейнер миниатюр
-      let container;
-      if (window.innerWidth < 1024) {
-        container = galleryThumbnailsMobile;
-      } else {
-        container = galleryThumbnailsDesktop;
-      }
-
+    // ---------- Smart scroll ----------
+    function scrollToThumbnailIfNeeded(index, type = 'auto') {
+      const isMobile = (type === 'mobile') || (type === 'auto' && window.innerWidth < 1024);
+      const container = isMobile ? thumbsMobile : thumbsDesktop;
       if (!container) return;
+      const thumbs = Array.from(container.children);
+      const target = thumbs[index];
+      if (!target) return;
 
-      const thumbnails = container.querySelectorAll('div');
-      const visibleCount = calculateVisibleThumbnails(container, window.innerWidth < 1024);
-      const currentIndex = currentGalleryIndex;
-      let newIndex;
+      // For vertical container, use scrollTop/offsetTop; for horizontal - scrollLeft/offsetLeft
+      const isHorizontal = isMobile;
+      const visibleCount = calculateVisibleThumbnails(container, isMobile);
+      const total = thumbs.length;
 
-      if (window.innerWidth < 1024) {
-        // Мобильная логика - горизонтальная навигация
-        if (direction === -1) { // prev
-          if (currentIndex > 0) {
-            newIndex = currentIndex - 1;
-          } else {
-            newIndex = photos.length - 1; // зацикливание
-          }
-        } else { // next
-          if (currentIndex < photos.length - 1) {
-            newIndex = currentIndex + 1;
-          } else {
-            newIndex = 0; // зацикливание
-          }
-        }
+      // compute view start/end in content coordinates
+      const viewStart = isHorizontal ? container.scrollLeft : container.scrollTop;
+      const viewSize = isHorizontal ? container.clientWidth : container.clientHeight;
+      const targetStart = isHorizontal ? target.offsetLeft : target.offsetTop;
+      const targetSize = isHorizontal ? target.offsetWidth : target.offsetHeight;
+      const targetEnd = targetStart + targetSize;
+
+      // is fully visible?
+      if (targetStart >= viewStart && targetEnd <= viewStart + viewSize) return;
+
+      const maxScroll = (isHorizontal ? container.scrollWidth : container.scrollHeight) - viewSize;
+
+      // if near start
+      if (index <= Math.floor(visibleCount / 2)) {
+        smoothScrollTo(container, 0, isHorizontal);
+        return;
+      }
+      // if near end
+      if (index >= total - Math.ceil(visibleCount / 2)) {
+        smoothScrollTo(container, maxScroll, isHorizontal);
+        return;
+      }
+
+      // center thumbnail
+      const targetCenter = targetStart - (viewSize / 2) + (targetSize / 2);
+      const dest = Math.max(0, Math.min(maxScroll, targetCenter));
+      smoothScrollTo(container, dest, isHorizontal);
+    }
+
+    function smoothScrollTo(container, value, horizontal = true) {
+      // Use native smooth behavior where supported
+      if (horizontal) {
+        container.scrollTo({ left: value, behavior: 'smooth' });
       } else {
-        // Десктопная логика - вертикальная навигация с учетом видимых
-        if (direction === -1) { // prev
-          if (currentIndex > 0) {
-            newIndex = currentIndex - 1;
-          } else {
-            // Переход к последней видимой группе
-            newIndex = photos.length - visibleCount;
-          }
-        } else { // next
-          if (currentIndex < photos.length - visibleCount) {
-            newIndex = currentIndex + 1;
-          } else {
-            // Если приближаемся к концу, идем к первой группе
-            newIndex = Math.min(currentIndex + 1, photos.length - 1);
-            if (newIndex === photos.length - 1) {
-              // Дошли до конца - переходим к началу
-              setTimeout(() => {
-                container.scrollTo({
-                  top: 0,
-                  behavior: 'smooth'
-                });
-              }, 300);
-            }
-          }
-        }
-      }
-
-      // Обновляем индекс и изображение
-      currentGalleryIndex = newIndex;
-      updateGalleryImage();
-      updateThumbnailSelection();
-
-      // Дополнительная логика для плавного скролла
-      const containerRect = container.getBoundingClientRect();
-      const thumbnail = thumbnails[newIndex];
-
-      if (thumbnail) {
-        if (window.innerWidth < 1024) {
-          // Мобильные: центрируем выбранную миниатюру
-          const targetLeft = thumbnail.offsetLeft - (containerRect.width / 2) + (thumbnail.offsetWidth / 2);
-          container.scrollTo({
-            left: targetLeft,
-            behavior: 'smooth'
-          });
-        } else {
-          // Десктоп: центрируем по вертикали
-          const targetTop = thumbnail.offsetTop - (containerRect.height / 2) + (thumbnail.offsetHeight / 2);
-          container.scrollTo({
-            top: targetTop,
-            behavior: 'smooth'
-          });
-        }
+        container.scrollTo({ top: value, behavior: 'smooth' });
       }
     }
 
-    // === Функции управления курсором ===
-    function setZoomInCursor() {
-      galleryImg.classList.remove('cursor-grab', 'cursor-grabbing', 'cursor-zoom-out');
-      galleryImg.classList.add('cursor-zoom-in');
-    }
-
-    function setGrabCursor() {
-      galleryImg.classList.remove('cursor-zoom-in', 'cursor-grabbing', 'cursor-zoom-out');
-      galleryImg.classList.add('cursor-grab');
-    }
-
-    function resetCursor() {
-      if (isZoomed) {
-        if (window.matchMedia('(hover: hover)').matches && !isTouchDevice()) {
-          galleryImg.classList.remove('cursor-grab', 'cursor-grabbing', 'cursor-zoom-in');
-          galleryImg.classList.add('cursor-zoom-out');
-        } else {
-          setGrabCursor();
-        }
-      } else {
-        setZoomInCursor();
-      }
-    }
-
-    function isTouchDevice() {
-      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    }
-
-    // === Обновление времени последнего взаимодействия ===
-    function updateInteractionTime() {
-      lastInteractionTime = Date.now();
-    }
-
-    // === Автоматический сброс зума на мобильных ===
-    function startAutoResetTimer() {
-      if (!isTouchDevice() || !isZoomed) return;
-
-      clearTimeout(autoResetZoomTimer);
-      autoResetZoomTimer = setTimeout(() => {
-        if (isZoomed && Date.now() - lastInteractionTime >= MOBILE_AUTO_RESET_DELAY) {
-          resetZoom();
-        }
-      }, MOBILE_AUTO_RESET_DELAY);
-    }
-
-    // === Управление десктопным режимом (перемещение за курсором) ===
-    function enableDesktopZoomMode() {
-      if (isDesktopZoomMode) return;
-      isDesktopZoomMode = true;
-      galleryImageContainer.addEventListener('mousemove', handleDesktopPan);
-      galleryImageContainer.addEventListener('mouseleave', handleDesktopMouseLeave);
-    }
-
-    function disableDesktopZoomMode() {
-      if (!isDesktopZoomMode) return;
-      isDesktopZoomMode = false;
-      galleryImageContainer.removeEventListener('mousemove', handleDesktopPan);
-      galleryImageContainer.removeEventListener('mouseleave', handleDesktopMouseLeave);
-    }
-
-    function handleDesktopPan(e) {
-      if (!isZoomed || isTouchDevice()) return;
-
-      const rect = galleryImageContainer.getBoundingClientRect();
-
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-
-      const posX = mouseX / rect.width;
-      const posY = mouseY / rect.height;
-
-      const scaledWidth = galleryImg.naturalWidth * currentScale;
-      const scaledHeight = galleryImg.naturalHeight * currentScale;
-
-      const maxX = Math.max(0, (scaledWidth - rect.width) / 2);
-      const maxY = Math.max(0, (scaledHeight - rect.height) / 2);
-
-      translateX = maxX - posX * (maxX * 2);
-      translateY = maxY - posY * (maxY * 2);
-
-      applyTransform();
-    }
-
-
-    function handleDesktopMouseLeave() {
-      // На десктопе при уходе курсора с увеличенного изображения - сбрасываем зум
-      if (isZoomed && !isTouchDevice()) {
+    // ---------- Gallery image update ----------
+    function updateGalleryImage() {
+      const p = photos[currentGalleryIndex];
+      if (!p) return;
+      // preload to avoid flash
+      const tmp = new Image();
+      tmp.onload = () => {
+        galleryImg.src = p.src;
+        galleryImg.alt = p.alt || '';
+        resetZoom(); // ensure consistent state
+        if (galleryCounter) galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
+      };
+      tmp.onerror = () => {
+        galleryImg.src = p.src;
+        galleryImg.alt = p.alt || '';
         resetZoom();
-      }
+        if (galleryCounter) galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
+      };
+      tmp.src = p.src;
     }
 
-    // === Функции масштабирования ===
-    function zoomToDefault() {
-      currentScale = (MIN_ZOOM + MAX_ZOOM) / 2;
-      isZoomed = true;
+    // ---------- Zoom / Pan core ----------
+    function applyTransform() {
+      // transform: translate then scale (translate in px relative to element)
+      galleryImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+    }
 
-      expandContainer();
+    // compute max pan allowed based on natural size and container size
+    function computePanLimits() {
+      const rect = galleryImageContainer.getBoundingClientRect();
+      // natural sizes (intrinsic)
+      const naturalW = galleryImg.naturalWidth || galleryImg.width;
+      const naturalH = galleryImg.naturalHeight || galleryImg.height;
+
+      // scaled sizes
+      const scaledW = naturalW * currentScale;
+      const scaledH = naturalH * currentScale;
+
+      // if image smaller than container -> no pan allowed
+      const maxX = Math.max(0, (scaledW - rect.width) / 2);
+      const maxY = Math.max(0, (scaledH - rect.height) / 2);
+
+      return { maxX, maxY, containerRect: rect, scaledW, scaledH };
+    }
+
+    function clampTranslate() {
+      const { maxX, maxY } = computePanLimits();
+      translateX = Math.max(-maxX, Math.min(maxX, translateX));
+      translateY = Math.max(-maxY, Math.min(maxY, translateY));
+    }
+
+    function zoomTo(scale, focusX = null, focusY = null) {
+      // optional focusX/Y are client coords where we should keep point fixed (for wheel/mouse)
+      const prevScale = currentScale;
+      const newScale = Math.max(1, Math.min(MAX_ZOOM, scale));
+      if (newScale === prevScale) return;
+
+      // if focusing on a point, adjust translate so that that point stays under cursor
+      if (focusX !== null && focusY !== null) {
+        const rect = galleryImageContainer.getBoundingClientRect();
+        // point relative to image center in container coordinates:
+        const cx = focusX - rect.left - rect.width / 2;
+        const cy = focusY - rect.top - rect.height / 2;
+        // adjust translate proportionally to scale change
+        translateX = (translateX) * (newScale / prevScale) + (cx) * (1 - newScale / prevScale);
+        translateY = (translateY) * (newScale / prevScale) + (cy) * (1 - newScale / prevScale);
+      } else {
+        // scale around center: keep translate proportional
+        translateX = translateX * (newScale / prevScale);
+        translateY = translateY * (newScale / prevScale);
+      }
+
+      currentScale = newScale;
+      isZoomed = currentScale > 1.01;
+      clampTranslate();
       applyTransform();
       updateZoomIndicator();
-      updateInteractionTime();
 
-      if (window.matchMedia('(hover: hover)').matches && !isTouchDevice()) {
-        enableDesktopZoomMode();
-        galleryImg.classList.remove('cursor-grab', 'cursor-grabbing', 'cursor-zoom-in');
-        galleryImg.classList.add('cursor-zoom-out');
-      } else {
-        setGrabCursor();
-        // Показываем кнопку сброса зума на мобильных
-        if (galleryResetZoom) {
-          galleryResetZoom.classList.remove('hidden');
-        }
-        // Запускаем таймер автосброса
-        startAutoResetTimer();
+      // desktop vs mobile behavior
+      if (!isTouchDevice() && isZoomed) enableDesktopZoomMode();
+      else disableDesktopZoomMode();
+
+      updateInteractionTime();
+    }
+
+    function zoomIn() {
+      zoomTo(Math.min(MAX_ZOOM, currentScale + ZOOM_STEP));
+    }
+    function zoomOut() {
+      zoomTo(Math.max(1, currentScale - ZOOM_STEP));
+    }
+
+    function toggleZoom(clientX = null, clientY = null) {
+      if (isZoomed) resetZoom();
+      else {
+        // center on click if coords provided
+        const defaultScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, (MIN_ZOOM + MAX_ZOOM) / 2));
+        if (clientX !== null && clientY !== null) zoomTo(defaultScale, clientX, clientY);
+        else zoomTo(defaultScale);
       }
     }
 
@@ -657,259 +531,194 @@ $photosUnified[] = [
       translateX = 0;
       translateY = 0;
       isZoomed = false;
-
-      resetContainer();
       applyTransform();
       updateZoomIndicator();
-      updateInteractionTime();
-
       disableDesktopZoomMode();
-      setZoomInCursor();
-
-      // Скрываем кнопку сброса зума на мобильных
-      if (galleryResetZoom) {
-        galleryResetZoom.classList.add('hidden');
-      }
-
-      // Останавливаем таймер автосброса
+      if (galleryResetZoom) galleryResetZoom.classList.add('hidden');
       clearTimeout(autoResetZoomTimer);
     }
-
-    function toggleZoom() {
-      updateInteractionTime();
-      if (isZoomed) {
-        resetZoom();
-      } else {
-        zoomToDefault();
-      }
-    }
-
-    function zoomIn() {
-      const newScale = Math.min(currentScale + ZOOM_STEP, MAX_ZOOM);
-      if (newScale !== currentScale) {
-        currentScale = newScale;
-        isZoomed = true;
-        expandContainer();
-        applyTransform();
-        updateZoomIndicator();
-        resetCursor();
-        updateInteractionTime();
-        startAutoResetTimer();
-      }
-    }
-
-    function zoomOut() {
-      const newScale = Math.max(currentScale - ZOOM_STEP, MIN_ZOOM);
-      if (newScale !== currentScale) {
-        currentScale = newScale;
-        isZoomed = true;
-        expandContainer();
-        applyTransform();
-        updateZoomIndicator();
-        resetCursor();
-        updateInteractionTime();
-        startAutoResetTimer();
-      }
-    }
-
-    function expandContainer() {
-      galleryImageContainer.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'max-h-[calc(90vh-4rem)]', 'lg:max-h-[90vh]');
-
-      if (window.innerWidth < 1024) {
-        // На мобильных - уменьшаем максимальную высоту чтобы не перекрывало миниатюры
-        galleryImageContainer.classList.add('max-w-[95vw]', 'max-h-[calc(85vh-2rem)]', 'overflow-auto', 'mb-8');
-      } else {
-        galleryImageContainer.classList.add('lg:max-w-[calc(95vw-6rem)]', 'max-w-[95vw]', 'max-h-[90vh]', 'overflow-auto');
-      }
-
-      galleryImg.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
-      galleryImg.classList.add('max-w-none', 'max-h-none');
-    }
-
-    function resetContainer() {
-      galleryImageContainer.classList.remove(
-        'lg:max-w-[calc(95vw-2rem)]', 'max-w-[95vw]',
-        'max-h-[calc(85vh-2rem)]', 'max-h-[90vh]',
-        'overflow-auto', 'mb-20'
-      );
-
-      galleryImageContainer.classList.add('max-w-full', 'max-h-[calc(90vh-4rem)]', 'lg:max-h-[90vh]', 'mb-2', 'lg:mb-0');
-      galleryImg.classList.remove('max-w-none', 'max-h-none');
-      galleryImg.classList.add('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
-    }
-
-    function applyTransform() {
-      galleryImg.style.transform =
-        `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
-    }
-
 
     function updateZoomIndicator() {
-      if (galleryZoomIndicator) {
-        if (isZoomed) {
-          galleryZoomIndicator.textContent = Math.round(currentScale * 100) + '%';
-          galleryZoomIndicator.classList.remove('hidden');
-        } else {
-          galleryZoomIndicator.classList.add('hidden');
-        }
+      if (!galleryZoomIndicator) return;
+      if (isZoomed) {
+        galleryZoomIndicator.textContent = Math.round(currentScale * 100) + '%';
+        galleryZoomIndicator.classList.remove('hidden');
+        if (galleryResetZoom) galleryResetZoom.classList.remove('hidden');
+      } else {
+        galleryZoomIndicator.classList.add('hidden');
       }
     }
 
-    // === Открытие/закрытие галереи ===
-    mainImageContainer?.addEventListener('click', () => {
-      currentGalleryIndex = currentMainIndex;
-      resetZoom();
-      createThumbnails(); // Создаём миниатюры при открытии
-      updateGalleryImage();
-      galleryModal.classList.remove('hidden', 'pointer-events-none');
-      setTimeout(() => {
-        galleryModal.classList.add('opacity-100', 'pointer-events-auto');
-        updateInteractionTime();
-      }, 10);
-    });
+    // ---------- Desktop hover pan mode ----------
+    let desktopMouseHandler = (e) => {
+      if (!isZoomed || isTouchDevice()) return;
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const rect = galleryImageContainer.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const posX = mouseX / rect.width;
+        const posY = mouseY / rect.height;
 
-    function closeGallery() {
-      resetZoom();
-      galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
-      setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
-      clearTimeout(autoResetZoomTimer);
-    }
+        const { maxX, maxY } = computePanLimits();
 
-    galleryClose?.addEventListener('click', closeGallery);
-    galleryModal?.addEventListener('click', (e) => {
-      if (e.target === galleryModal) closeGallery();
-    });
+        translateX = maxX - posX * (maxX * 2);
+        translateY = maxY - posY * (maxY * 2);
 
-    // === Кнопка сброса зума для мобильных ===
-    if (galleryResetZoom) {
-      galleryResetZoom.addEventListener('click', resetZoom);
-    }
-
-    // === Навигация ===
-    galleryPrev?.addEventListener('click', () => {
-      smartNavigate(-1);
-    });
-
-    galleryNext?.addEventListener('click', () => {
-      smartNavigate(1);
-    });
-
-    function updateGalleryImage() {
-      const photo = photos[currentGalleryIndex];
-      galleryImg.src = photo.src;
-      galleryImg.alt = photo.alt;
-      resetZoom(); // гарантируем сброс при смене
-      if (galleryCounter) {
-        galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
-      }
+        clampTranslate();
+        applyTransform();
+      });
       updateInteractionTime();
+    };
+
+    function enableDesktopZoomMode() {
+      if (!galleryImageContainer) return;
+      galleryImageContainer.addEventListener('mousemove', desktopMouseHandler);
+      galleryImageContainer.addEventListener('mouseleave', handleDesktopMouseLeave);
+    }
+    function disableDesktopZoomMode() {
+      if (!galleryImageContainer) return;
+      galleryImageContainer.removeEventListener('mousemove', desktopMouseHandler);
+      galleryImageContainer.removeEventListener('mouseleave', handleDesktopMouseLeave);
+    }
+    function handleDesktopMouseLeave() {
+      // reset to centered when leaving
+      if (isZoomed && !isTouchDevice()) {
+        resetZoom();
+      }
     }
 
-    // === Клик по изображению — переключение зума ===
-    galleryImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleZoom();
-    });
-
-    // === Только для мобильных: drag при нажатии ===
-    galleryImg.addEventListener('touchstart', (e) => {
-      if (!isZoomed || e.touches.length !== 1) return;
-      e.preventDefault();
+    // ---------- Drag (touch) ----------
+    function startDrag(clientX, clientY) {
       isDragging = true;
-      startX = e.touches[0].clientX - translateX;
-      startY = e.touches[0].clientY - translateY;
-      setGrabCursor();
-      document.addEventListener('touchmove', drag);
-      document.addEventListener('touchend', endDrag);
+      dragStartX = clientX - translateX;
+      dragStartY = clientY - translateY;
       updateInteractionTime();
-      startAutoResetTimer();
-    });
-
-    function drag(e) {
-      if (!isDragging || !isZoomed) return;
-
-      e.preventDefault();
-
-      const touch = e.touches[0];
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
-
-      const rect = galleryImageContainer.getBoundingClientRect();
-
-      const scaledWidth = galleryImg.naturalWidth * currentScale;
-      const scaledHeight = galleryImg.naturalHeight * currentScale;
-
-      const maxX = Math.max(0, (scaledWidth - rect.width) / 2);
-      const maxY = Math.max(0, (scaledHeight - rect.height) / 2);
-
-      translateX = Math.max(-maxX, Math.min(maxX, dx));
-      translateY = Math.max(-maxY, Math.min(maxY, dy));
-
-      applyTransform();
     }
-
-
-    function endDrag() {
+    function moveDrag(clientX, clientY) {
+      if (!isDragging || !isZoomed) return;
+      const dx = clientX - dragStartX;
+      const dy = clientY - dragStartY;
+      translateX = dx;
+      translateY = dy;
+      clampTranslate();
+      applyTransform();
+      updateInteractionTime();
+    }
+    function stopDrag() {
       if (!isDragging) return;
       isDragging = false;
-      document.removeEventListener('touchmove', drag);
-      document.removeEventListener('touchend', endDrag);
-      resetCursor();
       updateInteractionTime();
-      startAutoResetTimer();
+      // restart auto-reset on mobile
+      if (isTouchDevice() && isZoomed) {
+        clearTimeout(autoResetZoomTimer);
+        autoResetZoomTimer = setTimeout(() => {
+          if (Date.now() - lastInteraction >= MOBILE_AUTO_RESET_DELAY) resetZoom();
+        }, MOBILE_AUTO_RESET_DELAY);
+      }
     }
 
-    // === Колесо мыши — только если не в десктоп-режиме ===
-    galleryImageContainer.addEventListener('wheel', (e) => {
-      if (!isZoomed || isTouchDevice()) return;
-      e.preventDefault();
-      if (e.deltaY < 0) zoomIn();
-      else zoomOut();
-      updateInteractionTime();
+    // ---------- Touch handlers ----------
+    galleryImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        // single finger - potential drag when zoomed
+        if (!isZoomed) return;
+        const t = e.touches[0];
+        startDrag(t.clientX, t.clientY);
+      } else if (e.touches.length === 2) {
+        // pinch start
+        e.preventDefault();
+        const d = getDistance(e.touches[0], e.touches[1]);
+        pinchStartDistance = d;
+        pinchStartScale = currentScale;
+      }
     }, { passive: false });
 
-    // === Жесты (масштабирование) на мобильных ===
-    let initialDistance = 0;
-    let initialScale = 1;
-
-    galleryImageContainer.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 2) {
+    galleryImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1 && isDragging) {
         e.preventDefault();
-        initialDistance = getDistance(e.touches[0], e.touches[1]);
-        initialScale = currentScale;
-        updateInteractionTime();
+        const t = e.touches[0];
+        moveDrag(t.clientX, t.clientY);
+      } else if (e.touches.length === 2) {
+        e.preventDefault();
+        const d = getDistance(e.touches[0], e.touches[1]);
+        if (!pinchStartDistance) pinchStartDistance = d;
+        const factor = d / pinchStartDistance;
+        const newScale = Math.max(1, Math.min(MAX_ZOOM, pinchStartScale * factor));
+        // scale around center between two touches
+        const rect = galleryImageContainer.getBoundingClientRect();
+        const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        zoomTo(newScale, centerX, centerY);
+      }
+    }, { passive: false });
+
+    galleryImg.addEventListener('touchend', (e) => {
+      if (e.touches.length === 0) {
+        stopDrag();
+        pinchStartDistance = 0;
       }
     });
 
-    galleryImageContainer.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 2) {
-        e.preventDefault();
-        const currentDistance = getDistance(e.touches[0], e.touches[1]);
-        const scaleFactor = currentDistance / initialDistance;
-        const newScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, initialScale * scaleFactor));
-        if (newScale !== currentScale) {
-          currentScale = newScale;
-          isZoomed = true;
-          expandContainer();
-          applyTransform();
-          updateZoomIndicator();
-          setGrabCursor();
-          updateInteractionTime();
-          startAutoResetTimer();
-        }
-      }
-    });
-
-    function getDistance(touch1, touch2) {
-      const dx = touch1.clientX - touch2.clientX;
-      const dy = touch1.clientY - touch2.clientY;
+    function getDistance(a, b) {
+      const dx = a.clientX - b.clientX;
+      const dy = a.clientY - b.clientY;
       return Math.sqrt(dx * dx + dy * dy);
     }
 
-    // === Клавиатура ===
+    // ---------- Mouse events ----------
+    // click toggles zoom (use event coordinates to focus)
+    galleryImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleZoom(e.clientX, e.clientY);
+    });
+
+    // wheel zoom (desktop), only when not touch device
+    galleryImageContainer.addEventListener('wheel', (e) => {
+      if (isTouchDevice()) return;
+      if (e.ctrlKey) return; // let browser handle pinch-zoom when ctrl pressed
+      e.preventDefault();
+      const delta = e.deltaY;
+      if (delta < 0) {
+        // zoom in around pointer
+        zoomTo(Math.min(MAX_ZOOM, currentScale + ZOOM_STEP), e.clientX, e.clientY);
+      } else {
+        zoomTo(Math.max(1, currentScale - ZOOM_STEP), e.clientX, e.clientY);
+      }
+    }, { passive: false });
+
+    // pointer-based dragging (desktop dragging when zoomed)
+    galleryImg.addEventListener('pointerdown', (e) => {
+      // use pointer events to unify mouse/touch where supported
+      if (e.pointerType === 'mouse' && e.button !== 0) return; // left click only
+      if (!isZoomed) return;
+      pointerId = e.pointerId;
+      galleryImg.setPointerCapture(pointerId);
+      startDrag(e.clientX, e.clientY);
+    });
+    galleryImg.addEventListener('pointermove', (e) => {
+      if (pointerId !== e.pointerId) return;
+      if (isDragging) moveDrag(e.clientX, e.clientY);
+    });
+    galleryImg.addEventListener('pointerup', (e) => {
+      if (pointerId !== e.pointerId) return;
+      galleryImg.releasePointerCapture(pointerId);
+      pointerId = null;
+      stopDrag();
+    });
+    galleryImg.addEventListener('pointercancel', () => {
+      if (pointerId) {
+        galleryImg.releasePointerCapture(pointerId);
+        pointerId = null;
+      }
+      stopDrag();
+    });
+
+    // ---------- Keyboard ----------
     window.addEventListener('keydown', (e) => {
       if (!galleryModal.classList.contains('opacity-100')) return;
-
       if (e.key === 'Escape') {
         if (isZoomed) resetZoom();
         else closeGallery();
@@ -918,101 +727,84 @@ $photosUnified[] = [
       } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         smartNavigate(1);
       } else if (e.key === '0') resetZoom();
-      else if (e.key === '1') zoomToDefault();
-      else if (e.key === '+' || e.key === '=') zoomIn();
+      else if (e.key === '1') {
+        zoomTo((MIN_ZOOM + MAX_ZOOM) / 2);
+      } else if (e.key === '+' || e.key === '=') zoomIn();
       else if (e.key === '-' || e.key === '_') zoomOut();
 
       updateInteractionTime();
     });
 
-    // === Смена основного изображения (миниатюры) ===
-    const infoDots = document.getElementById('infoDots');
+    // ---------- Navigation (prev/next) ----------
+    function smartNavigate(direction) {
+      // direction: -1 prev, 1 next
+      resetZoom();
+      updateInteractionTime();
+      const total = photos.length;
+      if (total === 0) return;
+      let newIndex = currentGalleryIndex + direction;
+      if (newIndex < 0) newIndex = total - 1;
+      if (newIndex >= total) newIndex = 0;
+      currentGalleryIndex = newIndex;
+      updateGalleryImage();
+      updateThumbnailSelection();
 
-    function changeMainImage(thumb) {
-      const bigImage = thumb.dataset.bigimage;
-      const alt = thumb.alt;
-      const index = parseInt(thumb.dataset.index, 10);
-
-      if (!mainImage || !bigImage || isNaN(index)) return;
-
-      // Обновляем подсветку
-      document.querySelectorAll('.slider-track img').forEach(img => {
-        img.style.borderColor = '';
-      });
-      thumb.style.setProperty('border-color', '#2563eb', 'important');
-
-      // Обновляем индекс
-      currentMainIndex = index;
-
-      // Обновляем точки (если нужно)
-      if (infoDots) {
-        infoDots.classList.toggle('hidden', index !== 0);
-      }
-
-      // Загружаем изображение
-      const tempImg = new Image();
-      tempImg.onload = () => {
-        mainImage.src = bigImage; // только после успешной загрузки
-        mainImage.alt = alt;
-        requestAnimationFrame(refreshSlider);
-      };
-      tempImg.onerror = () => {
-        mainImage.src = bigImage;
-        mainImage.alt = alt;
-        requestAnimationFrame(refreshSlider);
-      };
-      tempImg.src = bigImage; // запуск загрузки
+      // scroll to new thumb
+      scrollToThumbnailIfNeeded(newIndex, window.innerWidth < 1024 ? 'mobile' : 'desktop');
     }
 
-    // Инициализация миниатюр
-    const firstThumb = document.querySelector('.slider-track img');
-    if (firstThumb) {
-      currentMainIndex = parseInt(firstThumb.dataset.index, 10) || 0;
-      changeMainImage(firstThumb);
+    // ---------- Open / Close gallery ----------
+    function openAt(index) {
+      if (index < 0 || index >= photos.length) index = 0;
+      currentGalleryIndex = index;
+      resetZoom();
+      createThumbnails();
+      updateGalleryImage();
+      galleryModal.classList.remove('hidden', 'pointer-events-none');
+      // small timeout to allow transition to animate
+      setTimeout(() => {
+        galleryModal.classList.add('opacity-100', 'pointer-events-auto');
+        updateInteractionTime();
+      }, 10);
     }
 
-    document.querySelectorAll('.slider-track img').forEach(img => {
-      img.addEventListener('click', () => changeMainImage(img));
-    });
+    function closeGallery() {
+      resetZoom();
+      galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
+      setTimeout(() => {
+        galleryModal.classList.add('hidden', 'pointer-events-none');
+      }, 300);
+      clearTimeout(autoResetZoomTimer);
+    }
 
-    // === Адаптивность слайдера миниатюр (оставляем вашу логику) ===
+    // ---------- Small helpers ----------
     function updateThumbnailSliderHeight() {
+      // keep your previous behavior — adapt container heights
       const track = document.querySelector('.slider-track');
       const container = document.querySelector(".slider-thumbnails-container > .relative");
-
-      // Если элементов нет — выходим
       if (!track || !container) return;
-
       if (window.innerWidth < 1024) {
-        // === Мобильный режим: сбрасываем ВСЁ (ширина по содержимому или 100%) ===
+        // reset mobile
         track.style.height = '';
         track.style.maxHeight = '';
         track.style.width = '';
         track.style.minWidth = '';
         track.style.maxWidth = '';
-
         container.style.height = '';
         container.style.maxHeight = '';
         container.style.width = '';
         container.style.minWidth = '';
         container.style.maxWidth = '';
-
         return;
       }
-
-      // === Десктопный режим (>=1024px) ===
       const mainImageEl = document.querySelector('#mainImageContainer > img');
       if (!mainImageEl) return;
-
       const imageHeight = mainImageEl.getBoundingClientRect().height;
       if (imageHeight <= 0) return;
-
-      const btnHeight = 20; // высота кнопок "вверх/вниз"
-      const gap = 16;       // суммарный gap между кнопками и треком
+      const btnHeight = 20;
+      const gap = 16;
       const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
       const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
-
-      // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
       container.style.height = imageHeight + 'px';
       container.style.maxHeight = imageHeight + 'px';
       container.style.width = '80px';
@@ -1024,24 +816,82 @@ $photosUnified[] = [
       updateThumbnailSliderHeight();
     }
 
-    // === Обработка ресайза окна ===
-    function handleResize() {
+    // ---------- Events wiring ----------
+    galleryClose?.addEventListener('click', closeGallery);
+    galleryModal?.addEventListener('click', (e) => {
+      if (e.target === galleryModal) closeGallery();
+    });
+
+    galleryPrev?.addEventListener('click', () => smartNavigate(-1));
+    galleryNext?.addEventListener('click', () => smartNavigate(1));
+    if (galleryResetZoom) galleryResetZoom.addEventListener('click', resetZoom);
+
+    window.addEventListener('resize', () => {
+      // on resize keep UX predictable: recompute limits and clamp
+      clampTranslate();
       refreshSlider();
-      // При ресайзе сбрасываем зум для корректного отображения
+      if (isZoomed && !isTouchDevice()) disableDesktopZoomMode();
+    });
+    window.addEventListener('load', refreshSlider);
+    mainImage?.addEventListener('load', refreshSlider);
+
+    // ---------- Initial hookup for thumbnail-click that updates main image in product view ----------
+    function changeMainImage(thumb) {
+      const bigImage = thumb.dataset.bigimage;
+      const alt = thumb.alt;
+      const index = parseInt(thumb.dataset.index, 10);
+      if (!mainImage || !bigImage || isNaN(index)) return;
+      // clear others
+      document.querySelectorAll('.slider-track img').forEach(img => img.style.borderColor = '');
+      thumb.style.setProperty('border-color', '#2563eb', 'important');
+      currentMainIndex = index;
+      const tmp = new Image();
+      tmp.onload = () => {
+        mainImage.src = bigImage;
+        mainImage.alt = alt || '';
+        requestAnimationFrame(refreshSlider);
+      };
+      tmp.onerror = () => {
+        mainImage.src = bigImage;
+        mainImage.alt = alt || '';
+        requestAnimationFrame(refreshSlider);
+      };
+      tmp.src = bigImage;
+    }
+
+    const firstThumb = document.querySelector('.slider-track img');
+    if (firstThumb) {
+      currentMainIndex = parseInt(firstThumb.dataset.index, 10) || 0;
+      changeMainImage(firstThumb);
+    }
+    document.querySelectorAll('.slider-track img').forEach(img => img.addEventListener('click', () => changeMainImage(img)));
+
+    // ---------- Accessibility / keyboard focus ----------
+    // (kept minimal — ESC handled above)
+
+    // ---------- Init ----------
+    // set initial cursors & hooks
+    galleryImg.style.transition = 'transform 0.25s ease';
+    setTimeout(() => {
+      // ensure DOM ready thumbnails
+      createThumbnails();
+      setCursorState();
+    }, 50);
+
+    function setCursorState() {
       if (isZoomed) {
-        resetZoom();
-      }
-      // Пересчитываем и обновляем миниатюры
-      if (galleryModal.classList.contains('opacity-100')) {
-        updateThumbnailSelection();
+        if (!isTouchDevice()) galleryImg.classList.remove('cursor-zoom-in'), galleryImg.classList.add('cursor-zoom-out');
+        else galleryImg.classList.remove('cursor-zoom-in'), galleryImg.classList.add('cursor-grab');
+      } else {
+        galleryImg.classList.remove('cursor-grab', 'cursor-zoom-out');
+        galleryImg.classList.add('cursor-zoom-in');
       }
     }
 
-    window.addEventListener('load', refreshSlider);
-    window.addEventListener('resize', handleResize);
-    mainImage?.addEventListener('load', refreshSlider);
-
-    // Инициализация
-    setZoomInCursor();
+    // expose small helpers to console for debug (optional)
+    window.__gallery = {
+      openAt, closeGallery, smartNavigate, zoomIn, zoomOut, resetZoom
+    };
   });
 </script>
+
