@@ -3,16 +3,32 @@
   id="gallery-modal"
   class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
 >
+  <!-- Левая панель миниатюр (десктоп) -->
+  <div
+    id="gallery-thumbnails-desktop"
+    class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]"
+  >
+    <!-- Миниатюры будут добавляться динамически -->
+  </div>
+
+  <!-- Нижняя панель миниатюр (мобильные) -->
+  <div
+    id="gallery-thumbnails-mobile"
+    class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none"
+  >
+    <!-- Миниатюры будут добавляться динамически -->
+  </div>
+
   <!-- Центральное изображение -->
   <div
     id="gallery-image-container"
-    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out"
+    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0"
   >
     <img
       id="gallery-main-img"
       src=""
       alt=""
-      class="max-w-full max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
+      class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
     />
   </div>
 
@@ -30,7 +46,7 @@
   <!-- Стрелка "назад" -->
   <button
     id="gallery-prev"
-    class="absolute left-4 top-1/2 -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
     aria-label="Предыдущее изображение"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -41,7 +57,7 @@
   <!-- Стрелка "вперёд" -->
   <button
     id="gallery-next"
-    class="absolute right-4 top-1/2 -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+    class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
     aria-label="Следующее изображение"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -52,16 +68,27 @@
   <!-- Счётчик -->
   <div
     id="gallery-counter"
-    class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm"
+    class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]"
   ></div>
 
   <!-- Индикатор масштаба -->
   <div
     id="gallery-zoom-indicator"
-    class="absolute top-4 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden"
+    class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]"
   >
     100%
   </div>
+
+  <!-- Кнопка сброса зума (только для мобильных) -->
+  <button
+    id="gallery-reset-zoom"
+    class="lg:hidden absolute bottom-24 right-4 text-white/90 text-sm font-light z-[61] bg-black/60 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/80 hidden"
+    aria-label="Сбросить масштаб"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+    </svg>
+  </button>
 </div>
 
 <?php
@@ -119,6 +146,34 @@ $photosUnified[] = [
 }
 ?>
 
+<style>
+  /* Скрываем скроллбар для всех элементов */
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE и Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none; /* Chrome, Safari и Opera */
+  }
+
+  /* Стили для десктопных миниатюр */
+  #gallery-thumbnails-desktop {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  #gallery-thumbnails-desktop::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Плавный скролл для миниатюр */
+  #gallery-thumbnails-desktop,
+  #gallery-thumbnails-mobile {
+    scroll-behavior: smooth;
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // === ГАЛЕРЕЯ: данные ===
@@ -133,11 +188,14 @@ $photosUnified[] = [
     let currentScale = 1;
     let isDesktopZoomMode = false;
     let currentMainIndex = 0;
+    let autoResetZoomTimer = null;
+    let lastInteractionTime = Date.now();
 
     // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
     const MIN_ZOOM = 1.2;
     const MAX_ZOOM = 2.0;
     const ZOOM_STEP = 0.1;
+    const MOBILE_AUTO_RESET_DELAY = 3000; // 3 секунды бездействия
 
     // === Элементы DOM ===
     const mainImage = document.getElementById('main-product-image');
@@ -150,6 +208,196 @@ $photosUnified[] = [
     const galleryNext = document.getElementById('gallery-next');
     const galleryCounter = document.getElementById('gallery-counter');
     const galleryZoomIndicator = document.getElementById('gallery-zoom-indicator');
+    const galleryResetZoom = document.getElementById('gallery-reset-zoom');
+    const galleryThumbnailsDesktop = document.getElementById('gallery-thumbnails-desktop');
+    const galleryThumbnailsMobile = document.getElementById('gallery-thumbnails-mobile');
+
+    // === Функция создания миниатюр ===
+    function createThumbnails() {
+      // Десктопная версия (вертикальная)
+      if (galleryThumbnailsDesktop) {
+        galleryThumbnailsDesktop.innerHTML = '';
+
+        photos.forEach((photo, index) => {
+          const thumbnail = createThumbnailElement(photo, index);
+
+          thumbnail.addEventListener('click', (e) => {
+            e.stopPropagation();
+            changeGalleryImage(index);
+          });
+
+          galleryThumbnailsDesktop.appendChild(thumbnail);
+        });
+      }
+
+      // Мобильная версия (горизонтальная)
+      if (galleryThumbnailsMobile) {
+        galleryThumbnailsMobile.innerHTML = '';
+
+        photos.forEach((photo, index) => {
+          const thumbnail = createThumbnailElement(photo, index);
+
+          thumbnail.addEventListener('click', (e) => {
+            e.stopPropagation();
+            changeGalleryImage(index);
+
+            // Умный скролл при клике на любую миниатюру
+            scrollToThumbnailIfNeeded(index, 'mobile');
+          });
+
+          galleryThumbnailsMobile.appendChild(thumbnail);
+        });
+      }
+
+      updateThumbnailSelection();
+
+      // Добавляем обработчики для умного скролла на десктопе
+      if (galleryThumbnailsDesktop) {
+        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
+        desktopThumbs.forEach((thumb, index) => {
+          thumb.addEventListener('click', () => {
+            scrollToThumbnailIfNeeded(index, 'desktop');
+          });
+        });
+      }
+    }
+
+    // === Создание элемента миниатюры ===
+    function createThumbnailElement(photo, index) {
+      const thumbnail = document.createElement('div');
+      thumbnail.className = 'relative w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 flex-shrink-0 hover:border-blue-400 active:scale-95';
+      thumbnail.style.borderColor = 'transparent';
+      thumbnail.dataset.index = index;
+
+      thumbnail.innerHTML = `
+        <img
+          src="${photo.thumb}"
+          alt="${photo.alt}"
+          class="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity duration-200"></div>
+      `;
+
+      return thumbnail;
+    }
+
+    // === Функция для умного скролла к миниатюре ===
+    function scrollToThumbnailIfNeeded(index, type = 'auto') {
+      let container, thumbnails;
+
+      if (type === 'mobile' || (type === 'auto' && window.innerWidth < 1024)) {
+        container = galleryThumbnailsMobile;
+        if (!container) return;
+        thumbnails = container.querySelectorAll('div');
+      } else {
+        container = galleryThumbnailsDesktop;
+        if (!container) return;
+        thumbnails = container.querySelectorAll('div');
+      }
+
+      if (!thumbnails[index]) return;
+
+      const thumbnail = thumbnails[index];
+      const containerRect = container.getBoundingClientRect();
+      const thumbnailRect = thumbnail.getBoundingClientRect();
+
+      // Для горизонтального скролла (мобильные)
+      if (container === galleryThumbnailsMobile) {
+        const isFullyVisible =
+          thumbnailRect.left >= containerRect.left &&
+          thumbnailRect.right <= containerRect.right;
+
+        if (!isFullyVisible) {
+          if (thumbnailRect.left < containerRect.left) {
+            // Миниатюра слева за границей
+            container.scrollTo({
+              left: thumbnail.offsetLeft - 16,
+              behavior: 'smooth'
+            });
+          } else if (thumbnailRect.right > containerRect.right) {
+            // Миниатюра справа за границей
+            const scrollLeft = thumbnail.offsetLeft - container.clientWidth + thumbnail.clientWidth + 16;
+            container.scrollTo({
+              left: scrollLeft,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+      // Для вертикального скролла (десктоп)
+      else if (container === galleryThumbnailsDesktop) {
+        const isFullyVisible =
+          thumbnailRect.top >= containerRect.top &&
+          thumbnailRect.bottom <= containerRect.bottom;
+
+        if (!isFullyVisible) {
+          if (thumbnailRect.top < containerRect.top) {
+            // Миниатюра сверху за границей
+            container.scrollTo({
+              top: thumbnail.offsetTop - 16,
+              behavior: 'smooth'
+            });
+          } else if (thumbnailRect.bottom > containerRect.bottom) {
+            // Миниатюра снизу за границей
+            const scrollTop = thumbnail.offsetTop - container.clientHeight + thumbnail.clientHeight + 16;
+            container.scrollTo({
+              top: scrollTop,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+    }
+
+    // === Функция обновления выбранной миниатюры ===
+    function updateThumbnailSelection() {
+      // Десктопные миниатюры
+      if (galleryThumbnailsDesktop) {
+        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
+        desktopThumbs.forEach((thumb, index) => {
+          if (index === currentGalleryIndex) {
+            thumb.style.borderColor = '#3b82f6'; // blue-500
+            thumb.style.borderWidth = '2px';
+          } else {
+            thumb.style.borderColor = 'transparent';
+            thumb.style.borderWidth = '2px';
+          }
+        });
+      }
+
+      // Мобильные миниатюры
+      if (galleryThumbnailsMobile) {
+        const mobileThumbs = galleryThumbnailsMobile.querySelectorAll('div');
+        mobileThumbs.forEach((thumb, index) => {
+          if (index === currentGalleryIndex) {
+            thumb.style.borderColor = '#3b82f6'; // blue-500
+            thumb.style.borderWidth = '2px';
+          } else {
+            thumb.style.borderColor = 'transparent';
+            thumb.style.borderWidth = '2px';
+          }
+        });
+      }
+
+      // Автоматический скролл к выбранной миниатюре
+      if (window.innerWidth < 1024) {
+        scrollToThumbnailIfNeeded(currentGalleryIndex, 'mobile');
+      } else {
+        scrollToThumbnailIfNeeded(currentGalleryIndex, 'desktop');
+      }
+    }
+
+    // === Функция смены изображения в галерее ===
+    function changeGalleryImage(index) {
+      if (index < 0 || index >= photos.length || index === currentGalleryIndex) return;
+
+      resetZoom();
+      currentGalleryIndex = index;
+      updateGalleryImage();
+      updateThumbnailSelection();
+      updateInteractionTime();
+    }
 
     // === Функции управления курсором ===
     function setZoomInCursor() {
@@ -179,21 +427,42 @@ $photosUnified[] = [
       return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     }
 
+    // === Обновление времени последнего взаимодействия ===
+    function updateInteractionTime() {
+      lastInteractionTime = Date.now();
+    }
+
+    // === Автоматический сброс зума на мобильных ===
+    function startAutoResetTimer() {
+      if (!isTouchDevice() || !isZoomed) return;
+
+      clearTimeout(autoResetZoomTimer);
+      autoResetZoomTimer = setTimeout(() => {
+        if (isZoomed && Date.now() - lastInteractionTime >= MOBILE_AUTO_RESET_DELAY) {
+          resetZoom();
+        }
+      }, MOBILE_AUTO_RESET_DELAY);
+    }
+
     // === Управление десктопным режимом (перемещение за курсором) ===
     function enableDesktopZoomMode() {
       if (isDesktopZoomMode) return;
       isDesktopZoomMode = true;
       galleryImageContainer.addEventListener('mousemove', handleDesktopPan);
+      galleryImageContainer.addEventListener('mouseleave', handleDesktopMouseLeave);
     }
 
     function disableDesktopZoomMode() {
       if (!isDesktopZoomMode) return;
       isDesktopZoomMode = false;
       galleryImageContainer.removeEventListener('mousemove', handleDesktopPan);
+      galleryImageContainer.removeEventListener('mouseleave', handleDesktopMouseLeave);
     }
 
     function handleDesktopPan(e) {
       if (!isZoomed || isTouchDevice()) return;
+
+      updateInteractionTime();
 
       const containerRect = galleryImageContainer.getBoundingClientRect();
       const imgRect = galleryImg.getBoundingClientRect();
@@ -229,6 +498,13 @@ $photosUnified[] = [
       applyTransform();
     }
 
+    function handleDesktopMouseLeave() {
+      // На десктопе при уходе курсора с увеличенного изображения - сбрасываем зум
+      if (isZoomed && !isTouchDevice()) {
+        resetZoom();
+      }
+    }
+
     // === Функции масштабирования ===
     function zoomToDefault() {
       currentScale = (MIN_ZOOM + MAX_ZOOM) / 2;
@@ -237,6 +513,7 @@ $photosUnified[] = [
       expandContainer();
       applyTransform();
       updateZoomIndicator();
+      updateInteractionTime();
 
       if (window.matchMedia('(hover: hover)').matches && !isTouchDevice()) {
         enableDesktopZoomMode();
@@ -244,6 +521,12 @@ $photosUnified[] = [
         galleryImg.classList.add('cursor-zoom-out');
       } else {
         setGrabCursor();
+        // Показываем кнопку сброса зума на мобильных
+        if (galleryResetZoom) {
+          galleryResetZoom.classList.remove('hidden');
+        }
+        // Запускаем таймер автосброса
+        startAutoResetTimer();
       }
     }
 
@@ -256,12 +539,22 @@ $photosUnified[] = [
       resetContainer();
       applyTransform();
       updateZoomIndicator();
+      updateInteractionTime();
 
       disableDesktopZoomMode();
       setZoomInCursor();
+
+      // Скрываем кнопку сброса зума на мобильных
+      if (galleryResetZoom) {
+        galleryResetZoom.classList.add('hidden');
+      }
+
+      // Останавливаем таймер автосброса
+      clearTimeout(autoResetZoomTimer);
     }
 
     function toggleZoom() {
+      updateInteractionTime();
       if (isZoomed) {
         resetZoom();
       } else {
@@ -278,6 +571,8 @@ $photosUnified[] = [
         applyTransform();
         updateZoomIndicator();
         resetCursor();
+        updateInteractionTime();
+        startAutoResetTimer();
       }
     }
 
@@ -290,21 +585,35 @@ $photosUnified[] = [
         applyTransform();
         updateZoomIndicator();
         resetCursor();
+        updateInteractionTime();
+        startAutoResetTimer();
       }
     }
 
     function expandContainer() {
-      galleryImageContainer.classList.remove('max-w-full', 'max-h-[90vh]');
-      galleryImageContainer.classList.add('max-w-[95vw]', 'max-h-[95vh]', 'overflow-auto');
-      galleryImg.classList.remove('max-w-full', 'max-h-[90vh]');
+      galleryImageContainer.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
+
+      if (window.innerWidth < 1024) {
+        // На мобильных - уменьшаем максимальную высоту чтобы не перекрывало миниатюры
+        galleryImageContainer.classList.add('max-w-[95vw]', 'max-h-[calc(85vh-2rem)]', 'overflow-auto', 'mb-8');
+      } else {
+        galleryImageContainer.classList.add('lg:max-w-[calc(95vw-6rem)]', 'max-w-[95vw]', 'max-h-[90vh]', 'overflow-auto');
+      }
+
+      galleryImg.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
       galleryImg.classList.add('max-w-none', 'max-h-none');
     }
 
     function resetContainer() {
-      galleryImageContainer.classList.remove('max-w-[95vw]', 'max-h-[95vh]', 'overflow-auto');
-      galleryImageContainer.classList.add('max-w-full', 'max-h-[90vh]');
+      galleryImageContainer.classList.remove(
+        'lg:max-w-[calc(95vw-2rem)]', 'max-w-[95vw]',
+        'max-h-[calc(85vh-2rem)]', 'max-h-[90vh]',
+        'overflow-auto', 'mb-20'
+      );
+
+      galleryImageContainer.classList.add('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]', 'mb-2', 'lg:mb-0');
       galleryImg.classList.remove('max-w-none', 'max-h-none');
-      galleryImg.classList.add('max-w-full', 'max-h-[90vh]');
+      galleryImg.classList.add('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
     }
 
     function applyTransform() {
@@ -326,15 +635,20 @@ $photosUnified[] = [
     mainImageContainer?.addEventListener('click', () => {
       currentGalleryIndex = currentMainIndex;
       resetZoom();
+      createThumbnails(); // Создаём миниатюры при открытии
       updateGalleryImage();
       galleryModal.classList.remove('hidden', 'pointer-events-none');
-      setTimeout(() => galleryModal.classList.add('opacity-100', 'pointer-events-auto'), 10);
+      setTimeout(() => {
+        galleryModal.classList.add('opacity-100', 'pointer-events-auto');
+        updateInteractionTime();
+      }, 10);
     });
 
     function closeGallery() {
       resetZoom();
       galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
       setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
+      clearTimeout(autoResetZoomTimer);
     }
 
     galleryClose?.addEventListener('click', closeGallery);
@@ -342,17 +656,26 @@ $photosUnified[] = [
       if (e.target === galleryModal) closeGallery();
     });
 
+    // === Кнопка сброса зума для мобильных ===
+    if (galleryResetZoom) {
+      galleryResetZoom.addEventListener('click', resetZoom);
+    }
+
     // === Навигация ===
     galleryPrev?.addEventListener('click', () => {
       resetZoom();
       currentGalleryIndex = (currentGalleryIndex - 1 + photos.length) % photos.length;
       updateGalleryImage();
+      updateThumbnailSelection();
+      updateInteractionTime();
     });
 
     galleryNext?.addEventListener('click', () => {
       resetZoom();
       currentGalleryIndex = (currentGalleryIndex + 1) % photos.length;
       updateGalleryImage();
+      updateThumbnailSelection();
+      updateInteractionTime();
     });
 
     function updateGalleryImage() {
@@ -363,6 +686,7 @@ $photosUnified[] = [
       if (galleryCounter) {
         galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
       }
+      updateInteractionTime();
     }
 
     // === Клик по изображению — переключение зума ===
@@ -378,9 +702,11 @@ $photosUnified[] = [
       isDragging = true;
       startX = e.touches[0].clientX - translateX;
       startY = e.touches[0].clientY - translateY;
-      setGrabCursor(); // временно
+      setGrabCursor();
       document.addEventListener('touchmove', drag);
       document.addEventListener('touchend', endDrag);
+      updateInteractionTime();
+      startAutoResetTimer();
     });
 
     function drag(e) {
@@ -400,6 +726,7 @@ $photosUnified[] = [
       translateX = Math.max(-maxX, Math.min(maxX, newTranslateX));
       translateY = Math.max(-maxY, Math.min(maxY, newTranslateY));
       applyTransform();
+      updateInteractionTime();
     }
 
     function endDrag() {
@@ -407,7 +734,9 @@ $photosUnified[] = [
       isDragging = false;
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', endDrag);
-      resetCursor(); // вернёт grab (на мобилках)
+      resetCursor();
+      updateInteractionTime();
+      startAutoResetTimer();
     }
 
     // === Колесо мыши — только если не в десктоп-режиме ===
@@ -416,6 +745,7 @@ $photosUnified[] = [
       e.preventDefault();
       if (e.deltaY < 0) zoomIn();
       else zoomOut();
+      updateInteractionTime();
     }, { passive: false });
 
     // === Жесты (масштабирование) на мобильных ===
@@ -427,6 +757,7 @@ $photosUnified[] = [
         e.preventDefault();
         initialDistance = getDistance(e.touches[0], e.touches[1]);
         initialScale = currentScale;
+        updateInteractionTime();
       }
     });
 
@@ -443,6 +774,8 @@ $photosUnified[] = [
           applyTransform();
           updateZoomIndicator();
           setGrabCursor();
+          updateInteractionTime();
+          startAutoResetTimer();
         }
       }
     });
@@ -461,43 +794,19 @@ $photosUnified[] = [
         else closeGallery();
       } else if (e.key === 'ArrowLeft') galleryPrev?.click();
       else if (e.key === 'ArrowRight') galleryNext?.click();
-      else if (e.key === '0') resetZoom();
+      else if (e.key === 'ArrowUp') {
+        changeGalleryImage(Math.max(0, currentGalleryIndex - 1));
+      } else if (e.key === 'ArrowDown') {
+        changeGalleryImage(Math.min(photos.length - 1, currentGalleryIndex + 1));
+      } else if (e.key === '0') resetZoom();
       else if (e.key === '1') zoomToDefault();
       else if (e.key === '+' || e.key === '=') zoomIn();
       else if (e.key === '-' || e.key === '_') zoomOut();
+      updateInteractionTime();
     });
 
     // === Смена основного изображения (миниатюры) ===
     const infoDots = document.getElementById('infoDots');
-
-    // function changeMainImage(thumb) {
-    //   const bigImage = thumb.dataset.bigimage;
-    //   const alt = thumb.alt;
-
-    //   if (!mainImage || !bigImage) return;
-
-    //   // Обновляем подсветку миниатюр
-    //   document.querySelectorAll('.slider-track img').forEach(img => {
-    //     img.style.borderColor = ''; // сбрасываем инлайновый цвет
-    //   });
-    //   thumb.style.setProperty('border-color', '#2563eb', 'important');
-
-    //   // Управление точками
-    //   const thumbIndex = Array.from(document.querySelectorAll('.slider-track img')).indexOf(thumb);
-    //   if (infoDots) {
-    //     infoDots.classList.toggle('hidden', thumbIndex !== 0);
-    //   }
-
-    //   // Ждём загрузки изображения перед обновлением высоты
-    //   mainImage.onload = () => {
-    //     mainImage.onload = null; // отписываемся
-    //     requestAnimationFrame(refreshSlider);
-    //   };
-
-    //   // Меняем изображение
-    //   mainImage.src = bigImage;
-    //   mainImage.alt = alt;
-    // }
 
     function changeMainImage(thumb) {
       const bigImage = thumb.dataset.bigimage;
@@ -595,8 +904,17 @@ $photosUnified[] = [
       updateThumbnailSliderHeight();
     }
 
+    // === Обработка ресайза окна ===
+    function handleResize() {
+      refreshSlider();
+      // При ресайзе сбрасываем зум для корректного отображения
+      if (isZoomed) {
+        resetZoom();
+      }
+    }
+
     window.addEventListener('load', refreshSlider);
-    window.addEventListener('resize', refreshSlider);
+    window.addEventListener('resize', handleResize);
     mainImage?.addEventListener('load', refreshSlider);
 
     // Инициализация
