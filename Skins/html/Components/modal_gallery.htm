@@ -245,19 +245,19 @@ $photosUnified[] = [
     function calculateVisibleThumbnails(container, isMobile = false) {
       if (!container || !container.children.length) return 1;
 
-      const containerRect = container.getBoundingClientRect();
-      const thumbnails = container.children;
-      const thumbWidth = thumbnails[0].offsetWidth + 8; // + gap (space-x-2 = 0.5rem = 8px)
+      const first = container.children[0];
+      const style = getComputedStyle(container);
+      const gap = parseInt(style.columnGap || style.rowGap || 8);
 
       if (isMobile) {
-        // Для горизонтального контейнера (мобильные)
-        return Math.floor(containerRect.width / thumbWidth);
+        const full = first.offsetWidth + gap;
+        return Math.max(1, Math.floor(container.clientWidth / full));
       } else {
-        // Для вертикального контейнера (десктоп)
-        const thumbHeight = thumbnails[0].offsetHeight + 8; // + gap (space-y-2 = 0.5rem = 8px)
-        return Math.floor(containerRect.height / thumbHeight);
+        const full = first.offsetHeight + gap;
+        return Math.max(1, Math.floor(container.clientHeight / full));
       }
     }
+
 
     // === Функция создания миниатюр ===
     function createThumbnails() {
@@ -337,98 +337,58 @@ $photosUnified[] = [
 
     // === Функция для умного скролла к миниатюре ===
     function scrollToThumbnailIfNeeded(index, type = 'auto') {
-      let container, thumbnails;
+      let container, thumbnails, isMobile;
 
       if (type === 'mobile' || (type === 'auto' && window.innerWidth < 1024)) {
         container = galleryThumbnailsMobile;
-        if (!container) return;
-        thumbnails = container.querySelectorAll('div');
+        isMobile = true;
       } else {
         container = galleryThumbnailsDesktop;
-        if (!container) return;
-        thumbnails = container.querySelectorAll('div');
+        isMobile = false;
       }
 
-      if (!thumbnails[index]) return;
+      if (!container) return;
 
+      thumbnails = Array.from(container.children);
       const thumbnail = thumbnails[index];
-      const containerRect = container.getBoundingClientRect();
-      const thumbnailRect = thumbnail.getBoundingClientRect();
+      if (!thumbnail) return;
 
-      // Получаем количество полностью видимых миниатюр
-      const visibleThumbs = calculateVisibleThumbnails(container, type === 'mobile');
+      const visibleCount = calculateVisibleThumbnails(container, isMobile);
+      const totalThumbs = thumbnails.length;
 
-      // Для горизонтального скролла (мобильные)
-      if (container === galleryThumbnailsMobile) {
-        // Проверяем, видна ли миниатюра полностью
-        const isFullyVisible =
-          thumbnailRect.left >= containerRect.left &&
-          thumbnailRect.right <= containerRect.right;
+      const thumbStart = thumbnail.offsetLeft;
+      const thumbEnd = thumbStart + thumbnail.offsetWidth;
 
-        if (!isFullyVisible) {
-          // Вычисляем позицию для скролла с учетом полного числа миниатюр
-          const thumbIndex = index;
-          const visibleCount = visibleThumbs;
-          const totalThumbs = thumbnails.length;
+      const viewStart = container.scrollLeft;
+      const viewEnd = viewStart + container.clientWidth;
 
-          if (thumbIndex < visibleCount) {
-            // Для первых миниатюр - скролл в начало
-            container.scrollTo({
-              left: 0,
-              behavior: 'smooth'
-            });
-          } else if (thumbIndex >= totalThumbs - visibleCount) {
-            // Для последних миниатюр - скролл в конец
-            container.scrollTo({
-              left: container.scrollWidth,
-              behavior: 'smooth'
-            });
-          } else {
-            // Для средних миниатюр - центрируем
-            const targetLeft = thumbnail.offsetLeft - (containerRect.width / 2) + (thumbnail.offsetWidth / 2);
-            container.scrollTo({
-              left: targetLeft,
-              behavior: 'smooth'
-            });
-          }
-        }
+      // === Миниатюра видна полностью? ===
+      const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
+      if (fullyVisible) return;
+
+      // === Границы скролла ===
+      const maxScroll = container.scrollWidth - container.clientWidth;
+
+      if (index <= Math.floor(visibleCount / 2)) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+        return;
       }
-      // Для вертикального скролла (десктоп)
-      else if (container === galleryThumbnailsDesktop) {
-        // Проверяем, видна ли миниатюра полностью
-        const isFullyVisible =
-          thumbnailRect.top >= containerRect.top &&
-          thumbnailRect.bottom <= containerRect.bottom;
 
-        if (!isFullyVisible) {
-          // Вычисляем позицию для скролла с учетом полного числа миниатюр
-          const thumbIndex = index;
-          const visibleCount = visibleThumbs;
-          const totalThumbs = thumbnails.length;
-
-          if (thumbIndex < visibleCount) {
-            // Для первых миниатюр - скролл в начало
-            container.scrollTo({
-              top: 0,
-              behavior: 'smooth'
-            });
-          } else if (thumbIndex >= totalThumbs - visibleCount) {
-            // Для последних миниатюр - скролл в конец
-            container.scrollTo({
-              top: container.scrollHeight,
-              behavior: 'smooth'
-            });
-          } else {
-            // Для средних миниатюр - центрируем
-            const targetTop = thumbnail.offsetTop - (containerRect.height / 2) + (thumbnail.offsetHeight / 2);
-            container.scrollTo({
-              top: targetTop,
-              behavior: 'smooth'
-            });
-          }
-        }
+      if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
+        container.scrollTo({ left: maxScroll, behavior: "smooth" });
+        return;
       }
+
+      // === Центрирование ===
+      const targetLeft =
+        thumbStart - container.clientWidth / 2 + thumbnail.offsetWidth / 2;
+
+      container.scrollTo({
+        left: Math.max(0, Math.min(maxScroll, targetLeft)),
+        behavior: "smooth"
+      });
     }
+
 
     // === Функция обновления выбранной миниатюры ===
     function updateThumbnailSelection() {
@@ -639,41 +599,26 @@ $photosUnified[] = [
     function handleDesktopPan(e) {
       if (!isZoomed || isTouchDevice()) return;
 
-      updateInteractionTime();
+      const rect = galleryImageContainer.getBoundingClientRect();
 
-      const containerRect = galleryImageContainer.getBoundingClientRect();
-      const imgRect = galleryImg.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
 
-      // Размеры видимой области и полного масштабированного изображения
-      const containerWidth = containerRect.width;
-      const containerHeight = containerRect.height;
-      const scaledImgWidth = imgRect.width * currentScale;
-      const scaledImgHeight = imgRect.height * currentScale;
+      const posX = mouseX / rect.width;
+      const posY = mouseY / rect.height;
 
-      // Если изображение не выходит за границы — ничего не двигаем
-      if (scaledImgWidth <= containerWidth && scaledImgHeight <= containerHeight) {
-        translateX = 0;
-        translateY = 0;
-        applyTransform();
-        return;
-      }
+      const scaledWidth = galleryImg.naturalWidth * currentScale;
+      const scaledHeight = galleryImg.naturalHeight * currentScale;
 
-      // Позиция курсора относительно контейнера (0..1)
-      const mouseX = e.clientX - containerRect.left;
-      const mouseY = e.clientY - containerRect.top;
-      const posX = mouseX / containerWidth; // 0 = слева, 1 = справа
-      const posY = mouseY / containerHeight; // 0 = сверху, 1 = снизу
+      const maxX = Math.max(0, (scaledWidth - rect.width) / 2);
+      const maxY = Math.max(0, (scaledHeight - rect.height) / 2);
 
-      // Максимальное смещение (на сколько можно двигать)
-      const maxOffsetX = Math.max(0, (scaledImgWidth - containerWidth) / 2);
-      const maxOffsetY = Math.max(0, (scaledImgHeight - containerHeight) / 2);
-
-      // Рассчитываем смещение: когда курсор слева — изображение уходит вправо и наоборот
-      translateX = maxOffsetX - posX * (maxOffsetX * 2);
-      translateY = maxOffsetY - posY * (maxOffsetY * 2);
+      translateX = maxX - posX * (maxX * 2);
+      translateY = maxY - posY * (maxY * 2);
 
       applyTransform();
     }
+
 
     function handleDesktopMouseLeave() {
       // На десктопе при уходе курсора с увеличенного изображения - сбрасываем зум
@@ -794,8 +739,10 @@ $photosUnified[] = [
     }
 
     function applyTransform() {
-      galleryImg.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+      galleryImg.style.transform =
+        `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
     }
+
 
     function updateZoomIndicator() {
       if (galleryZoomIndicator) {
@@ -880,23 +827,27 @@ $photosUnified[] = [
 
     function drag(e) {
       if (!isDragging || !isZoomed) return;
-      if (e.touches.length !== 1) return;
+
       e.preventDefault();
-      const clientX = e.touches[0].clientX;
-      const clientY = e.touches[0].clientY;
-      const newTranslateX = clientX - startX;
-      const newTranslateY = clientY - startY;
 
-      const imgRect = galleryImg.getBoundingClientRect();
-      const containerRect = galleryImageContainer.getBoundingClientRect();
-      const maxX = Math.max(0, (imgRect.width * currentScale - containerRect.width) / 2);
-      const maxY = Math.max(0, (imgRect.height * currentScale - containerRect.height) / 2);
+      const touch = e.touches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
 
-      translateX = Math.max(-maxX, Math.min(maxX, newTranslateX));
-      translateY = Math.max(-maxY, Math.min(maxY, newTranslateY));
+      const rect = galleryImageContainer.getBoundingClientRect();
+
+      const scaledWidth = galleryImg.naturalWidth * currentScale;
+      const scaledHeight = galleryImg.naturalHeight * currentScale;
+
+      const maxX = Math.max(0, (scaledWidth - rect.width) / 2);
+      const maxY = Math.max(0, (scaledHeight - rect.height) / 2);
+
+      translateX = Math.max(-maxX, Math.min(maxX, dx));
+      translateY = Math.max(-maxY, Math.min(maxY, dy));
+
       applyTransform();
-      updateInteractionTime();
     }
+
 
     function endDrag() {
       if (!isDragging) return;
