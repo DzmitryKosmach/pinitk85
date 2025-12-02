@@ -172,6 +172,35 @@ $photosUnified[] = [
   #gallery-thumbnails-mobile {
     scroll-behavior: smooth;
   }
+
+  /* Гарантируем целочисленное количество миниатюр */
+  #gallery-thumbnails-desktop {
+    height: calc(100vh - 8rem); /* Оставляем место для кнопок */
+  }
+
+  #gallery-thumbnails-mobile {
+    min-height: 5rem; /* Фиксированная высота для мобильных */
+  }
+
+  /* Корректное отображение миниатюр */
+  #gallery-thumbnails-desktop img,
+  #gallery-thumbnails-mobile img {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  /* Плавное появление миниатюр */
+  #gallery-thumbnails-desktop div,
+  #gallery-thumbnails-mobile div {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* Активная миниатюра */
+  #gallery-thumbnails-desktop div.active,
+  #gallery-thumbnails-mobile div.active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
 </style>
 
 <script>
@@ -211,6 +240,24 @@ $photosUnified[] = [
     const galleryResetZoom = document.getElementById('gallery-reset-zoom');
     const galleryThumbnailsDesktop = document.getElementById('gallery-thumbnails-desktop');
     const galleryThumbnailsMobile = document.getElementById('gallery-thumbnails-mobile');
+
+    // === Функция расчета видимых миниатюр ===
+    function calculateVisibleThumbnails(container, isMobile = false) {
+      if (!container || !container.children.length) return 1;
+
+      const containerRect = container.getBoundingClientRect();
+      const thumbnails = container.children;
+      const thumbWidth = thumbnails[0].offsetWidth + 8; // + gap (space-x-2 = 0.5rem = 8px)
+
+      if (isMobile) {
+        // Для горизонтального контейнера (мобильные)
+        return Math.floor(containerRect.width / thumbWidth);
+      } else {
+        // Для вертикального контейнера (десктоп)
+        const thumbHeight = thumbnails[0].offsetHeight + 8; // + gap (space-y-2 = 0.5rem = 8px)
+        return Math.floor(containerRect.height / thumbHeight);
+      }
+    }
 
     // === Функция создания миниатюр ===
     function createThumbnails() {
@@ -260,6 +307,12 @@ $photosUnified[] = [
           });
         });
       }
+
+      // Прокручиваем к активной миниатюре с задержкой
+      setTimeout(() => {
+        updateThumbnailSelection();
+        scrollToThumbnailIfNeeded(currentGalleryIndex, window.innerWidth < 1024 ? 'mobile' : 'desktop');
+      }, 100);
     }
 
     // === Создание элемента миниатюры ===
@@ -302,24 +355,39 @@ $photosUnified[] = [
       const containerRect = container.getBoundingClientRect();
       const thumbnailRect = thumbnail.getBoundingClientRect();
 
+      // Получаем количество полностью видимых миниатюр
+      const visibleThumbs = calculateVisibleThumbnails(container, type === 'mobile');
+
       // Для горизонтального скролла (мобильные)
       if (container === galleryThumbnailsMobile) {
+        // Проверяем, видна ли миниатюра полностью
         const isFullyVisible =
           thumbnailRect.left >= containerRect.left &&
           thumbnailRect.right <= containerRect.right;
 
         if (!isFullyVisible) {
-          if (thumbnailRect.left < containerRect.left) {
-            // Миниатюра слева за границей
+          // Вычисляем позицию для скролла с учетом полного числа миниатюр
+          const thumbIndex = index;
+          const visibleCount = visibleThumbs;
+          const totalThumbs = thumbnails.length;
+
+          if (thumbIndex < visibleCount) {
+            // Для первых миниатюр - скролл в начало
             container.scrollTo({
-              left: thumbnail.offsetLeft - 16,
+              left: 0,
               behavior: 'smooth'
             });
-          } else if (thumbnailRect.right > containerRect.right) {
-            // Миниатюра справа за границей
-            const scrollLeft = thumbnail.offsetLeft - container.clientWidth + thumbnail.clientWidth + 16;
+          } else if (thumbIndex >= totalThumbs - visibleCount) {
+            // Для последних миниатюр - скролл в конец
             container.scrollTo({
-              left: scrollLeft,
+              left: container.scrollWidth,
+              behavior: 'smooth'
+            });
+          } else {
+            // Для средних миниатюр - центрируем
+            const targetLeft = thumbnail.offsetLeft - (containerRect.width / 2) + (thumbnail.offsetWidth / 2);
+            container.scrollTo({
+              left: targetLeft,
               behavior: 'smooth'
             });
           }
@@ -327,22 +395,34 @@ $photosUnified[] = [
       }
       // Для вертикального скролла (десктоп)
       else if (container === galleryThumbnailsDesktop) {
+        // Проверяем, видна ли миниатюра полностью
         const isFullyVisible =
           thumbnailRect.top >= containerRect.top &&
           thumbnailRect.bottom <= containerRect.bottom;
 
         if (!isFullyVisible) {
-          if (thumbnailRect.top < containerRect.top) {
-            // Миниатюра сверху за границей
+          // Вычисляем позицию для скролла с учетом полного числа миниатюр
+          const thumbIndex = index;
+          const visibleCount = visibleThumbs;
+          const totalThumbs = thumbnails.length;
+
+          if (thumbIndex < visibleCount) {
+            // Для первых миниатюр - скролл в начало
             container.scrollTo({
-              top: thumbnail.offsetTop - 16,
+              top: 0,
               behavior: 'smooth'
             });
-          } else if (thumbnailRect.bottom > containerRect.bottom) {
-            // Миниатюра снизу за границей
-            const scrollTop = thumbnail.offsetTop - container.clientHeight + thumbnail.clientHeight + 16;
+          } else if (thumbIndex >= totalThumbs - visibleCount) {
+            // Для последних миниатюр - скролл в конец
             container.scrollTo({
-              top: scrollTop,
+              top: container.scrollHeight,
+              behavior: 'smooth'
+            });
+          } else {
+            // Для средних миниатюр - центрируем
+            const targetTop = thumbnail.offsetTop - (containerRect.height / 2) + (thumbnail.offsetHeight / 2);
+            container.scrollTo({
+              top: targetTop,
               behavior: 'smooth'
             });
           }
@@ -359,9 +439,11 @@ $photosUnified[] = [
           if (index === currentGalleryIndex) {
             thumb.style.borderColor = '#3b82f6'; // blue-500
             thumb.style.borderWidth = '2px';
+            thumb.classList.add('active');
           } else {
             thumb.style.borderColor = 'transparent';
             thumb.style.borderWidth = '2px';
+            thumb.classList.remove('active');
           }
         });
       }
@@ -373,9 +455,11 @@ $photosUnified[] = [
           if (index === currentGalleryIndex) {
             thumb.style.borderColor = '#3b82f6'; // blue-500
             thumb.style.borderWidth = '2px';
+            thumb.classList.add('active');
           } else {
             thumb.style.borderColor = 'transparent';
             thumb.style.borderWidth = '2px';
+            thumb.classList.remove('active');
           }
         });
       }
@@ -397,6 +481,99 @@ $photosUnified[] = [
       updateGalleryImage();
       updateThumbnailSelection();
       updateInteractionTime();
+    }
+
+    // === Функция "умного" переключения по стрелкам ===
+    function smartNavigate(direction) {
+      // direction: -1 для prev, 1 для next
+
+      resetZoom();
+      updateInteractionTime();
+
+      // Получаем текущий контейнер миниатюр
+      let container;
+      if (window.innerWidth < 1024) {
+        container = galleryThumbnailsMobile;
+      } else {
+        container = galleryThumbnailsDesktop;
+      }
+
+      if (!container) return;
+
+      const thumbnails = container.querySelectorAll('div');
+      const visibleCount = calculateVisibleThumbnails(container, window.innerWidth < 1024);
+      const currentIndex = currentGalleryIndex;
+      let newIndex;
+
+      if (window.innerWidth < 1024) {
+        // Мобильная логика - горизонтальная навигация
+        if (direction === -1) { // prev
+          if (currentIndex > 0) {
+            newIndex = currentIndex - 1;
+          } else {
+            newIndex = photos.length - 1; // зацикливание
+          }
+        } else { // next
+          if (currentIndex < photos.length - 1) {
+            newIndex = currentIndex + 1;
+          } else {
+            newIndex = 0; // зацикливание
+          }
+        }
+      } else {
+        // Десктопная логика - вертикальная навигация с учетом видимых
+        if (direction === -1) { // prev
+          if (currentIndex > 0) {
+            newIndex = currentIndex - 1;
+          } else {
+            // Переход к последней видимой группе
+            newIndex = photos.length - visibleCount;
+          }
+        } else { // next
+          if (currentIndex < photos.length - visibleCount) {
+            newIndex = currentIndex + 1;
+          } else {
+            // Если приближаемся к концу, идем к первой группе
+            newIndex = Math.min(currentIndex + 1, photos.length - 1);
+            if (newIndex === photos.length - 1) {
+              // Дошли до конца - переходим к началу
+              setTimeout(() => {
+                container.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }, 300);
+            }
+          }
+        }
+      }
+
+      // Обновляем индекс и изображение
+      currentGalleryIndex = newIndex;
+      updateGalleryImage();
+      updateThumbnailSelection();
+
+      // Дополнительная логика для плавного скролла
+      const containerRect = container.getBoundingClientRect();
+      const thumbnail = thumbnails[newIndex];
+
+      if (thumbnail) {
+        if (window.innerWidth < 1024) {
+          // Мобильные: центрируем выбранную миниатюру
+          const targetLeft = thumbnail.offsetLeft - (containerRect.width / 2) + (thumbnail.offsetWidth / 2);
+          container.scrollTo({
+            left: targetLeft,
+            behavior: 'smooth'
+          });
+        } else {
+          // Десктоп: центрируем по вертикали
+          const targetTop = thumbnail.offsetTop - (containerRect.height / 2) + (thumbnail.offsetHeight / 2);
+          container.scrollTo({
+            top: targetTop,
+            behavior: 'smooth'
+          });
+        }
+      }
     }
 
     // === Функции управления курсором ===
@@ -591,7 +768,7 @@ $photosUnified[] = [
     }
 
     function expandContainer() {
-      galleryImageContainer.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
+      galleryImageContainer.classList.remove('max-w-full', 'max-h-[calc(90vh-2rem)]', 'max-h-[calc(90vh-4rem)]', 'lg:max-h-[90vh]');
 
       if (window.innerWidth < 1024) {
         // На мобильных - уменьшаем максимальную высоту чтобы не перекрывало миниатюры
@@ -611,7 +788,7 @@ $photosUnified[] = [
         'overflow-auto', 'mb-20'
       );
 
-      galleryImageContainer.classList.add('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]', 'mb-2', 'lg:mb-0');
+      galleryImageContainer.classList.add('max-w-full', 'max-h-[calc(90vh-4rem)]', 'lg:max-h-[90vh]', 'mb-2', 'lg:mb-0');
       galleryImg.classList.remove('max-w-none', 'max-h-none');
       galleryImg.classList.add('max-w-full', 'max-h-[calc(90vh-2rem)]', 'lg:max-h-[90vh]');
     }
@@ -663,19 +840,11 @@ $photosUnified[] = [
 
     // === Навигация ===
     galleryPrev?.addEventListener('click', () => {
-      resetZoom();
-      currentGalleryIndex = (currentGalleryIndex - 1 + photos.length) % photos.length;
-      updateGalleryImage();
-      updateThumbnailSelection();
-      updateInteractionTime();
+      smartNavigate(-1);
     });
 
     galleryNext?.addEventListener('click', () => {
-      resetZoom();
-      currentGalleryIndex = (currentGalleryIndex + 1) % photos.length;
-      updateGalleryImage();
-      updateThumbnailSelection();
-      updateInteractionTime();
+      smartNavigate(1);
     });
 
     function updateGalleryImage() {
@@ -789,19 +958,19 @@ $photosUnified[] = [
     // === Клавиатура ===
     window.addEventListener('keydown', (e) => {
       if (!galleryModal.classList.contains('opacity-100')) return;
+
       if (e.key === 'Escape') {
         if (isZoomed) resetZoom();
         else closeGallery();
-      } else if (e.key === 'ArrowLeft') galleryPrev?.click();
-      else if (e.key === 'ArrowRight') galleryNext?.click();
-      else if (e.key === 'ArrowUp') {
-        changeGalleryImage(Math.max(0, currentGalleryIndex - 1));
-      } else if (e.key === 'ArrowDown') {
-        changeGalleryImage(Math.min(photos.length - 1, currentGalleryIndex + 1));
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        smartNavigate(-1);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        smartNavigate(1);
       } else if (e.key === '0') resetZoom();
       else if (e.key === '1') zoomToDefault();
       else if (e.key === '+' || e.key === '=') zoomIn();
       else if (e.key === '-' || e.key === '_') zoomOut();
+
       updateInteractionTime();
     });
 
@@ -910,6 +1079,10 @@ $photosUnified[] = [
       // При ресайзе сбрасываем зум для корректного отображения
       if (isZoomed) {
         resetZoom();
+      }
+      // Пересчитываем и обновляем миниатюры
+      if (galleryModal.classList.contains('opacity-100')) {
+        updateThumbnailSelection();
       }
     }
 
