@@ -201,212 +201,23 @@ $photosUnified[] = [
     transform: scale(0.95);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
-</style>
 
-<!-- Модальное окно галереи -->
-<div
-  id="gallery-modal"
-  class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
->
-  <!-- Левая панель миниатюр (десктоп) -->
-  <div
-    id="gallery-thumbnails-desktop"
-    class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]"
-  >
-    <!-- Миниатюры будут добавляться динамически -->
-  </div>
-
-  <!-- Нижняя панель миниатюр (мобильные) -->
-  <div
-    id="gallery-thumbnails-mobile"
-    class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none"
-  >
-    <!-- Миниатюры будут добавляться динамически -->
-  </div>
-
-  <!-- Центральное изображение -->
-  <div
-    id="gallery-image-container"
-    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0"
-  >
-    <img
-      id="gallery-main-img"
-      src=""
-      alt=""
-      class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
-    />
-  </div>
-
-  <!-- Кнопка закрытия -->
-  <button
-    id="gallery-close"
-    class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-[61] bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
-    aria-label="Закрыть галерею"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </button>
-
-  <!-- Стрелка "назад" -->
-  <button
-    id="gallery-prev"
-    class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Предыдущее изображение"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-    </svg>
-  </button>
-
-  <!-- Стрелка "вперёд" -->
-  <button
-    id="gallery-next"
-    class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Следующее изображение"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-    </svg>
-  </button>
-
-  <!-- Счётчик -->
-  <div
-    id="gallery-counter"
-    class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]"
-  ></div>
-
-  <!-- Индикатор масштаба -->
-  <div
-    id="gallery-zoom-indicator"
-    class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]"
-  >
-    100%
-  </div>
-
-  <!-- Кнопка сброса зума (только для мобильных) -->
-  <button
-    id="gallery-reset-zoom"
-    class="lg:hidden absolute bottom-24 right-4 text-white/90 text-sm font-light z-[61] bg-black/60 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/80 hidden"
-    aria-label="Сбросить масштаб"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
-    </svg>
-  </button>
-</div>
-
-<?php
-$photosUnified = [];
-
-// --- Если это ФОТО ТОВАРА (присутствует rm) ---
-if (isset($photos[0]['rm'])) {
-
-    foreach ($photos as $p) {
-        $photosUnified[] = [
-            'src'   => Catalog::photoUrl(
-Catalog_Series_Photos::$imagePath,
-$p['id'], 0, 0, 0, $p['_img_ext'],
-[$catInf['url'], $seriesInf['url']]
-),
-'thumb' => Catalog::photoUrl(
-Catalog_Series_Photos::$imagePath,
-$p['id'], 90, 90, $p['rm'], $p['_img_ext']
-),
-'alt'   => hsch(
-trim($p['alt'])
-? $p['alt']
-: $catInf['name'] . ' ' . $seriesInf['name']
-),
-'highslide' => false
-];
-}
-}
-
-// --- Если это ФОТО ПРОЕКТА ---
-else {
-
-
-foreach ($photos as $i => $p) {
-
-// большие изображения
-$src = Config::pathRel('images') .
-Clients_Projects_Pics::$imagePath .
-$p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
-
-// миниатюры
-$thumb = Config::pathRel('images') .
-Clients_Projects_Pics::$imagePath .
-$p['id'] .
-($i === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') .
-$p['_img_ext'];
-
-$photosUnified[] = [
-'src'       => $src,
-'thumb'     => $thumb,
-'alt'       => hsch($p['alt']),
-'highslide' => true
-];
-}
-}
-?>
-
-<style>
-  /* Скрываем скроллбар для всех элементов */
-  .scrollbar-none {
-    -ms-overflow-style: none;  /* IE и Edge */
-    scrollbar-width: none;     /* Firefox */
-  }
-
-  .scrollbar-none::-webkit-scrollbar {
-    display: none; /* Chrome, Safari и Opera */
-  }
-
-  /* Стили для десктопных миниатюр */
   #gallery-thumbnails-desktop {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
   }
 
   #gallery-thumbnails-desktop::-webkit-scrollbar {
-    display: none;
+    display: none; /* Chrome, Safari и Opera */
   }
 
-  /* Плавный скролл для миниатюр */
-  #gallery-thumbnails-desktop,
-  #gallery-thumbnails-mobile {
-    scroll-behavior: smooth;
-  }
-
-  /* Гарантируем целочисленное количество миниатюр */
   #gallery-thumbnails-desktop {
-    height: calc(100vh - 8rem); /* Оставляем место для кнопок */
-  }
-
-  #gallery-thumbnails-mobile {
-    min-height: 5rem; /* Фиксированная высота для мобильных */
-  }
-
-  /* Корректное отображение миниатюр */
-  #gallery-thumbnails-desktop img,
-  #gallery-thumbnails-mobile img {
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  /* Плавное появление миниатюр */
-  #gallery-thumbnails-desktop div,
-  #gallery-thumbnails-mobile div {
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  /* Активная миниатюра */
-  #gallery-thumbnails-desktop div.active,
-  #gallery-thumbnails-mobile div.active {
-    transform: scale(0.95);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 </style>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -452,14 +263,18 @@ $photosUnified[] = [
 
       const first = container.children[0];
       const style = getComputedStyle(container);
-      const gap = parseInt(style.columnGap || style.rowGap || 8);
+      const gap = isMobile ?
+        parseInt(style.columnGap) || parseInt(style.gap) || 8 :
+        parseInt(style.rowGap) || parseInt(style.gap) || 8;
 
       if (isMobile) {
-        const full = first.offsetWidth + gap;
-        return Math.max(1, Math.floor(container.clientWidth / full));
+        const thumbWidth = first.offsetWidth;
+        const fullWidth = thumbWidth + gap;
+        return Math.max(1, Math.floor(container.clientWidth / fullWidth));
       } else {
-        const full = first.offsetHeight + gap;
-        return Math.max(1, Math.floor(container.clientHeight / full));
+        const thumbHeight = first.offsetHeight;
+        const fullHeight = thumbHeight + gap;
+        return Math.max(1, Math.floor(container.clientHeight / fullHeight));
       }
     }
 
@@ -476,6 +291,11 @@ $photosUnified[] = [
           thumbnail.addEventListener('click', (e) => {
             e.stopPropagation();
             changeGalleryImage(index);
+
+            // Умный скролл при клике на любую миниатюру
+            setTimeout(() => {
+              scrollToThumbnailIfNeeded(index, 'desktop');
+            }, 50);
           });
 
           galleryThumbnailsDesktop.appendChild(thumbnail);
@@ -494,7 +314,9 @@ $photosUnified[] = [
             changeGalleryImage(index);
 
             // Умный скролл при клике на любую миниатюру
-            scrollToThumbnailIfNeeded(index, 'mobile');
+            setTimeout(() => {
+              scrollToThumbnailIfNeeded(index, 'mobile');
+            }, 50);
           });
 
           galleryThumbnailsMobile.appendChild(thumbnail);
@@ -502,16 +324,6 @@ $photosUnified[] = [
       }
 
       updateThumbnailSelection();
-
-      // Добавляем обработчики для умного скролла на десктопе
-      if (galleryThumbnailsDesktop) {
-        const desktopThumbs = galleryThumbnailsDesktop.querySelectorAll('div');
-        desktopThumbs.forEach((thumb, index) => {
-          thumb.addEventListener('click', () => {
-            scrollToThumbnailIfNeeded(index, 'desktop');
-          });
-        });
-      }
 
       // Прокручиваем к активной миниатюре с задержкой
       setTimeout(() => {
@@ -561,38 +373,70 @@ $photosUnified[] = [
       const visibleCount = calculateVisibleThumbnails(container, isMobile);
       const totalThumbs = thumbnails.length;
 
-      const thumbStart = thumbnail.offsetLeft;
-      const thumbEnd = thumbStart + thumbnail.offsetWidth;
+      // Для мобильных (горизонтальных) используем offsetLeft
+      // Для десктопных (вертикальных) используем offsetTop
+      if (isMobile) {
+        const thumbStart = thumbnail.offsetLeft;
+        const thumbEnd = thumbStart + thumbnail.offsetWidth;
 
-      const viewStart = container.scrollLeft;
-      const viewEnd = viewStart + container.clientWidth;
+        const viewStart = container.scrollLeft;
+        const viewEnd = viewStart + container.clientWidth;
 
-      // === Миниатюра видна полностью? ===
-      const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
-      if (fullyVisible) return;
+        // Миниатюра видна полностью?
+        const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
+        if (fullyVisible) return;
 
-      // === Границы скролла ===
-      const maxScroll = container.scrollWidth - container.clientWidth;
+        const maxScroll = container.scrollWidth - container.clientWidth;
 
-      if (index <= Math.floor(visibleCount / 2)) {
-        container.scrollTo({ left: 0, behavior: "smooth" });
-        return;
+        if (index <= Math.floor(visibleCount / 2)) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+          return;
+        }
+
+        if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
+          container.scrollTo({ left: maxScroll, behavior: "smooth" });
+          return;
+        }
+
+        // Центрирование для горизонтальной панели
+        const targetLeft = thumbStart - container.clientWidth / 2 + thumbnail.offsetWidth / 2;
+        container.scrollTo({
+          left: Math.max(0, Math.min(maxScroll, targetLeft)),
+          behavior: "smooth"
+        });
+      } else {
+        // Вертикальная панель (десктоп)
+        const thumbStart = thumbnail.offsetTop;
+        const thumbEnd = thumbStart + thumbnail.offsetHeight;
+
+        const viewStart = container.scrollTop;
+        const viewEnd = viewStart + container.clientHeight;
+
+        // Миниатюра видна полностью?
+        const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
+        if (fullyVisible) return;
+
+        const maxScroll = container.scrollHeight - container.clientHeight;
+
+        if (index <= Math.floor(visibleCount / 2)) {
+          container.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
+        if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
+          container.scrollTo({ top: maxScroll, behavior: "smooth" });
+          return;
+        }
+
+        // Центрирование для вертикальной панели
+        const targetTop = thumbStart - container.clientHeight / 2 + thumbnail.offsetHeight / 2;
+        container.scrollTo({
+          top: Math.max(0, Math.min(maxScroll, targetTop)),
+          behavior: "smooth"
+        });
       }
-
-      if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
-        container.scrollTo({ left: maxScroll, behavior: "smooth" });
-        return;
-      }
-
-      // === Центрирование ===
-      const targetLeft =
-        thumbStart - container.clientWidth / 2 + thumbnail.offsetWidth / 2;
-
-      container.scrollTo({
-        left: Math.max(0, Math.min(maxScroll, targetLeft)),
-        behavior: "smooth"
-      });
     }
+
 
 
     // === Функция обновления выбранной миниатюры ===
@@ -646,6 +490,12 @@ $photosUnified[] = [
       currentGalleryIndex = newIndex;
       updateGalleryImage();
       updateThumbnailSelection();
+
+      // Автоматический скролл к миниатюре после перехода
+      setTimeout(() => {
+        scrollToThumbnailIfNeeded(currentGalleryIndex, window.innerWidth < 1024 ? 'mobile' : 'desktop');
+      }, 100);
+
       updateInteractionTime();
     }
 
@@ -899,11 +749,13 @@ $photosUnified[] = [
     }
 
     // === Навигация ===
-    galleryPrev?.addEventListener('click', () => {
+    galleryPrev?.addEventListener('click', (e) => {
+      e.stopPropagation();
       smartNavigate(-1);
     });
 
-    galleryNext?.addEventListener('click', () => {
+    galleryNext?.addEventListener('click', (e) => {
+      e.stopPropagation();
       smartNavigate(1);
     });
 
@@ -1026,10 +878,22 @@ $photosUnified[] = [
       if (e.key === 'Escape') {
         if (isZoomed) resetZoom();
         else closeGallery();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowLeft') {
         smartNavigate(-1);
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      } else if (e.key === 'ArrowRight') {
         smartNavigate(1);
+      } else if (e.key === 'ArrowUp') {
+        // Дополнительно: скролл вверх по миниатюрам на десктопе
+        if (window.innerWidth >= 1024 && galleryThumbnailsDesktop) {
+          e.preventDefault();
+          galleryThumbnailsDesktop.scrollBy({ top: -80, behavior: 'smooth' });
+        }
+      } else if (e.key === 'ArrowDown') {
+        // Дополнительно: скролл вниз по миниатюрам на десктопе
+        if (window.innerWidth >= 1024 && galleryThumbnailsDesktop) {
+          e.preventDefault();
+          galleryThumbnailsDesktop.scrollBy({ top: 80, behavior: 'smooth' });
+        }
       } else if (e.key === '0') resetZoom();
       else if (e.key === '1') zoomToDefault();
       else if (e.key === '+' || e.key === '=') zoomIn();
