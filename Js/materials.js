@@ -607,10 +607,15 @@ var oMaterials = new (function () {
       // начало новой строки
       if (i > 0 && i % matsInRow === 0) {
         // для level 1: только первая строка видна, остальные — dis
-        var rowClass = (level === 1 && rowIndex > 0) ? "dis" : "";
+        var rowClass = level === 1 && rowIndex > 0 ? "dis" : "";
+        var rowStyle =
+          "position:relative;z-index:100;width:330px;height:125px;margin:0 0 20px 0;";
+        if (rowClass === "dis") rowStyle = "display:none;" + rowStyle;
         html +=
           '<div class="materials-row ' +
           rowClass +
+          '" style="' +
+          rowStyle +
           '">' +
           rowHtml +
           '<div class="cl"></div></div>';
@@ -624,10 +629,15 @@ var oMaterials = new (function () {
 
     // добавляем последнюю строку
     if (rowHtml) {
-      var lastRowClass = (level === 1 && rowIndex > 0) ? "dis" : "";
+      var lastRowClass = level === 1 && rowIndex > 0 ? "dis" : "";
+      var rowStyle =
+        "position:relative;z-index:100;width:330px;height:125px;margin:0 0 20px 0;";
+      if (lastRowClass === "dis") rowStyle = "display:none;" + rowStyle;
       html +=
         '<div class="materials-row ' +
         lastRowClass +
+        '" style="' +
+        rowStyle +
         '">' +
         rowHtml +
         '<div class="cl"></div></div>';
@@ -636,27 +646,25 @@ var oMaterials = new (function () {
     // добавляем уровень
     if (level === 1) {
       html +=
-        '<div class="materials-level2 !w-fit !z-20" id="materials-level2" style="display: none">' +
-        '<div class="level-tail" id="materials-level2-tail"></div>' +
+        '<div class="materials-level2" id="materials-level2" style="display:none;position:relative;top:-20px;z-index:50;padding:20px 20px 0 20px;margin:0;background:#fff;border:1px solid #7a8a93;">' +
+        '<div class="level-tail" id="materials-level2-tail" style="position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg);"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
-        '<strong class="level-title" id="materials-level2-title"></strong>' +
-        '<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
-        '<div id="materials-level2-content" class="!w-fit"></div>' +
-        '</div>';
+        '<strong class="level-title" id="materials-level2-title" style="display:block;padding:5px 0 10px 2px;color:#737769;font-weight:normal;font-size:16px;"></strong>' +
+        '<div class="level-help" style="display:block;padding:0 0 15px 2px;color:#999;font-weight:normal;font-size:12px;">Нажмите на изображение материала, чтобы выбрать его</div>' +
+        '<div id="materials-level2-content" style="position:relative;z-index:1000;overflow-y:scroll;overflow-x:hidden;height:300px;width:300px;padding:20px;"></div>' +
+        "</div>";
     } else {
       html +=
-        '<div class="materials-level3" id="materials-level3" style="display: none">' +
-        '<div class="level-tail" id="materials-level3-tail"></div>' +
+        '<div class="materials-level3" id="materials-level3" style="display:none;position:relative;top:-20px;z-index:50;padding:20px 0 0 20px;margin:0;background:#fff;border:1px solid #7a8a93;">' +
+        '<div class="level-tail" id="materials-level3-tail" style="position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg);"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
-        '<strong class="level-title" id="materials-level3-title"></strong>' +
-        '<div id="materials-level3-content"></div>' +
-        '</div>';
+        '<strong class="level-title" id="materials-level3-title" style="display:block;padding:5px 0 10px 2px;color:#737769;font-weight:normal;font-size:16px;"></strong>' +
+        '<div id="materials-level3-content" style="position:relative;z-index:1000;overflow-y:scroll;overflow-x:hidden;height:300px;"></div>' +
+        "</div>";
     }
 
     return html;
   }
-
-
 
   /**
    * Получаем HTML-код для отображения одного материала в попапе
@@ -714,6 +722,31 @@ var oMaterials = new (function () {
     var price = matPrice4Item(topM.id);
     price = price > 0 ? priceFormat(price) + " ₽" : "по запросу";
 
+    var materialStyle =
+      "display:block;position:relative;float:left;box-sizing:border-box;width:110px;height:135px;margin:0;text-decoration:none;border-radius:4px;";
+    var materialInStyle = "box-sizing:border-box;width:95px;height:inherit;";
+    var imageStyle =
+      "display:block;position:relative;width:76px;height:61px;margin-bottom:2px;border:2px solid #FFF;box-shadow:0 1px 6px 0 rgba(0,0,0,0.3);";
+    var imageBigWrapStyle =
+      "display:none;position:absolute;z-index:800;width:164px;height:132px;left:-32px;top:-65px;background:#fff;border:2px solid #FFF;box-shadow:0 1px 4px 0 rgba(0,0,0,0.3);";
+    var infoStyle = "height:55px;overflow:hidden;padding-left:2px;";
+    var nameStyle =
+      "display:table-cell;vertical-align:middle;height:26px;line-height:13px;font-size:11px;color:#0075c2;text-decoration:underline;";
+    var priceStyle = "display:block;white-space:nowrap;font-size:11px;";
+    if (active) {
+      nameStyle += "font-weight:bold;";
+      imageStyle = imageStyle.replace(
+        "border:2px solid #FFF;",
+        "border:2px solid #ffa800;"
+      );
+    }
+
+    var hasSubIcon = "";
+    if (m.has_sub == 1) {
+      hasSubIcon =
+        '<span style="position:absolute;right:23px;top:-7px;width:30px;height:30px;background:url(/Skins/img/user/materials-popup-hassub.png) no-repeat 0 0;"></span>';
+    }
+
     var html =
       '<a id="material-' +
       m.id +
@@ -721,17 +754,36 @@ var oMaterials = new (function () {
       className +
       '" href="javascript:void(0)" onclick="' +
       onclick +
-      '; return false;">' +
-      '<div class="material-in">' +
-      '<div class="image">' +
+      '; return false;" style="' +
+      materialStyle +
+      '">' +
+      hasSubIcon +
+      '<div class="material-in" style="' +
+      materialInStyle +
+      '">' +
+      '<div class="image" style="' +
+      imageStyle +
+      '">' +
       image +
-      (imageBig ? '<div class="image-big">' + imageBig + "</div>" : "") +
+      (imageBig
+        ? '<div class="image-big" style="' +
+          imageBigWrapStyle +
+          '">' +
+          imageBig +
+          "</div>"
+        : "") +
       "</div>" +
-      '<div class="info material-info">' +
-      '<div class="name">' +
+      '<div class="info material-info" style="' +
+      infoStyle +
+      '">' +
+      '<div class="name" style="' +
+      nameStyle +
+      '">' +
       m.name +
       "</div>" +
-      '<div class="price">' +
+      '<div class="price" style="' +
+      priceStyle +
+      '">' +
       price +
       "</div>" +
       "</div>" +
