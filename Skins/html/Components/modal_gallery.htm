@@ -129,11 +129,10 @@ $src = Config::pathRel('images') .
 Clients_Projects_Pics::$imagePath .
 $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
 
-// миниатюры
+// миниатюры 90x90
 $thumb = Config::pathRel('images') .
 Clients_Projects_Pics::$imagePath .
-$p['id'] .
-($i === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') .
+$p['id'] . '_90x90_0_wm.' .
 $p['_img_ext'];
 
 $photosUnified[] = [
