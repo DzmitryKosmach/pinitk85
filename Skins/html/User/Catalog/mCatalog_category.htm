@@ -13,7 +13,7 @@
   <div>
     <!-- Хлебные крошки -->
     <nav
-      class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 "
+      class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-4 "
     >
       <?php if(count($breadcrumbs)) { ?>
       <?php $bcLast = array_pop($breadcrumbs); ?>
@@ -33,7 +33,7 @@
 
     <section class="">
       <div>
-        <h1 class="text-xl md:text-2xl font-bold mb-2 md:mb-6">
+        <h1 class="text-xl md:text-2xl font-bold mb-2 ">
           <?php echo $pageInf['header']; ?>
         </h1>
 
@@ -42,7 +42,7 @@
         <div
           class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] pt-2 z-20 bg-body"
         >
-          <div class="text-[11px] sm3:text-sm lg:text-base mb-6 lg:mb-12">
+          <div class="text-[11px] sm3:text-sm lg:text-base mb-4 lg:mb-8">
             <!-- Контейнер для всех табов (скрытый) -->
             <div id="allTabsContainer" class="hidden">
               <?php foreach ($pages as $p): ?>
