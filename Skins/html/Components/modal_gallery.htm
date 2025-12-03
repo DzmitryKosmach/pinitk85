@@ -1,91 +1,72 @@
 <!-- Модальное окно галереи -->
-<div
-  id="gallery-modal"
-  class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden"
->
+<div id="gallery-modal"
+  class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
   <!-- Левая панель миниатюр (десктоп) -->
-  <div
-    id="gallery-thumbnails-desktop"
-    class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]"
-  >
+  <div id="gallery-thumbnails-desktop"
+    class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]">
     <!-- Миниатюры будут добавляться динамически -->
   </div>
 
   <!-- Нижняя панель миниатюр (мобильные) -->
-  <div
-    id="gallery-thumbnails-mobile"
-    class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none"
-  >
+  <div id="gallery-thumbnails-mobile"
+    class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none">
     <!-- Миниатюры будут добавляться динамически -->
   </div>
 
   <!-- Центральное изображение -->
-  <div
-    id="gallery-image-container"
-    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0"
-  >
-    <img
-      id="gallery-main-img"
-      src=""
-      alt=""
-      class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in"
-    />
+  <div id="gallery-image-container"
+    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0">
+    <img id="gallery-main-img" src="" alt=""
+      class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in" />
   </div>
 
   <!-- Кнопка закрытия -->
-  <button
-    id="gallery-close"
+  <button id="gallery-close"
     class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-[61] bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
-    aria-label="Закрыть галерею"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    aria-label="Закрыть галерею">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+      stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </button>
 
   <!-- Стрелка "назад" -->
-  <button
-    id="gallery-prev"
+  <button id="gallery-prev"
     class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Предыдущее изображение"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    aria-label="Предыдущее изображение">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+      stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
 
   <!-- Стрелка "вперёд" -->
-  <button
-    id="gallery-next"
+  <button id="gallery-next"
     class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Следующее изображение"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    aria-label="Следующее изображение">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+      stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   </button>
 
   <!-- Счётчик -->
-  <div
-    id="gallery-counter"
-    class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]"
-  ></div>
+  <div id="gallery-counter"
+    class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]">
+  </div>
 
   <!-- Индикатор масштаба -->
-  <div
-    id="gallery-zoom-indicator"
-    class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]"
-  >
+  <div id="gallery-zoom-indicator"
+    class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]">
     100%
   </div>
 
   <!-- Кнопка сброса зума (только для мобильных) -->
-  <button
-    id="gallery-reset-zoom"
+  <button id="gallery-reset-zoom"
     class="lg:hidden absolute bottom-24 right-4 text-white/90 text-sm font-light z-[61] bg-black/60 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/80 hidden"
-    aria-label="Сбросить масштаб"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    aria-label="Сбросить масштаб">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+      stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
     </svg>
   </button>
@@ -127,12 +108,12 @@ foreach ($photos as $i => $p) {
 // большие изображения
 $src = Config::pathRel('images') .
 Clients_Projects_Pics::$imagePath .
-$p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
+$p['id'] . '_0x0_1.' . $p['_img_ext'];
 
 // миниатюры 90x90
 $thumb = Config::pathRel('images') .
 Clients_Projects_Pics::$imagePath .
-$p['id'] . '_90x90_0_wm.' .
+$p['id'] . '_90x90_0.' .
 $p['_img_ext'];
 
 $photosUnified[] = [
@@ -148,12 +129,15 @@ $photosUnified[] = [
 <style>
   /* Скрываем скроллбар для всех элементов */
   .scrollbar-none {
-    -ms-overflow-style: none;  /* IE и Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;
+    /* IE и Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
   .scrollbar-none::-webkit-scrollbar {
-    display: none; /* Chrome, Safari и Opera */
+    display: none;
+    /* Chrome, Safari и Opera */
   }
 
   /* Стили для десктопных миниатюр */
@@ -174,11 +158,13 @@ $photosUnified[] = [
 
   /* Гарантируем целочисленное количество миниатюр */
   #gallery-thumbnails-desktop {
-    height: calc(100vh - 8rem); /* Оставляем место для кнопок */
+    height: calc(100vh - 8rem);
+    /* Оставляем место для кнопок */
   }
 
   #gallery-thumbnails-mobile {
-    min-height: 5rem; /* Фиксированная высота для мобильных */
+    min-height: 5rem;
+    /* Фиксированная высота для мобильных */
   }
 
   /* Корректное отображение миниатюр */
@@ -202,12 +188,15 @@ $photosUnified[] = [
   }
 
   #gallery-thumbnails-desktop {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE и Edge */
   }
 
   #gallery-thumbnails-desktop::-webkit-scrollbar {
-    display: none; /* Chrome, Safari и Opera */
+    display: none;
+    /* Chrome, Safari и Opera */
   }
 
   #gallery-thumbnails-desktop {
@@ -1021,4 +1010,3 @@ $photosUnified[] = [
     setZoomInCursor();
   });
 </script>
-
