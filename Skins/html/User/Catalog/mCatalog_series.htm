@@ -404,36 +404,65 @@
             <div class="flex gap-2 text-sm">
               <button
                 class="tab-btn1
-           px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
-           shadow-[0_0_8px_rgba(59,130,246,0.3)]
-           hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
-           active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out"
+                  px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
+                  shadow-[0_0_8px_rgba(59,130,246,0.3)]
+                  hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+                  active:translate-y-[-1px]
+                  transition-all duration-200 ease-in-out"
                 data-target="section-photo">
                 Мебель на фото
               </button>
 
               <button
                 class="tab-btn1 break-all
-           px-4 py-2 rounded-lg bg-white border border-gray-200
-           shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
-           hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
-           active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out"
+                  px-4 py-2 rounded-lg bg-white border border-gray-200
+                  shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+                  hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+                  active:translate-y-[-1px]
+                  transition-all duration-200 ease-in-out"
                 data-target="section-specs">
                 Характеристики
               </button>
 
+
+
+              <style>
+                @keyframes pulseGlow {
+                  0%, 100% {
+                    background-color: #3b82f6; /* blue-500 */
+                    color: white;
+                    box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+                    border-color: #3b82f6;
+                  }
+                  50% {
+                    background-color: white;
+                    color: #3b82f6;
+                    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+                    border-color: #d1d5db; /* gray-300 */
+                  }
+                }
+
+                .pulse-button {
+                  animation: pulseGlow 2s infinite ease-in-out;
+                }
+
+                /* При наведении — остановить мигание и показать обычный hover-эффект */
+                .pulse-button:hover {
+                  animation-play-state: paused;
+                }
+              </style>
               <button
                 class="tab-btn1
-           px-4 py-2 rounded-lg bg-white border border-gray-200
-           shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
-           hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
-           active:translate-y-[-1px]
-           transition-all duration-200 ease-in-out"
+                  px-4 py-2 rounded-lg bg-white border border-gray-200
+                  shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+                  hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+                  active:translate-y-[-1px]
+                  transition-all duration-200 ease-in-out
+                  pulse-button"
                 data-target="section-prices">
                 Цены на товары
               </button>
+
             </div>
 
             <script>
