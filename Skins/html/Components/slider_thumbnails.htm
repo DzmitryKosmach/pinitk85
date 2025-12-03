@@ -16,8 +16,8 @@ $photosUnified[] = [
 else {
 
 foreach ($photos as $pn => $p) {
-$big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1_wm.' . $p['_img_ext'];
-$small = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . ($pn === 0 ? '_290x255_0_wm.' : '_197x153_0_wm.') . $p['_img_ext'];
+$big  = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . '_0x0_1.' . $p['_img_ext'];
+$small = Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['id'] . ($pn === 0 ? '_290x255_0.' : '_197x153_0.') . $p['_img_ext'];
 
 $photosUnified[] = [
 'big'   => $big,

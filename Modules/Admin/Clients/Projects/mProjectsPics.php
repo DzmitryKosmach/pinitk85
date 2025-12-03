@@ -147,7 +147,7 @@ class mProjectsPics extends Admin
     {
         $oImages = new Images();
         $origFile = Config::path('images') . Clients_Projects_Pics::$imagePath . $id . '.' . $ext;
-        $newName = Config::path('images') . Clients_Projects_Pics::$imagePath . $id . '_' . $width . 'x' . $height . '_0_wm.' . $ext;
+        $newName = Config::path('images') . Clients_Projects_Pics::$imagePath . $id . '_' . $width . 'x' . $height . '_0.' . $ext;
         $origImg = $oImages->fromFile($origFile);
 
         $newW = $width;
@@ -166,22 +166,7 @@ class mProjectsPics extends Admin
             in_array($ext, array('png', 'gif'))
         );
 
-        list($imgW, $imgH) = $oImages->ctrl->size($requestImg);
-        $wmImg = $oImages->fromFile(Config::path('images') . '/watermark.png');
-        list($wmWOrig, $wmHOrig) = $oImages->ctrl->size($wmImg);
-        $wmSize = min($imgW * 0.4, $imgH * 0.4);
-        imagecopyresampled(
-            $requestImg,
-            $wmImg,
-            $imgW - $wmSize,
-            $imgH - $wmSize,
-            0,
-            0,
-            $wmSize,
-            $wmSize,
-            $wmWOrig,
-            $wmHOrig
-        );
+
 
         $mime = isset(Images::$extToMime[$ext]) ? Images::$extToMime[$ext] : 'image/jpeg';
         $oImages->toFile($requestImg, $newName, $mime);
