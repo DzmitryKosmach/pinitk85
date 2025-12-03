@@ -592,11 +592,13 @@ var oMaterials = new (function () {
       matsInRow = matsInRowLevel3;
     }
 
-    // Показываем кнопку "Показать все" только для уровня 1
-    if (level === 1 && mIds.length > matsInRow) {
-      $(".klink-dashed").show();
-    } else {
-      $(".klink-dashed").hide();
+    // Управляем кнопкой "Показать все" только при построении уровня 1
+    if (level === 1) {
+      if (mIds.length > matsInRow) {
+        $(".klink-dashed").show();
+      } else {
+        $(".klink-dashed").hide();
+      }
     }
 
     var html = "";
