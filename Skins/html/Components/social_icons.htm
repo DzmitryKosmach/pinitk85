@@ -10,6 +10,7 @@ if (!isset($size)) {
 // Стандартные ссылки (можно переопределить через $links)
 $defaultLinks = [
     'max'      => '#',
+    'telegram' => '#',
     'zen'      => 'https://zen.yandex.ru/id/61bd9b90a5e7c35fbfbcad55',
     'vk'       => 'https://vk.com/mebelioniru',
     'ok'       => 'https://ok.ru/group/61739138941100'
@@ -21,7 +22,8 @@ $links = $links ?? $defaultLinks;
 // Описание иконок
 $icons = [
 'max'      => ['title' => 'MAX',           'alt' => 'MAX',        'img' => '/images/product/soc_m.png'],
-'zen'      => ['title' => 'Zen',            'alt' => 'Zen',             'img' => '/images/product/soc_zen.png'],
+'telegram' => ['title' => 'Telegram',      'alt' => 'Telegram',    'img' => '/images/product/soc_tg.png'],
+'zen'      => ['title' => 'Yandex Zen',    'alt' => 'Yandex Zen',    'img' => '/images/product/soc_zen.png'],
 'vk'       => ['title' => 'ВКонтакте',     'alt' => 'ВКонтакте',       'img' => '/images/product/soc_vk.png'],
 'ok'       => ['title' => 'Одноклассники', 'alt' => 'Одноклассники',   'img' => '/images/product/soc_ок.png']
 ];
