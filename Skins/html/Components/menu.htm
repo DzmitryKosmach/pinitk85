@@ -42,7 +42,7 @@ $menuItems = [
 
 
 <nav id="main-nav" class="flex flex-wrap justify-center lg:justify-start gap-5 lg:gap-8 text-sm sm:text-base lg:text-lg font-semibold sm:font-medium relative z-50 transition-all duration-300">
-  <?php foreach ($menuItems as $menuItem): ?>
+  <?php foreach ($menuItems as $index => $menuItem): ?>
   <?php if ($menuItem['is_dropdown'] && !empty($menuItem['items'])): ?>
   <!-- Dropdown menu item -->
   <div class="dropdown relative group" data-pinned="false">
@@ -56,7 +56,7 @@ $menuItems = [
           fill="#020202" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
-    <div class="dropdown-menu absolute top-full left-0 bg-white leading-4 border rounded shadow-md w-64 sm:w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+    <div class="dropdown-menu absolute top-full <?= $index === 1 ? 'left-[-60px] sm:left-0' : 'left-0' ?> bg-white leading-4 border rounded shadow-md w-64 sm:w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
       <?php foreach ($menuItem['items'] as $subItem): ?>
       <a href="<?= htmlspecialchars($subItem['url'], ENT_QUOTES, 'UTF-8') ?>"
          class="block px-4 py-2 hover:bg-main_hover_menu border-b border-gray-200 last:border-b-0">
@@ -83,35 +83,60 @@ $menuItems = [
       const menu = dropdown.querySelector('.dropdown-menu');
       const arrow = dropdown.querySelector('.dropdown-arrow');
 
+      // --- ПОВЕДЕНИЕ ПРИ НАВЕДЕНИИ ---
+      dropdown.addEventListener('mouseenter', () => {
+        if (dropdown.getAttribute('data-pinned') !== 'true') {
+          menu.classList.replace('opacity-0', 'opacity-100');
+          menu.classList.replace('invisible', 'visible');
+          arrow.classList.add('rotate-180');
+        }
+      });
+
+      dropdown.addEventListener('mouseleave', () => {
+        if (dropdown.getAttribute('data-pinned') !== 'true') {
+          menu.classList.replace('opacity-100', 'opacity-0');
+          menu.classList.replace('visible', 'invisible');
+          arrow.classList.remove('rotate-180');
+        }
+      });
+
+      // --- ПОВЕДЕНИЕ ПРИ КЛИКЕ ---
       toggle.addEventListener('click', function (e) {
         e.stopPropagation();
-
         const isPinned = dropdown.getAttribute('data-pinned') === 'true';
 
-        // Снять pinned со всех
+        // Снять pinned со всех остальных
         dropdowns.forEach(d => {
-          d.setAttribute('data-pinned', 'false');
-          const m = d.querySelector('.dropdown-menu');
-          const a = d.querySelector('.dropdown-arrow');
-          if (m) {
-            m.classList.replace('opacity-100', 'opacity-0');
-            m.classList.replace('visible', 'invisible');
+          if (d !== dropdown) {
+            d.setAttribute('data-pinned', 'false');
+            const m = d.querySelector('.dropdown-menu');
+            const a = d.querySelector('.dropdown-arrow');
+            if (m) {
+              m.classList.replace('opacity-100', 'opacity-0');
+              m.classList.replace('visible', 'invisible');
+            }
+            if (a) a.classList.remove('rotate-180');
           }
-          if (a) a.classList.remove('rotate-180');
         });
 
-        if (!isPinned) {
-          // Закрепить текущий
+        // Переключение pinned у текущего
+        if (isPinned) {
+          // Был закреплён → снять закрепление и скрыть
+          dropdown.setAttribute('data-pinned', 'false');
+          menu.classList.replace('opacity-100', 'opacity-0');
+          menu.classList.replace('visible', 'invisible');
+          arrow.classList.remove('rotate-180');
+        } else {
+          // Был не закреплён → закрепить и показать
           dropdown.setAttribute('data-pinned', 'true');
           menu.classList.replace('opacity-0', 'opacity-100');
           menu.classList.replace('invisible', 'visible');
           arrow.classList.add('rotate-180');
         }
-        // Если был pinned — он уже снят выше
       });
     });
 
-    // Закрыть все при клике вне
+    // --- КЛИК ВНЕ МЕНЮ ---
     document.addEventListener('click', () => {
       dropdowns.forEach(d => {
         d.setAttribute('data-pinned', 'false');
@@ -126,3 +151,4 @@ $menuItems = [
     });
   });
 </script>
+
