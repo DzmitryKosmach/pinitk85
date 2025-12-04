@@ -83,20 +83,57 @@ $menuItems = [
       const menu = dropdown.querySelector('.dropdown-menu');
       const arrow = dropdown.querySelector('.dropdown-arrow');
 
+      // helper: показать меню (используем inline-стили чтобы перебить group-hover)
+      function showMenu() {
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
+        menu.style.transition = menu.style.transition || ''; // оставить transition из css если есть
+        arrow && arrow.classList.add('rotate-180');
+      }
+
+      // helper: скрыть меню (inline-стили чтобы перебить group-hover)
+      function hideMenu() {
+        menu.style.opacity = '0';
+        menu.style.visibility = 'hidden';
+        arrow && arrow.classList.remove('rotate-180');
+      }
+
+      // helper: полностью очистить inline-стили (чтобы вернуть поведение CSS)
+      function clearInlineStyle() {
+        menu.style.removeProperty('opacity');
+        menu.style.removeProperty('visibility');
+        menu.style.removeProperty('transition');
+      }
+
       // --- ПОВЕДЕНИЕ ПРИ НАВЕДЕНИИ ---
       dropdown.addEventListener('mouseenter', () => {
-        if (dropdown.getAttribute('data-pinned') !== 'true') {
-          menu.classList.replace('opacity-0', 'opacity-100');
-          menu.classList.replace('invisible', 'visible');
-          arrow.classList.add('rotate-180');
+        const pinned = dropdown.getAttribute('data-pinned') === 'true';
+        const suppressed = dropdown.getAttribute('data-suppress-hover') === 'true';
+
+        if (!pinned && !suppressed) {
+          // показать (через inline-стили или классы — используем inline чтобы быть надёжнее)
+          showMenu();
         }
       });
 
       dropdown.addEventListener('mouseleave', () => {
-        if (dropdown.getAttribute('data-pinned') !== 'true') {
-          menu.classList.replace('opacity-100', 'opacity-0');
-          menu.classList.replace('visible', 'invisible');
-          arrow.classList.remove('rotate-180');
+        const pinned = dropdown.getAttribute('data-pinned') === 'true';
+        // при уходе курсора снимаем suppression — теперь последующее наведение будет работать
+        dropdown.setAttribute('data-suppress-hover', 'false');
+
+        if (!pinned) {
+          // скрыть и вернуть поведение CSS (удаляем inline-стили чтобы group-hover снова работал)
+          hideMenu();
+          // небольшая задержка перед очисткой inline-стиля чтобы не прервать transition (опционально)
+          window.requestAnimationFrame(() => {
+            // если меню не закреплено и не видно (opacity 0) — очищаем inline, чтобы CSS снова управлял
+            if (dropdown.getAttribute('data-pinned') !== 'true') {
+              clearInlineStyle();
+              // убедимся, что CSS действительно скрывает (если есть классы opacity-0/invisible, они применятся)
+              menu.classList.add('opacity-0', 'invisible');
+              menu.classList.remove('opacity-100', 'visible');
+            }
+          });
         }
       });
 
@@ -105,33 +142,45 @@ $menuItems = [
         e.stopPropagation();
         const isPinned = dropdown.getAttribute('data-pinned') === 'true';
 
-        // Снять pinned со всех остальных
+        // Снять pinned и скрыть у всех остальных
         dropdowns.forEach(d => {
           if (d !== dropdown) {
             d.setAttribute('data-pinned', 'false');
+            d.setAttribute('data-suppress-hover', 'false');
             const m = d.querySelector('.dropdown-menu');
             const a = d.querySelector('.dropdown-arrow');
             if (m) {
-              m.classList.replace('opacity-100', 'opacity-0');
-              m.classList.replace('visible', 'invisible');
+              m.classList.add('opacity-0', 'invisible');
+              m.classList.remove('opacity-100', 'visible');
+              // также удаляем inline, чтобы не оставить побочный эффект
+              m.style.removeProperty('opacity');
+              m.style.removeProperty('visibility');
             }
             if (a) a.classList.remove('rotate-180');
           }
         });
 
-        // Переключение pinned у текущего
         if (isPinned) {
-          // Был закреплён → снять закрепление и скрыть
+          // Был закреплён → снять закрепление и скрыть даже при наведённом курсоре
           dropdown.setAttribute('data-pinned', 'false');
-          menu.classList.replace('opacity-100', 'opacity-0');
-          menu.classList.replace('visible', 'invisible');
-          arrow.classList.remove('rotate-180');
+          // ставим suppression — чтобы hover не открыл меню пока курсор не уйдёт
+          dropdown.setAttribute('data-suppress-hover', 'true');
+
+          // Принудительно скрыть меню через inline-стили (это перебьёт CSS :hover)
+          hideMenu();
+          // Убираем классы видимости, чтобы состояние было консистентным
+          menu.classList.add('opacity-0', 'invisible');
+          menu.classList.remove('opacity-100', 'visible');
         } else {
           // Был не закреплён → закрепить и показать
           dropdown.setAttribute('data-pinned', 'true');
-          menu.classList.replace('opacity-0', 'opacity-100');
-          menu.classList.replace('invisible', 'visible');
-          arrow.classList.add('rotate-180');
+          dropdown.setAttribute('data-suppress-hover', 'false');
+
+          // Показать принудительно
+          showMenu();
+          // Убираем классы скрытия/показа для консистентности
+          menu.classList.add('opacity-100', 'visible');
+          menu.classList.remove('opacity-0', 'invisible');
         }
       });
     });
@@ -140,15 +189,26 @@ $menuItems = [
     document.addEventListener('click', () => {
       dropdowns.forEach(d => {
         d.setAttribute('data-pinned', 'false');
+        d.setAttribute('data-suppress-hover', 'false');
         const m = d.querySelector('.dropdown-menu');
         const a = d.querySelector('.dropdown-arrow');
         if (m) {
-          m.classList.replace('opacity-100', 'opacity-0');
-          m.classList.replace('visible', 'invisible');
+          // Принудительно скрываем
+          m.style.opacity = '0';
+          m.style.visibility = 'hidden';
+          // синхронизируем с классами tailwind
+          m.classList.add('opacity-0', 'invisible');
+          m.classList.remove('opacity-100', 'visible');
+          // затем очищаем inline-стили, чтобы CSS hover снова работал при последующем наведении
+          window.requestAnimationFrame(() => {
+            m.style.removeProperty('opacity');
+            m.style.removeProperty('visibility');
+          });
         }
         if (a) a.classList.remove('rotate-180');
       });
     });
   });
 </script>
+
 
