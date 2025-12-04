@@ -6,8 +6,8 @@
      class="flex justify-center"
      rel="noopener noreferrer">
     <img src="<?php echo Config::pathRel('images') . Clients_Projects_Pics::$imagePath . $p['1st_photo']['id']; ?>_290x255_0.<?php echo $p['1st_photo']['_img_ext']; ?>" width="290" height="255" alt="<?php echo hsch($p['name']); ?>"
-      alt="Наша работа"
-      class="max-w-full h-auto object-contain rounded-md mb-4"
+         alt="Наша работа"
+         class="max-w-full h-auto object-contain rounded-md mb-4"
     />
   </a>
 
@@ -17,12 +17,12 @@
       class="font-medium text-sm sm2:text-base lg:text-lg leading-5 line-clamp-3 transition-all duration-200 absolute top-0 left-0 right-0 hover:line-clamp-none hover:z-10 hover:bg-white hover:shadow-lg hover:rounded hover:px-2 hover:py-1"
     >
       <a
-        href="#"
+        href="<?php echo Clients_Projects::a($p['id']); ?>"
         class="text-inherit hover:text-inherit block"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Perseo (Персео) - мебель для кабинета руководителя
+        <?php echo htmlspecialchars($p['name']); ?>
       </a>
     </h3>
   </div>
