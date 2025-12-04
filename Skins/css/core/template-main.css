@@ -170,7 +170,13 @@ div.table div.full,
 .body .aroundowlslider1 .item.product .text,
 .body .aroundowlslider1 .item.product .image{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;}
 .body img,.footer img{max-width:100%;height:auto;width:auto\9;/*ie8*/}
-.ajax_loader{display:block;margin:0 auto;}
+.ajax_loader{width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;display:block}
+#fancybox-loading{background:transparent;border:0;box-shadow:none}
+#fancybox-loading div{width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}
+.highslide-loading{display:inline-block;width:36px;height:36px;line-height:0;background:none!important;border:0!important;text-indent:-9999px}
+.highslide-loading::before{content:"";display:block;width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}
+.rsgppopup .loading{width:36px;height:36px;margin:16px auto;border:3px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 /* global styles - clear */
 .clearfix:after{display:block;clear:both;content:" ";font-size:0;height:0;visibility:hidden;}
 * html .clearfix{//zoom: 1;}/*IE6*/
