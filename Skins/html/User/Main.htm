@@ -1260,8 +1260,12 @@ function getHomeUrl() {
     </button>
   </div>
 
-  <div class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0" id="kmodal">
-    <a href="javascript:void(0);" class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors" onclick="kclose(); return false;">
+  <div
+    class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
+    id="kmodal" style="display:none;">
+    <a href="javascript:void(0);"
+      class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors"
+      onclick="kclose(); return false;">
       ×
     </a>
 
@@ -1273,11 +1277,11 @@ function getHomeUrl() {
 
       <div class="flex flex-col md:flex-row gap-4 mt-8">
         <a class="yes flex-1 text-center py-3 px-4 bg-main text-white rounded-lg hover:bg-main_hover transition-colors font-medium"
-           onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-           href="#">Да</a>
+          onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+          href="#">Да</a>
         <a class="no flex-1 text-center py-3 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-           onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-           href="#">Нет</a>
+          onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+          href="#">Нет</a>
       </div>
 
       <div class="mt-6 pt-5 border-t border-gray-200 text-gray-600 text-sm">
@@ -1290,7 +1294,8 @@ function getHomeUrl() {
         Хотите мы вам перезвоним через 15 секунд?
       </div>
       <div class="modal-order-call__label mb-2">
-        <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup class="text-red-500">*</sup></label>
+        <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup
+            class="text-red-500">*</sup></label>
       </div>
 
       <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
@@ -1298,8 +1303,9 @@ function getHomeUrl() {
           <div class="flex flex-col md:flex-row gap-4">
             <div class="modal-order-call-form__input">
               <div>
-                <input class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all" type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20"
-                       required="" />
+                <input
+                  class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                  type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required="" />
                 <input type="hidden" name="name" value="жду звонка" />
                 <input type="hidden" name="XMLHttpRequest" value="1" />
                 <div class="text-xs text-gray-400 mt-1">
@@ -1310,11 +1316,13 @@ function getHomeUrl() {
             <div class="modal-order-call-form__button !p-0">
               <!--<a href="#">Жду звонка</a>-->
               <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
-              <button type="submit" class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
+              <button type="submit"
+                class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
                 Жду звонка
               </button>
             </div>
-            <div id="yatimer" class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
+            <div id="yatimer"
+              class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
               <img class="mr-2" src="<?php echo getImagePath('/img/icons/timer.png'); ?>" />
               <div class="!flex !items-center">
                 <span class="text-2xl ">00</span>
@@ -1325,7 +1333,8 @@ function getHomeUrl() {
               </div>
             </div>
           </div>
-          <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px" id="captcha_callback-left">
+          <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px"
+            id="captcha_callback-left">
           </div>
         </div>
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>" />
