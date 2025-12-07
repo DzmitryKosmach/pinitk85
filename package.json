@@ -1,0 +1,20 @@
+{
+  "name": "pinitk85",
+  "version": "1.0.0",
+  "description": "1. [x] Корректировки класс для работы с БД на php 8.2\r 2. [x] Перевод шаблонов на php 8.2\r 3. [x] phpQuery на PHP 8\r 4. [x] Замена класса для работы Excel\r 5. [x] Чистка от мусора\r 6. [x] Работа cron задач",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "build": "npx tailwindcss -i ./input.css -o ./dist/output.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "3.4"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
+  }
+}
