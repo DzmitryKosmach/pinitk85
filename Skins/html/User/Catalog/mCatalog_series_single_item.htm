@@ -26,6 +26,8 @@
   #materials-popup .material.has-sub:hover:after{background-position:-30px 0}
   #materials-popup .material.has-sub.active:after{background-position:-60px 0}
   .materials-level2 .level-tail,.materials-level3 .level-tail{position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg)}
+  .dis{display:none}
+  .cl{display:block;clear:both}
 </style>
 <script>
   oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
