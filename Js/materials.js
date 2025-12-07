@@ -610,15 +610,10 @@ var oMaterials = new (function () {
       if (i > 0 && i % matsInRow === 0) {
         // для level 1: только первая строка видна, остальные — dis
         var rowClass = level === 1 && rowIndex > 0 ? "dis" : "";
-        var rowStyle =
-          "position:relative;z-index:100;width:330px;height:125px;margin:0 0 20px 0;";
-        if (rowClass === "dis") rowStyle = "display:none;" + rowStyle;
         html +=
           '<div class="materials-row ' +
           rowClass +
-          '" style="' +
-          rowStyle +
-          '">' +
+          ' relative z-[100] w-[330px] h-[125px] mb-5">' +
           rowHtml +
           '<div class="cl"></div></div>';
         rowHtml = "";
@@ -632,15 +627,10 @@ var oMaterials = new (function () {
     // добавляем последнюю строку
     if (rowHtml) {
       var lastRowClass = level === 1 && rowIndex > 0 ? "dis" : "";
-      var rowStyle =
-        "position:relative;z-index:100;width:330px;height:125px;margin:0 0 20px 0;";
-      if (lastRowClass === "dis") rowStyle = "display:none;" + rowStyle;
       html +=
         '<div class="materials-row ' +
         lastRowClass +
-        '" style="' +
-        rowStyle +
-        '">' +
+        ' relative z-[100] w-[330px] h-[125px] mb-5">' +
         rowHtml +
         '<div class="cl"></div></div>';
     }
@@ -648,20 +638,20 @@ var oMaterials = new (function () {
     // добавляем уровень
     if (level === 1) {
       html +=
-        '<div class="materials-level2" id="materials-level2" style="display:none;position:relative;top:-20px;z-index:50;padding:20px 20px 0 20px;margin:0;background:#fff;border:1px solid #7a8a93;">' +
-        '<div class="level-tail" id="materials-level2-tail" style="position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg);"></div>' +
+        '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2">' +
+        '<div class="level-tail" id="materials-level2-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
-        '<strong class="level-title" id="materials-level2-title" style="display:block;padding:5px 0 10px 2px;color:#737769;font-weight:normal;font-size:16px;"></strong>' +
-        '<div class="level-help" style="display:block;padding:0 0 15px 2px;color:#999;font-weight:normal;font-size:12px;">Нажмите на изображение материала, чтобы выбрать его</div>' +
-        '<div id="materials-level2-content" style="position:relative;z-index:1000;overflow-y:scroll;overflow-x:hidden;height:300px;width:300px;padding:20px;"></div>' +
+        '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>' +
+        '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>' +
+        '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>' +
         "</div>";
     } else {
       html +=
-        '<div class="materials-level3" id="materials-level3" style="display:none;position:relative;top:-20px;z-index:50;padding:20px 0 0 20px;margin:0;background:#fff;border:1px solid #7a8a93;">' +
-        '<div class="level-tail" id="materials-level3-tail" style="position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg);"></div>' +
+        '<div class="materials-level3 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3">' +
+        '<div class="level-tail" id="materials-level3-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
-        '<strong class="level-title" id="materials-level3-title" style="display:block;padding:5px 0 10px 2px;color:#737769;font-weight:normal;font-size:16px;"></strong>' +
-        '<div id="materials-level3-content" style="position:relative;z-index:1000;overflow-y:scroll;overflow-x:hidden;height:300px;"></div>' +
+        '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>' +
+        '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>' +
         "</div>";
     }
 
@@ -724,29 +714,21 @@ var oMaterials = new (function () {
     var price = matPrice4Item(topM.id);
     price = price > 0 ? priceFormat(price) + " ₽" : "по запросу";
 
-    var materialStyle =
-      "display:block;position:relative;float:left;box-sizing:border-box;width:110px;height:135px;margin:0;text-decoration:none;border-radius:4px;";
-    var materialInStyle = "box-sizing:border-box;width:95px;height:inherit;";
-    var imageStyle =
-      "display:block;position:relative;width:76px;height:61px;margin-bottom:2px;border:2px solid #FFF;box-shadow:0 1px 6px 0 rgba(0,0,0,0.3);";
-    var imageBigWrapStyle =
-      "display:none;position:absolute;z-index:800;width:164px;height:132px;left:-32px;top:-65px;background:#fff;border:2px solid #FFF;box-shadow:0 1px 4px 0 rgba(0,0,0,0.3);";
-    var infoStyle = "height:55px;overflow:hidden;padding-left:2px;";
-    var nameStyle =
-      "display:table-cell;vertical-align:middle;height:26px;line-height:13px;font-size:11px;color:#0075c2;text-decoration:underline;";
-    var priceStyle = "display:block;white-space:nowrap;font-size:11px;";
+    var anchorClasses = "material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50";
+    var materialInClasses = "material-in box-border w-[95px] h-full";
+    var imageClasses = "image block relative w-[76px] h-[61px] mb-[2px] border-2 border-white shadow";
+    var imageBigWrapClasses = "image-big absolute z-[800] w-[164px] h-[132px] left-[-32px] top-[-65px] bg-white border-2 border-white shadow";
+    var infoClasses = "info material-info h-[55px] overflow-hidden pl-[2px]";
+    var nameClasses = "name table-cell align-middle h-[26px] leading-[13px] text-[11px] text-[#0075c2] underline";
+    var priceClasses = "price block whitespace-nowrap text-[11px]";
     if (active) {
-      nameStyle += "font-weight:bold;";
-      imageStyle = imageStyle.replace(
-        "border:2px solid #FFF;",
-        "border:2px solid #ffa800;"
-      );
+      nameClasses += " font-semibold";
+      imageClasses = imageClasses.replace("border-white", "border-[#ffa800]");
     }
 
     var hasSubIcon = "";
     if (m.has_sub == 1) {
-      hasSubIcon =
-        '<span style="position:absolute;right:23px;top:-7px;width:30px;height:30px;background:url(/Skins/img/user/materials-popup-hassub.png) no-repeat 0 0;"></span>';
+      hasSubIcon = "";
     }
 
     var html =
@@ -754,37 +736,37 @@ var oMaterials = new (function () {
       m.id +
       '" class="' +
       className +
+      ' ' +
+      anchorClasses +
       '" href="javascript:void(0)" onclick="' +
       onclick +
-      '; return false;" style="' +
-      materialStyle +
-      '">' +
+      '; return false;">' +
       hasSubIcon +
-      '<div class="material-in" style="' +
-      materialInStyle +
+      '<div class="' +
+      materialInClasses +
       '">' +
-      '<div class="image" style="' +
-      imageStyle +
+      '<div class="' +
+      imageClasses +
       '">' +
       image +
       (imageBig
-        ? '<div class="image-big" style="' +
-          imageBigWrapStyle +
+        ? '<div class="' +
+          imageBigWrapClasses +
           '">' +
           imageBig +
           "</div>"
         : "") +
       "</div>" +
-      '<div class="info material-info" style="' +
-      infoStyle +
+      '<div class="' +
+      infoClasses +
       '">' +
-      '<div class="name" style="' +
-      nameStyle +
+      '<div class="' +
+      nameClasses +
       '">' +
       m.name +
       "</div>" +
-      '<div class="price" style="' +
-      priceStyle +
+      '<div class="' +
+      priceClasses +
       '">' +
       price +
       "</div>" +

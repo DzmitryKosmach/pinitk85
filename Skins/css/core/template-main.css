@@ -189,6 +189,7 @@ div.table div.full,
 /* global styles - hidden */
 .nonep{height:1px;left:-10000px;position:absolute;width:1px;}
 .noned{display:none;}
+.dis{display:none}
 /* global styles - links */
 a{color:#214496;text-decoration:none;}
 a.btn1,
@@ -262,6 +263,8 @@ a.fullback:hover .icon{
 .ajaxpages a{line-height:31px;text-decoration:none;}
 .ajaxpages span{border-bottom:1px dashed #0c4da2;}
 .ajaxpages a:hover span{border-bottom:1px dashed #fff;}
+.klink-dashed{border-bottom:1px dashed #0c4da2}
+.klink-dashed:hover{border-bottom-color:#fff}
 /* global styles - compare checkbox */
 .add2compare .icon,
 .add2compare1 .icon{
@@ -291,6 +294,16 @@ a.fullback:hover .icon{
 	color: green;
 	border:1px solid green;
 }
+#materials-popup .material.active .name{font-weight:bold}
+#materials-popup .material.active .image{border-color:#ffa800}
+#materials-popup .image:hover .image-big{display:block}
+ .image-big{display:none}
+ #materials-popup .material.has-sub:after{content:'';display:block;position:absolute;z-index:5;box-sizing:border-box;right:23px;top:-7px;width:30px;height:30px;background:url('/Skins/img/user/materials-popup-hassub.png') no-repeat 0 0}
+ #materials-popup .material.has-sub:hover:after{background-position:-30px 0}
+ #materials-popup .material.has-sub.active:after{background-position:-60px 0}
+ #materials-popup .material:hover .name{text-decoration:none}
+ .materials-level2 .level-tail,.materials-level3 .level-tail{position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg)}
+ .price-by-request{color:#6b7280}
 /* global styles - inputs */
 .body input[type="submit"],
 .body input[type="button"],
