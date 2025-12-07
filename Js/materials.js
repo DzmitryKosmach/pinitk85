@@ -752,7 +752,7 @@ var oMaterials = new (function () {
       (imageBig
         ? '<div class="' +
           imageBigWrapClasses +
-          '">' +
+          '" style="display:none;">' +
           imageBig +
           "</div>"
         : "") +
