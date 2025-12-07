@@ -302,7 +302,28 @@ a.fullback:hover .icon{
  #materials-popup .material.has-sub:hover:after{background-position:-30px 0}
  #materials-popup .material.has-sub.active:after{background-position:-60px 0}
  #materials-popup .material:hover .name{text-decoration:none}
- .materials-level2 .level-tail,.materials-level3 .level-tail{position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg)}
+.materials-level2 .level-tail,.materials-level3 .level-tail{position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg)}
+ #materials-popup{display:block;position:relative;box-sizing:border-box;width:360px}
+ #materials-popup .close{display:block;position:absolute;right:5px;top:5px;border:1px solid #a7b2b1;border-radius:5px;z-index:200;width:29px;height:29px;background:url('/Skins/img/user/popup-close.png') no-repeat 8px 8px}
+ #materials-popup .close:hover{background-position:-22px 8px;background-color:#000}
+ #materials-popup-content{width:360px}
+ #materials-level1-content,#materials-level2-content,#materials-level3-content{position:relative;z-index:1000;overflow-y:scroll;overflow-x:hidden;height:300px}
+ #materials-level2-content{width:300px;padding:20px;overflow-y:scroll;scrollbar-width:thin;scrollbar-color:#c3c3c3 white;scroll-behavior:smooth}
+ #materials-level2-content::-webkit-scrollbar{width:7px;background-color:#fff}
+ #materials-popup .materials-row{position:relative;z-index:100;width:330px;height:125px;margin:0 0 20px 0}
+ #materials-popup .material{display:block;position:relative;float:left;box-sizing:border-box;width:110px;height:135px;margin:0;text-decoration:none;border-radius:4px}
+ #materials-popup .material .material-in{box-sizing:border-box;width:95px;height:inherit}
+ #materials-popup .material .image{display:block;position:relative;width:76px;height:61px;margin-bottom:2px;border:2px solid #FFF;box-shadow:0 1px 6px 0 rgba(0,0,0,0.3)}
+ #materials-popup .material .image .image-big{display:none;position:absolute;z-index:800;width:164px;height:132px;left:-32px;top:-65px;background:#fff;border:2px solid #FFF;box-shadow:0 1px 4px 0 rgba(0,0,0,0.3)}
+ #materials-popup .material .image:hover .image-big{display:block}
+ #materials-popup .material .info{height:55px;overflow:hidden;padding-left:2px}
+ #materials-popup .material .name{display:table-cell;vertical-align:middle;height:26px;line-height:13px;font-size:11px;color:#0075c2;text-decoration:underline}
+ #materials-popup .material .price{display:block;white-space:nowrap;font-size:11px}
+ #materials-popup .materials-level2{display:inline-block;position:relative;top:-20px;z-index:50;padding:20px 20px 0 20px;margin:0;background:#fff;border:1px solid #7a8a93}
+ #materials-popup .materials-level3{display:inline-block;position:relative;top:-20px;z-index:50;padding:20px 0 0 20px;margin:0;background:#fff;border:1px solid #7a8a93}
+ #materials-popup .level-title{display:block;padding:5px 0 10px 2px;color:#737769;font-weight:normal;font-size:16px}
+ #materials-popup .level-help{display:block;padding:0 0 15px 2px;color:#999;font-weight:normal;font-size:12px}
+ #materials-popup .level-title:after{content:':'}
  .price-by-request{color:#6b7280}
 /* global styles - inputs */
 .body input[type="submit"],
