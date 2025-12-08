@@ -269,495 +269,465 @@ function getHomeUrl() {
 
   <?php echo Options::name('head-scripts'); ?>
   <script src="https://www.google.com/recaptcha/api.js?onload=onloadCaptchaCallback&render=explicit" async
-    defer></script>
+          defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
   <!-- Tailwind конфигурация -->
-<!--  <script src="https://cdn.tailwindcss.com"></script>-->
+  <!--  <script src="https://cdn.tailwindcss.com"></script>-->
   <link rel="stylesheet" href="/dist/output.css">
-<!--  <script>-->
-<!--    tailwind.config = {-->
-<!--      theme: {-->
-<!--        extend: {-->
-<!--          maxWidth: {-->
-<!--            1440: "1440px",-->
-<!--          },-->
-<!--          colors: {-->
-<!--            header: "#E7EBF2",-->
-<!--            body: "#F8F8F8",-->
-<!--            footer: "#E8F1FF",-->
-<!--            main: "#2563eb", //blue-600-->
-<!--            main_hover: "#1d4ed8", //blue-700-->
-<!--            main_hover_menu: "#dbeafe", //blue-100-->
-<!--          },-->
-<!--          fontFamily: {-->
-<!--            sans: ["Montserrat", "sans-serif"],-->
-<!--          },-->
-<!--          spacing: {-->
-<!--            18: "4.5rem",-->
-<!--          },-->
-<!--          screens: {-->
-<!--            sm2: "740px",-->
-<!--            sm3: "640px",-->
-<!--            xs: "480px",-->
-<!--            xs2: "420px",-->
-<!--          },-->
-<!--        },-->
-<!--      },-->
-<!--    };-->
-<!--  </script>-->
+
 </head>
 
 <body class="font-sans bg-body text-gray-900">
-  <?php
+<?php
 		if (APP_ENV == "production" || APP_ENV == "prod") {
 			$counters = file_get_contents(_ROOT . "/Skins/html/counters.htm");
 			echo $counters;
 		}
 	?>
 
-  <!-- Header -->
-  <header id="top" class="bg-header/90 backdrop-blur-sm sticky top-0 z-[900] transition-all duration-300">
-    <div
-      class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-1 flex-col flex sm:flex-row justify-between items-center text-base font-medium">
-      <!-- Левая часть -->
-      <div class="flex sm:inline-block justify-between gap-4 w-full sm:w-auto">
-        <div class="flex items-center gap-2">
-          <!-- Логотип (обычное состояние) -->
-          <a href="<?php echo getHomeUrl(); ?>" id="logo-main" class="transition-all duration-300">
-            <img src="<?php echo getImagePath('/images/index/logo.png'); ?>" alt="Логотип"
-              class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]" />
-          </a>
+<!-- Header -->
+<header id="top" class="bg-header/90 backdrop-blur-sm sticky top-0 z-[900] transition-all duration-300">
+  <div
+    class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-1 flex-col flex sm:flex-row justify-between items-center text-base font-medium">
+    <!-- Левая часть -->
+    <div class="flex sm:inline-block justify-between gap-4 w-full sm:w-auto">
+      <div class="flex items-center gap-2">
+        <!-- Логотип (обычное состояние) -->
+        <a href="<?php echo getHomeUrl(); ?>" id="logo-main" class="transition-all duration-300">
+          <img src="<?php echo getImagePath('/images/index/logo.png'); ?>" alt="Логотип"
+               class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]" />
+        </a>
 
-          <!-- Иконки каталога и поиска (при прокрутке) -->
-          <div id="header-icons-scrolled" class="hidden transition-all duration-300">
-            <div class="flex items-center gap-4">
-              <!-- Иконка каталога -->
-              <div class="flex align-middle gap-2">
-                <a href="/catalog/" class="inline-block">Каталог</a>
-                <div class="relative group">
-                  <button id="catalog-toggle1"
-                    class="flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
-                    aria-label="Открыть каталог">
-                    <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 1H20" stroke="currentColor" stroke-width="2" />
-                      <path d="M0 7H20" stroke="currentColor" stroke-width="2" />
-                      <path d="M0 13H20" stroke="currentColor" stroke-width="2" />
-                    </svg>
-                  </button>
-
-                  <!-- Выпадающее меню каталога (1 уровень) -->
-                  <ul id="catalog-menu1"
-                    class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[200]">
-                    <?php foreach($catsMenu as $c): ?>
-                    <?php
-        // Собираем все ID текущей категории и её подкатегорий
-        $catIds = [$c['id']];
-        if (is_array($c['sub']) && count($c['sub'])) {
-          foreach ($c['sub'] as $c2) {
-            $catIds[] = $c2['id'];
-          }
-        }
-      ?>
-                    <li class="relative hover:bg-main_hover_menu group/l2">
-                      <a href="<?php echo Catalog_Categories::a($c['id']); ?>"
-                        class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
-                        <?php echo htmlspecialchars($c['name']); ?>
-                        <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        <?php endif; ?>
-                      </a>
-
-                      <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-                      <!-- Подменю 2 уровня -->
-                      <ul
-                        class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12">
-                        <?php foreach ($c['sub'] as $c2): ?>
-                        <li class="relative hover:bg-main_hover_menu group/l3">
-                          <a href="<?php echo Catalog_Categories::a($c2['id']); ?>"
-                            class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
-                            <?php echo htmlspecialchars($c2['name']); ?>
-                            <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                            <?php endif; ?>
-                          </a>
-
-                          <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                          <!-- Подменю 3 уровня -->
-                          <ul
-                            class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50">
-                            <?php foreach ($c2['sub'] as $c3): ?>
-                            <li>
-                              <a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
-                                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100">
-                                <?php echo htmlspecialchars($c3['name']); ?>
-                              </a>
-                            </li>
-                            <?php endforeach; ?>
-                          </ul>
-                          <?php endif; ?>
-                        </li>
-                        <?php endforeach; ?>
-                      </ul>
-                      <?php endif; ?>
-                    </li>
-                    <?php endforeach; ?>
-                  </ul>
-                </div>
-              </div>
-
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  const catalogToggle = document.getElementById('catalog-toggle1');
-                  const catalogMenu = document.getElementById('catalog-menu1');
-                  let isMenuOpen = false;
-
-                  // Функция для открытия меню
-                  function openMenu() {
-                    catalogMenu.classList.remove('opacity-0', 'invisible');
-                    catalogMenu.classList.add('opacity-100', 'visible');
-                    isMenuOpen = true;
-                  }
-
-                  // Функция для закрытия меню
-                  function closeMenu() {
-                    catalogMenu.classList.remove('opacity-100', 'visible');
-                    catalogMenu.classList.add('opacity-0', 'invisible');
-                    isMenuOpen = false;
-                  }
-
-                  // Обработчик клика по кнопке
-                  catalogToggle.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    if (isMenuOpen) {
-                      closeMenu();
-                    } else {
-                      openMenu();
-                    }
-                  });
-
-                  // Закрытие меню при клике вне его области
-                  document.addEventListener('click', function (e) {
-                    if (isMenuOpen && !catalogMenu.contains(e.target) && !catalogToggle.contains(e.target)) {
-                      closeMenu();
-                    }
-                  });
-
-                  // Закрытие меню при нажатии клавиши Escape
-                  document.addEventListener('keydown', function (e) {
-                    if (e.key === 'Escape' && isMenuOpen) {
-                      closeMenu();
-                    }
-                  });
-                });
-              </script>
-
-              <!-- Иконка поиска -->
-              <div class="flex align-middle gap-2">
-                <p class="hidden md:block">Поиск</p>
-                <button id="search-toggle-scrolled"
-                  class="w-[26px] h-[26px] flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors border border-gray-300 rounded-md hover:border-blue-600"
-                  aria-label="Поиск">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M9 3C5.68629 3 3 5.68629 3 9C3 12.3137 5.68629 15 9 15C10.6569 15 12.1569 14.3271 13.2426 13.2426C14.3271 12.1569 15 10.6569 15 9C15 5.68629 12.3137 3 9 3ZM1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9C17 10.8487 16.3729 12.551 15.3199 13.9056L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L13.9056 15.3199C12.551 16.3729 10.8487 17 9 17C4.58172 17 1 13.4183 1 9Z"
-                      fill="currentColor" />
+        <!-- Иконки каталога и поиска (при прокрутке) -->
+        <div id="header-icons-scrolled" class="hidden transition-all duration-300">
+          <div class="flex items-center gap-4">
+            <!-- Иконка каталога -->
+            <div class="flex align-middle gap-2">
+              <a href="/catalog/" class="inline-block">Каталог</a>
+              <div class="relative group">
+                <button id="catalog-toggle1"
+                        class="flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                        aria-label="Открыть каталог">
+                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 1H20" stroke="currentColor" stroke-width="2" />
+                    <path d="M0 7H20" stroke="currentColor" stroke-width="2" />
+                    <path d="M0 13H20" stroke="currentColor" stroke-width="2" />
                   </svg>
                 </button>
+
+                <!-- Выпадающее меню каталога (1 уровень) -->
+                <ul id="catalog-menu1"
+                    class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[200]">
+                  <?php foreach($catsMenu as $c): ?>
+                  <?php
+                      // Собираем все ID текущей категории и её подкатегорий
+                      $catIds = [$c['id']];
+                      if (is_array($c['sub']) && count($c['sub'])) {
+                        foreach ($c['sub'] as $c2) {
+                          $catIds[] = $c2['id'];
+                        }
+                      }
+                    ?>
+                  <li class="relative hover:bg-main_hover_menu group/l2">
+                    <a href="<?php echo Catalog_Categories::a($c['id']); ?>"
+                       class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
+                      <?php echo htmlspecialchars($c['name']); ?>
+                      <?php if (is_array($c['sub']) && count($c['sub'])): ?>
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                      <?php endif; ?>
+                    </a>
+
+                    <?php if (is_array($c['sub']) && count($c['sub'])): ?>
+                    <!-- Подменю 2 уровня -->
+                    <ul
+                      class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12">
+                      <?php foreach ($c['sub'] as $c2): ?>
+                      <li class="relative hover:bg-main_hover_menu group/l3">
+                        <a href="<?php echo Catalog_Categories::a($c2['id']); ?>"
+                           class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
+                          <?php echo htmlspecialchars($c2['name']); ?>
+                          <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+                          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                          <?php endif; ?>
+                        </a>
+
+                        <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+                        <!-- Подменю 3 уровня -->
+                        <ul
+                          class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50">
+                          <?php foreach ($c2['sub'] as $c3): ?>
+                          <li>
+                            <a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
+                               class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100">
+                              <?php echo htmlspecialchars($c3['name']); ?>
+                            </a>
+                          </li>
+                          <?php endforeach; ?>
+                        </ul>
+                        <?php endif; ?>
+                      </li>
+                      <?php endforeach; ?>
+                    </ul>
+                    <?php endif; ?>
+                  </li>
+                  <?php endforeach; ?>
+                </ul>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Правая часть (мобильная версия) -->
-        <div class="block sm:hidden">
-          <div class="flex items-center gap-2">
+            <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                const catalogToggle = document.getElementById('catalog-toggle1');
+                const catalogMenu = document.getElementById('catalog-menu1');
+                let isMenuOpen = false;
 
-            <!-- Иконки -->
-            <div class="flex items-center gap-2">
-              <!-- Телефон (иконка с дропдауном) -->
-              <div class="relative inline-block group">
-                <!-- Иконка -->
-                <a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback block"
-                  aria-label="Позвонить или заказать обратный звонок">
-                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    class="w-6 h-6 cursor-pointer hover:opacity-50 transition-opacity">
-                    <path
-                      d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
-                      fill="#020202" />
-                  </svg>
-                </a>
+                // Функция для открытия меню
+                function openMenu() {
+                  catalogMenu.classList.remove('opacity-0', 'invisible');
+                  catalogMenu.classList.add('opacity-100', 'visible');
+                  isMenuOpen = true;
+                }
 
-                <!-- Выпадающий список -->
-                <div
-                  class="absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]">
-                  <a href="tel:+74959204824"
-                    class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                    +7 (495) 920-48-24
-                  </a>
-                  <a href="tel:88002349084"
-                    class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                    8 (800) 234-90-84
-                  </a>
-                </div>
-              </div>
+                // Функция для закрытия меню
+                function closeMenu() {
+                  catalogMenu.classList.remove('opacity-100', 'visible');
+                  catalogMenu.classList.add('opacity-0', 'invisible');
+                  isMenuOpen = false;
+                }
 
-              <!-- Корзина -->
-              <div class="relative inline-block">
-                <a href="<?php echo Url::a('catalog-cart')?>">
-                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    class="w-6 h-6 cursor-pointer hover:opacity-50">
-                    <path
-                      d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
-                      fill="#020202" />
-                  </svg>
+                // Обработчик клика по кнопке
+                catalogToggle.addEventListener('click', function (e) {
+                  e.stopPropagation();
+                  if (isMenuOpen) {
+                    closeMenu();
+                  } else {
+                    openMenu();
+                  }
+                });
 
-                  <!-- Бейдж с количеством товаров -->
-                  <?php
-                              $cart = Catalog_Cart::total();
-                              $count = (int)$cart[0]; // количество товаров
-                              ?>
-                  <span id="cart-badge-count-mobile"
-                    class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $count; ?>
-                  </span>
-                </a>
-              </div>
+                // Закрытие меню при клике вне его области
+                document.addEventListener('click', function (e) {
+                  if (isMenuOpen && !catalogMenu.contains(e.target) && !catalogToggle.contains(e.target)) {
+                    closeMenu();
+                  }
+                });
 
+                // Закрытие меню при нажатии клавиши Escape
+                document.addEventListener('keydown', function (e) {
+                  if (e.key === 'Escape' && isMenuOpen) {
+                    closeMenu();
+                  }
+                });
+              });
+            </script>
 
-              <!-- Избранное -->
-              <div class="relative inline-block">
-                <a href="<?php echo Url::a('catalog-favorite')?>">
-                  <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                    <path
-                      d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
-                      fill="#020202" />
-                  </svg>
-                  <!-- Бейдж с количеством товаров в избранном -->
-                  <?php
-                    $favoriteCount = Catalog_Favorites::count();
-                  ?>
-                  <span id="favorite-badge-count-desktop"
-                    class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $favoriteCount; ?>
-                  </span>
-                </a>
-              </div>
-
-              <!-- Сравнение -->
-              <div class="relative inline-block">
-                <a href="<?php echo Url::a('catalog-compare')?>">
-                  <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                    <path
-                      d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
-                      fill="#020202" />
-                  </svg>
-
-                  <!-- Бейдж с количеством товаров для сравнения -->
-                  <?php
-                                    $compareCount = Catalog_Compare::count();
-                                    ?>
-                  <span id="compare-badge-count-desktop"
-                    class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $compareCount; ?>
-                  </span>
-                </a>
-              </div>
+            <!-- Иконка поиска -->
+            <div class="flex align-middle gap-2">
+              <p class="hidden md:block">Поиск</p>
+              <button id="search-toggle-scrolled"
+                      class="w-[26px] h-[26px] flex items-center justify-center text-gray-700 hover:text-blue-600 transition-colors border border-gray-300 rounded-md hover:border-blue-600"
+                      aria-label="Поиск">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M9 3C5.68629 3 3 5.68629 3 9C3 12.3137 5.68629 15 9 15C10.6569 15 12.1569 14.3271 13.2426 13.2426C14.3271 12.1569 15 10.6569 15 9C15 5.68629 12.3137 3 9 3ZM1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9C17 10.8487 16.3729 12.551 15.3199 13.9056L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L13.9056 15.3199C12.551 16.3729 10.8487 17 9 17C4.58172 17 1 13.4183 1 9Z"
+                    fill="currentColor" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Центральная навигация -->
-      <?php include(Config::path('skins') . '/html/Components/menu.htm'); ?>
+      <!-- Правая часть (мобильная версия) -->
+      <div class="block sm:hidden">
+        <div class="flex items-center gap-2">
 
-      <!-- Правая часть -->
-      <div id="header-right" class="hidden sm:flex xl:flex-row items-center text-base transition-all duration-300">
-        <!-- Телефоны -->
-        <div class="hidden xl:inline-block text-center lg:text-right mr-2 xl:mr-8">
-          <!-- Контейнер для дропдауна -->
-          <div class="relative inline-block group">
-            <!-- Общий hover-контейнер -->
-            <div class="flex flex-col items-end">
-              <!-- Верхний телефон -->
-              <div class="flex items-center justify-end gap-1 cursor-pointer">
-                <a href="tel:+74959204824" class="hover:underline">+7 (495) 920-48-24</a>
-                <svg xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <!-- Иконки -->
+          <div class="flex items-center gap-2">
+            <!-- Телефон (иконка с дропдауном) -->
+            <div class="relative inline-block group">
+              <!-- Иконка -->
+              <a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback block"
+                 aria-label="Позвонить или заказать обратный звонок">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                     class="w-6 h-6 cursor-pointer hover:opacity-50 transition-opacity">
+                  <path
+                    d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
+                    fill="#020202" />
                 </svg>
-              </div>
+              </a>
 
               <!-- Выпадающий список -->
               <div
-                class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-10">
+                class="absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]">
                 <a href="tel:+74959204824"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+                   class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
                   +7 (495) 920-48-24
                 </a>
                 <a href="tel:88002349084"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+                   class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
                   8 (800) 234-90-84
                 </a>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Иконки -->
-        <div class="hidden sm:flex items-center gap-5 mb:gap-6">
-          <div class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50" title="г. Москва">
-            <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"
-                fill="#020202" />
-            </svg>
-            <span class="hidden xl:inline text-base">г. Москва</span>
-          </div>
+            <!-- Корзина -->
+            <div class="relative inline-block">
+              <a href="<?php echo Url::a('catalog-cart')?>">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                     class="w-6 h-6 cursor-pointer hover:opacity-50">
+                  <path
+                    d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
+                    fill="#020202" />
+                </svg>
 
-          <!-- Телефон (иконка с дропдауном) -->
-          <div class="relative inline-block group">
-            <!-- Иконка -->
-            <a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback block"
-              aria-label="Позвонить или заказать обратный звонок">
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50 transition-opacity">
-                <path
-                  d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
-                  fill="#020202" />
-              </svg>
-            </a>
-
-            <!-- Выпадающий список -->
-            <div
-              class="xl:hidden absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-10">
-              <a href="tel:+74959204824"
-                class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                +7 (495) 920-48-24
-              </a>
-              <a href="tel:88002349084"
-                class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                8 (800) 234-90-84
+                <!-- Бейдж с количеством товаров -->
+                <?php
+                              $cart = Catalog_Cart::total();
+                              $count = (int)$cart[0]; // количество товаров
+                              ?>
+                <span id="cart-badge-count-mobile"
+                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
+                    <?php echo $count; ?>
+                  </span>
               </a>
             </div>
-          </div>
 
-          <!-- Корзина -->
-          <div class="relative inline-block">
-            <a href="<?php echo Url::a('catalog-cart')?>">
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
-                <path
-                  d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
-                  fill="#020202" />
-              </svg>
 
-              <!-- Бейдж с количеством товаров -->
-              <?php
-                      $cart = Catalog_Cart::total();
-                      $count = (int)$cart[0]; // количество товаров
-                      ?>
-              <span id="cart-badge-count-desktop"
-                class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
-                <?php echo $count; ?>
-              </span>
-            </a>
-          </div>
+            <!-- Избранное -->
+            <div class="relative inline-block">
+              <a href="<?php echo Url::a('catalog-favorite')?>">
+                <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                     class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
+                  <path
+                    d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
+                    fill="#020202" />
+                </svg>
+                <!-- Бейдж с количеством товаров в избранном -->
+                <?php
+                    $favoriteCount = Catalog_Favorites::count();
+                  ?>
+                <span id="favorite-badge-count-desktop"
+                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
+                    <?php echo $favoriteCount; ?>
+                  </span>
+              </a>
+            </div>
 
-          <!-- Избранное -->
-          <div class="relative inline-block">
-            <a href="<?php echo Url::a('catalog-favorite')?>">
-              <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                <path
-                  d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
-                  fill="#020202" />
-              </svg>
-              <!-- Бейдж с количеством товаров в избранном -->
-              <?php
-                                $favoriteCount = Catalog_Favorites::count();
-                                ?>
-              <span id="favorite-badge-count-mobile"
-                class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
-                <?php echo $favoriteCount; ?>
-              </span>
-            </a>
-          </div>
+            <!-- Сравнение -->
+            <div class="relative inline-block">
+              <a href="<?php echo Url::a('catalog-compare')?>">
+                <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                     class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
+                  <path
+                    d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
+                    fill="#020202" />
+                </svg>
 
-          <!-- Сравнение -->
-          <div class="relative inline-block">
-            <a href="<?php echo Url::a('catalog-compare')?>">
-              <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
-                <path
-                  d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
-                  fill="#020202" />
-              </svg>
-
-              <!-- Бейдж с количеством товаров для сравнения -->
-              <?php
-                            $compareCount = Catalog_Compare::count();
-                            ?>
-              <span id="compare-badge-count-mobile"
-                class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
-                <?php echo $compareCount; ?>
-              </span>
-            </a>
+                <!-- Бейдж с количеством товаров для сравнения -->
+                <?php
+                                    $compareCount = Catalog_Compare::count();
+                                    ?>
+                <span id="compare-badge-count-desktop"
+                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
+                    <?php echo $compareCount; ?>
+                  </span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Поле поиска (появляется при клике на иконку) -->
-    <div id="search-bar" class="hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-2 bg-header border-t">
-      <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex w-full">
-        <input type="text" name="text" placeholder="Поиск по каталогу"
-          class="flex-1 px-2 py-1 sm:px-4 sm:py-2 bg-gray-50 text-sm md:text-base text-gray-600 focus:outline-none rounded-l-md"
-          value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
-          autocomplete="off" />
-        <button type="submit"
-          class="px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition-colors">
-          Найти
-        </button>
-      </form>
-    </div>
-  </header>
+    <!-- Центральная навигация -->
+    <?php include(Config::path('skins') . '/html/Components/menu.htm'); ?>
 
-  <!-- Menu catalog -->
-  <div id="catalog-menu"
-    class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300">
-    <div class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white">
-      <!-- Внешний group для hover -->
-      <div class="relative group" id="catalog-container">
-        <!-- Кнопка -->
+    <!-- Правая часть -->
+    <div id="header-right" class="hidden sm:flex xl:flex-row items-center text-base transition-all duration-300">
+      <!-- Телефоны -->
+      <div class="hidden xl:inline-block text-center lg:text-right mr-2 xl:mr-8">
+        <!-- Контейнер для дропдауна -->
+        <div class="relative inline-block group">
+          <!-- Общий hover-контейнер -->
+          <div class="flex flex-col items-end">
+            <!-- Верхний телефон -->
+            <div class="flex items-center justify-end gap-1 cursor-pointer">
+              <a href="tel:+74959204824" class="hover:underline">+7 (495) 920-48-24</a>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
 
-        <div
-          class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
-          <a href="/catalog/" id="catalog-link">
-            <span class="hidden sm:block">Каталог</span>
-          </a>
-          <div id="catalog-toggle" class="cursor-pointer">
-            <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 1H26" stroke="currentColor" stroke-width="2" />
-              <path d="M0 7H26" stroke="currentColor" stroke-width="2" />
-              <path d="M0 13H26" stroke="currentColor" stroke-width="2" />
+            <!-- Выпадающий список -->
+            <div
+              class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-10">
+              <a href="tel:+74959204824"
+                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+                +7 (495) 920-48-24
+              </a>
+              <a href="tel:88002349084"
+                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+                8 (800) 234-90-84
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Иконки -->
+      <div class="hidden sm:flex items-center gap-5 mb:gap-6">
+        <div class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50" title="г. Москва">
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"
+              fill="#020202" />
+          </svg>
+          <span class="hidden xl:inline text-base">г. Москва</span>
+        </div>
+
+        <!-- Телефон (иконка с дропдауном) -->
+        <div class="relative inline-block group">
+          <!-- Иконка -->
+          <a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback block"
+             aria-label="Позвонить или заказать обратный звонок">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                 class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50 transition-opacity">
+              <path
+                d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
+                fill="#020202" />
             </svg>
+          </a>
+
+          <!-- Выпадающий список -->
+          <div
+            class="xl:hidden absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-10">
+            <a href="tel:+74959204824"
+               class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+              +7 (495) 920-48-24
+            </a>
+            <a href="tel:88002349084"
+               class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
+              8 (800) 234-90-84
+            </a>
           </div>
         </div>
 
+        <!-- Корзина -->
+        <div class="relative inline-block">
+          <a href="<?php echo Url::a('catalog-cart')?>">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                 class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
+              <path
+                d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
+                fill="#020202" />
+            </svg>
 
-        <!-- Выпадающее меню (1 уровень) -->
-        <ul id="catalog-dropdown"
+            <!-- Бейдж с количеством товаров -->
+            <?php
+                      $cart = Catalog_Cart::total();
+                      $count = (int)$cart[0]; // количество товаров
+                      ?>
+            <span id="cart-badge-count-desktop"
+                  class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
+                <?php echo $count; ?>
+              </span>
+          </a>
+        </div>
+
+        <!-- Избранное -->
+        <div class="relative inline-block">
+          <a href="<?php echo Url::a('catalog-favorite')?>">
+            <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                 class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
+              <path
+                d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
+                fill="#020202" />
+            </svg>
+            <!-- Бейдж с количеством товаров в избранном -->
+            <?php
+                                $favoriteCount = Catalog_Favorites::count();
+                                ?>
+            <span id="favorite-badge-count-mobile"
+                  class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
+                <?php echo $favoriteCount; ?>
+              </span>
+          </a>
+        </div>
+
+        <!-- Сравнение -->
+        <div class="relative inline-block">
+          <a href="<?php echo Url::a('catalog-compare')?>">
+            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                 class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
+              <path
+                d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
+                fill="#020202" />
+            </svg>
+
+            <!-- Бейдж с количеством товаров для сравнения -->
+            <?php
+                            $compareCount = Catalog_Compare::count();
+                            ?>
+            <span id="compare-badge-count-mobile"
+                  class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
+                <?php echo $compareCount; ?>
+              </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Поле поиска (появляется при клике на иконку) -->
+  <div id="search-bar" class="hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-2 bg-header border-t">
+    <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex w-full">
+      <input type="text" name="text" placeholder="Поиск по каталогу"
+             class="flex-1 px-2 py-1 sm:px-4 sm:py-2 bg-gray-50 text-sm md:text-base text-gray-600 focus:outline-none rounded-l-md"
+             value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
+             autocomplete="off" />
+      <button type="submit"
+              class="px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition-colors">
+        Найти
+      </button>
+    </form>
+  </div>
+</header>
+
+<!-- Menu catalog -->
+<div id="catalog-menu"
+     class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300">
+  <div class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white">
+    <!-- Внешний group для hover -->
+    <div class="relative group" id="catalog-container">
+      <!-- Кнопка -->
+
+      <div
+        class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
+        <a href="/catalog/" id="catalog-link">
+          <span class="hidden sm:block">Каталог</span>
+        </a>
+        <div id="catalog-toggle" class="cursor-pointer">
+          <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 1H26" stroke="currentColor" stroke-width="2" />
+            <path d="M0 7H26" stroke="currentColor" stroke-width="2" />
+            <path d="M0 13H26" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+
+
+      <!-- Выпадающее меню (1 уровень) -->
+      <ul id="catalog-dropdown"
           class="absolute left-0 mt-2 w-64 !text-sm sm:text-base sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[100]">
-          <?php foreach($catsMenu as $c): ?>
-          <?php
+        <?php foreach($catsMenu as $c): ?>
+        <?php
           // Собираем все ID текущей категории и её подкатегорий
           $catIds = [$c['id']];
           if (is_array($c['sub']) && count($c['sub'])) {
@@ -766,295 +736,373 @@ function getHomeUrl() {
             }
           }
         ?>
-          <li class="relative hover:bg-main_hover_menu group/l2">
-            <a href="<?php echo Catalog_Categories::a($c['id']); ?>"
-              class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
-              <?php echo htmlspecialchars($c['name']); ?>
-              <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-              <?php endif; ?>
-            </a>
-
+        <li class="relative hover:bg-main_hover_menu group/l2">
+          <a href="<?php echo Catalog_Categories::a($c['id']); ?>"
+             class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
+            <?php echo htmlspecialchars($c['name']); ?>
             <?php if (is_array($c['sub']) && count($c['sub'])): ?>
-            <!-- Подменю 2 уровня -->
-            <ul
-              class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12">
-              <?php foreach ($c['sub'] as $c2): ?>
-              <li class="relative hover:bg-main_hover_menu group/l3">
-                <a href="<?php echo Catalog_Categories::a($c2['id']); ?>"
-                  class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
-                  <?php echo htmlspecialchars($c2['name']); ?>
-                  <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                  <?php endif; ?>
-                </a>
-
-                <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
-                <!-- Подменю 3 уровня -->
-                <ul
-                  class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50">
-                  <?php foreach ($c2['sub'] as $c3): ?>
-                  <li>
-                    <a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
-                      class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100">
-                      <?php echo htmlspecialchars($c3['name']); ?>
-                    </a>
-                  </li>
-                  <?php endforeach; ?>
-                </ul>
-                <?php endif; ?>
-              </li>
-              <?php endforeach; ?>
-            </ul>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
             <?php endif; ?>
-          </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-
-      <!-- Поле поиска -->
-      <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex">
-        <input type="text" name="text" placeholder="Поиск"
-          class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none"
-          value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
-          autocomplete="off" />
-      </form>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const catalogToggle = document.getElementById('catalog-toggle');
-      const catalogLink = document.getElementById('catalog-link');
-      const catalogDropdown = document.getElementById('catalog-dropdown');
-      const catalogContainer = document.getElementById('catalog-container');
-      let isMenuOpen = false;
-
-      // Функция для открытия меню
-      function openMenu() {
-        catalogDropdown.classList.remove('opacity-0', 'invisible');
-        catalogDropdown.classList.add('opacity-100', 'visible');
-        isMenuOpen = true;
-      }
-
-      // Функция для закрытия меню
-      function closeMenu() {
-        catalogDropdown.classList.remove('opacity-100', 'visible');
-        catalogDropdown.classList.add('opacity-0', 'invisible');
-        isMenuOpen = false;
-      }
-
-      // Обработчик клика по кнопке каталога
-      catalogToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (isMenuOpen) {
-          closeMenu();
-        } else {
-          openMenu();
-        }
-      });
-
-      // Предотвращаем закрытие меню при клике внутри него
-      catalogDropdown.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
-
-      // Закрытие меню при клике вне его области
-      document.addEventListener('click', function (e) {
-        if (isMenuOpen && !catalogContainer.contains(e.target)) {
-          closeMenu();
-        }
-      });
-
-      // Закрытие меню при нажатии клавиши Escape
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isMenuOpen) {
-          closeMenu();
-        }
-      });
-
-      // Обработчик для ссылки каталога (переход по ссылке только если меню закрыто)
-      catalogLink.addEventListener('click', function (e) {
-        if (isMenuOpen) {
-          e.preventDefault();
-        }
-      });
-    });
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const header = document.getElementById('top');
-      const logoMain = document.getElementById('logo-main');
-      const headerIconsScrolled = document.getElementById('header-icons-scrolled');
-      const mainNav = document.getElementById('main-nav');
-      //const headerRight = document.getElementById('header-right');
-      const catalogMenu = document.getElementById('catalog-menu');
-      const searchToggleScrolled = document.getElementById('search-toggle-scrolled');
-      const searchToggleMobile = document.getElementById('search-toggle-mobile');
-      const searchBar = document.getElementById('search-bar');
-
-      // --- Настройка порогов с гистерезисом ---
-      const SCROLL_THRESHOLD_DOWN = 120; // Порог для перехода в состояние "при прокрутке" (сделать хедер маленьким)
-      const SCROLL_THRESHOLD_UP = 20;   // Порог для возврата к нормальному состоянию (сделать хедер большим)
-      // Убедитесь, что SCROLL_THRESHOLD_DOWN > SCROLL_THRESHOLD_UP
-
-      // Функция для переключения состояния хедера при прокрутке
-      let scrollTimeout = null;
-      let isScrolled = false; // текущее состояние хедера
-      function updateHeaderState() {
-        const currentScroll = window.scrollY;
-
-        // Проверяем, нужно ли переключить состояние в "при прокрутке"
-        if (!isScrolled && currentScroll > SCROLL_THRESHOLD_DOWN) {
-          // Состояние при прокрутке
-          logoMain.classList.add('hidden');
-          headerIconsScrolled.classList.remove('hidden');
-          // Центральная навигация остается видимой (предположительно, она уже так настроена)
-          //headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
-          catalogMenu.classList.add('hidden');
-          isScrolled = true; // Запоминаем новое состояние
-          // console.log('Переключено в состояние прокрутки (маленький хедер)'); // Для отладки
-        }
-        // Проверяем, нужно ли переключить состояние обратно к нормальному
-        else if (isScrolled && currentScroll <= SCROLL_THRESHOLD_UP) {
-          // Обычное состояние
-          logoMain.classList.remove('hidden');
-          headerIconsScrolled.classList.add('hidden');
-          //headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
-          catalogMenu.classList.remove('hidden');
-          // Закрываем поле поиска при возврате к нормальному состоянию (если было открыто)
-          searchBar.classList.add('hidden');
-          isScrolled = false; // Запоминаем новое состояние
-          // console.log('Переключено в обычное состояние (большой хедер)'); // Для отладки
-        }
-        // Если currentScroll находится между SCROLL_THRESHOLD_UP и SCROLL_THRESHOLD_DOWN,
-        // состояние не меняется, что и предотвращает дергание.
-      }
-
-      function handleScroll() {
-        // Отменяем предыдущий таймер
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout);
-        }
-
-        // Запускаем обновление состояния с небольшой задержкой
-        scrollTimeout = setTimeout(updateHeaderState, 150); // 100 мс — баланс между отзывчивостью и стабильностью
-      }
-
-      // Инициализация
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      updateHeaderState(); // Вызываем сразу для начального состояния на случай, если страница загружена с прокруткой
-
-      // Обработчики для переключения поля поиска
-      function toggleSearchBar() {
-        searchBar.classList.toggle('hidden');
-      }
-
-      if (searchToggleScrolled) {
-        searchToggleScrolled.addEventListener('click', toggleSearchBar);
-      }
-
-      if (searchToggleMobile) {
-        searchToggleMobile.addEventListener('click', toggleSearchBar);
-      }
-
-      // Закрытие поля поиска при клике вне его
-      document.addEventListener('click', function (event) {
-        const isSearchToggle =
-          (searchToggleScrolled && searchToggleScrolled.contains(event.target)) ||
-          (searchToggleMobile && searchToggleMobile.contains(event.target));
-
-        if (!searchBar.contains(event.target) && !isSearchToggle) {
-          searchBar.classList.add('hidden');
-        }
-      });
-    });
-  </script>
-
-  <main class="max-w-1440 mx-auto px-4 pt-0 sm:px-6 lg:px-8 py-3">
-    <?php echo $CONTENT?>
-  </main>
-
-  <script>
-    RSGoPro_SetSet();
-  </script>
-  <?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
-  <div style="text-align: left; padding: 3% 12%">
-    <?php echo $pageInf['text'];?>
-  </div>
-  <?php } ?>
-
-  <footer class="bg-footer text-black text-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8 mt-6">
-    <div class="md:hidden block w-full text-center">
-      <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"><img
-          src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
-    </div>
-
-    <!-- Блок основной -->
-    <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
-      <!-- Блок 1: Компания -->
-      <div class="lg:col-span-1">
-        <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип" class="mb-4" /></a>
-
-        <div class="mt-4 space-y-1">
-          <p class="flex gap-4 font-semibold">
-            <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
-            <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
-          </p>
-          <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
-        </div>
-
-        <div class="mt-4 flex flex-col gap-2">
-          <a href="/contacts/callback/"
-            class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
-            Заказать звонок
           </a>
-          <a href="/contacts/"
-            class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
-            консультанта</a>
-        </div>
+
+          <?php if (is_array($c['sub']) && count($c['sub'])): ?>
+          <!-- Подменю 2 уровня -->
+          <ul
+            class="absolute top-0 w-42 xs2:w-52 md:w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l2:opacity-100 group-hover/l2:visible transition-all duration-200 z-50 xs:left-full xs:left-48 left-20 -mt-12">
+            <?php foreach ($c['sub'] as $c2): ?>
+            <li class="relative hover:bg-main_hover_menu group/l3">
+              <a href="<?php echo Catalog_Categories::a($c2['id']); ?>"
+                 class="flex items-center justify-between px-4 py-2 text-gray-700 border-b border-gray-100">
+                <?php echo htmlspecialchars($c2['name']); ?>
+                <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <?php endif; ?>
+              </a>
+
+              <?php if (is_array($c2['sub']) && count($c2['sub'])): ?>
+              <!-- Подменю 3 уровня -->
+              <ul
+                class="absolute left-full top-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover/l3:opacity-100 group-hover/l3:visible transition-all duration-200 z-50">
+                <?php foreach ($c2['sub'] as $c3): ?>
+                <li>
+                  <a href="<?php echo Catalog_Categories::a($c3['id']); ?>"
+                     class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-100">
+                    <?php echo htmlspecialchars($c3['name']); ?>
+                  </a>
+                </li>
+                <?php endforeach; ?>
+              </ul>
+              <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+          </ul>
+          <?php endif; ?>
+        </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+
+    <!-- Поле поиска -->
+    <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex">
+      <input type="text" name="text" placeholder="Поиск"
+             class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none"
+             value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
+             autocomplete="off" />
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const catalogToggle = document.getElementById('catalog-toggle');
+    const catalogLink = document.getElementById('catalog-link');
+    const catalogDropdown = document.getElementById('catalog-dropdown');
+    const catalogContainer = document.getElementById('catalog-container');
+    let isMenuOpen = false;
+
+    // Функция для открытия меню
+    function openMenu() {
+      catalogDropdown.classList.remove('opacity-0', 'invisible');
+      catalogDropdown.classList.add('opacity-100', 'visible');
+      isMenuOpen = true;
+    }
+
+    // Функция для закрытия меню
+    function closeMenu() {
+      catalogDropdown.classList.remove('opacity-100', 'visible');
+      catalogDropdown.classList.add('opacity-0', 'invisible');
+      isMenuOpen = false;
+    }
+
+    // Обработчик клика по кнопке каталога
+    catalogToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isMenuOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Предотвращаем закрытие меню при клике внутри него
+    catalogDropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+
+    // Закрытие меню при клике вне его области
+    document.addEventListener('click', function (e) {
+      if (isMenuOpen && !catalogContainer.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // Закрытие меню при нажатии клавиши Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isMenuOpen) {
+        closeMenu();
+      }
+    });
+
+    // Обработчик для ссылки каталога (переход по ссылке только если меню закрыто)
+    catalogLink.addEventListener('click', function (e) {
+      if (isMenuOpen) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const header = document.getElementById('top');
+    const logoMain = document.getElementById('logo-main');
+    const headerIconsScrolled = document.getElementById('header-icons-scrolled');
+    const mainNav = document.getElementById('main-nav');
+    //const headerRight = document.getElementById('header-right');
+    const catalogMenu = document.getElementById('catalog-menu');
+    const searchToggleScrolled = document.getElementById('search-toggle-scrolled');
+    const searchToggleMobile = document.getElementById('search-toggle-mobile');
+    const searchBar = document.getElementById('search-bar');
+
+    // --- Настройка порогов с гистерезисом ---
+    const SCROLL_THRESHOLD_DOWN = 120; // Порог для перехода в состояние "при прокрутке" (сделать хедер маленьким)
+    const SCROLL_THRESHOLD_UP = 20;   // Порог для возврата к нормальному состоянию (сделать хедер большим)
+    // Убедитесь, что SCROLL_THRESHOLD_DOWN > SCROLL_THRESHOLD_UP
+
+    // Функция для переключения состояния хедера при прокрутке
+    let scrollTimeout = null;
+    let isScrolled = false; // текущее состояние хедера
+    function updateHeaderState() {
+      const currentScroll = window.scrollY;
+
+      // Проверяем, нужно ли переключить состояние в "при прокрутке"
+      if (!isScrolled && currentScroll > SCROLL_THRESHOLD_DOWN) {
+        // Состояние при прокрутке
+        logoMain.classList.add('hidden');
+        headerIconsScrolled.classList.remove('hidden');
+        // Центральная навигация остается видимой (предположительно, она уже так настроена)
+        //headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
+        catalogMenu.classList.add('hidden');
+        isScrolled = true; // Запоминаем новое состояние
+        // console.log('Переключено в состояние прокрутки (маленький хедер)'); // Для отладки
+      }
+      // Проверяем, нужно ли переключить состояние обратно к нормальному
+      else if (isScrolled && currentScroll <= SCROLL_THRESHOLD_UP) {
+        // Обычное состояние
+        logoMain.classList.remove('hidden');
+        headerIconsScrolled.classList.add('hidden');
+        //headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
+        catalogMenu.classList.remove('hidden');
+        // Закрываем поле поиска при возврате к нормальному состоянию (если было открыто)
+        searchBar.classList.add('hidden');
+        isScrolled = false; // Запоминаем новое состояние
+        // console.log('Переключено в обычное состояние (большой хедер)'); // Для отладки
+      }
+      // Если currentScroll находится между SCROLL_THRESHOLD_UP и SCROLL_THRESHOLD_DOWN,
+      // состояние не меняется, что и предотвращает дергание.
+    }
+
+    function handleScroll() {
+      // Отменяем предыдущий таймер
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+
+      // Запускаем обновление состояния с небольшой задержкой
+      scrollTimeout = setTimeout(updateHeaderState, 150); // 100 мс — баланс между отзывчивостью и стабильностью
+    }
+
+    // Инициализация
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    updateHeaderState(); // Вызываем сразу для начального состояния на случай, если страница загружена с прокруткой
+
+    // Обработчики для переключения поля поиска
+    function toggleSearchBar() {
+      searchBar.classList.toggle('hidden');
+    }
+
+    if (searchToggleScrolled) {
+      searchToggleScrolled.addEventListener('click', toggleSearchBar);
+    }
+
+    if (searchToggleMobile) {
+      searchToggleMobile.addEventListener('click', toggleSearchBar);
+    }
+
+    // Закрытие поля поиска при клике вне его
+    document.addEventListener('click', function (event) {
+      const isSearchToggle =
+        (searchToggleScrolled && searchToggleScrolled.contains(event.target)) ||
+        (searchToggleMobile && searchToggleMobile.contains(event.target));
+
+      if (!searchBar.contains(event.target) && !isSearchToggle) {
+        searchBar.classList.add('hidden');
+      }
+    });
+  });
+</script>
+
+<main class="max-w-1440 mx-auto px-4 pt-0 sm:px-6 lg:px-8 py-3">
+  <?php echo $CONTENT?>
+</main>
+
+<script>
+  RSGoPro_SetSet();
+</script>
+<?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
+<div style="text-align: left; padding: 3% 12%">
+  <?php echo $pageInf['text'];?>
+</div>
+<?php } ?>
+
+<footer class="bg-footer text-black text-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8 mt-6">
+  <div class="md:hidden block w-full text-center">
+    <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"><img
+      src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
+  </div>
+
+  <!-- Блок основной -->
+  <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
+    <!-- Блок 1: Компания -->
+    <div class="lg:col-span-1">
+      <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип" class="mb-4" /></a>
+
+      <div class="mt-4 space-y-1">
+        <p class="flex gap-4 font-semibold">
+          <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+          <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
+        </p>
+        <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
       </div>
 
-      <!-- Блок 2: Контакты -->
-      <div class="lg:col-span-1">
-        <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
-        <div class="flex items-center gap-1 mb-2">
-          <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
-          <p class="mb-2">
-            Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
+      <div class="mt-4 flex flex-col gap-2">
+        <a href="/contacts/callback/"
+           class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
+          Заказать звонок
+        </a>
+        <a href="/contacts/"
+           class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
+          консультанта</a>
+      </div>
+    </div>
+
+    <!-- Блок 2: Контакты -->
+    <div class="lg:col-span-1">
+      <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
+      <div class="flex items-center gap-1 mb-2">
+        <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
+        <p class="mb-2">
+          Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
+        </p>
+      </div>
+      <div class="flex gap-1 mb-2">
+        <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
+        <div>
+          <p>
+            Для заказа: <br /><a href="mailto:zakaz@mebelioni.ru" class="text-blue-600">zakaz@mebelioni.ru</a>
           </p>
-        </div>
-        <div class="flex gap-1 mb-2">
-          <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
-          <div>
-            <p>
-              Для заказа: <br /><a href="mailto:zakaz@mebelioni.ru" class="text-blue-600">zakaz@mebelioni.ru</a>
-            </p>
-            <p>
-              Для информации: <br /><a href="mailto:info@mebelioni.ru" class="text-blue-600">info@mebelioni.ru</a>
-            </p>
-            <div class="flex flex-wrap gap-3 mt-3">
-              <!-- Иконки соцсетей -->
-              <?php $size = 'w-8 h-8'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
-            </div>
+          <p>
+            Для информации: <br /><a href="mailto:info@mebelioni.ru" class="text-blue-600">info@mebelioni.ru</a>
+          </p>
+          <div class="flex flex-wrap gap-3 mt-3">
+            <!-- Иконки соцсетей -->
+            <?php $size = 'w-8 h-8'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- Блок 3: Товары -->
+    <div class="lg:col-span-2">
+      <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+      <div class="flex gap-8">
+        <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+          <?php foreach($catsMenu as $n =>
+          $c) { ?>
+          <li>
+            <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+              <?php echo $c['name']; ?>
+            </a>
+          </li>
+          <?php } ?>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Блок 4: Карта сайта -->
+    <div class="lg:col-span-1">
+      <a href="/sitemap/">
+        <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
+      </a>
+    </div>
+  </div>
+
+  <!-- Блок основной (lg)-->
+  <div class="lg:hidden max-w-1440 mx-auto grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
+    <!-- Блок 1: Компания -->
+    <div>
+      <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
+      <div class="mt-4 space-y-1">
+        <p class="flex gap-4 font-semibold">
+          <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
+          <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
+        </p>
+        <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
+      </div>
+
+      <div class="mt-4 flex flex-col gap-2">
+        <a href="/contacts/callback/"
+           class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
+          Заказать звонок
+        </a>
+        <a href="/contacts/"
+           class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 text-center py-3 px-4 rounded text-sm">Выезд
+          консультанта
+        </a>
+      </div>
+    </div>
+
+    <!-- Блок 2: Контакты -->
+    <div class="flex flex-wrap flex-row-reverse justify-center text-sm mt-8">
+      <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
+        <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
+             class="w-4 h-4 mr-1" />
+        <p class="mb-2">
+          Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
+        </p>
+      </div>
+      <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
+        <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email" class="w-4 h-4 mr-1" />
+        <div>
+          <p>
+            Для заказа: <br /><a href="mailto:zakaz@mebelioni.ru" class="text-blue-600">zakaz@mebelioni.ru</a>
+          </p>
+          <p>
+            Для информации: <br /><a href="mailto:info@mebelioni.ru" class="text-blue-600">info@mebelioni.ru</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
+      <!-- Иконки соцсетей -->
+      <?php $size = 'w-7 h-7'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
+    </div>
+
+    <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
       <!-- Блок 3: Товары -->
       <div class="lg:col-span-2">
         <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
         <div class="flex gap-8">
           <ul class="columns-2 gap-x-8 space-y-1 leading-6">
             <?php foreach($catsMenu as $n =>
-          $c) { ?>
+            $c) { ?>
             <li>
               <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
                 <?php echo $c['name']; ?>
@@ -1066,553 +1114,477 @@ function getHomeUrl() {
       </div>
 
       <!-- Блок 4: Карта сайта -->
-      <div class="lg:col-span-1">
+      <div>
         <a href="/sitemap/">
           <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
         </a>
       </div>
     </div>
-
-    <!-- Блок основной (lg)-->
-    <div class="lg:hidden max-w-1440 mx-auto grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
-      <!-- Блок 1: Компания -->
-      <div>
-        <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
-        <div class="mt-4 space-y-1">
-          <p class="flex gap-4 font-semibold">
-            <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
-            <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
-          </p>
-          <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
-        </div>
-
-        <div class="mt-4 flex flex-col gap-2">
-          <a href="/contacts/callback/"
-            class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
-            Заказать звонок
-          </a>
-          <a href="/contacts/"
-            class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 text-center py-3 px-4 rounded text-sm">Выезд
-            консультанта
-          </a>
-        </div>
-      </div>
-
-      <!-- Блок 2: Контакты -->
-      <div class="flex flex-wrap flex-row-reverse justify-center text-sm mt-8">
-        <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
-          <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
-            class="w-4 h-4 mr-1" />
-          <p class="mb-2">
-            Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
-          </p>
-        </div>
-        <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
-          <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email" class="w-4 h-4 mr-1" />
-          <div>
-            <p>
-              Для заказа: <br /><a href="mailto:zakaz@mebelioni.ru" class="text-blue-600">zakaz@mebelioni.ru</a>
-            </p>
-            <p>
-              Для информации: <br /><a href="mailto:info@mebelioni.ru" class="text-blue-600">info@mebelioni.ru</a>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-center md:justify-start flex-wrap gap-3 mt-1">
-        <!-- Иконки соцсетей -->
-        <?php $size = 'w-7 h-7'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
-      </div>
-
-      <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
-        <!-- Блок 3: Товары -->
-        <div class="lg:col-span-2">
-          <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
-          <div class="flex gap-8">
-            <ul class="columns-2 gap-x-8 space-y-1 leading-6">
-              <?php foreach($catsMenu as $n =>
-            $c) { ?>
-              <li>
-                <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
-                  <?php echo $c['name']; ?>
-                </a>
-              </li>
-              <?php } ?>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Блок 4: Карта сайта -->
-        <div>
-          <a href="/sitemap/">
-            <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Нижний подвал -->
-    <div class="mt-8 text-gray-700 text-[10px] leading-3">
-      ©
-      <?php echo date('Y'); ?>
-      Все права защищены. Информация сайта защищена законом об авторских
-      правах.
-    </div>
-  </footer>
-
-  <div id="fixedcomparelist" class="">
-    <script>
-      RSGoPro_COMPARE = {};
-      RSGoPro_SetCompared();
-    </script>
   </div>
-  <div id="rs_easycart" class="brown addbodypadding fixed bottom-0 w-full" style="z-index: 991">
-    <div class="rsec rsec_headers !bg-blue-900">
-      <div class="rsec_in max-w-[1240px] mx-auto px-4" style="max-width: 1240px">
-        <div class="rsec_body h-10 flex flex-wrap items-center justify-end gap-2 text-white">
-          <div class="rsec_orlink">
-            <a class="rsec_viewed rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
-              href="<?php echo Url::a('catalog-recently'); ?>">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Недавно просмотренные</span>
-              <span class="rsec_color rsec_cnt text-[#bb645c] ml-1">
+
+  <!-- Нижний подвал -->
+  <div class="mt-8 text-gray-700 text-[10px] leading-3">
+    ©
+    <?php echo date('Y'); ?>
+    Все права защищены. Информация сайта защищена законом об авторских
+    правах.
+  </div>
+</footer>
+
+<div id="fixedcomparelist" class="">
+  <script>
+    RSGoPro_COMPARE = {};
+    RSGoPro_SetCompared();
+  </script>
+</div>
+<div id="rs_easycart" class="brown addbodypadding fixed bottom-0 w-full" style="z-index: 991">
+  <div class="rsec rsec_headers !bg-blue-900">
+    <div class="rsec_in max-w-[1240px] mx-auto px-4" style="max-width: 1240px">
+      <div class="rsec_body h-10 flex flex-wrap items-center justify-end gap-2 text-white">
+        <div class="rsec_orlink">
+          <a class="rsec_viewed rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
+             href="<?php echo Url::a('catalog-recently'); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Недавно просмотренные</span>
+            <span class="rsec_color rsec_cnt text-[#bb645c] ml-1">
                 <?php echo Catalog_Recently::count(); ?>
               </span>
-            </a>
-          </div>
-          <div class="rsec_orlink">
-            <a class="rsec_compare rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
-              href="<?php echo Url::a('catalog-compare'); ?>">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                <path d="M10 4h4v16h-4zM4 8h4v12H4zM16 12h4v8h-4z" />
-              </svg>
-              <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Сравнение товаров</span>
-              <span class="rsec_color rsec_cnt text-[#bb645c] ml-1" id="series-compare-cnt">
+          </a>
+        </div>
+        <div class="rsec_orlink">
+          <a class="rsec_compare rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
+             href="<?php echo Url::a('catalog-compare'); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+              <path d="M10 4h4v16h-4zM4 8h4v12H4zM16 12h4v8h-4z" />
+            </svg>
+            <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Сравнение товаров</span>
+            <span class="rsec_color rsec_cnt text-[#bb645c] ml-1" id="series-compare-cnt">
                 <?php echo Catalog_Compare::count(); ?>
               </span>
-            </a>
-          </div>
-          <div class="rsec_orlink">
-            <a class="rsec_favorite rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
-              href="<?php echo Url::a('catalog-favorite'); ?>">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                <path
-                  d="M20.8 4.6c-1.8-1.8-4.7-1.8-6.5 0L12 6.9l-2.3-2.3c-1.8-1.8-4.7-1.8-6.5 0s-1.8 4.7 0 6.5L12 21l8.8-9.9c1.8-1.8 1.8-4.7 0-6.5z" />
-              </svg>
-              <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Избранное</span>
-              <span class="rsec_color rsec_cnt text-[#bb645c] ml-1">
+          </a>
+        </div>
+        <div class="rsec_orlink">
+          <a class="rsec_favorite rsec_changer !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
+             href="<?php echo Url::a('catalog-favorite'); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+              <path
+                d="M20.8 4.6c-1.8-1.8-4.7-1.8-6.5 0L12 6.9l-2.3-2.3c-1.8-1.8-4.7-1.8-6.5 0s-1.8 4.7 0 6.5L12 21l8.8-9.9c1.8-1.8 1.8-4.7 0-6.5z" />
+            </svg>
+            <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Избранное</span>
+            <span class="rsec_color rsec_cnt text-[#bb645c] ml-1">
                 <span class="series-favorite-cnt">
                   <?php echo Catalog_Favorites::count(); ?>
                 </span>
               </span>
-            </a>
-          </div>
-          <div class="rsec_orlink">
-            <a class="rsec_basket rsec_changer <?php echo $class?> !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
-              href="<?php echo Url::a('catalog-cart'); ?>">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              <span class="rsec_name">Товаров</span>
-              <span class="rsec_color text-[#bb645c] ml-1">
+          </a>
+        </div>
+        <div class="rsec_orlink">
+          <a class="rsec_basket rsec_changer <?php echo $class?> !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
+             href="<?php echo Url::a('catalog-cart'); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            <span class="rsec_name">Товаров</span>
+            <span class="rsec_color text-[#bb645c] ml-1">
                 <span class="rsec_normalCount !text-white" id="basketinfo-amount">
                   <?php echo $cart[0]; ?>
                 </span>
               </span>
-              &nbsp;
-              <span class="rsec_name hidden md:inline">Сумма</span>
-              <span class="rsec_color rsec_sum text-[#bb645c] ml-1 hidden md:inline">
+            &nbsp;
+            <span class="rsec_name hidden md:inline">Сумма</span>
+            <span class="rsec_color rsec_sum text-[#bb645c] ml-1 hidden md:inline">
                 <span class="rsec_allSum_FORMATED !text-white" id="basketinfo-price">
                   <?php echo Catalog::priceFormat(round($cart[1])); ?>
                   руб.
                 </span>
               </span>
-            </a>
-          </div>
+          </a>
         </div>
       </div>
     </div>
   </div>
-  <div class="xCallback !mt-1 !z-[60]">
-    <button onclick="kcall(); return false;"
-      class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
-      <!-- Иконка -->
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
-        <!-- Телефон -->
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
-        <!-- Стрелка -->
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="m 15.327534,8.4004399 6.0561,-5.9433702 m -6.0561,5.9433702 5.999735,0.056365 m -5.999735,-0.056365 0.05636,-5.9997352" />
-      </svg>
-
-      <!-- Текст (показывается с sm и выше) -->
-      <span class="hidden sm:inline">Заказать звонок</span>
-    </button>
-  </div>
-
-  <div
-    class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
-    id="kmodal" style="display:none;">
-    <a href="javascript:void(0);"
-      class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors"
-      onclick="kclose(); return false;">
-      ×
-    </a>
-
-    <div id="vibiliunasnasaite" style="display: none">
-      <p class="mb-4 text-gray-700" style="margin-bottom: 10px">
-        Вы у нас на сайте <span id="livetimespan"></span>. <br />Вы нашли, что
-        искали?
-      </p>
-
-      <div class="flex flex-col md:flex-row gap-4 mt-8">
-        <a class="yes flex-1 text-center py-3 px-4 bg-main text-white rounded-lg hover:bg-main_hover transition-colors font-medium"
-          onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-          href="#">Да</a>
-        <a class="no flex-1 text-center py-3 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-          onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
-          href="#">Нет</a>
-      </div>
-
-      <div class="mt-6 pt-5 border-t border-gray-200 text-gray-600 text-sm">
-        Мы искренне ценим ваше время. И нам очень важно ваше мнение!
-      </div>
-    </div>
-
-    <div id="wix_call" class="modal-order-call p-6 md:p-8 !pt-14" style="display: block">
-      <div class="modal-order-call__caption text-lg font-semibold text-start mb-6" id="timertext">
-        Хотите мы вам перезвоним через 15 секунд?
-      </div>
-      <div class="modal-order-call__label mb-2">
-        <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup
-            class="text-red-500">*</sup></label>
-      </div>
-
-      <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
-        <div class="modal-order-call-form space-y-4">
-          <div class="flex flex-col md:flex-row gap-4">
-            <div class="modal-order-call-form__input">
-              <div>
-                <input
-                  class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
-                  type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required="" />
-                <input type="hidden" name="name" value="жду звонка" />
-                <input type="hidden" name="XMLHttpRequest" value="1" />
-                <div class="text-xs text-gray-400 mt-1">
-                  Внимание! Не забудьте указать код города
-                </div>
-              </div>
-            </div>
-            <div class="modal-order-call-form__button !p-0">
-              <!--<a href="#">Жду звонка</a>-->
-              <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
-              <button type="submit"
-                class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
-                Жду звонка
-              </button>
-            </div>
-            <div id="yatimer"
-              class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
-              <img class="mr-2" src="<?php echo getImagePath('/img/icons/timer.png'); ?>" />
-              <div class="!flex !items-center">
-                <span class="text-2xl ">00</span>
-                <span class="text-2xl">:</span>
-                <span class="text-2xl ">15</span>
-                <span class="text-2xl">,</span>
-                <span class="text-2xl ">00</span>
-              </div>
-            </div>
-          </div>
-          <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px"
-            id="captcha_callback-left">
-          </div>
-        </div>
-        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>" />
-        <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>" />
-      </form>
-      <script>
-        jQuery(document).on("submit", "#form_2calls_myFormId", function () {
-          var tag = this;
-          if (jduzvonka(1)) {
-            jQuery.ajax({
-              url: jQuery(this).attr("action"),
-              type: "POST",
-              data: jQuery(this).serialize(),
-              success: function (d) {
-                console.log(d);
-                if (d.search('{"location":') === 0) {
-                  var _d = JSON.parse(d);
-                  if (typeof _d == "object" && _d.location) {
-                    document.location.href = _d.location;
-                    return false;
-                  }
-                }
-                var error = jQuery(d).find("#form-errors").html();
-                if (typeof error != "undefined") {
-                  jQuery("#timertext").html(
-                    '<span style="color:red;">' + error + "</span>"
-                  );
-                  return false;
-                }
-                var success = jQuery(d).find("h1").html();
-                if (success) {
-                  document.location.href = "/thankyoupage/";
-                  return false;
-                }
-              },
-              errors: function (data) {
-                console.log(data);
-              },
-            });
-            return false;
-          }
-          return false;
-        });
-      </script>
-    </div>
-
-    <div id="wix_fin" class="modal-order-call" style="display: none">
-      <div class="modal-order-call__caption">Спасибо за обращение!</div>
-      <div class="modal-order-call-form">
-        <div class="modal-order-call-form__timer">
-          <p>00</p>
-          :
-          <p>00</p>
-          ,
-          <p>00</p>
-        </div>
-        <div class="modal-order-call-form__end clear">
-          <a id="xop555" href="javascript:void(0);" onclick="neuspeli(); return false;">мне не перезвонили!</a>
-          <span id="superjalobal" style="display: none">Менеджер свяжется с Вами в ближайшее время!</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
-  <style>
-    .fade-in {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    }
-
-    .fade-out {
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    }
-  </style>
-
-  <!-- Кнопка "наверх" -->
-  <button id="scrollToTopBtn"
-    class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-blue-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-blue-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
-    aria-label="Наверх">
-    <!-- Широкая стрелка SVG -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-      stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
-      <path d="M12 19V5M5 12l7-7 7 7" />
+</div>
+<div class="xCallback !mt-1 !z-[60]">
+  <button onclick="kcall(); return false;"
+          class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
+    <!-- Иконка -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+      <!-- Телефон -->
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
+      <!-- Стрелка -->
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m 15.327534,8.4004399 6.0561,-5.9433702 m -6.0561,5.9433702 5.999735,0.056365 m -5.999735,-0.056365 0.05636,-5.9997352" />
     </svg>
+
+    <!-- Текст (показывается с sm и выше) -->
+    <span class="hidden sm:inline">Заказать звонок</span>
   </button>
+</div>
 
-  <script>
-    <!-- Кнопка "наверх" -->
-    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+<div
+  class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
+  id="kmodal" style="display:none; left: 50px;">
+  <a href="javascript:void(0);"
+     class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors"
+     onclick="kclose(); return false;">
+    ×
+  </a>
 
-    // Показать/скрыть кнопку при прокрутке
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 300) {
-        scrollToTopBtn.classList.replace("fade-out", "fade-in");
-      } else {
-        scrollToTopBtn.classList.replace("fade-in", "fade-out");
-      }
-    });
+  <div id="vibiliunasnasaite" style="display: none">
+    <p class="mb-4 text-gray-700" style="margin-bottom: 10px">
+      Вы у нас на сайте <span id="livetimespan"></span>. <br />Вы нашли, что
+      искали?
+    </p>
 
-    // Плавная прокрутка наверх при клике
-    scrollToTopBtn.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    });
-  </script>
+    <div class="flex flex-col md:flex-row gap-4 mt-8">
+      <a class="yes flex-1 text-center py-3 px-4 bg-main text-white rounded-lg hover:bg-main_hover transition-colors font-medium"
+         onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+         href="#">Да</a>
+      <a class="no flex-1 text-center py-3 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+         onclick='ttext("Очень жаль! Давайте сэкономим ваше время и перезвоним бесплатно за 15 сек.?");blockshowhide("vibiliunasnasaite","wix_call");return false'
+         href="#">Нет</a>
+    </div>
 
-  <script>
-    function catchEnter(e) {
-      var lead_free = false;
-      var l = document.getElementsByClassName("form_2calls_input")[0];
-      l &&
-        ((a = l.value),
-          1 == lead_free
-            ? ("8" == a ? (l.value = "7") : a,
-              "495" == a ? (l.value = "7495") : a,
-              "499" == a ? (l.value = "7499") : a,
-              (l.value = l.value.replace("+", "")))
-            : ("+8" == a ? (l.value = "+7") : a,
-              "495" == a || "+495" == a ? (l.value = "+7495") : a,
-              "499" == a || "+499" == a ? (l.value = "+7499") : a,
-              "+" != a.charAt(0) ? (l.value = "+" + a.replace("+", "")) : a),
-          (l.value = l.value.replace(/[^\d\+.]/g, "")));
+    <div class="mt-6 pt-5 border-t border-gray-200 text-gray-600 text-sm">
+      Мы искренне ценим ваше время. И нам очень важно ваше мнение!
+    </div>
+  </div>
 
-      if (e.keyCode == 13) {
-        jduzvonka();
-        return false;
-      }
-    }
+  <div id="wix_call" class="modal-order-call bg-white p-6 md:p-8 !pt-14" style="display: block">
+    <div class="modal-order-call__caption text-lg font-semibold text-start mb-6" id="timertext">
+      Хотите мы вам перезвоним через 15 секунд?
+    </div>
+    <div class="modal-order-call__label mb-2">
+      <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup
+        class="text-red-500">*</sup></label>
+    </div>
 
-    function saveNumber(t) {
-      localStorage.setItem("cb_phone_number", t.value);
-    }
-
-    function checkPhoneInput(el) {
-      if (el.value == "") el.value = "+7";
-
-      moveCursorToEnd(el);
-    }
-
-    function moveCursorToEnd(el) {
-      if (typeof el.selectionStart == "number") {
-        el.selectionStart = el.selectionEnd = el.value.length;
-      } else if (typeof el.createTextRange != "undefined") {
-        el.focus();
-        var range = el.createTextRange();
-        range.collapse(false);
-        range.select();
-      }
-    }
-
-    function jduzvonka(k) {
-      var phone = jQuery("#wi_tele233").val();
-      if (phone.length > 10) {
-        jQuery("#wi_tele233").removeClass("errk");
-        /*$.ajax({
-        type: "POST",
-        url: '/mail.php',
-        data: {'phone': phone},
-        success: function(data) {
-            kclose();
-            alert('Ждите звонка!');
-        },
-        //dataType: 'json'
-    });*/
-        return true;
-      } else {
-        jQuery("#wi_tele233").addClass("errk");
-        return false;
-      }
-    }
-
-    function getCookie(name) {
-      var _return = document.cookie.match(
-        new RegExp(
-          "(?:^|; )" +
-          name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-          "=([^;]*)"
-        )
-      );
-      if (!_return || !_return[1]) return false;
-      return _return[1];
-    }
-
-    function setCookie(name, value, options) {
-      options = options || {};
-
-      var expires = options.expires;
-
-      if (typeof expires == "number" && expires) {
-        var d = new Date();
-        d.setTime(d.getTime() + expires * 1000);
-        expires = options.expires = d;
-      }
-      if (expires && expires.toUTCString) {
-        options.expires = expires.toUTCString();
-      }
-
-      value = encodeURIComponent(value);
-
-      var updatedCookie = name + "=" + value;
-
-      for (var propName in options) {
-        updatedCookie += "; " + propName;
-        var propValue = options[propName];
-        if (propValue !== true) {
-          updatedCookie += "=" + propValue;
-        }
-      }
-
-      document.cookie = updatedCookie;
-    }
-
-    function kclose() {
-      $(".fancybox-skin").removeClass("rr");
-      $(".fancybox-opened").removeClass("rr");
-      $.fancybox.close();
-    }
-
-    function kcall() {
-      $.fancybox({
-        autoScale: true,
-        transitionIn: "elastic",
-        transitionOut: "elastic",
-        speedIn: 500,
-        speedOut: 300,
-        autoDimensions: true,
-        centerOnScroll: true,
-        hideOnOverlayClick: false,
-        href: "#kmodal",
-      });
-
-      $(".fancybox-skin").addClass("rr");
-      $(".fancybox-opened").addClass("rr");
-    }
-
-    (function () {
-      function func() {
-        var zvonok = getCookie("zvonok");
-        //console.log(zvonok)
-        if (zvonok != 1) {
-          console.log("ok");
-          $.fancybox({
-            autoScale: true,
-            transitionIn: "elastic",
-            transitionOut: "elastic",
-            speedIn: 500,
-            speedOut: 300,
-            autoDimensions: true,
-            centerOnScroll: true,
-            hideOnOverlayClick: false,
-            href: "#kmodal",
+    <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
+      <div class="modal-order-call-form space-y-4">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="modal-order-call-form__input">
+            <div>
+              <input
+                class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required="" />
+              <input type="hidden" name="name" value="жду звонка" />
+              <input type="hidden" name="XMLHttpRequest" value="1" />
+              <div class="text-xs text-gray-400 mt-1">
+                Внимание! Не забудьте указать код города
+              </div>
+            </div>
+          </div>
+          <div class="modal-order-call-form__button !p-0">
+            <!--<a href="#">Жду звонка</a>-->
+            <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
+            <button type="submit"
+                    class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
+              Жду звонка
+            </button>
+          </div>
+          <div id="yatimer"
+               class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
+            <img class="mr-2" src="<?php echo getImagePath('/img/icons/timer.png'); ?>" />
+            <div class="!flex !items-center">
+              <span class="text-2xl ">00</span>
+              <span class="text-2xl">:</span>
+              <span class="text-2xl ">15</span>
+              <span class="text-2xl">,</span>
+              <span class="text-2xl ">00</span>
+            </div>
+          </div>
+        </div>
+        <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px"
+             id="captcha_callback-left">
+        </div>
+      </div>
+      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>" />
+      <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>" />
+    </form>
+    <script>
+      jQuery(document).on("submit", "#form_2calls_myFormId", function () {
+        var tag = this;
+        if (jduzvonka(1)) {
+          jQuery.ajax({
+            url: jQuery(this).attr("action"),
+            type: "POST",
+            data: jQuery(this).serialize(),
+            success: function (d) {
+              console.log(d);
+              if (d.search('{"location":') === 0) {
+                var _d = JSON.parse(d);
+                if (typeof _d == "object" && _d.location) {
+                  document.location.href = _d.location;
+                  return false;
+                }
+              }
+              var error = jQuery(d).find("#form-errors").html();
+              if (typeof error != "undefined") {
+                jQuery("#timertext").html(
+                  '<span style="color:red;">' + error + "</span>"
+                );
+                return false;
+              }
+              var success = jQuery(d).find("h1").html();
+              if (success) {
+                document.location.href = "/thankyoupage/";
+                return false;
+              }
+            },
+            errors: function (data) {
+              console.log(data);
+            },
           });
-          $(".fancybox-skin").addClass("rr");
-          $(".fancybox-opened").addClass("rr");
-          setCookie("zvonok", 1);
+          return false;
         }
-      }
-
-      setTimeout(func, 8000);
-    })();
-  </script>
-
-  <script>
-    var onloadCaptchaCallback = function () {
-      var siteKey = "6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL";
-      $(".captcha-item").each(function (index) {
-        grecaptcha.render($(this).attr("id"), {
-          sitekey: siteKey,
-        });
+        return false;
       });
-    };
-  </script>
+    </script>
+  </div>
+
+  <div id="wix_fin" class="modal-order-call" style="display: none">
+    <div class="modal-order-call__caption">Спасибо за обращение!</div>
+    <div class="modal-order-call-form">
+      <div class="modal-order-call-form__timer">
+        <p>00</p>
+        :
+        <p>00</p>
+        ,
+        <p>00</p>
+      </div>
+      <div class="modal-order-call-form__end clear">
+        <a id="xop555" href="javascript:void(0);" onclick="neuspeli(); return false;">мне не перезвонили!</a>
+        <span id="superjalobal" style="display: none">Менеджер свяжется с Вами в ближайшее время!</span>
+      </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
+<style>
+  .fade-in {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  .fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  .fancybox-wrap, .fancybox-skin, .fancybox-outer, .fancybox-inner, .fancybox-image, .fancybox-wrap iframe, .fancybox-wrap object, .fancybox-nav, .fancybox-nav span, .fancybox-tmp{padding:0;margin:0;border:0;outline:none;vertical-align:top;text-align:left;}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020;}.fancybox-skin{position:relative;color:#444;text-shadow:none;background:#fff;}.fancybox-opened{z-index:8030;}.fancybox-outer{padding-top:41px;}.fancybox-opened .fancybox-outer{padding-top:61px;}.fancybox-outer, .fancybox-inner{position:relative;}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch;}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap;}.fancybox-image, .fancybox-iframe{display:block;width:100%;height:100%;}.fancybox-image {max-width:100%;max-height:100%;}.fancybox-prev span, .fancybox-next span{background-image:url('/Skins/img/user/fancybox/sprite.png');}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-20px;margin-left:-20px;padding:10px;background-color:#fff;opacity:0.8;cursor:pointer;z-index:8060;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;}#fancybox-loading div{width:31px;height:31px;background:url('/Skins/img/user/fancybox/loading.gif') center center no-repeat;}.fancybox-close{position:absolute;top:0;right:0;padding:20px 25px;cursor:pointer;z-index:8050;}.fancybox-close .icon{width:10px;height:10px;background-position:0 -91px;}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url('/Skins/img/blank.gif');-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040;}.fancybox-prev{left:0;}.fancybox-next{right:0;}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden;}.fancybox-prev span{left:10px;background-position:0 -36px;}.fancybox-next span{right:10px;background-position:0 -72px;}.fancybox-nav:hover span{visibility:visible;}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible !important;}.fancybox-lock{overflow:hidden !important;width:auto;}.fancybox-lock body{overflow:hidden !important;}.fancybox-lock-test{overflow-y:hidden !important;}.fancybox-overlay {position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('/Skins/img/user/fancybox/overlay.png');}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0;}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll;}.fancybox-title{visibility:hidden;font:normal 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8040;}.fancybox-opened .fancybox-title{position:absolute;top:0;right:0;left:0;font-size:24px;font-family:Opensanslight,Arial,Helvetica,sans-serif;white-space:nowrap;text-overflow:ellipsis;padding:20px;border-bottom:1px solid #F2F2F2;visibility:visible;overflow:hidden;}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center;}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0, 0, 0, 0.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:bold;line-height:24px;white-space:nowrap;}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff;}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0, 0, 0, .8);}
+</style>
+
+<!-- Кнопка "наверх" -->
+<button id="scrollToTopBtn"
+        class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-blue-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-blue-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
+        aria-label="Наверх">
+  <!-- Широкая стрелка SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+       stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
+
+<script>
+  <!-- Кнопка "наверх" -->
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+  // Показать/скрыть кнопку при прокрутке
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      scrollToTopBtn.classList.replace("fade-out", "fade-in");
+    } else {
+      scrollToTopBtn.classList.replace("fade-in", "fade-out");
+    }
+  });
+
+  // Плавная прокрутка наверх при клике
+  scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+</script>
+
+<script>
+  function catchEnter(e) {
+    var lead_free = false;
+    var l = document.getElementsByClassName("form_2calls_input")[0];
+    l &&
+    ((a = l.value),
+      1 == lead_free
+        ? ("8" == a ? (l.value = "7") : a,
+          "495" == a ? (l.value = "7495") : a,
+          "499" == a ? (l.value = "7499") : a,
+          (l.value = l.value.replace("+", "")))
+        : ("+8" == a ? (l.value = "+7") : a,
+          "495" == a || "+495" == a ? (l.value = "+7495") : a,
+          "499" == a || "+499" == a ? (l.value = "+7499") : a,
+          "+" != a.charAt(0) ? (l.value = "+" + a.replace("+", "")) : a),
+      (l.value = l.value.replace(/[^\d\+.]/g, "")));
+
+    if (e.keyCode == 13) {
+      jduzvonka();
+      return false;
+    }
+  }
+
+  function saveNumber(t) {
+    localStorage.setItem("cb_phone_number", t.value);
+  }
+
+  function checkPhoneInput(el) {
+    if (el.value == "") el.value = "+7";
+
+    moveCursorToEnd(el);
+  }
+
+  function moveCursorToEnd(el) {
+    if (typeof el.selectionStart == "number") {
+      el.selectionStart = el.selectionEnd = el.value.length;
+    } else if (typeof el.createTextRange != "undefined") {
+      el.focus();
+      var range = el.createTextRange();
+      range.collapse(false);
+      range.select();
+    }
+  }
+
+  function jduzvonka(k) {
+    var phone = jQuery("#wi_tele233").val();
+    if (phone.length > 10) {
+      jQuery("#wi_tele233").removeClass("errk");
+      /*$.ajax({
+      type: "POST",
+      url: '/mail.php',
+      data: {'phone': phone},
+      success: function(data) {
+          kclose();
+          alert('Ждите звонка!');
+      },
+      //dataType: 'json'
+  });*/
+      return true;
+    } else {
+      jQuery("#wi_tele233").addClass("errk");
+      return false;
+    }
+  }
+
+  function getCookie(name) {
+    var _return = document.cookie.match(
+      new RegExp(
+        "(?:^|; )" +
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+        "=([^;]*)"
+      )
+    );
+    if (!_return || !_return[1]) return false;
+    return _return[1];
+  }
+
+  function setCookie(name, value, options) {
+    options = options || {};
+
+    var expires = options.expires;
+
+    if (typeof expires == "number" && expires) {
+      var d = new Date();
+      d.setTime(d.getTime() + expires * 1000);
+      expires = options.expires = d;
+    }
+    if (expires && expires.toUTCString) {
+      options.expires = expires.toUTCString();
+    }
+
+    value = encodeURIComponent(value);
+
+    var updatedCookie = name + "=" + value;
+
+    for (var propName in options) {
+      updatedCookie += "; " + propName;
+      var propValue = options[propName];
+      if (propValue !== true) {
+        updatedCookie += "=" + propValue;
+      }
+    }
+
+    document.cookie = updatedCookie;
+  }
+
+  function kclose() {
+    $(".fancybox-skin").removeClass("rr");
+    $(".fancybox-opened").removeClass("rr");
+    $.fancybox.close();
+  }
+
+  function kcall() {
+    $.fancybox({
+      autoScale: true,
+      transitionIn: "elastic",
+      transitionOut: "elastic",
+      speedIn: 500,
+      speedOut: 300,
+      autoDimensions: true,
+      centerOnScroll: true,
+      hideOnOverlayClick: false,
+      href: "#kmodal",
+    });
+
+    $(".fancybox-skin").addClass("rr");
+    $(".fancybox-opened").addClass("rr");
+  }
+
+  (function () {
+    function func() {
+      var zvonok = getCookie("zvonok");
+      //console.log(zvonok)
+      if (zvonok != 1) {
+        console.log("ok");
+        $.fancybox({
+          autoScale: true,
+          transitionIn: "elastic",
+          transitionOut: "elastic",
+          speedIn: 500,
+          speedOut: 300,
+          autoDimensions: true,
+          centerOnScroll: true,
+          hideOnOverlayClick: false,
+          href: "#kmodal",
+        });
+        $(".fancybox-skin").addClass("rr");
+        $(".fancybox-opened").addClass("rr");
+        setCookie("zvonok", 1);
+      }
+    }
+
+    setTimeout(func, 8000);
+  })();
+</script>
+
+<script>
+  var onloadCaptchaCallback = function () {
+    var siteKey = "6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL";
+    $(".captcha-item").each(function (index) {
+      grecaptcha.render($(this).attr("id"), {
+        sitekey: siteKey,
+      });
+    });
+  };
+</script>
 </body>
 
 </html>
