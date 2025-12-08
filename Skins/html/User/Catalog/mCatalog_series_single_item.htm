@@ -28,6 +28,7 @@
   .materials-level2 .level-tail,.materials-level3 .level-tail{position:absolute;width:15px;height:15px;left:0;top:-9px;margin-left:25px;background:#FFF;border:1px solid #7a8a93;border-left:0;border-bottom:0;transform:rotate(-45deg)}
   .dis{display:none}
   .cl{display:block;clear:both}
+  .b2{font-size: 18px;}
 </style>
 <script>
   oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
@@ -456,7 +457,7 @@
               <div class="flex flex-row gap-2 align-middle">
                 <span class="flex items-center font-normal text-base sm:text-xl">Купить</span>
                 <span class="flex items-center w-fit gap-5 !py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
-                    <a class="minus js-minus text-4xl !py-1 text-gray-600 cursor-pointer">−</a>
+                    <a class="minus js-minus text-4xl leading-3 !py-1 text-gray-600 cursor-pointer">−</a>
                   <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
                   <div>
                     <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
@@ -469,7 +470,7 @@
                     </div>
                   <?php } ?>
 
-                  <a class="plus js-plus text-3xl !py-1 text-gray-600 cursor-pointer">+</a>
+                  <a class="plus js-plus text-3xl leading-3 !py-1 text-gray-600 cursor-pointer">+</a>
                 </span>
 
               </div>
@@ -588,10 +589,15 @@
               <span class="underline font-bold">2–4 дня</span>
             </p>
             <p>
-              <span class="underline">
+              <a href="/dostavka-i-sborka/" class="hover:underline cursor-pointer">
                 Доставка и сборка (по Москве <br />
-                и МО):</span>
-              <span class="font-semibold">Бесплатная</span>
+                и МО): <span class="font-semibold">Бесплатная</span></a>
+            </p>
+            <p>
+              <a href="/contacts/#addresses" class="hover:underline cursor-pointer">
+                По России <span class="font-semibold">ПВЗ</span>
+              </a>
+
             </p>
           </div>
 
