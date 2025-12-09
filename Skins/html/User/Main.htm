@@ -73,14 +73,9 @@ function getHomeUrl() {
   ?>
   <?php myerror(); ?>
 
-  <title>
-    <?php echo $pageInf['title']; ?>
-  </title>
-
+  <title><?php echo $pageInf['title']; ?></title>
   <?php if(!is_null($pageInf['dscr']) && trim($pageInf['dscr']) !== '') { ?>
-  <meta name="description" content='
-    <?php echo $pageInf[' dscr']; ?>
-  '>
+  <meta name='description' content='<?php echo $pageInf['dscr']; ?>'>
   <?php } ?>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -272,9 +267,9 @@ function getHomeUrl() {
           defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
-  <!-- Tailwind конфигурация -->
-  <!--  <script src="https://cdn.tailwindcss.com"></script>-->
-  <link rel="stylesheet" href="/dist/output.css">
+
+  <!-- Tailwind -->
+  <link rel="stylesheet" href="/pinitk85/dist/output.css">
 
 </head>
 
@@ -961,14 +956,14 @@ function getHomeUrl() {
 </div>
 <?php } ?>
 
-<footer class="bg-footer text-black text-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8 mt-6">
+<footer class="bg-footer text-black text-sm pt-8 pb-4 mt-6">
   <div class="md:hidden block w-full text-center">
     <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"><img
       src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
   </div>
 
   <!-- Блок основной -->
-  <div class="hidden max-w-1440 mx-auto lg:grid gap-16 lg:grid-cols-5">
+  <div class="hidden max-w-1440 px-4 sm:px-6 lg:px-8  mx-auto lg:grid gap-12 lg:grid-cols-5">
     <!-- Блок 1: Компания -->
     <div class="lg:col-span-1">
       <a class="hidden md:block" href="#"><img src="/images/index/logo-footer.png" alt="Логотип" class="mb-4" /></a>
@@ -1044,7 +1039,7 @@ function getHomeUrl() {
   </div>
 
   <!-- Блок основной (lg)-->
-  <div class="lg:hidden max-w-1440 mx-auto grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
+  <div class="lg:hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
     <!-- Блок 1: Компания -->
     <div>
       <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
@@ -1123,7 +1118,7 @@ function getHomeUrl() {
   </div>
 
   <!-- Нижний подвал -->
-  <div class="mt-8 text-gray-700 text-[10px] leading-3">
+  <div class="max-w-1440 mx-auto mt-8 px-4 sm:px-6 lg:px-8 text-gray-700 text-[10px] leading-3">
     ©
     <?php echo date('Y'); ?>
     Все права защищены. Информация сайта защищена законом об авторских
@@ -1232,10 +1227,10 @@ function getHomeUrl() {
 </div>
 
 <div
-  class="modal modal--order-call !p-0 rounded-lg shadow-xl w-full max-w-sm md:max-w-[640px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
-  id="kmodal" style="display:none; left: 50px;">
+  class="modal modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
+  id="kmodal" style="display:none; left: 50%;">
   <a href="javascript:void(0);"
-     class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-red-500 z-10 rounded-full hover:bg-gray-100 transition-colors"
+     class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-black-500 z-10 rounded-full hover:bg-red-400 transition-colors"
      onclick="kclose(); return false;">
     ×
   </a>
@@ -1260,9 +1255,9 @@ function getHomeUrl() {
     </div>
   </div>
 
-  <div id="wix_call" class="modal-order-call bg-white p-6 md:p-8 !pt-14" style="display: block">
+  <div id="wix_call" class="modal-order-call bg-white p-6 md:p-8 mt-8" style="display: block">
     <div class="modal-order-call__caption text-lg font-semibold text-start mb-6" id="timertext">
-      Хотите мы вам перезвоним через 15 секунд?
+      Хотите мы вам перезвоним?
     </div>
     <div class="modal-order-call__label mb-2">
       <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup
@@ -1271,7 +1266,7 @@ function getHomeUrl() {
 
     <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
       <div class="modal-order-call-form space-y-4">
-        <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex flex-col gap-4">
           <div class="modal-order-call-form__input">
             <div>
               <input
@@ -1288,23 +1283,12 @@ function getHomeUrl() {
             <!--<a href="#">Жду звонка</a>-->
             <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
             <button type="submit"
-                    class="form_2calls_button !w-full md:!w-[160px] !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
+                    class="form_2calls_button !w-full !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
               Жду звонка
             </button>
           </div>
-          <div id="yatimer"
-               class="modal-order-call-form__timer !p-0 !m-0 flex items-center justify-center gap-2 !w-full md:!w-fit text-gray-600">
-            <img class="mr-2" src="<?php echo getImagePath('/img/icons/timer.png'); ?>" />
-            <div class="!flex !items-center">
-              <span class="text-2xl ">00</span>
-              <span class="text-2xl">:</span>
-              <span class="text-2xl ">15</span>
-              <span class="text-2xl">,</span>
-              <span class="text-2xl ">00</span>
-            </div>
-          </div>
         </div>
-        <div class="captcha-item mx-auto" style="width: 230px; overflow: hidden; height: 34px"
+        <div class="captcha-item mx-auto mt-2" style="width: auto; overflow: hidden;"
              id="captcha_callback-left">
         </div>
       </div>

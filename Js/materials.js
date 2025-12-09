@@ -309,6 +309,7 @@ var oMaterials = new (function () {
       itemActiveMats.push(m);
     }
 
+
     //if(!mobile){
     // Скролим станицу, чтобы был виден выбранный материал
     /*var p = elPos(matInfo.resultImage).y - 350;
@@ -334,6 +335,11 @@ var oMaterials = new (function () {
         topId: topM.id,
       }
     );
+
+    // Плавная прокрутка к блоку
+    const block = document.getElementById("section-photo");
+    const top = block.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   /**
@@ -751,10 +757,10 @@ var oMaterials = new (function () {
       image +
       (imageBig
         ? '<div class="' +
-          imageBigWrapClasses +
-          '" style="display:none;">' +
-          imageBig +
-          "</div>"
+        imageBigWrapClasses +
+        '" style="display:none;">' +
+        imageBig +
+        "</div>"
         : "") +
       "</div>" +
       '<div class="' +

@@ -568,10 +568,19 @@
               let btn = form.querySelector("button.submit");
 
               if (btn) {
+                // Меняем текст и стиль
                 btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
                 btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
-                btn.disabled = true;
                 btn.textContent = "✓ В корзину";
+
+                // Отключаем отправку формы
+                btn.type = "button"; // ← важно: чтобы не сабмитилась форма
+                btn.disabled = false; // ← делаем кликабельной
+
+                // Назначаем действие при клике
+                btn.onclick = function() {
+                  window.location.href = "/cart/";
+                };
               }
             }
           </script>
@@ -945,11 +954,11 @@
       <div class="text" id="tab-delivery" style="display: none;">
         <?php
             $t = $catInf['series_info'];
-            $t = str_replace('[name]', htmlspecialchars($seriesInf['name']), $t);
+            $t = str_replace('[name]', $seriesInf['name'], $t);
             $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
         $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
         $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
-        echo $t;
+        print $t;
         ?>
       </div>
 
@@ -1120,7 +1129,7 @@ $benefits = [
   'url' => '/preimuschestva/prostota-vybora/',
   'icon' => '/images/product/busket.png',
   'title' => 'Как уточнить и сделать покупку!',
-  'text' => 'На нашем сайте не надо регистрироваться, чтобы отправить заказ в корзину для уточнения информации достаточно оставить имя и телефон. Подарки при оформлении через сайт.'
+  'text' => 'На нашем сайте не надо регистрироваться, чтобы отправить заказ в корзину для уточнения информации достаточно оставить имя и телефон.'
   ]
   ];
   ?>
@@ -1337,16 +1346,16 @@ $benefits = [
             </script>
           </div>
           <?php
-                            }
+          }
 
-                            unset($_SESSION['review_flash_msg']);
-                            unset($_SESSION['review_flash_status']);
+          unset($_SESSION['review_flash_msg']);
+          unset($_SESSION['review_flash_status']);
 
-                            unset($_SESSION['review_name']);
-                            unset($_SESSION['review_email']);
-                            unset($_SESSION['review_comment']);
-                            unset($_SESSION['review_rating']);
-                            ?>
+          unset($_SESSION['review_name']);
+          unset($_SESSION['review_email']);
+          unset($_SESSION['review_comment']);
+          unset($_SESSION['review_rating']);
+          ?>
         </div>
       </div>
     </div>
