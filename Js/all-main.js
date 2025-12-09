@@ -2015,13 +2015,11 @@ var oMaterials = new function(){
       matsInRow = matsInRowLevel3;
     }
 
-    // Кнопку "Показать все" управляем ТОЛЬКО при построении уровня 1
-    if (level === 1) {
-      if (mIds.length > matsInRow) {
-        $(".klink-dashed").show();
-      } else {
-        $(".klink-dashed").hide();
-      }
+    // Показываем кнопку "Показать все" только для уровня 1
+    if (level === 1 && mIds.length > matsInRow) {
+      $(".klink-dashed").show();
+    } else {
+      $(".klink-dashed").hide();
     }
 
     var html = "";
@@ -2851,8 +2849,9 @@ var oCart = new function(){
 					}
 				}
 
-				if($$$('text-delivery')){
-					var spans = byTag('SPAN', $$$('text-delivery'));
+				var deliveryContainer = $$$('text-delivery') || $$$('tab-delivery');
+				if(deliveryContainer){
+					var spans = byTag('SPAN', deliveryContainer);
 					for(var i in spans){
 						if(typeof(spans[i].className) == 'undefined') continue;
 						if(spans[i].className.indexOf('info-delivery') != -1){
