@@ -1,72 +1,72 @@
 <!-- Модальное окно галереи -->
 <div id="gallery-modal"
-  class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+     class="fixed inset-0 bg-black bg-opacity-90 z-[999] items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
   <!-- Левая панель миниатюр (десктоп) -->
   <div id="gallery-thumbnails-desktop"
-    class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]">
+       class="hidden lg:block absolute left-4 top-4 bottom-4 w-20 flex flex-col items-center py-2 space-y-2 overflow-y-auto overflow-x-hidden z-[60]">
     <!-- Миниатюры будут добавляться динамически -->
   </div>
 
   <!-- Нижняя панель миниатюр (мобильные) -->
   <div id="gallery-thumbnails-mobile"
-    class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none">
+       class="lg:hidden absolute bottom-4 left-4 right-4 h-20 flex items-center overflow-x-auto overflow-y-hidden py-2 space-x-2 z-[60] scrollbar-none">
     <!-- Миниатюры будут добавляться динамически -->
   </div>
 
   <!-- Центральное изображение -->
   <div id="gallery-image-container"
-    class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0">
+       class="relative h-full flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 ease-out lg:ml-24 mb-8 lg:mb-0">
     <img id="gallery-main-img" src="" alt=""
-      class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in" />
+         class="max-w-full max-h-[calc(90vh-2rem)] lg:max-h-[90vh] object-contain shadow-2xl transition-transform duration-300 ease-out cursor-zoom-in" />
   </div>
 
   <!-- Кнопка закрытия -->
   <button id="gallery-close"
-    class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-[61] bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
-    aria-label="Закрыть галерею">
+          class="absolute top-4 right-4 text-white/90 hover:text-white text-lg font-light z-[61] bg-black/40 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/60"
+          aria-label="Закрыть галерею">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
+         stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </button>
 
   <!-- Стрелка "назад" -->
   <button id="gallery-prev"
-    class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Предыдущее изображение">
+          class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+          aria-label="Предыдущее изображение">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
+         stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
 
   <!-- Стрелка "вперёд" -->
   <button id="gallery-next"
-    class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
-    aria-label="Следующее изображение">
+          class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white transition-all duration-200 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40"
+          aria-label="Следующее изображение">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
+         stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   </button>
 
   <!-- Счётчик -->
   <div id="gallery-counter"
-    class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]">
+       class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]">
   </div>
 
   <!-- Индикатор масштаба -->
   <div id="gallery-zoom-indicator"
-    class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]">
+       class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]">
     100%
   </div>
 
   <!-- Кнопка сброса зума (только для мобильных) -->
   <button id="gallery-reset-zoom"
-    class="lg:hidden absolute bottom-24 right-4 text-white/90 text-sm font-light z-[61] bg-black/60 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/80 hidden"
-    aria-label="Сбросить масштаб">
+          class="lg:hidden absolute bottom-24 right-4 text-white/90 text-sm font-light z-[61] bg-black/60 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-black/80 hidden"
+          aria-label="Сбросить масштаб">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
+         stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
     </svg>
   </button>
@@ -223,6 +223,9 @@ $photosUnified[] = [
     let currentMainIndex = 0;
     let autoResetZoomTimer = null;
     let lastInteractionTime = Date.now();
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const SWIPE_THRESHOLD = 50; // минимальное расстояние свайпа в пикселях
 
     // === НАСТРОЙКИ МАСШТАБИРОВАНИЯ ===
     const MIN_ZOOM = 1.2;
@@ -340,9 +343,9 @@ $photosUnified[] = [
       return thumbnail;
     }
 
-    // === Функция для умного скролла к миниатюре ===
+    // === Функция для центрирования миниатюры в панели ===
     function scrollToThumbnailIfNeeded(index, type = 'auto') {
-      let container, thumbnails, isMobile;
+      let container, isMobile;
 
       if (type === 'mobile' || (type === 'auto' && window.innerWidth < 1024)) {
         container = galleryThumbnailsMobile;
@@ -354,72 +357,42 @@ $photosUnified[] = [
 
       if (!container) return;
 
-      thumbnails = Array.from(container.children);
+      const thumbnails = Array.from(container.children);
       const thumbnail = thumbnails[index];
       if (!thumbnail) return;
 
-      const visibleCount = calculateVisibleThumbnails(container, isMobile);
-      const totalThumbs = thumbnails.length;
-
-      // Для мобильных (горизонтальных) используем offsetLeft
-      // Для десктопных (вертикальных) используем offsetTop
       if (isMobile) {
-        const thumbStart = thumbnail.offsetLeft;
-        const thumbEnd = thumbStart + thumbnail.offsetWidth;
+        // Мобильная: горизонтальная панель
+        const containerRect = container.getBoundingClientRect();
+        const thumbRect = thumbnail.getBoundingClientRect();
 
-        const viewStart = container.scrollLeft;
-        const viewEnd = viewStart + container.clientWidth;
+        // Центр контейнера
+        const containerCenter = container.scrollLeft + containerRect.width / 2;
+        // Центр миниатюры в viewport
+        const thumbCenter = thumbRect.left + thumbRect.width / 2;
 
-        // Миниатюра видна полностью?
-        const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
-        if (fullyVisible) return;
+        // Смещение, чтобы совместить центры
+        const scrollOffset = container.scrollLeft + (thumbCenter - containerRect.left - containerRect.width / 2);
 
-        const maxScroll = container.scrollWidth - container.clientWidth;
-
-        if (index <= Math.floor(visibleCount / 2)) {
-          container.scrollTo({ left: 0, behavior: "smooth" });
-          return;
-        }
-
-        if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
-          container.scrollTo({ left: maxScroll, behavior: "smooth" });
-          return;
-        }
-
-        // Центрирование для горизонтальной панели
-        const targetLeft = thumbStart - container.clientWidth / 2 + thumbnail.offsetWidth / 2;
         container.scrollTo({
-          left: Math.max(0, Math.min(maxScroll, targetLeft)),
+          left: scrollOffset,
           behavior: "smooth"
         });
       } else {
-        // Вертикальная панель (десктоп)
-        const thumbStart = thumbnail.offsetTop;
-        const thumbEnd = thumbStart + thumbnail.offsetHeight;
+        // Десктоп: вертикальная панель
+        const containerRect = container.getBoundingClientRect();
+        const thumbRect = thumbnail.getBoundingClientRect();
 
-        const viewStart = container.scrollTop;
-        const viewEnd = viewStart + container.clientHeight;
+        // Центр контейнера
+        const containerCenter = container.scrollTop + containerRect.height / 2;
+        // Центр миниатюры в viewport
+        const thumbCenter = thumbRect.top + thumbRect.height / 2;
 
-        // Миниатюра видна полностью?
-        const fullyVisible = thumbStart >= viewStart && thumbEnd <= viewEnd;
-        if (fullyVisible) return;
+        // Смещение
+        const scrollOffset = container.scrollTop + (thumbCenter - containerRect.top - containerRect.height / 2);
 
-        const maxScroll = container.scrollHeight - container.clientHeight;
-
-        if (index <= Math.floor(visibleCount / 2)) {
-          container.scrollTo({ top: 0, behavior: "smooth" });
-          return;
-        }
-
-        if (index >= totalThumbs - Math.ceil(visibleCount / 2)) {
-          container.scrollTo({ top: maxScroll, behavior: "smooth" });
-          return;
-        }
-
-        // Центрирование для вертикальной панели
-        const targetTop = thumbStart - container.clientHeight / 2 + thumbnail.offsetHeight / 2;
         container.scrollTo({
-          top: Math.max(0, Math.min(maxScroll, targetTop)),
+          top: scrollOffset,
           behavior: "smooth"
         });
       }
@@ -706,12 +679,32 @@ $photosUnified[] = [
       }
     }
 
+    // Функция блокировки прокрутки body
+    function lockBodyScroll() {
+      // Сохраняем текущую ширину скроллбара, чтобы компенсировать смещение
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+      // Фиксируем body: отключаем скролл и добавляем отступ справа
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = scrollBarWidth + 'px';
+    }
+
+    // Функция разблокировки прокрутки body
+    function unlockBodyScroll() {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+
     // === Открытие/закрытие галереи ===
     mainImageContainer?.addEventListener('click', () => {
       currentGalleryIndex = currentMainIndex;
       resetZoom();
       createThumbnails(); // Создаём миниатюры при открытии
       updateGalleryImage();
+
+      // 🔒 Блокируем прокрутку фона
+      lockBodyScroll();
+
       galleryModal.classList.remove('hidden', 'pointer-events-none');
       setTimeout(() => {
         galleryModal.classList.add('opacity-100', 'pointer-events-auto');
@@ -722,7 +715,13 @@ $photosUnified[] = [
     function closeGallery() {
       resetZoom();
       galleryModal.classList.remove('opacity-100', 'pointer-events-auto');
-      setTimeout(() => galleryModal.classList.add('hidden', 'pointer-events-none'), 300);
+
+      // 🔓 Разблокируем прокрутку после анимации
+      setTimeout(() => {
+        galleryModal.classList.add('hidden', 'pointer-events-none');
+        unlockBodyScroll(); // ← вот здесь
+      }, 300);
+
       clearTimeout(autoResetZoomTimer);
     }
 
@@ -777,6 +776,28 @@ $photosUnified[] = [
       updateInteractionTime();
       startAutoResetTimer();
     });
+
+    // === Свайп по основному изображению (только если НЕ увеличено) ===
+    galleryImageContainer.addEventListener('touchstart', (e) => {
+      if (isZoomed || e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    galleryImageContainer.addEventListener('touchend', (e) => {
+      if (isZoomed || e.changedTouches.length !== 1) return;
+      touchEndX = e.changedTouches[0].clientX;
+
+      const diff = touchStartX - touchEndX;
+
+      // Свайп влево → следующее изображение
+      if (diff > SWIPE_THRESHOLD) {
+        smartNavigate(1);
+      }
+      // Свайп вправо → предыдущее изображение
+      else if (diff < -SWIPE_THRESHOLD) {
+        smartNavigate(-1);
+      }
+    }, { passive: true });
 
     function drag(e) {
       if (!isDragging || !isZoomed) return;
