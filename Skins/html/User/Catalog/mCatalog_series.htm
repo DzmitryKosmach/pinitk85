@@ -1064,6 +1064,7 @@
 
     <!-- Доставка и оплата -->
     <div class="text" id="tab-delivery" style="display: none;">
+      <div id="text-delivery">
       <?php
             $t = $catInf['series_info'];
             $t = str_replace('[name]', htmlspecialchars($seriesInf['name']), $t);
@@ -1072,6 +1073,7 @@
       $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
       echo $t;
       ?>
+      </div>
     </div>
 
     <!-- Ком. Пред (пример пустого контента) -->
