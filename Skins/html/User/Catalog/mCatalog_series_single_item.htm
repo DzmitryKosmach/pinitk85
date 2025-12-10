@@ -409,184 +409,150 @@
 
 
         <!-- Кнопки -->
-        <div >
-          <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
+        <?php
+  $itemId    = $itemInf['id'];
+  $inCart    = Catalog_Cart::isItemInCart($itemId);
+  $priceMin  = $itemInf['price_min'];
+  $discount  = abs($itemInf['discount']);
+  $hasOldPrice = ($discount !== 1 && $discount !== 0);
+  $isBulk    = ($catInf['parent_id'] == 38 || $catInf['id'] == 9);
+  $defaultQty = $isBulk ? 4 : 1;
+?>
+        <div>
+          <?php if ($inCart): ?>
           <a href="/cart/">
             <button type="button"
-                    class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-pointer opacity-90"
+                    class="bg-green-600 text-white py-2 px-12 rounded font-semibold opacity-90 cursor-pointer"
                     disabled>
               ✓ В корзину
             </button>
           </a>
           <?php else: ?>
-          <form
-            class="add2basketform clearfix main-cart-form"
-            id="catalog-item-full-<?php echo $itemInf['id']?>"
-            action="<?php echo Url::a('catalog-cart')?>"
-            method="get"
-            onsubmit="updateCartButton(this); oCart.add(this);  return false;"
-          >
-            <input type="hidden" name="add" id="single-item-id" value="<?php echo $itemInf['id']; ?>">
+          <form class="add2basketform clearfix main-cart-form"
+                id="catalog-item-full-<?= $itemId ?>"
+                action="<?= Url::a('catalog-cart') ?>"
+                method="get"
+                onsubmit="updateCartButton(this); oCart.add(this); return false;">
+            <input type="hidden" name="add" value="<?= $itemId ?>">
 
-            <div class="flex flex-row flex-wrap gap-x-6 gap-y-2" >
-              <!-- Итоговая цена -->
-              <div class="flex flex-row gap-2 align-middle">
-                <span class="flex font-normal items-center text-base sm:text-xl">Цена товара</span>
+            <div class="flex flex-row flex-wrap gap-x-6 gap-y-2">
+              <!-- Цена товара -->
+              <div class="flex flex-row gap-2 items-center">
+                <span class="text-base sm:text-xl font-normal">Цена товара</span>
                 <div>
-                  <p id="item-<?php echo $itemInf['id']; ?>-price-old" class="text-lg leading-4 text-gray-500 line-through">
-                    <?php
-                              $d = abs($itemInf['discount']);
-                              if ($d != 1 && $d != 0) {
-                                  echo Catalog::priceFormat($itemInf['price_min'] / $d) . ' ₽';
-                              }
-                          ?>
+                  <?php if ($hasOldPrice): ?>
+                  <p id="item-<?= $itemId ?>-price-old"
+                     class="text-lg leading-4 text-gray-500 line-through">
+                    <?= Catalog::priceFormat($priceMin / $discount) ?> ₽
                   </p>
+                  <?php endif; ?>
 
-                  <div id="item-<?php echo $itemInf['id']; ?>-price" class="text-2xl md:text-3xl whitespace-nowrap font-bold text-black">
-                    <?php if(abs($itemInf['price_min'])): ?>
-                    <?php echo Catalog::priceFormat($itemInf['price_min']) ?> ₽
+                  <div id="item-<?= $itemId ?>-price"
+                       class="text-2xl md:text-3xl font-bold text-black whitespace-nowrap">
+                    <?php if (abs($priceMin)): ?>
+                    <?= Catalog::priceFormat($priceMin) ?> ₽
                     <?php else: ?>
                     Цена по запросу
                     <?php endif; ?>
                   </div>
-
                 </div>
               </div>
 
+              <!-- Количество и кнопки +- -->
+              <div class="flex flex-row gap-2 items-center">
+                <span class="text-base sm:text-xl font-normal">Купить</span>
+                <span class="flex items-center gap-5 w-fit py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg">
+            <a class="minus js-minus text-4xl leading-3 py-1 text-gray-600 cursor-pointer">−</a>
 
-              <div class="flex flex-row gap-2 align-middle">
-                <span class="flex items-center font-normal text-base sm:text-xl">Купить</span>
-                <span class="flex items-center w-fit gap-5 !py-1 px-4 bg-white border border-[#E4E4E4] rounded-lg ">
-                    <a class="minus js-minus text-4xl leading-3 !py-1 text-gray-600 cursor-pointer">−</a>
-                  <?php if($catInf['parent_id'] == 38 || $catInf['id'] == 9) { ?>
-                  <div>
-                    <input type="text" class="js-quantity min_4 !w-6 text-center font-medium border-none outline-none" name="amount" value="4" data-ratio="1">
-                    <span class="js-measurename">шт</span>
-                      </div>
-                  <?php } else { ?>
-                  <div>
-                    <input type="text" class="js-quantity w-6 text-center border-none outline-none" name="amount" value="1" data-ratio="1">
-                    <span class="js-measurename">шт</span>
-                    </div>
-                  <?php } ?>
+            <div>
+              <input type="text"
+                     name="amount"
+                     value="<?= $defaultQty ?>"
+                     data-ratio="1"
+                     class="js-quantity <?= $isBulk ? 'min_4' : '' ?> w-6 text-center font-medium border-none outline-none">
+              <span class="js-measurename">шт</span>
+            </div>
 
-                  <a class="plus js-plus text-3xl leading-3 !py-1 text-gray-600 cursor-pointer">+</a>
-                </span>
-
+            <a class="plus js-plus text-3xl leading-3 py-1 text-gray-600 cursor-pointer">+</a>
+          </span>
               </div>
             </div>
 
-            <div class="flex gap-4 flex-wrap mt-2 mb-4">
-
+            <!-- Блок кнопок: добавить либо "Отложить" + "Нашли дешевле?" -->
+            <div class="flex flex-wrap gap-4 mt-2 mb-4">
               <div class="button-block w-full sm:w-fit pt-0">
-                <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
-                <a href="/cart/">
-                  <button
-                    type="submit"
-                    class="submit inbasket w-full bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                  <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-                  title="В корзину"
-                  >
-                  <i class="icon pngicons"></i>В корзину
-                  </button>
-                </a>
-                <?php } else { ?>
-                <button
-                  type="submit"
-                  class="submit add2basket w-full sm:w-fit !bg-blue-600 text-white py-3 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-                title="Отложить в 1 клик со СКИДКОЙ"
-                >
-                <i class="icon pngicons"></i>Отложить в 1 клик со СКИДКОЙ
+                <button type="submit"
+                        class="submit add2basket w-full sm:w-fit bg-blue-600 text-white py-3 px-6 rounded font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                <?= !empty($seriesInf['out_of_production']) ? 'disabled' : '' ?>
+                title="<?= $inCart ? 'В корзине' : 'Отложить в 1 клик со СКИДКОЙ' ?>">
+                <i class="icon pngicons"></i>
+                <?= $inCart ? 'В корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>
                 </button>
-                <?php } ?>
-
                 <input type="submit" name="submit" class="noned" value="">
               </div>
 
               <div class="w-full sm:w-fit">
                 <a rel="nofollow"
-                   class="w-full block sm:inline-block sm:w-fit border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
-                   href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER; ?>"
+                   class="block sm:inline-block sm:w-fit border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+                   href="<?= Url::a('contacts') ?>?reason=<?= Contacts_Feedback::REASON_CHEAPER ?>"
                    title="Нашли дешевле?">
                   Нашли дешевле?
                 </a>
               </div>
             </div>
 
-
+            <!-- Селект материалов -->
             <div class="material-nojs hidden">
-              <select name="material_id" id="item-<?php echo $itemInf['id']?>-material" style="max-width: 240px;">
-                <?php foreach($itemInf['materials'] as $im) { ?>
-                <?php $m1 = $materials[$im['material_id']]; ?>
-                <?php if($m1['has_sub']) { ?>
-                <?php foreach($m1['sub'] as $m2) { ?>
-                <?php if($m2['has_sub']) { ?>
-                <?php foreach($m2['sub'] as $m3) { ?>
-                <option value="<?php echo $m3['id']?>" <?php if($m3['id'] == $mActive['id']) { ?>selected<?php } ?>>
-                <?php echo $m1['name']?> / <?php echo $m2['name']?> / <?php echo $m3['name']?>
-                <?php if(abs($im['price'])) { ?>
-                (<?php echo $im['price']?> р.)
-                <?php } else { ?>
-                (по запросу)
-                <?php } ?>
+              <select name="material_id" id="item-<?= $itemId ?>-material" style="max-width:240px;">
+                <?php foreach ($itemInf['materials'] as $im):
+            $m1 = $materials[$im['material_id']];
+            if (!empty($m1['has_sub'])):
+              foreach ($m1['sub'] as $m2):
+                if (!empty($m2['has_sub'])):
+                  foreach ($m2['sub'] as $m3): ?>
+                <option value="<?= $m3['id'] ?>" <?= $m3['id'] == $mActive['id'] ? 'selected' : '' ?>>
+                <?= "{$m1['name']} / {$m2['name']} / {$m3['name']}" ?>
+                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
                 </option>
-                <?php } ?>
-                <?php } else { ?>
-                <option value="<?php echo $m2['id']?>" <?php if($m2['id'] == $mActive['id']) { ?>selected<?php } ?>>
-                <?php echo $m1['name']?> / <?php echo $m2['name']?>
-                <?php if(abs($im['price'])) { ?>
-                (<?php echo $im['price']?> р.)
-                <?php } else { ?>
-                (по запросу)
-                <?php } ?>
+                <?php endforeach;
+                else: ?>
+                <option value="<?= $m2['id'] ?>" <?= $m2['id'] == $mActive['id'] ? 'selected' : '' ?>>
+                <?= "{$m1['name']} / {$m2['name']}" ?>
+                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
                 </option>
-                <?php } ?>
-                <?php } ?>
-                <?php } else { ?>
-                <option value="<?php echo $m1['id']?>" <?php if($m1['id'] == $mActive['id']) { ?>selected<?php } ?>>
-                <?php echo $m1['name']?>
-                <?php if(abs($im['price'])) { ?>
-                (<?php echo $im['price']?> р.)
-                <?php } else { ?>
-                (по запросу)
-                <?php } ?>
+                <?php endif;
+              endforeach;
+            else: ?>
+                <option value="<?= $m1['id'] ?>" <?= $m1['id'] == $mActive['id'] ? 'selected' : '' ?>>
+                <?= $m1['name'] ?>
+                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
                 </option>
-                <?php } ?>
-                <?php } ?>
+                <?php endif;
+          endforeach; ?>
               </select>
             </div>
 
           </form>
-
-
           <?php endif; ?>
-
-          <script>
-            function updateCartButton(form) {
-              // Находим кнопку "Добавить"
-              let btn = form.querySelector("button.submit");
-
-              if (btn) {
-                // Меняем текст и стиль
-                btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
-                btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
-                btn.textContent = "✓ В корзину";
-
-                // Отключаем отправку формы
-                btn.type = "button"; // ← важно: чтобы не сабмитилась форма
-                btn.disabled = false; // ← делаем кликабельной
-
-                // Назначаем действие при клике
-                btn.onclick = function() {
-                  window.location.href = "/cart/";
-                };
-              }
-            }
-          </script>
-
-
         </div>
+
+        <script>
+          function updateCartButton(form) {
+            const btn = form.querySelector("button.submit");
+            if (!btn) return;
+
+            btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
+            btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
+
+            btn.textContent = "✓ В корзину";
+            btn.type = "button";
+            btn.disabled = false;
+
+            btn.onclick = () => window.location.href = "/cart/";
+          }
+        </script>
+
+
 
         <!-- Условия доставки и контакты -->
         <div class="flex flex-wrap gap-6">
