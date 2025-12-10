@@ -957,13 +957,13 @@
             $t = $catInf['series_info'];
             $t = str_replace('[name]', $seriesInf['name'], $t);
             $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
-            $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
-            $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
-            $t = preg_replace('/\+\s*40\s*руб\.?\s*\/\s*км\.?/u', '', $t);
-            $t = preg_replace('/Километраж\s+считается[\s\S]*?покупателя\./u', '', $t);
-            $t = preg_replace('/Нет\s+лифта\s*:\s*3\s*р\.?\s*за\s*1\s*кг\.?\s*за\s*1\s*этаж,\s*[^<]*?800\s*руб\.?/u', '', $t);
-            $t = preg_replace('/6%\s*-\s*от\s*стоимости\s*мебели,\s*[^<]*?800\s*руб\.?/u', '', $t);
-            print $t;
+          $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
+          $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
+          $t = preg_replace('/\+\s*40\s*руб\.?\s*\/\s*км\.?/u', '', $t);
+          $t = preg_replace('/Километраж\s+считается[\s\S]*?покупателя\./u', '', $t);
+          $t = preg_replace('/Нет\s+лифта[^0-9]*3[^0-9]*р\.?[^0-9]*за[^0-9]*1[^0-9]*кг\.?[^0-9]*за[^0-9]*1[^0-9]*этаж[^,]*,[^0-9]*но[^0-9]*не[^0-9]*менее[^0-9]*800[^а-я]*руб\.?/iu', '', $t);
+          $t = preg_replace('/6%\s*-\s*от\s*стоимости\s*мебели,\s*[^<]*?800\s*руб\.?/u', '', $t);
+          print $t;
           ?>
         </div>
       </div>
