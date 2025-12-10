@@ -175,14 +175,7 @@
 											?>
                   <?php if(!$i['on_series_photo']) continue; ?>
 
-                  <!--                    <div-->
-                  <!--                      id="series-set-point-<?php echo $i['id']; ?>"-->
-                  <!--                      class="absolute flex flex-row items-center justify-start space-x-2 px-2 py-1 bg-white border border-gray-300 bg-opacity-90 rounded-md z-30 text-xs font-medium text-black whitespace-nowrap pointer-events-none"-->
-                  <!--                      style="left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%; top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;"-->
-                  <!--                      onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"-->
-                  <!--                      onmouseover="seriesSetHoverPoint(<?php echo $i['id']; ?>, true)"-->
-                  <!--                      onmouseout="seriesSetHoverPoint(<?php echo $i['id']; ?>, false)"-->
-                  <!--                    >-->
+
                   <!-- Общая обёртка для позиционирования -->
                   <div class="absolute" style="
                       left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
@@ -742,29 +735,6 @@
 
             <?php endif; ?>
 
-            <script>
-              function updateCartButton(form) {
-                // Находим кнопку "Добавить"
-                let btn = form.querySelector("button.submit");
-
-                if (btn) {
-                  // Меняем текст и стиль
-                  btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
-                  btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
-                  btn.textContent = "✓ В корзину";
-
-                  // Отключаем отправку формы
-                  btn.type = "button"; // ← важно: чтобы не сабмитилась форма
-                  btn.disabled = false; // ← делаем кликабельной
-
-                  // Назначаем действие при клике
-                  btn.onclick = function() {
-                    window.location.href = "/cart/";
-                  };
-                }
-              }
-            </script>
-
             <!-- Кнопка "Нашли дешевле?" -->
             <button class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
               <a rel="nofollow"
@@ -775,6 +745,29 @@
               </a>
             </button>
           </div>
+
+          <script>
+            function updateCartButton(form) {
+              // Находим кнопку "Добавить"
+              let btn = form.querySelector("button.submit");
+
+              if (btn) {
+                // Меняем текст и стиль
+                btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
+                btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
+                btn.textContent = "✓ В корзину";
+
+                // Отключаем отправку формы
+                btn.type = "button"; // ← важно: чтобы не сабмитилась форма
+                btn.disabled = false; // ← делаем кликабельной
+
+                // Назначаем действие при клике
+                btn.onclick = function() {
+                  window.location.href = "/cart/";
+                };
+              }
+            }
+          </script>
 
 
           <div class="flex flex-wrap gap-6">
