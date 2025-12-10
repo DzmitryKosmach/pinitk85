@@ -553,10 +553,10 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   kw = i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep);
   kd = decimals
     ? dec_point +
-      Math.abs(number - i)
-        .toFixed(decimals)
-        .replace(/-/, 0)
-        .slice(2)
+    Math.abs(number - i)
+      .toFixed(decimals)
+      .replace(/-/, 0)
+      .slice(2)
     : "";
 
   return km + kw + kd;
@@ -938,13 +938,13 @@ function winSize() {
   var w = window.innerWidth
     ? window.innerWidth
     : document.documentElement.clientWidth
-    ? document.documentElement.clientWidth
-    : document.body.offsetWidth;
+      ? document.documentElement.clientWidth
+      : document.body.offsetWidth;
   var h = window.innerHeight
     ? window.innerHeight
     : document.documentElement.clientHeight
-    ? document.documentElement.clientHeight
-    : document.body.offsetHeight;
+      ? document.documentElement.clientHeight
+      : document.body.offsetHeight;
   return { w: w, h: h };
 }
 
@@ -1784,6 +1784,11 @@ var oMaterials = new (function () {
         topId: topM.id,
       }
     );
+
+    // Плавная прокрутка к блоку
+    const block = document.getElementById("section-photo");
+    const top = block.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   /**
@@ -2046,7 +2051,7 @@ var oMaterials = new (function () {
     if (level === 1 && mIds.length > matsInRow) {
       $(".klink-dashed").show();
     } else {
-      $(".klink-dashed").hide();
+      // $(".klink-dashed").hide();
     }
 
     var html = "";
@@ -2356,8 +2361,8 @@ function Search() {
     if ($$$(LId) !== false) {
       alert(
         "Element with ID '" +
-          LId +
-          "' is already exist. This ID reserved for search results layer."
+        LId +
+        "' is already exist. This ID reserved for search results layer."
       );
       return;
     }

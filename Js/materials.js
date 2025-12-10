@@ -603,7 +603,7 @@ var oMaterials = new (function () {
       if (mIds.length > matsInRow) {
         $(".klink-dashed").show();
       } else {
-        $(".klink-dashed").hide();
+        // $(".klink-dashed").hide();
       }
     }
 
