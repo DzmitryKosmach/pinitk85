@@ -650,19 +650,19 @@
         <div class="flex flex-col xl:flex-row gap-0 xl:gap-20 ">
           <div class="item-current-material max-w-[140px] mt-8" style="float: none">
             <span class="b2">Выбран:</span>
-            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
+            <div class="image border-2 mb-2 w-[76px] border-white shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image">
               <?php if($mActive && $mActive['image']['ext']) { ?>
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
                    width="107" height="87" alt="">
               <?php } ?>
             </div>
-            <div class="name test" id="item-<?php echo $itemInf['id']; ?>-name">
+            <div class="name test text-[11px]" id="item-<?php echo $itemInf['id']; ?>-name">
               <?php echo implode(' / ', $mActiveName); ?>
             </div>
           </div>
 
           <div class="item-materials" style="margin-top: 30px;">
-            <div class="b">Цветовая гамма:</div>
+            <div class="b mb-2">Цветовая гамма:</div>
 
             <div id="materials-popup">
               <!-- Основной контейнер -->
