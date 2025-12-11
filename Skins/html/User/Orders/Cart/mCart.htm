@@ -1,51 +1,24 @@
 <div id="title" class="title">
-  <div class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-4">
-    <div class="centeringin clearfix flex flex-col gap-3">
-      <?php if(count($breadcrumbs)) { ?>
-      <?php $bcLast = array_pop($breadcrumbs); ?>
-      <ul
-        class="breadcrumb flex flex-wrap items-center gap-1 text-sm text-gray-500"
-        itemscope
-        itemtype="http://schema.org/BreadcrumbList"
-      >
+  <div class="">
+    <div class="clearfix flex flex-col gap-3">
+      <!-- Хлебные крошки -->
+      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
+        <?php if(count($breadcrumbs)) { ?>
+        <?php $bcLast = array_pop($breadcrumbs); ?>
         <?php $position = 0; ?>
         <?php foreach($breadcrumbs as $bc) { ?>
         <?php $position = $position + 1; ?>
-        <li
-          itemprop="itemListElement"
-          itemscope
-          itemtype="http://schema.org/ListItem"
-        >
-          <a
-            href="<?php echo $bc['url']; ?>"
-            title="<?php echo hsch($bc['name'])?>"
-            itemscope
-            itemtype="http://schema.org/Thing"
-            itemid="<?php echo $bc['url']; ?>"
-            itemprop="item"
-          ><span itemprop="name"><?php echo $bc['name']; ?></span></a
-          >
-          <meta itemprop="position" content="<?php echo $position; ?>" />
-        </li>
-        <li><span> / </span></li>
+        <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+          <?php echo $bc['name']; ?>
+        </a>
+        <span class="mx-1">›</span>
         <?php } ?>
-        <li
-          itemprop="itemListElement"
-          itemscope
-          itemtype="http://schema.org/ListItem"
-        >
-          <span
-            itemscope
-            itemtype="http://schema.org/Thing"
-            itemid="<?php echo $bc['url']; ?>"
-            itemprop="item"
-          >
-            <span itemprop="name"><?php echo $bcLast['name']; ?></span>
-          </span>
-          <meta itemprop="position" content="<?php echo $position + 1; ?>" />
-        </li>
-      </ul>
-      <?php } ?>
+        <span class="text-gray-700">
+                    <?php echo $bcLast['name']; ?>
+                </span>
+        <?php } ?>
+      </nav>
+
       <?php if(trim($pageInf['header'])) { ?>
       <h1 class="pagetitle text-2xl md:text-3xl font-semibold"><?php echo $pageInf['header']; ?></h1>
       <?php } ?>
