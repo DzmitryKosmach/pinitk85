@@ -419,15 +419,7 @@
           $defaultQty = $isBulk ? 4 : 1;
         ?>
         <div>
-          <?php if ($inCart): ?>
-          <a href="/cart/">
-            <button type="button"
-                    class="bg-green-600 text-white py-2 px-12 rounded font-semibold opacity-90 cursor-pointer"
-                    disabled>
-              ✓ В корзину
-            </button>
-          </a>
-          <?php else: ?>
+
           <form class="add2basketform clearfix main-cart-form"
                 id="catalog-item-full-<?= $itemId ?>"
                 action="<?= Url::a('catalog-cart') ?>"
@@ -481,13 +473,15 @@
             <!-- Блок кнопок: добавить либо "Отложить" + "Нашли дешевле?" -->
             <div class="flex flex-wrap gap-4 mt-2 mb-4">
               <div class="button-block w-full sm:w-fit pt-0">
-                <button type="submit"
-                        class="submit add2basket w-full sm:w-fit !bg-blue-600 text-white py-3 px-6 rounded font-semibold hover:!bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                <?= !empty($seriesInf['out_of_production']) ? 'disabled' : '' ?>
-                title="<?= $inCart ? 'В корзине' : 'Отложить в 1 клик со СКИДКОЙ' ?>">
-                <i class="icon pngicons"></i>
-                <?= $inCart ? 'В корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>
+                <button
+                  type="<?= $inCart ? 'button' : 'submit' ?>"
+                  class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700' ?> py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                  title="<?= $inCart ? 'Перейти в корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>"
+                <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
+                <?= !empty($seriesInf['out_of_production']) && !$inCart ? 'disabled' : '' ?>>
+                <?= $inCart ? '✓ В корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>
                 </button>
+
                 <input type="submit" name="submit" class="noned" value="">
               </div>
 
@@ -533,7 +527,7 @@
             </div>
 
           </form>
-          <?php endif; ?>
+
         </div>
 
         <script>
@@ -546,6 +540,7 @@
 
             btn.textContent = "✓ В корзину";
             btn.type = "button";
+            btn.title = "Перейти в корзину";
             btn.disabled = false;
 
             btn.onclick = () => window.location.href = "/cart/";
@@ -570,7 +565,7 @@
             </p>
             <p>
               <a href="/contacts/#addresses" class="hover:underline cursor-pointer">
-                По России <span class="font-semibold">ПВЗ</span>
+                <span class="font-semibold">ПВЗ</span> по России
               </a>
 
             </p>
