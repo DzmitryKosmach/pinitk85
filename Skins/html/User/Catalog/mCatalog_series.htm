@@ -684,17 +684,13 @@
 
 
           <!-- Кнопки -->
-          <div class="flex flex-col flex-wrap lg:flex-nowrap sm:flex-row gap-2">
-            <?php if(Catalog_Cart::isItemInCart($itemInf['id'])): ?>
+          <?php
+            $inCart    = Catalog_Cart::isItemInCart($itemId);
 
-            <a href="/cart/">
-              <button type="button"
-                      class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-pointer opacity-90"
-                      disabled>
-                ✓ В корзину
-              </button>
-            </a>
-            <?php else: ?>
+          ?>
+
+          <div class="flex flex-col flex-wrap lg:flex-nowrap sm:flex-row gap-2">
+
 
             <!-- Форма для добавления в корзину -->
             <form method="post" action="<?php echo Url::a('catalog-cart')?>"
@@ -714,26 +710,19 @@
                    ?>">
               <?php } ?>
 
-              <?php if(Catalog_Cart::isSetInCart($seriesSetItemsIds)) { ?>
-              <a href="/cart/">
-                <button type="button"
-                        class="bg-green-600 text-white py-2 px-12 rounded text-center font-semibold cursor-pointer opacity-90"
-                        disabled>
-                  ✓ В корзину
-                </button>
-              </a>
-              <?php } else { ?>
-              <button type="submit"
-                      class="submit add2basket h-full w-full !bg-blue-600 text-white py-2 px-6 rounded text-center font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
-                      title="Отложить в 1 клик со СКИДКОЙ">
-                Отложить в 1 клик со СКИДКОЙ
+              <button
+                type="<?= $inCart ? 'button' : 'submit' ?>"
+                class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700' ?> py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                title="<?= $inCart ? 'Перейти в корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>"
+              <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
+              <?= !empty($seriesInf['out_of_production']) && !$inCart ? 'disabled' : '' ?>>
+              <?= $inCart ? '✓ В корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>
               </button>
-              <?php } ?>
 
             </form>
 
 
-            <?php endif; ?>
+
 
             <!-- Кнопка "Нашли дешевле?" -->
             <button class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
@@ -748,25 +737,18 @@
 
           <script>
             function updateCartButton(form) {
-              // Находим кнопку "Добавить"
-              let btn = form.querySelector("button.submit");
+              const btn = form.querySelector("button.submit");
+              if (!btn) return;
 
-              if (btn) {
-                // Меняем текст и стиль
-                btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
-                btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
-                btn.textContent = "✓ В корзину";
-                btn.title = "Перейти в корзину";
+              btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
+              btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
 
-                // Отключаем отправку формы
-                btn.type = "button"; // ← важно: чтобы не сабмитилась форма
-                btn.disabled = false; // ← делаем кликабельной
+              btn.textContent = "✓ В корзину";
+              btn.type = "button";
+              btn.title = "Перейти в корзину";
+              btn.disabled = false;
 
-                // Назначаем действие при клике
-                btn.onclick = function() {
-                  window.location.href = "/cart/";
-                };
-              }
+              btn.onclick = () => window.location.href = "/cart/";
             }
           </script>
 
