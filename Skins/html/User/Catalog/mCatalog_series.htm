@@ -756,6 +756,7 @@
                 btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
                 btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
                 btn.textContent = "✓ В корзину";
+                btn.title = "Перейти в корзину";
 
                 // Отключаем отправку формы
                 btn.type = "button"; // ← важно: чтобы не сабмитилась форма
@@ -1058,7 +1059,7 @@
     <!-- Доставка и оплата -->
     <div class="text" id="tab-delivery" style="display: none;">
       <div id="text-delivery">
-      <?php
+        <?php
         $t = $catInf['series_info'];
         $t = str_replace('[name]', $seriesInf['name'], $t);
         $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
@@ -1069,7 +1070,7 @@
         $t = preg_replace('/Нет\s+лифта\s*:\s*3\s*р\.?\s*за\s*1\s*кг\.?\s*за\s*1\s*этаж,\s*[^<]*?800\s*руб\.?/u', '', $t);
         $t = preg_replace('/6%\s*-\s*от\s*стоимости\s*мебели,\s*[^<]*?800\s*руб\.?/u', '', $t);
         print $t;
-      ?>
+        ?>
       </div>
     </div>
 
