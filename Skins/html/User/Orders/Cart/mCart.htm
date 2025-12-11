@@ -2,7 +2,7 @@
   <div class="">
     <div class="clearfix flex flex-col gap-3">
       <!-- Хлебные крошки -->
-      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-10">
+      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
         <?php if(count($breadcrumbs)) { ?>
         <?php $bcLast = array_pop($breadcrumbs); ?>
         <?php $position = 0; ?>
@@ -20,7 +20,7 @@
       </nav>
 
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-2xl md:text-3xl font-semibold"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-2xl md:text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
       <?php } ?>
     </div>
   </div>
