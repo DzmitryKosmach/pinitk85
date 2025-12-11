@@ -23,23 +23,7 @@ class CssCopmress {
 	 */
 	static $modules = array(
 		'core'		=> array(
-			'/Skins/css/core/all.min.css',
-/*			'/Skins/css/core/core.min.css',
-			'/Skins/css/core/core-popup.min.css',
-			'/Skins/css/core/system-pagenavigation.min.css',
-			'/Skins/css/core/media.min.css',
-			'/Skins/css/core/menu-tpanel.min.css',
-			'/Skins/css/core/sale-basket-small.min.css',
-			'/Skins/css/core/menu-catalog.min.css',
-			'/Skins/css/core/search-title.min.css',
-			'/Skins/css/core/breadcrumb.min.css',
-			'/Skins/css/core/menu-infootercatalog.min.css',
-			'/Skins/css/core/menu-infooter.min.css',
-			'/Skins/css/core/easycart.min.css',
-			'/Skins/css/core/template-main.min.css',
-			'/Skins/css/core/js-popup.min.css',
-			'/Skins/css/core/js-jquery.fancybox.min.css',
-			'/Skins/css/core/nasvyazi.min.css'   */
+			/* отключено: legacy стили ядра */
 		),
 		'news'		=> array(
 			'/Skins/css/news/news-list.css',
@@ -50,10 +34,8 @@ class CssCopmress {
 		'catalog'	=> array(
 			'/Skins/css/catalog/catalog.css',
 			'/Skins/css/catalog/catalog-section.css',
-			'/Skins/css/catalog/catalog-section-list.css',
-			'/Skins/css/catalog/catalog-section-list2.css',
-			'/Skins/css/catalog/offers.css',
-			'/Skins/css/catalog/js-jquery.jscrollpane.css'
+			'/Skins/css/catalog/catalog-section-list.css'
+			/* отключено: catalog-section-list2.css, offers.css, js-jquery.jscrollpane.css */
 		),
 		'category'	=> array(
 			'/Skins/css/catalog/category/catalog-smart-filter.css',
@@ -61,8 +43,7 @@ class CssCopmress {
 			'/Skins/css/catalog/category/catalog-sorter.css'
 		),
 		'series'	=> array(
-			'/Skins/css/catalog/series/js-glass.css',
-			'/Skins/css/catalog/series/catalog.element.css',
+			/* отключено: js-glass.css, catalog.element.css */
 			'/Skins/css/catalog/series/reviews.css'
 		),
 		'cart'		=> array(
@@ -95,7 +76,7 @@ class CssCopmress {
 	 * @return	string
 	 */
 	static function load($module){
-		if(!isset(self::$modules[$module])){
+		if(!isset(self::$modules[$module]) || !count(self::$modules[$module])){
 			return '';
 		}
 
