@@ -49,25 +49,9 @@ class JsCopmress
 			'core'	=> array(
 				self::getBasePath() . '/Js/core/all-core.js',
 				self::getBasePath() . '/Js/core/all-core1.min.js',
-				/*		'/Js/core/devfunc.js',
-				'/Js/core/core.js',
-				'/Js/core/core_ajax.js',
-				'/Js/core/core_popup.js'		*/
 			),
 			'core1'	=> array(
 				self::getBasePath() . '/Js/core1/all-core1.min.js'
-				/*			'/Js/core1/jquery-1.11.0.min.js',
-				'/Js/core1/jquery.mousewheel.min.js',
-				'/Js/core1/jquery.cookie.js',
-				'/Js/core1/jquery.fancybox.pack.js',
-				'/Js/core1/jquery.scrollTo.min.js',
-				'/Js/core1/stuff.js',
-				'/Js/core1/popup.js',
-				'/Js/core1/jquery.maskedinput.min.js',
-				'/Js/core1/menu-catalog.js',
-				'/Js/core1/search.title.js',
-				'/Js/core1/search.title-inheader.js',
-				'/Js/core1/easycart.js'  */
 			),
 			'index'	=> array(
 				self::getBasePath() . '/Js/index/jssor.core.js',
@@ -81,9 +65,7 @@ class JsCopmress
 			'catalog'	=> array(
 				self::getBasePath() . '/Js/catalog/offers.js',
 				self::getBasePath() . '/Js/catalog/catalog.section.js',
-				self::getBasePath() . '/Js/catalog/catalog.section.list.js',
-				self::getBasePath() . '/Js/catalog/series/jquery.jscrollpane.min.js',
-				self::getBasePath() . '/Js/catalog/series/jquery.jscrollpane.ext.js'
+				self::getBasePath() . '/Js/catalog/catalog.section.list.js'
 
 			),
 			'category'	=> array(
@@ -97,8 +79,6 @@ class JsCopmress
 
 			),
 			'series'	=> array(
-				self::getBasePath() . '/Js/catalog/series/glass.js',
-				self::getBasePath() . '/Js/catalog/series/catalog.element.js',
 				self::getBasePath() . '/Js/catalog/series/reviews.js'
 			),
 
@@ -171,7 +151,7 @@ class JsCopmress
 	static function load($module, $async = false)
 	{
 		$modules = self::getModules();
-		if (!isset($modules[$module])) {
+		if (!isset($modules[$module]) || !count($modules[$module])) {
 			return '';
 		}
 
