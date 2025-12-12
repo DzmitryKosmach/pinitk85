@@ -65,7 +65,9 @@ class JsCopmress
 			'catalog'	=> array(
 				self::getBasePath() . '/Js/catalog/offers.js',
 				self::getBasePath() . '/Js/catalog/catalog.section.js',
-				self::getBasePath() . '/Js/catalog/catalog.section.list.js'
+				self::getBasePath() . '/Js/catalog/catalog.section.list.js',
+				self::getBasePath() . '/Js/catalog/series/jquery.jscrollpane.min.js',
+				self::getBasePath() . '/Js/catalog/series/jquery.jscrollpane.ext.js'
 
 			),
 			'category'	=> array(
@@ -79,6 +81,7 @@ class JsCopmress
 
 			),
 			'series'	=> array(
+				self::getBasePath() . '/Js/catalog/series/catalog.element.js',
 				self::getBasePath() . '/Js/catalog/series/reviews.js'
 			),
 
