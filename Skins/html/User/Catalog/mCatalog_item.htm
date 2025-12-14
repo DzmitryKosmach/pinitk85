@@ -323,3 +323,25 @@
 </div>
 <div class="cl"></div>
 <script>window.DISABLE_MATERIALS_SCROLL=true;</script>
+<script>
+(function(){
+  var y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  function saveY(){ y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0; }
+  function restoreY(){ window.scrollTo({ top: y, left: 0, behavior: 'auto' }); }
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('#materials-popup .material');
+    if(t){ saveY(); setTimeout(restoreY, 0); }
+  });
+  document.addEventListener('change', function(e){
+    if(e.target && e.target.name === 'material_id'){ saveY(); setTimeout(restoreY, 200); }
+  });
+  if(window.oMaterials){
+    var orig = oMaterials.onSave;
+    oMaterials.onSave = function(price, material){
+      saveY();
+      if(typeof orig === 'function'){ try{ orig(price, material); }catch(e){} }
+      setTimeout(restoreY, 0);
+    };
+  }
+})();
+</script>
