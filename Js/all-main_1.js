@@ -1786,6 +1786,7 @@ var oMaterials = new (function () {
     );
 
     const noScroll = document.getElementById("no-scroll");
+    alert(`All-main_1 = ${noScroll}`);
     if(!noScroll){
       const block = document.getElementById("section-photo");
       if(block){
