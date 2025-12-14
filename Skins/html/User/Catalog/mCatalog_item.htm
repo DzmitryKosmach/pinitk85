@@ -60,7 +60,7 @@
   #materials-popup .level-help { display:block; padding:0 0 15px 2px; color:#999; font-weight:normal; font-size:12px; }
 </style>
 <div id="content" class="content">
-  <div>
+  <div id="no-scroll">
     <div>
       <div class="centeringin clearfix">
         <form
@@ -322,42 +322,4 @@
 </div>
 </div>
 <div class="cl"></div>
-<script>window.DISABLE_MATERIALS_SCROLL=true;</script>
-<script>
-(function(){
-  var y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  function saveY(){ y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0; }
-  function restoreY(){ window.scrollTo({ top: y, left: 0, behavior: 'auto' }); }
-  document.addEventListener('click', function(e){
-    var t = e.target.closest('#materials-popup .material');
-    if(t){ saveY(); setTimeout(restoreY, 0); }
-  });
-  document.addEventListener('pointerdown', function(e){
-    var t = e.target.closest('#materials-popup .material');
-    if(t){ saveY(); }
-  }, true);
-  document.addEventListener('change', function(e){
-    if(e.target && e.target.name === 'material_id'){ saveY(); setTimeout(restoreY, 200); }
-  });
-  if(window.oMaterials){
-    var orig = oMaterials.onSave;
-    oMaterials.onSave = function(price, material){
-      saveY();
-      if(typeof orig === 'function'){ try{ orig(price, material); }catch(e){} }
-      setTimeout(restoreY, 0);
-    };
-    if(typeof oMaterials.openLevel2 === 'function'){
-      var o2 = oMaterials.openLevel2;
-      oMaterials.openLevel2 = function(mId){ saveY(); try{ o2.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
-    }
-    if(typeof oMaterials.openLevel3 === 'function'){
-      var o3 = oMaterials.openLevel3;
-      oMaterials.openLevel3 = function(mId){ saveY(); try{ o3.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
-    }
-    if(typeof oMaterials.selectMaterial === 'function'){
-      var sM = oMaterials.selectMaterial;
-      oMaterials.selectMaterial = function(mId){ saveY(); try{ sM.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
-    }
-  }
-})();
-</script>
+
