@@ -1891,7 +1891,6 @@ var oMaterials = new function(){
     selectedMatId = mId;
 
     // Сохраняем выбор и закрываем попап
-    alert(`All-main 2 = ${noScroll}`);
     this.save();
   };
 
