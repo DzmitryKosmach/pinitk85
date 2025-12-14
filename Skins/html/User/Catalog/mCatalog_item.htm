@@ -175,31 +175,33 @@
             </table>
           </div>
           <div class="buy">
-            <div class="add2basketform main-cart-form">
-                    <span class="quantitytitle">
-                      Купить&nbsp; &nbsp;
-                    </span>
-              <span class="quantity">
-                      <a class="minus js-minus">-</a>
-                      <input type="text" class="js-quantity" name="amount" value="1" data-ratio="1">
-                      <span class="js-measurename">шт</span>
-                      <a class="plus js-plus">+</a>
-                    </span>
+            <div class="add2basketform main-cart-form flex flex-col sm:flex-row gap-2">
+              <div>
+                <span class="quantitytitle">
+                        Купить&nbsp; &nbsp;
+                      </span>
+                <span class="quantity">
+                        <a class="minus js-minus">-</a>
+                        <input type="text" class="js-quantity" name="amount" value="1" data-ratio="1">
+                        <span class="js-measurename">шт</span>
+                        <a class="plus js-plus">+</a>
+                </span>
+              </div>
               <input type="hidden" name="add" value="<?php echo $itemInf['id']; ?>">
 
               <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
               <button
                 type="submit"
-                class="submit inbasket"
-              <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
-              title="В корзине"
+                class="submit inbasket !bg-green-600 text-white opacity-90 cursor-pointer"
+                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+                title="В корзине"
               >
               <i class="icon pngicons"></i>В корзине
               </button>
               <?php } else { ?>
               <button
                 type="submit"
-                class="submit add2basket !bg-main"
+                class="submit add2basket !w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700"
               <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
               title="Добавить в корзину"
               >
@@ -211,12 +213,12 @@
         </div>
         <div style="float: left;">
           <?php
-                foreach($itemInf['materials'] as $n => $im){
-          if(!isset($materials[$im['material_id']])){
-          unset($itemInf['materials'][$n]);
-          }
-          }
-          $itemInf['materials'] = array_values($itemInf['materials']);
+              foreach($itemInf['materials'] as $n => $im){
+              if(!isset($materials[$im['material_id']])){
+              unset($itemInf['materials'][$n]);
+              }
+              }
+              $itemInf['materials'] = array_values($itemInf['materials']);
           ?>
 
           <?php $mActive = false; ?>
