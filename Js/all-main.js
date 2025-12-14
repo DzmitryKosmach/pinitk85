@@ -1733,6 +1733,16 @@ var oMaterials = new function(){
    * Сохранить выбор и закрыть попап
    */
   this.save = function(){
+    const noScroll = document.getElementById("no-scroll");
+    alert(`All-main = ${noScroll}`);
+    if(!noScroll){
+      const block = document.getElementById("section-photo");
+      if(block){
+        const top = block.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
+
     if(!openedItemId) return;
 
     var matInfo = showSelectMaterial();
@@ -1769,15 +1779,6 @@ var oMaterials = new function(){
       }
     );
 
-    const noScroll = document.getElementById("no-scroll");
-    alert(`All-main = ${noScroll}`);
-    if(!noScroll){
-      const block = document.getElementById("section-photo");
-      if(block){
-        const top = block.getBoundingClientRect().top + window.scrollY - 60;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    }
   };
 
 
