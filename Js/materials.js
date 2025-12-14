@@ -337,6 +337,7 @@ var oMaterials = new (function () {
     );
 
     const noScroll = document.getElementById("no-scroll");
+    alert(`Material = ${noScroll}`);
     if(!noScroll){
       const block = document.getElementById("section-photo");
       if(block){
