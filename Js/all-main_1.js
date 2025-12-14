@@ -1785,7 +1785,8 @@ var oMaterials = new (function () {
       }
     );
 
-    if(!window.DISABLE_MATERIALS_SCROLL){
+    const noScroll = document.getElementById("no-scroll");
+    if(!noScroll){
       const block = document.getElementById("section-photo");
       if(block){
         const top = block.getBoundingClientRect().top + window.scrollY - 60;
