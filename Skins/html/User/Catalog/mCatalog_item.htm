@@ -332,6 +332,10 @@
     var t = e.target.closest('#materials-popup .material');
     if(t){ saveY(); setTimeout(restoreY, 0); }
   });
+  document.addEventListener('pointerdown', function(e){
+    var t = e.target.closest('#materials-popup .material');
+    if(t){ saveY(); }
+  }, true);
   document.addEventListener('change', function(e){
     if(e.target && e.target.name === 'material_id'){ saveY(); setTimeout(restoreY, 200); }
   });
@@ -342,6 +346,18 @@
       if(typeof orig === 'function'){ try{ orig(price, material); }catch(e){} }
       setTimeout(restoreY, 0);
     };
+    if(typeof oMaterials.openLevel2 === 'function'){
+      var o2 = oMaterials.openLevel2;
+      oMaterials.openLevel2 = function(mId){ saveY(); try{ o2.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
+    }
+    if(typeof oMaterials.openLevel3 === 'function'){
+      var o3 = oMaterials.openLevel3;
+      oMaterials.openLevel3 = function(mId){ saveY(); try{ o3.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
+    }
+    if(typeof oMaterials.selectMaterial === 'function'){
+      var sM = oMaterials.selectMaterial;
+      oMaterials.selectMaterial = function(mId){ saveY(); try{ sM.call(oMaterials, mId); }catch(e){} setTimeout(restoreY, 0); };
+    }
   }
 })();
 </script>
