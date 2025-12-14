@@ -1785,10 +1785,13 @@ var oMaterials = new (function () {
       }
     );
 
-    // Плавная прокрутка к блоку
-    const block = document.getElementById("section-photo");
-    const top = block.getBoundingClientRect().top + window.scrollY - 60;
-    window.scrollTo({ top, behavior: "smooth" });
+    if(!window.DISABLE_MATERIALS_SCROLL){
+      const block = document.getElementById("section-photo");
+      if(block){
+        const top = block.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
   };
 
   /**
