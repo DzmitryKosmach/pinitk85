@@ -1744,6 +1744,20 @@ var oMaterials = new (function () {
   }
 
   /**
+   * Скролим вверх
+   */
+  this.scrollToSectionPhoto = function () {
+    const noScroll = document.getElementById("no-scroll");
+    if (!noScroll) {
+      const block = document.getElementById("section-photo");
+      if (block) {
+        const top = block.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
+  };
+
+  /**
    * Сохранить выбор и закрыть попап
    */
   this.save = function () {
@@ -1785,15 +1799,8 @@ var oMaterials = new (function () {
       }
     );
 
-    const noScroll = document.getElementById("no-scroll");
-    alert(`All-main_1 = ${noScroll}`);
-    if(!noScroll){
-      const block = document.getElementById("section-photo");
-      if(block){
-        const top = block.getBoundingClientRect().top + window.scrollY - 60;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    }
+    this.scrollToSectionPhoto();
+
   };
 
   /**
