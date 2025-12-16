@@ -291,10 +291,10 @@ function getHomeUrl() {
           <div class="flex items-center gap-4">
             <!-- Иконка каталога -->
             <div class="flex align-middle gap-2">
-              <a href="/catalog/" class="inline-block">Каталог</a>
-              <div class="relative group">
+              <a href="/catalog/" class="inline-block catalog-main-link">Каталог</a>
+              <div class="relative group catalog-dropdown-container">
                 <button id="catalog-toggle1"
-                        class="flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                        class="catalog-toggle flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
                         aria-label="Открыть каталог">
                   <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 1H20" stroke="currentColor" stroke-width="2" />
@@ -305,7 +305,7 @@ function getHomeUrl() {
 
                 <!-- Выпадающее меню каталога (1 уровень) -->
                 <ul id="catalog-menu1"
-                    class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[200]">
+                    class="absolute left-0 mt-2 text-sm sm:text-base w-64 sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible transition-all duration-200 ease-in-out z-[200]"
                   <?php foreach($catsMenu as $c): ?>
                   <?php
                       // Собираем все ID текущей категории и её подкатегорий
@@ -367,51 +367,6 @@ function getHomeUrl() {
               </div>
             </div>
 
-            <script>
-              document.addEventListener('DOMContentLoaded', function () {
-                const catalogToggle = document.getElementById('catalog-toggle1');
-                const catalogMenu = document.getElementById('catalog-menu1');
-                let isMenuOpen = false;
-
-                // Функция для открытия меню
-                function openMenu() {
-                  catalogMenu.classList.remove('opacity-0', 'invisible');
-                  catalogMenu.classList.add('opacity-100', 'visible');
-                  isMenuOpen = true;
-                }
-
-                // Функция для закрытия меню
-                function closeMenu() {
-                  catalogMenu.classList.remove('opacity-100', 'visible');
-                  catalogMenu.classList.add('opacity-0', 'invisible');
-                  isMenuOpen = false;
-                }
-
-                // Обработчик клика по кнопке
-                catalogToggle.addEventListener('click', function (e) {
-                  e.stopPropagation();
-                  if (isMenuOpen) {
-                    closeMenu();
-                  } else {
-                    openMenu();
-                  }
-                });
-
-                // Закрытие меню при клике вне его области
-                document.addEventListener('click', function (e) {
-                  if (isMenuOpen && !catalogMenu.contains(e.target) && !catalogToggle.contains(e.target)) {
-                    closeMenu();
-                  }
-                });
-
-                // Закрытие меню при нажатии клавиши Escape
-                document.addEventListener('keydown', function (e) {
-                  if (e.key === 'Escape' && isMenuOpen) {
-                    closeMenu();
-                  }
-                });
-              });
-            </script>
 
             <!-- Иконка поиска -->
             <div class="flex align-middle gap-2">
@@ -692,15 +647,13 @@ function getHomeUrl() {
      class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300">
   <div class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white">
     <!-- Внешний group для hover -->
-    <div class="relative group" id="catalog-container">
+    <div class="relative group catalog-dropdown-container" id="catalog-container">
       <!-- Кнопка -->
 
       <div
         class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
-        <a href="/catalog/" id="catalog-link">
-          <span class="hidden sm:block">Каталог</span>
-        </a>
-        <div id="catalog-toggle" class="cursor-pointer">
+        <a href="/catalog/" class="catalog-main-link hidden sm:block">Каталог</a>
+        <div class="catalog-toggle cursor-pointer">
           <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 1H26" stroke="currentColor" stroke-width="2" />
             <path d="M0 7H26" stroke="currentColor" stroke-width="2" />
@@ -711,8 +664,7 @@ function getHomeUrl() {
 
 
       <!-- Выпадающее меню (1 уровень) -->
-      <ul id="catalog-dropdown"
-          class="absolute left-0 mt-2 w-64 !text-sm sm:text-base sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-[100]">
+      <ul id="catalog-dropdown" class="absolute left-0 mt-2 w-64 !text-sm sm:text-base sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible transition-all duration-200 ease-in-out z-[100]">
         <?php foreach($catsMenu as $c): ?>
         <?php
           // Собираем все ID текущей категории и её подкатегорий
@@ -785,62 +737,83 @@ function getHomeUrl() {
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const catalogToggle = document.getElementById('catalog-toggle');
-    const catalogLink = document.getElementById('catalog-link');
-    const catalogDropdown = document.getElementById('catalog-dropdown');
-    const catalogContainer = document.getElementById('catalog-container');
-    let isMenuOpen = false;
+    // Находим все контейнеры, где лежит кнопка и выпадашка
+    const catalogContainers = document.querySelectorAll('.catalog-dropdown-container');
 
-    // Функция для открытия меню
-    function openMenu() {
-      catalogDropdown.classList.remove('opacity-0', 'invisible');
-      catalogDropdown.classList.add('opacity-100', 'visible');
-      isMenuOpen = true;
-    }
+    catalogContainers.forEach(container => {
+      // Ищем элементы внутри конкретного контейнера
+      const dropdown = container.querySelector('ul'); // само меню
+      const toggleBtn = container.querySelector('.catalog-toggle');
+      // Ищем ссылку "Каталог", которая лежит рядом с контейнером
+      const mainLink = container.parentElement.querySelector('.catalog-main-link');
 
-    // Функция для закрытия меню
-    function closeMenu() {
-      catalogDropdown.classList.remove('opacity-100', 'visible');
-      catalogDropdown.classList.add('opacity-0', 'invisible');
-      isMenuOpen = false;
-    }
+      let isPinned = false; // Флаг фиксации для текущего меню
 
-    // Обработчик клика по кнопке каталога
-    catalogToggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (isMenuOpen) {
-        closeMenu();
-      } else {
-        openMenu();
+      function show() {
+        dropdown.classList.add('opacity-100', 'visible');
+        dropdown.classList.remove('opacity-0', 'invisible');
       }
-    });
 
-    // Предотвращаем закрытие меню при клике внутри него
-    catalogDropdown.addEventListener('click', function (e) {
-      e.stopPropagation();
-    });
-
-    // Закрытие меню при клике вне его области
-    document.addEventListener('click', function (e) {
-      if (isMenuOpen && !catalogContainer.contains(e.target)) {
-        closeMenu();
+      function hide() {
+        dropdown.classList.remove('opacity-100', 'visible');
+        dropdown.classList.add('opacity-0', 'invisible');
       }
-    });
 
-    // Закрытие меню при нажатии клавиши Escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isMenuOpen) {
-        closeMenu();
-      }
-    });
+      // --- 1. Логика HOVER ---
+      // Вешаем на родителя, чтобы захватить и ссылку, и кнопку, и само меню
+      const parent = container.parentElement;
 
-    // Обработчик для ссылки каталога (переход по ссылке только если меню закрыто)
-    catalogLink.addEventListener('click', function (e) {
-      if (isMenuOpen) {
+      parent.addEventListener('mouseenter', () => {
+        show();
+      });
+
+      parent.addEventListener('mouseleave', () => {
+        if (!isPinned) {
+          hide();
+        }
+      });
+
+      // --- 2. Логика CLICK (Фиксация) ---
+      function handleToggle(e) {
         e.preventDefault();
+        e.stopPropagation();
+
+        if (isPinned) {
+          // Если уже закреплено — убираем закрепление и скрываем
+          isPinned = false;
+          hide();
+        } else {
+          // Если не закреплено — закрепляем и показываем
+          isPinned = true;
+          show();
+        }
       }
+
+      if (toggleBtn) toggleBtn.addEventListener('click', handleToggle);
+      if (mainLink) mainLink.addEventListener('click', handleToggle);
+
+      // --- 3. Вспомогательные функции закрытия ---
+
+      // Закрытие при клике вне текущего меню
+      document.addEventListener('click', (e) => {
+        if (!parent.contains(e.target)) {
+          isPinned = false;
+          hide();
+        }
+      });
+
+      // Закрытие по клавише Esc
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          isPinned = false;
+          hide();
+        }
+      });
+
+      // Предотвращаем закрытие при кликах внутри самого выпадающего списка
+      dropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     });
   });
 </script>
