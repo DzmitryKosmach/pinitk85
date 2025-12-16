@@ -6,7 +6,7 @@ Require valid-user
 <Files "/Skins/html/User/Contacts/mCallback.htm">
     AuthType Basic
     AuthName "Special Access Required"
-    AuthUserFile "/home/p/pinitk85/pinitk85.beget.tech/public_html/.htpasswd-callback"
+    AuthUserFile "/home/p/pinitk85/pinitk85.beget.tech/public_html/.htpasswd"
     Require valid-user
 </Files>
 
