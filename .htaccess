@@ -3,14 +3,6 @@ AuthName "Who are you?"
 AuthUserFile "/home/p/pinitk85/pinitk85.beget.tech/public_html/.htpasswd"
 Require valid-user
 
-# Альтернатива: Защита по URL-пути (если используется rewrite)
-<Location "/contacts/callback/">
-    AuthType Basic
-    AuthName "Callback Access"
-    AuthUserFile "/home/p/pinitk85/pinitk85.beget.tech/public_html/.htpasswd-callback"
-    Require valid-user
-</Location>
-
 RewriteEngine on
 
 php_value auto_prepend_file "/home/p/pinitk85/pinitk85.beget.tech/public_html/protect760/code/include.php"
