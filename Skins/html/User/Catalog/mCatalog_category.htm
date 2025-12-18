@@ -435,105 +435,91 @@
     </section>
 
     <section class="mt-16">
-      <!-- Двухколоночное размещение -->
-      <div class="flex flex-col md:flex-row gap-20 lg:gap-32">
-        <!-- Левая колонка -->
-        <div class="w-full md:w-1/2 text-sm sm:text-[16px]">
-          <h2 class="text-2xl font-bold mb-2">
-            Офисная мебель руководителя - ассортимент
-          </h2>
-          <p class="mb-4">
-            В отличие от рабочего места рядового офисного сотрудника, место,
-            занимаемое руководителем, должно обладать более широкой
-            функциональностью. Это не только рабочая зона, но и переговорная,
-            где проводятся совещания, встречи с партнерами. Кроме того,
-            немаловажную роль играет интерьер офиса. В нем должен отражаться
-            фирменный стиль компании, максимальный комфорт, акцент на статусе
-            владельца, сфере бизнеса. У нас представлена вся необходимая мебель
-            для кабинета руководителя - классический стиль, модерн или хай тек –
-            огромный выбор по умеренным ценам. Коллекция каталога разбита на
-            следующие сегменты:
-          </p>
+      <?php if(!Pages::isMobile() && $catInf && trim($catInf['text']) !== '') { ?>
+      <div id="catalog-page">
+        <?php if($tagPageInfo['text']) { ?>
+        <?php echo $tagPageInfo['text']; ?>
+        <?php } else { ?>
+        <?php echo $catInf['text']; ?>
+        <?php } ?>
 
-          <!-- Список сегментов -->
-          <ul class="list-disc pl-5 mb-4 text-sm sm:text-[16px]">
-            <li>
-              <span class="underline">Эконом.</span> Категория меблировки,
-              которая позволяет экономно обставить кабинет руководителя;
-            </li>
-            <li>
-              <span class="underline">Бизнес.</span> Здесь представлена мебель в
-              кабинете руководителя с максимальной функциональностью, богатым
-              разнообразием конфигураций;
-            </li>
-            <li>
-              <span class="underline">Премиум.</span> Данный сегмент – это
-              эксклюзивный стиль, уникальные дизайнерские решения, материалы
-              экстра-класса.
-            </li>
-            <li>
-              <span class="underline">Президент комплекты.</span> Люксовая серия
-              кабинетов, предназначенная для высших чинов, глав компаний,
-              президентов стран.
-            </li>
-          </ul>
-
-          <!-- Многообразие комплектаций -->
-          <p class="mb-4">
-            Многообразие комплектаций мебели кабинетов руководителя:
-          </p>
-          <ul class="list-disc pl-5 mb-4 text-sm sm:text-[16px]">
-            <li>
-              письменные, компьютерные, рабочие столы различных форм,
-              дизайнерских исполнений, цветовых решений;
-            </li>
-            <li>брифинг-приставки различных конфигураций;</li>
-            <li>
-              приставки подкатные – конструкции, которые отличаются не только
-              функциональностью, но и мобильностью;
-            </li>
-            <li>
-              <span class="underline">шкафы,</span>
-              <span class="underline">стеллажи для документации,</span>
-              позволяющие сортировать и хранить договора, бланки, акты и т.д.;
-            </li>
-            <li><span class="underline">шкафы для одежды;</span></li>
-            <li>кренедении;</li>
-            <li>
-              вспомогательные элементы. Сюда входят
-              <span class="underline">кресла,</span>
-              <span class="underline">стулья,</span> кофейные столики,
-              аксессуары.
-            </li>
-          </ul>
-
-          <p class="mb-4">
-            Мы поможем купить кабинет готовой комплектации или составить
-            подборку по модулям, удовлетворяющую изысканным пожеланиям
-            покупателей.
-          </p>
-        </div>
-
-        <!-- Правая колонка -->
-        <div class="w-full md:w-1/2 text-sm sm:text-[16px]">
-          <h2 class="text-2xl font-bold mb-2">
-            Комплекты мебели для кабинета руководителя покупать выгодно с
-            компанией ООО Дары мебели
-          </h2>
-          <p class="mb-4">
-            Наш интернет-магазин создан так, чтобы обеспечивать максимальное
-            удобство выбора. Интуитивно понятный интерфейс, разработка
-            продуманной навигации позволяет производить отбор по нескольким
-            ключевым параметрам. Реалистичные фотографии готовых комплектов дают
-            возможность оценить реальные габариты, сориентироваться в их
-            стилевых направлениях еще на стадии просмотра каталога. Купить набор
-            офисной мебели для руководителя сегодня - это просто, недорого, а
-            главное удобно. Сделав заказ прямо сейчас, уже в ближайшее время вы
-            сможете комфортно осуществлять руководство бизнесом, проводить
-            встречи с партнерами или принимать иностранные делегации.
-          </p>
-        </div>
+        <div class="cl"></div>
       </div>
+      <style>
+        /* Стили только для контента внутри #catalog-page */
+        #catalog-page h1,
+        #catalog-page h2,
+        #catalog-page h3 {
+          font-size: 1.5rem !important;        /* text-lg */
+          font-weight: 600;           /* font-semibold */
+          margin-top: 1rem;           /* mt-4 */
+          margin-bottom: 0.5rem;      /* mb-2 */
+          line-height: 1.25 !important;
+        }
+
+        #catalog-page h1 {
+          font-size: 2rem !important;
+        }
+
+        #catalog-page p {
+          font-size: 1rem;            /* text-base */
+          line-height: 1.5;           /* leading-6 */
+          margin-bottom: 0.75rem;     /* mb-3 */
+          margin-top: 0;
+        }
+
+        #catalog-page ul,
+        #catalog-page ol {
+          list-style-type: disc;
+          padding-left: 1.25rem;      /* pl-5 */
+          margin-bottom: 0.75rem;     /* mb-3 */
+          margin-top: 0;
+        }
+
+        #catalog-page ul ul,
+        #catalog-page ol ol {
+          list-style-type: circle;
+          padding-left: 1rem;         /* pl-4 */
+          margin-bottom: 0.5rem;
+        }
+
+        #catalog-page li {
+          font-size: 1rem;
+          margin-bottom: 0.5rem;     /* space-y-1 */
+          line-height: 1.5;
+        }
+
+        #catalog-page a {
+          color: #2563bb;
+          text-decoration: underline;
+        }
+
+        #catalog-page a:hover {
+          color: #1e40af;             /* text-blue-800 */
+        }
+
+        #catalog-page strong,
+        #catalog-page b {
+          font-weight: 700;           /* font-bold */
+        }
+
+        #catalog-page em,
+        #catalog-page i {
+          font-style: italic;
+        }
+
+        /* Убираем лишние отступы у первого и последнего элемента */
+        #catalog-page > p > *:first-child,
+        #catalog-page > p > :first-child {
+          margin-top: 0 !important;
+        }
+
+        #catalog-page > p > *:last-child,
+        #catalog-page > p > :last-child {
+          margin-bottom: 0 !important;
+        }
+      </style>
+      <?php } ?>
     </section>
   </div>
 </div>
