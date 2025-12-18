@@ -761,8 +761,7 @@ function getHomeUrl() {
 
       // --- 1. Логика HOVER ---
       // Вешаем на родителя, чтобы захватить и ссылку, и кнопку, и само меню
-      // const parent = container.parentElement;
-      const parent = container;
+      const parent = container; // это было = container.parentElement;
 
       parent.addEventListener('mouseenter', () => {
         show();
