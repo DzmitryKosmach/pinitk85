@@ -652,7 +652,7 @@ function getHomeUrl() {
 
       <div
         class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
-        <a href="/catalog/" class="catalog-main-link hidden sm:block">Каталог</a>
+        <a href="/catalog/" class="catalog-main-link hidden sm:block" target="_blank">Каталог</a>
         <div class="catalog-toggle cursor-pointer">
           <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 1H26" stroke="currentColor" stroke-width="2" />
@@ -745,7 +745,7 @@ function getHomeUrl() {
       const dropdown = container.querySelector('ul'); // само меню
       const toggleBtn = container.querySelector('.catalog-toggle');
       // Ищем ссылку "Каталог", которая лежит рядом с контейнером
-      const mainLink = container.parentElement.querySelector('.catalog-main-link');
+      // const mainLink = container.parentElement.querySelector('.catalog-main-link');
 
       let isPinned = false; // Флаг фиксации для текущего меню
 
@@ -761,7 +761,8 @@ function getHomeUrl() {
 
       // --- 1. Логика HOVER ---
       // Вешаем на родителя, чтобы захватить и ссылку, и кнопку, и само меню
-      const parent = container.parentElement;
+      // const parent = container.parentElement;
+      const parent = container;
 
       parent.addEventListener('mouseenter', () => {
         show();
@@ -790,7 +791,7 @@ function getHomeUrl() {
       }
 
       if (toggleBtn) toggleBtn.addEventListener('click', handleToggle);
-      if (mainLink) mainLink.addEventListener('click', handleToggle);
+      // if (mainLink) mainLink.addEventListener('click', handleToggle);
 
       // --- 3. Вспомогательные функции закрытия ---
 
