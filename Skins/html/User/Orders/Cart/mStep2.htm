@@ -50,7 +50,7 @@
 									</span>
 									руб.
 								</span>
-                <div class="flex flex-row flex-wrap">
+                <div class="flex flex-row gap-4 sm:gap-6 flex-wrap">
                   <div class="label left flex items-center gap-2 mt-2">
                     <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-0"
                            value="<?php echo Orders_Options::DELIVERY_NO?>"
@@ -78,7 +78,7 @@
                   </div>
                 </div>
               </div>
-              <div class="line f_text" data-type="TEXT" id="delivery-distance-block">
+              <div class="line f_text mb-6" data-type="TEXT" id="delivery-distance-block">
                 <div class="nm">
                   Расстояние
                 </div>
@@ -113,7 +113,7 @@
 									</span>
 									руб.
 								</span>
-                <div class="flex flex-row flex-wrap">
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
                     <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-0"
                            value="<?php echo Orders_Options::UNLOADING_NO?>"
@@ -137,7 +137,7 @@
                   </div>
                 </div>
               </div>
-              <div class="line f_text" data-type="TEXT" id="unloading-floor-block">
+              <div class="line f_text mb-6" data-type="TEXT" id="unloading-floor-block">
                 <div class="nm">
                   Этаж
                 </div>
@@ -172,7 +172,7 @@
 									</span>
 									руб.
 								</span>
-                <div class="flex flex-row flex-wrap">
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
                     <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-0"
                            value="<?php echo Orders_Options::ASSEMBLY_NO?>"
@@ -199,7 +199,7 @@
 									руб.<br>
 									<span class="small">(до 10 куб.м. или 1500 кг)</span>
 								</span>
-                <div class="flex flex-row flex-wrap">
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
                     <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-0"
                            value="<?php echo Orders_Options::GARBAGE_NO?>"
@@ -223,7 +223,7 @@
               </button>
             </div>
           </form>
-          <div class="cart-step2-right flex-1 w-full">
+          <div class="cart-step2-right flex-1 !w-full">
             <h4 class="text-2xl font-semibold mb-4">Итоговая стоимость</h4>
             <div class="body clearfix">
               <div class="order-total clearfix space-y-4">
@@ -269,11 +269,11 @@
                 </div>
 
                 <br>
-                <a href="<?php echo Url::a('catalog-cart-step3'); ?>" class="btn btn1 inline-block bg-blue-600 text-white text-center font-semibold px-8 py-3 rounded hover:bg-blue-700 transition">
+                <a href="<?php echo Url::a('catalog-cart-step3'); ?>" class="btn btn1 inline-block bg-blue-600 text-white text-center font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-700 transition">
                   Продолжить оформление заказа
                 </a>
                 <br><br>
-                <a href="<?php echo Url::a('catalog-cart-step1'); ?>" class="border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition">
+                <a href="<?php echo Url::a('catalog-cart-step1'); ?>" class="border-2 border-blue-600 text-blue-600 text-center !whitespace-normal !break-words px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-50 transition">
                   Вернуться к предыдущему этапу
                 </a>
               </div>
