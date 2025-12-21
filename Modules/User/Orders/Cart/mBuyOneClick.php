@@ -89,7 +89,7 @@ class mBuyOneClick
 
       if (self::$output == OUTPUT_FRAME) {
         $_SESSION['flash_msg'] = '<div class="notetext mb-6">
-                <div class="text-2xl font-semibold">Ваш заказ успешно оформлен.</div>
+                <div class="text-2xl font-semibold">Ваш заказ успешно оформлен1</div>
                 <div class="text-base font-normal text-gray-700 mt-2">
                   В ближайшее время с вами свяжется представитель для уточнения деталей.
                 </div>
