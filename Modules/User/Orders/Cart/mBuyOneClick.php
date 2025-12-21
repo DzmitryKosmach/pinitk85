@@ -88,7 +88,12 @@ class mBuyOneClick
         );
 
         if (self::$output == OUTPUT_FRAME) {
-            $_SESSION['flash_msg'] = '<div class="notetext">Ваш заказ успешно отправлен администрации сайта.<br>В ближайшее время с вами свяжется представитель магазин для уточнения деталей</div>';
+            $_SESSION['flash_msg'] = '<div class="notetext mb-6">
+                <div class="text-2xl font-semibold">Ваш заказ успешно оформлен.</div>
+                <div class="text-base font-normal text-gray-700 mt-2">
+                  В ближайшее время с вами свяжется представитель для уточнения деталей.
+                </div>
+              </div>';
             echo '{"location":"' . Orders::a($orderId) . '"}';
             exit;
             //print Pages::msgOk('Ваш заказ успешно отправлен администрации сайта. В ближайшее время с вами свяжутся для уточнения деталей.');

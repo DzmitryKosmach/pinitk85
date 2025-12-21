@@ -45,7 +45,7 @@ class Orders extends ExtDbList
         self::PAYMETHOD_NO => '',
         self::PAYMETHOD_CARD => 'Mir, MasterCard или Visa',
         self::PAYMETHOD_RASR => 'Рассрочка/Кредит',
-        self::PAYMETHOD_CASH => 'Вы сможете оплатить стоимость заказа наличными при получении заказа от курьера.<span style=color: "#FF0000";>Только при доставке курьером!</span>',
+        self::PAYMETHOD_CASH => 'Вы сможете оплатить стоимость заказа наличными при получении заказа от курьера. <span class="text-red-500">Только при доставке курьером!</span>',
         self::PAYMETHOD_BANK => 'Cчет/Договор',
 
     );
