@@ -131,7 +131,7 @@ class mStep3
         Catalog_Cart::clear();
 
         Pages::flash(
-            'Ваш заказ успешно оформлен.2<br>В ближайшее время с вами свяжется представитель для уточнения деталей.',
+            '<div class="text-2xl font-semibold">Ваш заказ успешно оформлен.</div><div class="text-base font-normal text-gray-700 mt-2 mb-6">В ближайшее время с вами свяжется представитель для уточнения деталей.</div>',
             false,
             Orders::a($orderId)
         );
