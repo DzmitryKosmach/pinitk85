@@ -48,7 +48,7 @@
                 <?php foreach (Orders::$paymethods as $pm => $name) { ?>
                 <?php if ($pm === Orders::PAYMETHOD_NO) continue; ?>
 
-                <div class="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                   <!-- Радиокнопка -->
                   <div class="flex items-center">
                     <input
@@ -63,7 +63,7 @@
                   <!-- Логотип -->
                   <label for="paymethod-<?php echo $pm; ?>" class="block w-12 h-12 cursor-pointer">
                       <img
-                        class="block w-full h-full object-fit"
+                        class="block w-full h-full object-contain"
                         src="/Skins/img/user/pay-logo-<?php echo $pm; ?>.png"
                       />
                   </label>
@@ -73,7 +73,7 @@
                     <label for="paymethod-<?php echo $pm; ?>" class="cursor-pointer block">
                       <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
                       <p class="note text-gray-600 text-sm mt-1">
-                        <?php echo htmlspecialchars(Orders::$paymethodsComments[$pm] ?? ''); ?>
+                        <?php echo Orders::$paymethodsComments[$pm] ?? ''; ?>
                       </p>
                     </label>
                   </div>
