@@ -260,7 +260,7 @@ function getHomeUrl() {
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <!-- Tailwind -->
-  <link rel="stylesheet" href="/dist/output.css">
+  <link rel="stylesheet" href="/pinitk85/dist/output.css">
   <?php echo CssCopmress::load('series') ?>
 
 </head>
@@ -651,8 +651,8 @@ function getHomeUrl() {
       <!-- Кнопка -->
 
       <div
-        class="flex flex-1 h-full items-center gap-0 px-5 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
-        <a href="/catalog/" class="catalog-main-link hidden sm:block" target="_blank">Каталог</a>
+        class="flex flex-1 h-full items-center gap-2 px-2 sm:px-6 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
+        <a href="/catalog/" class="catalog-main-link" target="_blank">Каталог</a>
         <div class="catalog-toggle cursor-pointer">
           <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 1H26" stroke="currentColor" stroke-width="2" />
@@ -728,7 +728,7 @@ function getHomeUrl() {
     <!-- Поле поиска -->
     <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex">
       <input type="text" name="text" placeholder="Поиск"
-             class="flex-1 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none"
+             class="w-full min-w-0 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none"
              value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
              autocomplete="off" />
     </form>
