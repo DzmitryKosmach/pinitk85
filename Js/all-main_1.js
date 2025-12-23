@@ -2105,7 +2105,7 @@ var oMaterials = new (function () {
       html +=
         '<div class="materials-level2 !w-fit !z-20" id="materials-level2" style="display: none">' +
         '<div class="level-tail" id="materials-level2-tail"></div>' +
-        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
+        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>' +
         '<strong class="level-title" id="materials-level2-title"></strong>' +
         '<div class="level-help">Нажмите на изображение материала, чтобы выбрать его</div>' +
         '<div id="materials-level2-content" class="!w-fit"></div>' +

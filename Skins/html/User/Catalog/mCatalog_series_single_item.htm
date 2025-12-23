@@ -29,8 +29,36 @@
   }
 
   #materials-level2-content {
-    width: 300px;
+    width: fit-content;
     padding: 20px;
+  }
+
+  @media (max-width: 639px) {
+    #materials-popup .materials-level2 {
+      padding: 10px 10px 0 10px;
+    }
+
+    #materials-popup .materials-level3 {
+      padding: 10px 0 0 10px;
+    }
+
+    #materials-level2-content {
+      padding: 10px;
+    }
+
+    #materials-popup .material .material-in {
+      box-sizing: border-box;
+      width: fit-content !important;
+      height: inherit;
+    }
+
+    #materials-popup .material .material-in {
+      width: fit-content !important;
+    }
+
+    #materials-popup .material {
+      width: fit-content;
+    }
   }
 
   #materials-popup .materials-row {
