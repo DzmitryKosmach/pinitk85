@@ -658,7 +658,7 @@ var oMaterials = new (function () {
       html +=
         '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2">' +
         '<div class="level-tail" id="materials-level2-tail"></div>' +
-        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"></a>' +
+        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>' +
         '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>' +
         '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>' +
         '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>' +
