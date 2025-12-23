@@ -194,7 +194,7 @@
     float: none;
     width: auto;
   }
-  .cart-step2-left
+  .cart-step2-left,
   .cart-step3-left,
   .order-view-left {
     margin-bottom: 0;
@@ -202,7 +202,7 @@
   .cart-step1-right {
     display: none;
   }
-  .cart-step2-right
+  .cart-step2-right,
   .cart-step3-right,
   .order-view-right {
     float: none;
