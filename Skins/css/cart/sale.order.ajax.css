@@ -26,8 +26,7 @@
   font-weight:normal;
   font-size: 80%;
 }
-.someform.orderforma h4,
-.someform.orderforma .h4{
+.someform.orderforma h4{
   display:block;
   padding:10px 25px;
   font-weight:normal;
@@ -39,6 +38,18 @@
   border-bottom:1px solid #F2F2F2;
   border-left:1px solid #F2F2F2;
 }
+
+@media (max-width: 639px) {
+  .someform.orderforma h4,
+  .someform.orderforma .h4{
+    padding:10px 14px;
+  }
+  .someform.orderforma .body{
+    padding:10px 14px;
+  }
+
+}
+
 .someform.orderforma .body .line{
   margin-top:10px;
 }
@@ -175,7 +186,7 @@
   margin-bottom: 20px;
   padding-left: 20px;
 }
-@media screen and (max-width:885px){
+@media (max-width:885px){
   .cart-step1-left,
   .cart-step2-left,
   .cart-step3-left,
