@@ -1747,14 +1747,13 @@ var oMaterials = new (function () {
    * Скролим вверх
    */
   this.scrollToSectionPhoto = function () {
-    const noScroll = document.getElementById("no-scroll");
-    if (!noScroll) {
-      const block = document.getElementById("section-photo");
-      if (block) {
-        const top = block.getBoundingClientRect().top + window.scrollY - 60;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
+
+    const block = document.getElementById("material-selected");
+    if (block) {
+      const top = block.getBoundingClientRect().top + window.scrollY - 40;
+      window.scrollTo({ top, behavior: "smooth" });
     }
+
   };
 
   /**
