@@ -2114,7 +2114,7 @@ var oMaterials = new (function () {
       html +=
         '<div class="materials-level3" id="materials-level3" style="display: none">' +
         '<div class="level-tail" id="materials-level3-tail"></div>' +
-        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"></a>' +
+        '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>' +
         '<strong class="level-title" id="materials-level3-title"></strong>' +
         '<div id="materials-level3-content"></div>' +
         '</div>';

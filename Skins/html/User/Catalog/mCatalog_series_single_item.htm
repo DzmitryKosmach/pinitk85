@@ -93,7 +93,7 @@
     width: 76px;
     height: 61px;
     margin-bottom: 2px;
-    border: 2px solid #fff;
+    border: 2px solid #2563EB;
     box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.3);
   }
 
@@ -141,7 +141,7 @@
   }
 
   #materials-popup .material.active .image {
-    border-color: #ffa800;
+    border-color: #2563EB;
   }
 
   #materials-popup .material.has-sub:after {
@@ -633,7 +633,7 @@
             <div class="flex flex-row flex-wrap gap-x-6 gap-y-2">
               <!-- Цена товара -->
               <div class="flex flex-row gap-2 items-center">
-                <span class="text-base sm:text-xl font-normal">Цена товара</span>
+                <span class="text-base sm:text-xl font-normal">Цена товара: </span>
                 <div>
                   <?php if ($hasOldPrice): ?>
                   <p id="item-<?= $itemId ?>-price-old"
