@@ -825,7 +825,7 @@ function getHomeUrl() {
     const headerIconsScrolled = document.getElementById('header-icons-scrolled');
     const mainNav = document.getElementById('main-nav');
     //const headerRight = document.getElementById('header-right');
-    const catalogMenu = document.getElementById('catalog-menu');
+    //const catalogMenu = document.getElementById('catalog-menu');
     const searchToggleScrolled = document.getElementById('search-toggle-scrolled');
     const searchToggleMobile = document.getElementById('search-toggle-mobile');
     const searchBar = document.getElementById('search-bar');
@@ -848,7 +848,7 @@ function getHomeUrl() {
         headerIconsScrolled.classList.remove('hidden');
         // Центральная навигация остается видимой (предположительно, она уже так настроена)
         //headerRight.classList.remove('hidden', 'sm:flex'); // Убираем классы, которые скрывают/показывают по-другому
-        catalogMenu.classList.add('hidden');
+        //catalogMenu.classList.add('hidden');
         isScrolled = true; // Запоминаем новое состояние
         // console.log('Переключено в состояние прокрутки (маленький хедер)'); // Для отладки
       }
@@ -858,7 +858,7 @@ function getHomeUrl() {
         logoMain.classList.remove('hidden');
         headerIconsScrolled.classList.add('hidden');
         //headerRight.classList.remove('hidden', 'sm:flex'); // Сброс к обычному состоянию
-        catalogMenu.classList.remove('hidden');
+        //catalogMenu.classList.remove('hidden');
         // Закрываем поле поиска при возврате к нормальному состоянию (если было открыто)
         searchBar.classList.add('hidden');
         isScrolled = false; // Запоминаем новое состояние
