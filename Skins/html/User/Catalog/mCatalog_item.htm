@@ -43,7 +43,7 @@
   #materials-popup .material .name { display:table-cell; vertical-align:middle; height:26px; line-height:13px; font-size:11px; color:#0075c2; text-decoration:underline; }
   #materials-popup .material .price { display:block; white-space:nowrap; font-size:11px; }
   #materials-popup .material.active .name { font-weight:bold; }
-  #materials-popup .material.active .image { border-color:#ffa800; }
+  #materials-popup .material.active .image { border-color:#2563EB; }
   #materials-popup .material.has-sub:after { content:''; display:block; position:absolute; z-index:5; box-sizing:border-box; right:23px; top:-7px; width:30px; height:30px; background:url('/Skins/img/user/materials-popup-hassub.png') no-repeat 0 0; }
   #materials-popup .material.has-sub:hover:after { background-position:-30px 0; }
   #materials-popup .material.has-sub.active:after { background-position:-60px 0; }
@@ -234,7 +234,7 @@
                   ?>
           <div class="item-current-material">
             <span class="b">Выбран цвет:</span>
-            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image">
+            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
               <?php if($mActive['image']['ext']) { ?>
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_76x61_0.<?php echo $mActive['image']['ext']; ?>" width="76" height="61" alt="">
               <?php } ?>

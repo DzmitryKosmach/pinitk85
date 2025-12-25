@@ -32,10 +32,10 @@ class Orders extends ExtDbList
      */
     static $paymethods = array(
         self::PAYMETHOD_NO => 'Не указан',
-        self::PAYMETHOD_CARD => 'Кредитная карта',
+        self::PAYMETHOD_BANK => 'Банковский перевод',
         self::PAYMETHOD_RASR => 'Рассрочка/Кредит',
-        self::PAYMETHOD_CASH => 'Наличный расчёт',
-        self::PAYMETHOD_BANK => 'Банковский перевод'
+        self::PAYMETHOD_CARD => 'Кредитная карта',
+        self::PAYMETHOD_CASH => 'Наличный расчёт'
     );
 
     /**
@@ -44,10 +44,9 @@ class Orders extends ExtDbList
     static $paymethodsComments = array(
         self::PAYMETHOD_NO => '',
         self::PAYMETHOD_CARD => 'Mir, MasterCard или Visa',
-        self::PAYMETHOD_RASR => 'Рассрочка/Кредит',
+        self::PAYMETHOD_RASR => 'Cчет/Договор',
         self::PAYMETHOD_CASH => 'Вы сможете оплатить стоимость заказа наличными при получении заказа от курьера. <span class="text-red-500">Только при доставке курьером!</span>',
-        self::PAYMETHOD_BANK => 'Cчет/Договор',
-
+        self::PAYMETHOD_BANK => 'Cчет/Договор'
     );
 
     /**

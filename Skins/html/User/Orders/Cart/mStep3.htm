@@ -34,6 +34,131 @@
       <div class="cl"></div>
       <?php } ?>
 
+      <div class="section summary">
+        <h4>Товары в заказе</h4>
+        <div class="body">
+          <table class="products js-element">
+            <tr>
+              <th class="item nowrap">Серия</th>
+              <th class="custom nowrap">Товар</th>
+              <th class="custom nowrap">Цвет</th>
+              <th class="custom nowrap">Цена</th>
+              <th class="custom nowrap">Кол-во</th>
+              <th class="custom nowrap">Сумма</th>
+            </tr>
+            <?php foreach($cart as $c) { ?>
+            <tr>
+              <td class="item">
+                <?php if($c['series']) { ?>
+                <a href="<?php echo Catalog_Series::a($c['series']); ?>"
+                ><?php echo $c['series']['name']; ?></a
+                >
+                <?php } ?>
+              </td>
+              <td class="itemname">
+                <div class="pic">
+                  <?php if($c['item']['_img_ext']) { ?>
+                  <img
+                    src="<?php echo Catalog::photoUrl(
+														Catalog_Items::$imagePath,
+														$c['item']['id'], 30, 30, 1, $c['item']['_img_ext'],
+														$c['item']['image-name']
+													); ?>"
+                  />
+                  <?php } ?>
+                </div>
+                <div class="text">
+                  <?php echo $c['item']['name']; ?><br />
+                  <span>
+                      Арт.:
+                    <?php echo $c['item']['art']; ?><br />
+                    <?php if(trim($c['item']['size']) !== '') { ?>
+                    Размер:
+                    <?php echo $c['item']['size']; ?>
+                    <?php } ?>
+                    </span>
+                </div>
+              </td>
+              <td class="material" style="min-width: 100px">
+                <?php if($c['material']) { ?>
+                <?php if($c['material']['_img_ext']) { ?>
+                <div class="image">
+                  <a
+                    href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                    target="_blank"
+                    onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+                  >
+                    <img
+                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                      width="24"
+                      height="24"
+                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                    />
+                  </a>
+                </div>
+                <?php } ?>
+                <div class="name">
+                  <?php echo implode('<br>',
+                  Catalog_Materials::getFullName($c['material']['id'])); ?>
+                </div>
+                <?php } else { ?>
+                &nbsp;
+                <?php } ?>
+              </td>
+              <td class="nowrap right">
+                <?php if(abs($c['price'])) { ?>
+                <?php echo Catalog::priceFormat($c['price']); ?>
+                руб.
+                <?php if(abs($c['item']['discount']) != 1) { ?>
+                <?php $d = Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>
+                <br />
+                <span
+                  class="discount"
+                  title="Цена со скидкой <?php echo $d?>%"
+                >
+                    (-<?php echo $d?>%)
+                  </span>
+                <?php } ?>
+                <?php } else { ?>
+                по запросу
+                <?php } ?>
+              </td>
+              <td class="nowrap right">
+                <?php echo $c['amount']; ?>
+                шт
+              </td>
+              <td class="nowrap right">
+                <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?>
+                руб.
+              </td>
+            </tr>
+            <?php } ?>
+          </table>
+          <div class="order_pay">
+            <div class="right">
+              <table class="bx_ordercart_order_sum">
+                <tr>
+                  <td class="custom_t1 fwb" colspan="6" class="itog">
+                    Итого:
+                  </td>
+                  <td class="custom_t2 fwb price">
+                    <?php echo Catalog::priceFormat($totalPrice); ?>
+                    руб.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="custom_t1" colspan="6"></td>
+                  <td class="custom_t2">
+                    <?php echo $totalAmount; ?>
+                    шт.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="order_form_div someform orderforma order-checkout">
         <div class="clearfix ">
           <form
@@ -143,130 +268,7 @@
           </form>
         </div>
 
-        <div class="section summary">
-          <h4>Товары в заказе</h4>
-          <div class="body">
-            <table class="products js-element">
-              <tr>
-                <th class="item nowrap">Серия</th>
-                <th class="custom nowrap">Товар</th>
-                <th class="custom nowrap">Цвет</th>
-                <th class="custom nowrap">Цена</th>
-                <th class="custom nowrap">Кол-во</th>
-                <th class="custom nowrap">Сумма</th>
-              </tr>
-              <?php foreach($cart as $c) { ?>
-              <tr>
-                <td class="item">
-                  <?php if($c['series']) { ?>
-                  <a href="<?php echo Catalog_Series::a($c['series']); ?>"
-                  ><?php echo $c['series']['name']; ?></a
-                  >
-                  <?php } ?>
-                </td>
-                <td class="itemname">
-                  <div class="pic">
-                    <?php if($c['item']['_img_ext']) { ?>
-                    <img
-                      src="<?php echo Catalog::photoUrl(
-														Catalog_Items::$imagePath,
-														$c['item']['id'], 30, 30, 1, $c['item']['_img_ext'],
-														$c['item']['image-name']
-													); ?>"
-                    />
-                    <?php } ?>
-                  </div>
-                  <div class="text">
-                    <?php echo $c['item']['name']; ?><br />
-                    <span>
-                      Арт.:
-                      <?php echo $c['item']['art']; ?><br />
-                      <?php if(trim($c['item']['size']) !== '') { ?>
-                      Размер:
-                      <?php echo $c['item']['size']; ?>
-                      <?php } ?>
-                    </span>
-                  </div>
-                </td>
-                <td class="material" style="min-width: 100px">
-                  <?php if($c['material']) { ?>
-                  <?php if($c['material']['_img_ext']) { ?>
-                  <div class="image">
-                    <a
-                      href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                      target="_blank"
-                      onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                    >
-                      <img
-                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                        width="24"
-                        height="24"
-                        alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                      />
-                    </a>
-                  </div>
-                  <?php } ?>
-                  <div class="name">
-                    <?php echo implode('<br>',
-                    Catalog_Materials::getFullName($c['material']['id'])); ?>
-                  </div>
-                  <?php } else { ?>
-                  &nbsp;
-                  <?php } ?>
-                </td>
-                <td class="nowrap right">
-                  <?php if(abs($c['price'])) { ?>
-                  <?php echo Catalog::priceFormat($c['price']); ?>
-                  руб.
-                  <?php if(abs($c['item']['discount']) != 1) { ?>
-                  <?php $d = Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>
-                  <br />
-                  <span
-                    class="discount"
-                    title="Цена со скидкой <?php echo $d?>%"
-                  >
-                    (-<?php echo $d?>%)
-                  </span>
-                  <?php } ?>
-                  <?php } else { ?>
-                  по запросу
-                  <?php } ?>
-                </td>
-                <td class="nowrap right">
-                  <?php echo $c['amount']; ?>
-                  шт
-                </td>
-                <td class="nowrap right">
-                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?>
-                  руб.
-                </td>
-              </tr>
-              <?php } ?>
-            </table>
-            <div class="order_pay">
-              <div class="right">
-                <table class="bx_ordercart_order_sum">
-                  <tr>
-                    <td class="custom_t1 fwb" colspan="6" class="itog">
-                      Итого:
-                    </td>
-                    <td class="custom_t2 fwb price">
-                      <?php echo Catalog::priceFormat($totalPrice); ?>
-                      руб.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="custom_t1" colspan="6"></td>
-                    <td class="custom_t2">
-                      <?php echo $totalAmount; ?>
-                      шт.
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
