@@ -678,7 +678,7 @@
               <div class="button-block w-full sm:w-fit pt-0">
                 <button
                   type="<?= $inCart ? 'button' : 'submit' ?>"
-                  class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700' ?> py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                  class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-green-700' ?> py-3 px-6 rounded font-semibold transition-colors shadow-lg"
                   title="<?= $inCart ? 'Перейти в корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>"
                 <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
                 <?= !empty($seriesInf['out_of_production']) && !$inCart ? 'disabled' : '' ?>>
@@ -738,7 +738,7 @@
             const btn = form.querySelector("button.submit");
             if (!btn) return;
 
-            btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-blue-700");
+            btn.classList.remove("add2basket", "!bg-blue-600", "hover:bg-green-700");
             btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
 
             btn.textContent = "✓ В корзину";
