@@ -744,8 +744,6 @@ function getHomeUrl() {
       // Ищем элементы внутри конкретного контейнера
       const dropdown = container.querySelector('ul'); // само меню
       const toggleBtn = container.querySelector('.catalog-toggle');
-      // Ищем ссылку "Каталог", которая лежит рядом с контейнером
-      // const mainLink = container.parentElement.querySelector('.catalog-main-link');
 
       let isPinned = false; // Флаг фиксации для текущего меню
 
@@ -802,7 +800,6 @@ function getHomeUrl() {
       }
 
       if (toggleBtn) toggleBtn.addEventListener('click', handleToggle);
-      // if (mainLink) mainLink.addEventListener('click', handleToggle);
 
       // --- 3. Обработка кликов по элементам меню (только для мобильных) ---
       if (isMobile()) {
@@ -816,9 +813,15 @@ function getHomeUrl() {
             // Убираем href у ссылки первого уровня
             link.href = '#';
 
-            // При клике на первый уровень — показываем подменю
+            // При клике на первый уровень — показываем подменю и фиксируем основное меню
             link.addEventListener('click', (e) => {
               e.preventDefault();
+
+              // Если основное меню не открыто — открыть его
+              if (!isPinned) {
+                isPinned = true;
+                show();
+              }
 
               // Скрываем все подменю второго уровня
               const allSubmenus = container.querySelectorAll('ul.absolute');
@@ -838,19 +841,25 @@ function getHomeUrl() {
           }
           // Если нет подменю — оставляем обычный переход
         });
+
+        // --- Закрытие меню при клике вне ---
+        document.addEventListener('click', (e) => {
+          if (!parent.contains(e.target)) {
+            isPinned = false;
+            hide();
+          }
+        });
+      } else {
+        // --- Закрытие меню при клике вне (для десктопа) ---
+        document.addEventListener('click', (e) => {
+          if (!parent.contains(e.target)) {
+            isPinned = false;
+            hide();
+          }
+        });
       }
 
-      // --- 4. Вспомогательные функции закрытия ---
-
-      // Закрытие при клике вне текущего меню
-      document.addEventListener('click', (e) => {
-        if (!parent.contains(e.target)) {
-          isPinned = false;
-          hide();
-        }
-      });
-
-      // Закрытие по клавише Esc
+      // --- 4. Закрытие по клавише Esc ---
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           isPinned = false;
@@ -858,12 +867,12 @@ function getHomeUrl() {
         }
       });
 
-      // Предотвращаем закрытие при кликах внутри самого выпадающего списка
+      // --- 5. Предотвращаем закрытие при кликах внутри самого выпадающего списка ---
       dropdown.addEventListener('click', (e) => {
         e.stopPropagation();
       });
 
-      // --- 5. Обработка ресайза ---
+      // --- 6. Обработка ресайза ---
       window.addEventListener('resize', () => {
         if (!isMobile()) {
           // Если перешли на десктоп — включаем hover
