@@ -60,10 +60,19 @@
        class="absolute lg:bottom-4 bottom-28 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm z-[62]">
   </div>
 
-  <!-- Индикатор масштаба -->
+  <!-- Индикатор масштаба + иконка лупы (только для мобильных) -->
   <div id="gallery-zoom-indicator"
-       class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62]">
-    100%
+       class="absolute top-4 lg:left-28 left-4 text-white/80 text-sm font-mono tracking-wide bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm hidden z-[62] flex items-center gap-1">
+    <svg id="gallery-zoom-icon"
+         xmlns="http://www.w3.org/2000/svg"
+         class="h-8 w-8 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         stroke-width="2">
+      <!-- Содержимое будет обновляться динамически -->
+    </svg>
+    <span id="gallery-zoom-text">100%</span>
   </div>
 
   <!-- Кнопка сброса зума (только для мобильных) -->
@@ -596,7 +605,7 @@ $photosUnified[] = [
 
       resetContainer();
       applyTransform();
-      updateZoomIndicator();
+      updateZoomIndicator(); // ← обновляет иконку
       updateInteractionTime();
 
       disableDesktopZoomMode();
@@ -609,6 +618,15 @@ $photosUnified[] = [
 
       // Останавливаем таймер автосброса
       clearTimeout(autoResetZoomTimer);
+    }
+
+    function toggleZoom() {
+      updateInteractionTime();
+      if (isZoomed) {
+        resetZoom();
+      } else {
+        zoomToDefault();
+      }
     }
 
     function toggleZoom() {
@@ -683,11 +701,40 @@ $photosUnified[] = [
     function updateZoomIndicator() {
       if (galleryZoomIndicator) {
         if (isZoomed) {
-          galleryZoomIndicator.textContent = Math.round(currentScale * 100) + '%';
           galleryZoomIndicator.classList.remove('hidden');
+          document.getElementById('gallery-zoom-text').textContent = Math.round(currentScale * 100) + '%';
+          updateZoomIcon(); // Обновляем иконку
         } else {
-          galleryZoomIndicator.classList.add('hidden');
+          galleryZoomIndicator.classList.remove('hidden'); // Показываем всегда, если на мобильном
+          document.getElementById('gallery-zoom-text').textContent = Math.round(currentScale * 100) + '%';
+          updateZoomIcon(); // Обновляем иконку
         }
+      }
+    }
+
+    // === Обработчик клика по иконке зума (только для мобильных) ===
+    const zoomIcon = document.getElementById('gallery-zoom-icon');
+    if (zoomIcon) {
+      zoomIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleZoom();
+      });
+    }
+
+    function updateZoomIcon() {
+      const icon = document.getElementById('gallery-zoom-icon');
+      if (!icon) return;
+
+      if (currentScale <= 1) {
+        // Лупа с +
+        icon.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0zm-4 0H7m3-3v6m-3-3h6" />
+    `;
+      } else {
+        // Лупа с -
+        icon.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0zm-4 0H7" />
+    `;
       }
     }
 
@@ -767,6 +814,7 @@ $photosUnified[] = [
         galleryCounter.textContent = `${currentGalleryIndex + 1} / ${photos.length}`;
       }
       updateInteractionTime();
+      updateZoomIndicator(); // ← обновляем индикатор при смене изображения
     }
 
     // === Клик по изображению — переключение зума ===
