@@ -757,23 +757,35 @@ function getHomeUrl() {
       function hide() {
         dropdown.classList.remove('opacity-100', 'visible');
         dropdown.classList.add('opacity-0', 'invisible');
+        // Также скрываем все подменю при общем закрытии
+        const allSubmenus = container.querySelectorAll('ul.absolute');
+        allSubmenus.forEach(sub => {
+          sub.classList.remove('opacity-100', 'visible');
+          sub.classList.add('opacity-0', 'invisible');
+        });
       }
 
-      // --- 1. Логика HOVER ---
-      // Вешаем на родителя, чтобы захватить и ссылку, и кнопку, и само меню
-      const parent = container; // это было = container.parentElement;
+      // --- Проверка мобильного устройства ---
+      function isMobile() {
+        return window.innerWidth < 768; // или любое другое пороговое значение
+      }
 
-      parent.addEventListener('mouseenter', () => {
-        show();
-      });
+      // --- 1. Логика HOVER (только на десктопе) ---
+      const parent = container;
 
-      parent.addEventListener('mouseleave', () => {
-        if (!isPinned) {
-          hide();
-        }
-      });
+      if (!isMobile()) {
+        parent.addEventListener('mouseenter', () => {
+          show();
+        });
 
-      // --- 2. Логика CLICK (Фиксация) ---
+        parent.addEventListener('mouseleave', () => {
+          if (!isPinned) {
+            hide();
+          }
+        });
+      }
+
+      // --- 2. Логика CLICK (Фиксация + мобильные) ---
       function handleToggle(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -792,7 +804,43 @@ function getHomeUrl() {
       if (toggleBtn) toggleBtn.addEventListener('click', handleToggle);
       // if (mainLink) mainLink.addEventListener('click', handleToggle);
 
-      // --- 3. Вспомогательные функции закрытия ---
+      // --- 3. Обработка кликов по элементам меню (только для мобильных) ---
+      if (isMobile()) {
+        const topLevelItems = container.querySelectorAll('li.relative');
+
+        topLevelItems.forEach(item => {
+          const link = item.querySelector('a');
+          const submenu = item.querySelector('ul.absolute');
+
+          if (submenu) {
+            // Убираем href у ссылки первого уровня
+            link.href = '#';
+
+            // При клике на первый уровень — показываем подменю
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+
+              // Скрываем все подменю второго уровня
+              const allSubmenus = container.querySelectorAll('ul.absolute');
+              allSubmenus.forEach(sub => {
+                if (sub !== submenu) {
+                  sub.classList.remove('opacity-100', 'visible');
+                  sub.classList.add('opacity-0', 'invisible');
+                }
+              });
+
+              // Переключаем видимость текущего подменю
+              submenu.classList.toggle('opacity-100');
+              submenu.classList.toggle('visible');
+              submenu.classList.toggle('opacity-0');
+              submenu.classList.toggle('invisible');
+            });
+          }
+          // Если нет подменю — оставляем обычный переход
+        });
+      }
+
+      // --- 4. Вспомогательные функции закрытия ---
 
       // Закрытие при клике вне текущего меню
       document.addEventListener('click', (e) => {
@@ -813,6 +861,21 @@ function getHomeUrl() {
       // Предотвращаем закрытие при кликах внутри самого выпадающего списка
       dropdown.addEventListener('click', (e) => {
         e.stopPropagation();
+      });
+
+      // --- 5. Обработка ресайза ---
+      window.addEventListener('resize', () => {
+        if (!isMobile()) {
+          // Если перешли на десктоп — включаем hover
+          parent.addEventListener('mouseenter', () => show());
+          parent.addEventListener('mouseleave', () => {
+            if (!isPinned) hide();
+          });
+        } else {
+          // Если перешли на мобильный — отключаем hover
+          parent.removeEventListener('mouseenter', show);
+          parent.removeEventListener('mouseleave', hide);
+        }
       });
     });
   });
