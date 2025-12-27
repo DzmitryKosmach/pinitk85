@@ -22,7 +22,7 @@
   #materials-level2-content,
   #materials-level3-content {
     position: relative;
-    z-index: 1000;
+    z-index: 110;
     overflow-y: scroll;
     overflow-x: hidden;
     height: 300px;
@@ -100,7 +100,7 @@
   #materials-popup .material .image .image-big {
     display: none;
     position: absolute;
-    z-index: 800;
+    z-index: 108;
     width: 164px;
     height: 132px;
     left: -32px;
@@ -1271,66 +1271,7 @@
 
   <hr class="mb-6 border-gray-300 mt-12" />
 
-  <?php
-// Базовый URL
-$baseUrl = 'http://pinitk85.beget.tech';
-
-// Данные для карточек (можно вынести в настройки или БД)
-$benefits = [
-    [
-        'url' => '/preimuschestva/nizkie-tseny-i-skidki/',
-  'icon' => '/images/product/rub.png',
-  'title' => 'Самые низкие цены!',
-  'text' => 'Индивидуальный подход к каждому заказчику. Минимальные цены, дополнительные скидки. Удобная оплата, с НДС и без, договор.'
-  ],
-  [
-  'url' => '/preimuschestva/garantiya-ot-proizvoditelya/',
-  'icon' => '/images/product/user.png',
-  'title' => 'Гарантия от производителя!',
-  'text' => 'Мебель только лучших фабрик, поставщиков и производителей России и зарубежья.'
-  ],
-  [
-  'url' => '/preimuschestva/nashi-sotrudniki-professionaly-svoego-dela/',
-  'icon' => '/images/product/rule.png',
-  'title' => 'Вызвать специалиста в офис или получить консультацию эксперта!',
-  'text' => 'Предоставим каталоги и образцы, дизайн проект и расстановку Вашей офисной мебели.'
-  ],
-  [
-  'url' => '/preimuschestva/prostota-vybora/',
-  'icon' => '/images/product/busket.png',
-  'title' => 'Как уточнить и сделать покупку!',
-  'text' => 'На нашем сайте не надо регистрироваться, чтобы отправить заказ в корзину для уточнения информации достаточно оставить имя и телефон.'
-  ]
-  ];
-  ?>
-
-  <div class="clear"></div>
-
-  <section>
-    <!-- Почему у нас -->
-    <h2 class="text-2xl font-bold mt-8 mb-4 md:mt-12 md:mb-6">Почему стоит заказать у нас</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium mb-10">
-      <?php foreach ($benefits as $item): ?>
-      <a href="<?php echo $baseUrl . $item['url']; ?>"
-         class="flex items-start gap-2 bg-white p-3 shadow rounded no-underline text-current hover:no-underline"
-         target="_blank"
-      >
-        <div class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0">
-          <img src="<?php echo $item['icon']; ?>"
-               class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
-               alt="<?php echo htmlspecialchars($item['title']); ?>" />
-        </div>
-        <p class="text-lg font-medium">
-          <?php echo htmlspecialchars($item['title']); ?>
-          <span class="block font-normal"><?php echo htmlspecialchars($item['text']); ?></span>
-        </p>
-      </a>
-      <?php endforeach; ?>
-    </div>
-  </section>
-
-
+  <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
 
   <?php if(count($linkages)) { ?>
   <?php foreach($linkages as $ln => $l) { ?>
@@ -1346,8 +1287,6 @@ $benefits = [
   </div>
   <?php } ?>
   <?php } ?>
-
-
 
   <noindex>
     <section class="mt-16 mb-8">
