@@ -232,7 +232,7 @@
                     $mActiveName[] = $mActive['name'];
                   }
                   ?>
-          <div id="material-selected" class="item-current-material">
+          <div id="material-selected2" class="item-current-material">
             <span class="b">Выбран цвет:</span>
             <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
               <?php if($mActive['image']['ext']) { ?>
@@ -304,24 +304,6 @@
           <div class="materials-level1" id="materials-popup-content"></div>
         </div>
       </div>
-
-      <script>
-        // Плавная прокрутка к выбранному материалу при изменении через select
-        document.addEventListener('DOMContentLoaded', function() {
-          const materialSelect = document.getElementById('item-<?php echo $itemInf['id']; ?>-material');
-          if (materialSelect) {
-            materialSelect.addEventListener('change', function() {
-              setTimeout(function() {
-                const block = document.getElementById('material-selected');
-                if (block) {
-                  const top = block.getBoundingClientRect().top + window.scrollY - 80;
-                  window.scrollTo({ top: top, behavior: 'smooth' });
-                }
-              }, 100);
-            });
-          }
-        });
-      </script>
 
       <?php } else { ?>
       <select name="material_id" style="display: none">
