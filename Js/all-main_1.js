@@ -1749,10 +1749,15 @@ var oMaterials = new (function () {
   this.scrollToSectionPhoto = function () {
     // Небольшая задержка для обновления DOM после выбора материала
     setTimeout(function() {
-      const block = document.getElementById("material-selected");
-      if (block) {
-        const top = block.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
+      // Находим выбранный материал внутри попапа
+      const selectedMaterial = $$$("material-" + selectedMatId);
+      if (selectedMaterial && elPopupContent) {
+        // Прокручиваем контент попапа к выбранному материалу
+        selectedMaterial.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest"
+        });
       }
     }, 100);
   };
