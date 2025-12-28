@@ -1749,80 +1749,12 @@ var oMaterials = new (function () {
   this.scrollToSectionPhoto = function () {
     // Небольшая задержка для обновления DOM после выбора материала
     setTimeout(function() {
-      // Находим выбранный материал внутри попапа
-      const selectedMaterial = $$$("material-" + selectedMatId);
-      if (!selectedMaterial) return;
-
-      // Находим прокручиваемый контейнер
-      var scrollContainer = null;
-      var parent = selectedMaterial.parentElement;
-
-      // Ищем ближайший прокручиваемый родитель
-      while (parent && parent !== document.body) {
-        var style = window.getComputedStyle(parent);
-        var hasOverflow = style.overflowY === 'scroll' || style.overflowY === 'auto' ||
-          style.overflow === 'scroll' || style.overflow === 'auto';
-
-        if (hasOverflow && parent.scrollHeight > parent.clientHeight) {
-          scrollContainer = parent;
-          break;
-        }
-        parent = parent.parentElement;
+      const block = document.getElementById("material-selected");
+      if (block) {
+        const top = block.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
       }
-
-      // Если не нашли прокручиваемый контейнер, используем elPopupContent
-      if (!scrollContainer && elPopupContent) {
-        scrollContainer = elPopupContent;
-      }
-
-      if (scrollContainer && selectedMaterial) {
-        // Вычисляем позицию элемента относительно контейнера
-        var containerRect = scrollContainer.getBoundingClientRect();
-        var elementRect = selectedMaterial.getBoundingClientRect();
-
-        // Текущий scrollTop контейнера
-        var currentScrollTop = scrollContainer.scrollTop;
-
-        // Позиция элемента относительно контейнера
-        var elementTop = elementRect.top - containerRect.top + currentScrollTop;
-
-        // Высота контейнера и элемента
-        var containerHeight = scrollContainer.clientHeight;
-        var elementHeight = selectedMaterial.offsetHeight;
-
-        // Центрируем элемент в видимой области контейнера
-        var targetScrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2);
-
-        // Ограничиваем значения
-        var maxScroll = scrollContainer.scrollHeight - containerHeight;
-        targetScrollTop = Math.max(0, Math.min(targetScrollTop, maxScroll));
-
-        // Плавная прокрутка с использованием requestAnimationFrame для лучшей совместимости
-        var startScrollTop = currentScrollTop;
-        var distance = targetScrollTop - startScrollTop;
-        var duration = 300; // миллисекунды
-        var startTime = null;
-
-        function animateScroll(currentTime) {
-          if (startTime === null) startTime = currentTime;
-          var timeElapsed = currentTime - startTime;
-          var progress = Math.min(timeElapsed / duration, 1);
-
-          // Easing функция для плавности
-          var ease = progress < 0.5
-            ? 2 * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-          scrollContainer.scrollTop = startScrollTop + distance * ease;
-
-          if (progress < 1) {
-            requestAnimationFrame(animateScroll);
-          }
-        }
-
-        requestAnimationFrame(animateScroll);
-      }
-    }, 150);
+    }, 100);
   };
 
   /**
