@@ -737,6 +737,10 @@ function getHomeUrl() {
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
+
     // Находим все контейнеры, где лежит кнопка и выпадашка
     const catalogContainers = document.querySelectorAll('.catalog-dropdown-container');
 
@@ -803,61 +807,51 @@ function getHomeUrl() {
 
       // --- 3. Обработка кликов по элементам меню (только для мобильных) ---
       if (isMobile()) {
-        const topLevelItems = container.querySelectorAll('li.relative');
+        const level1Items = container.querySelectorAll('#catalog-dropdown > li');
 
-        topLevelItems.forEach(item => {
-          const link = item.querySelector('a');
-          const submenu = item.querySelector('ul.absolute');
+        level1Items.forEach(item => {
+          const link = item.querySelector(':scope > a');
+          const submenu = item.querySelector(':scope > ul');
 
-          if (submenu) {
-            // Убираем href у ссылки первого уровня
-            link.href = '#';
-
-            // При клике на первый уровень — показываем подменю и фиксируем основное меню
+          if (submenu && link) {
+            // ❌ запрещаем переход
             link.addEventListener('click', (e) => {
               e.preventDefault();
+              e.stopPropagation();
 
-              // Если основное меню не открыто — открыть его
+              // если основное меню закрыто — открыть
               if (!isPinned) {
                 isPinned = true;
                 show();
               }
 
-              // Скрываем все подменю второго уровня
-              const allSubmenus = container.querySelectorAll('ul.absolute');
-              allSubmenus.forEach(sub => {
-                if (sub !== submenu) {
-                  sub.classList.remove('opacity-100', 'visible');
-                  sub.classList.add('opacity-0', 'invisible');
+              // закрываем все остальные подменю 2 уровня
+              level1Items.forEach(otherItem => {
+                const otherSub = otherItem.querySelector(':scope > ul');
+                if (otherSub && otherSub !== submenu) {
+                  otherSub.classList.remove('opacity-100', 'visible');
+                  otherSub.classList.add('opacity-0', 'invisible');
                 }
               });
 
-              // Переключаем видимость текущего подменю
+              // переключаем ТЕКУЩЕЕ подменю
               submenu.classList.toggle('opacity-100');
               submenu.classList.toggle('visible');
               submenu.classList.toggle('opacity-0');
               submenu.classList.toggle('invisible');
             });
           }
-          // Если нет подменю — оставляем обычный переход
         });
 
-        // --- Закрытие меню при клике вне ---
+        // закрытие ТОЛЬКО при клике вне каталога
         document.addEventListener('click', (e) => {
-          if (!parent.contains(e.target)) {
-            isPinned = false;
-            hide();
-          }
-        });
-      } else {
-        // --- Закрытие меню при клике вне (для десктопа) ---
-        document.addEventListener('click', (e) => {
-          if (!parent.contains(e.target)) {
+          if (!container.contains(e.target)) {
             isPinned = false;
             hide();
           }
         });
       }
+
 
       // --- 4. Закрытие по клавише Esc ---
       document.addEventListener('keydown', (e) => {
