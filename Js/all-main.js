@@ -1732,13 +1732,14 @@ var oMaterials = new function(){
    * Скролим вверх
    */
   this.scrollToSectionPhoto = function () {
-
-    const block = document.getElementById("material-selected");
-    if (block) {
-      const top = block.getBoundingClientRect().top + window.scrollY - 40;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-
+    // Небольшая задержка для обновления DOM после выбора материала
+    setTimeout(function() {
+      const block = document.getElementById("material-selected");
+      if (block) {
+        const top = block.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 100);
   };
 
   /**
