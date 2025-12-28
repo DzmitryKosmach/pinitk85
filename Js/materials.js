@@ -297,6 +297,8 @@ var oMaterials = new (function () {
    * Скролим вверх
    */
   this.scrollToSectionPhoto = function () {
+    const block2 = document.getElementById("material-selected2");
+    if (block2) return;
     // Небольшая задержка для обновления DOM после выбора материала
     setTimeout(function() {
       const block = document.getElementById("material-selected");
