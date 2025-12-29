@@ -1645,7 +1645,7 @@ var oMaterials = new function(){
     var elLevel2 = $$$('materials-level2'); if(!elLevel2) return;
     elLevel2.style.display = 'none';
 
-    this.onChangePageSize(false);
+    // this.onChangePageSize(false);
   };
 
 
