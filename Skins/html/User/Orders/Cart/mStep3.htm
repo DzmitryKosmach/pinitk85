@@ -35,105 +35,127 @@
       <?php } ?>
 
       <div class="section summary mb-10">
-        <h4 class="text-xl font-semibold mb-4">Товары в заказе</h4>
+        <h4 class="font-black text-2xl">Товары в заказе</h4>
         <div class="body">
-          <table class="products js-element">
-            <tr>
-              <th class="item nowrap max-w-24">Серия</th>
-              <th class="custom nowrap">Товар</th>
-              <th class="custom nowrap">Цвет</th>
-              <th class="custom nowrap">Цена</th>
-              <th class="custom nowrap">Кол-во</th>
-              <th class="custom nowrap">Сумма</th>
+          <table class="products js-element w-full border-collapse">
+            <thead>
+            <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+              <th class="item nowrap px-4 py-3 min-w-0 w-32 max-w-32 overflow-hidden text-ellipsis">Серия</th>
+              <th class="custom nowrap px-4 py-3">Товар</th>
+              <th class="custom nowrap px-4 py-3">Цвет</th>
+              <th class="custom nowrap px-4 py-3">Кол-во</th>
+              <th class="custom nowrap px-4 py-3">Цена</th>
+              <th class="custom nowrap px-4 py-3">Сумма</th>
             </tr>
+            </thead>
+            <tbody>
             <?php foreach($cart as $c) { ?>
-            <tr>
-              <td class="item">
+            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+              <!-- Серия -->
+              <td class="item px-4 py-3 min-w-0 w-32 max-w-32 overflow-hidden text-ellipsis">
                 <?php if($c['series']) { ?>
-                <a href="<?php echo Catalog_Series::a($c['series']); ?>"
-                ><?php echo $c['series']['name']; ?></a
-                >
+                <a href="<?php echo Catalog_Series::a($c['series']); ?>" class="text-blue-600 hover:text-blue-800">
+                  <?php echo $c['series']['name']; ?>
+                </a>
                 <?php } ?>
               </td>
-              <td class="itemname">
-                <div class="pic">
-                  <?php if($c['item']['_img_ext']) { ?>
-                  <img
-                    src="<?php echo Catalog::photoUrl(
-														Catalog_Items::$imagePath,
-														$c['item']['id'], 30, 30, 1, $c['item']['_img_ext'],
-														$c['item']['image-name']
-													); ?>"
-                  />
-                  <?php } ?>
-                </div>
-                <div class="text">
-                  <?php echo $c['item']['name']; ?><br />
-                  <span>
-                      Арт.:
-                    <?php echo $c['item']['art']; ?><br />
-                    <?php if(trim($c['item']['size']) !== '') { ?>
-                    Размер:
-                    <?php echo $c['item']['size']; ?>
+
+              <!-- Товар -->
+              <td class="itemname px-4 py-3">
+                <div class="flex items-start gap-3">
+                  <div class="flex-shrink-0">
+                    <?php if($c['item']['_img_ext']) { ?>
+                    <img
+                      src="<?php echo Catalog::photoUrl(
+                    Catalog_Items::$imagePath,
+                    $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
+                    $c['item']['image-name']
+                  ); ?>"
+                      alt="<?php echo hsch($c['item']['name']); ?>"
+                      class="w-12 h-12 object-cover rounded"
+                    />
+                    <?php } else { ?>
+                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    </div>
                     <?php } ?>
-                    </span>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-medium text-gray-900"><?php echo $c['item']['name']; ?></div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      Арт.: <?php echo $c['item']['art']; ?><br>
+                      <?php if(trim($c['item']['size']) !== '') { ?>
+                      Размер: <?php echo $c['item']['size']; ?>
+                      <?php } ?>
+                    </div>
+                  </div>
                 </div>
               </td>
-              <td class="material" style="min-width: 100px">
+
+              <!-- Цвет -->
+              <td class="material px-4 py-3 text-center" style="min-width: 100px;">
                 <?php if($c['material']) { ?>
-                <?php if($c['material']['_img_ext']) { ?>
-                <div class="image">
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <?php if($c['material']['_img_ext']) { ?>
                   <a
                     href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
                     target="_blank"
                     onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+                    class="block"
                   >
                     <img
                       src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
                       width="24"
                       height="24"
                       alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                      class="rounded border"
                     />
                   </a>
-                </div>
-                <?php } ?>
-                <div class="name">
-                  <?php echo implode('<br>',
-                  Catalog_Materials::getFullName($c['material']['id'])); ?>
+                  <?php } ?>
+                  <div class="name text-xs text-gray-700">
+                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                  </div>
                 </div>
                 <?php } else { ?>
                 &nbsp;
                 <?php } ?>
               </td>
-              <td class="nowrap right">
+
+              <!-- Кол-во -->
+              <td class="nowrap px-4 py-3">
+                <?php echo $c['amount']; ?> шт
+              </td>
+
+              <!-- Цена -->
+              <td class="nowrap px-4 py-3 text-right">
                 <?php if(abs($c['price'])) { ?>
-                <?php echo Catalog::priceFormat($c['price']); ?>
-                руб.
                 <?php if(abs($c['item']['discount']) != 1) { ?>
-                <?php $d = Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>
-                <br />
-                <span
-                  class="discount"
-                  title="Цена со скидкой <?php echo $d?>%"
-                >
-                    (-<?php echo $d?>%)
-                  </span>
+                <div class="text-xs text-gray-500 line-through">
+                  <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
+                </div>
                 <?php } ?>
+                <div class="font-medium">
+                  <?php echo Catalog::priceFormat($c['price']); ?> руб.
+                </div>
                 <?php } else { ?>
-                по запросу
+                <div class="text-gray-500">по запросу</div>
                 <?php } ?>
               </td>
-              <td class="nowrap right">
-                <?php echo $c['amount']; ?>
-                шт
-              </td>
-              <td class="nowrap right">
-                <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?>
-                руб.
+
+              <!-- Сумма -->
+              <td class="nowrap px-4 py-3 text-right">
+                <div class="font-medium">
+                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
+                </div>
               </td>
             </tr>
             <?php } ?>
+            </tbody>
           </table>
+
           <div class="order_pay">
             <div class="right">
               <table class="bx_ordercart_order_sum">
@@ -142,15 +164,13 @@
                     Итого:
                   </td>
                   <td class="custom_t2 fwb price">
-                    <?php echo Catalog::priceFormat($totalPrice); ?>
-                    руб.
+                    <?php echo Catalog::priceFormat($totalPrice); ?> руб.
                   </td>
                 </tr>
                 <tr>
                   <td class="custom_t1" colspan="6"></td>
                   <td class="custom_t2">
-                    <?php echo $totalAmount; ?>
-                    шт.
+                    <?php echo $totalAmount; ?> шт.
                   </td>
                 </tr>
               </table>
