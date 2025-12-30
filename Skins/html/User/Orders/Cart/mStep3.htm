@@ -15,13 +15,17 @@
         </a>
         <span class="mx-1">›</span>
         <?php } ?>
-        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <span class="text-gray-700">
+          <?php echo $bcLast['name']; ?>
+        </span>
         <?php } ?>
       </nav>
 
 
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-3xl font-semibold mb-6">
+        <?php echo $pageInf['header']; ?>
+      </h1>
       <?php } ?>
     </div>
   </div>
@@ -50,50 +54,43 @@
             <tr>
               <td class="item">
                 <?php if($c['series']) { ?>
-                <a href="<?php echo Catalog_Series::a($c['series']); ?>"
-                ><?php echo $c['series']['name']; ?></a
-                >
+                <a href="<?php echo Catalog_Series::a($c['series']); ?>">
+                  <?php echo $c['series']['name']; ?>
+                </a>
                 <?php } ?>
               </td>
               <td class="itemname">
                 <div class="pic">
                   <?php if($c['item']['_img_ext']) { ?>
-                  <img
-                    src="<?php echo Catalog::photoUrl(
+                  <img src="<?php echo Catalog::photoUrl(
 														Catalog_Items::$imagePath,
 														$c['item']['id'], 30, 30, 1, $c['item']['_img_ext'],
 														$c['item']['image-name']
-													); ?>"
-                  />
+													); ?>" />
                   <?php } ?>
                 </div>
                 <div class="text">
                   <?php echo $c['item']['name']; ?><br />
                   <span>
-                      Арт.:
+                    Арт.:
                     <?php echo $c['item']['art']; ?><br />
                     <?php if(trim($c['item']['size']) !== '') { ?>
                     Размер:
                     <?php echo $c['item']['size']; ?>
                     <?php } ?>
-                    </span>
+                  </span>
                 </div>
               </td>
               <td class="material" style="min-width: 100px">
                 <?php if($c['material']) { ?>
                 <?php if($c['material']['_img_ext']) { ?>
                 <div class="image">
-                  <a
-                    href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                    target="_blank"
-                    onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                  >
+                  <a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                    target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})">
                     <img
                       src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                      width="24"
-                      height="24"
-                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                    />
+                      width="24" height="24"
+                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>" />
                   </a>
                 </div>
                 <?php } ?>
@@ -112,12 +109,10 @@
                 <?php if(abs($c['item']['discount']) != 1) { ?>
                 <?php $d = Catalog::num2percent($c['item']['discount'], Catalog::PC_DECREASE); ?>
                 <br />
-                <span
-                  class="discount"
-                  title="Цена со скидкой <?php echo $d?>%"
-                >
-                    (-<?php echo $d?>%)
-                  </span>
+                <span class="discount" title="Цена со скидкой <?php echo $d?>%">
+                  (-
+                  <?php echo $d?>%)
+                </span>
                 <?php } ?>
                 <?php } else { ?>
                 по запросу
@@ -160,14 +155,10 @@
       </div>
 
       <div class="order_form_div someform orderforma order-checkout">
-        <div class="clearfix ">
-          <form
-            method="post"
-            class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
-            id="cart-form"
-            style="width: 100%"
-          >
-            <div class="payment_method-step3">
+        <div class="clearfix max-w-7xl mx-auto">
+          <form method="post" class="cart-step3-left section paysystem flex flex-col lg:flex-row gap-6 w-full"
+            id="cart-form">
+            <div class="payment_method-step3 flex-1 lg:max-w-md">
               <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
               <div class="space-y-4">
                 <?php foreach (Orders::$paymethods as $pm => $name) { ?>
@@ -176,27 +167,22 @@
                 <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                   <!-- Радиокнопка -->
                   <div class="flex items-center">
-                    <input
-                      type="radio"
-                      name="paymethod"
-                      value="<?php echo $pm; ?>"
-                      id="paymethod-<?php echo $pm; ?>"
-                      class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5"
-                    />
+                    <input type="radio" name="paymethod" value="<?php echo $pm; ?>" id="paymethod-<?php echo $pm; ?>"
+                      class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5" />
                   </div>
 
                   <!-- Логотип -->
-                  <label for="paymethod-<?php echo $pm; ?>" class="block w-12 h-12 cursor-pointer">
-                      <img
-                        class="block w-full h-full object-contain"
-                        src="/Skins/img/user/pay-logo-<?php echo $pm; ?>.png"
-                      />
+                  <label for="paymethod-<?php echo $pm; ?>" class="block w-12 h-12 cursor-pointer shrink-0">
+                    <img class="block w-full h-full object-contain"
+                      src="/Skins/img/user/pay-logo-<?php echo $pm; ?>.png" />
                   </label>
 
                   <!-- Текст: название и описание -->
                   <div class="data flex-1 min-w-0">
                     <label for="paymethod-<?php echo $pm; ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
+                      <strong class="text-gray-900">
+                        <?php echo htmlspecialchars($name); ?>
+                      </strong>
                       <p class="note text-gray-600 text-sm mt-1">
                         <?php echo Orders::$paymethodsComments[$pm] ?? ''; ?>
                       </p>
@@ -207,7 +193,7 @@
               </div>
             </div>
 
-            <div class="cart-step3-right !w-full">
+            <div class="cart-step3-right flex-1 lg:max-w-md">
               <h4 class="text-2xl font-semibold mb-4">Итоговая стоимость</h4>
               <div class="body clearfix">
                 <div class="order-total clearfix space-y-4">
@@ -250,17 +236,15 @@
                     </div>
                   </div>
                   <br>
-                  <div class="flex flex-col gap-4 w-fit">
-                    <button
-                      onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;"
-                      type="submit"
-                      class="btn btn1 px-6 py-3 !bg-main text-white rounded-md font-semibold hover:bg-opacity-90 transition"
-                      form="cart-form"
-                    >
+                  <div class="flex flex-col gap-4 w-full sm:w-fit">
+                    <button onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;" type="submit"
+                      class="btn btn1 px-6 py-3 !bg-main text-white text-center rounded-md font-semibold hover:bg-opacity-90 transition w-full sm:w-auto"
+                      form="cart-form">
                       Оформить заказ
                     </button>
 
-                    <a href="<?php echo Url::a('catalog-cart-step2'); ?>" class="inline-block border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition">
+                    <a href="<?php echo Url::a('catalog-cart-step2'); ?>"
+                      class="inline-block border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition w-full sm:w-auto text-center">
                       Вернуться к предыдущему этапу
                     </a>
                   </div>
