@@ -26,6 +26,7 @@
     </div>
   </div>
 </div>
+
 <div id="content" class="content">
   <div>
     <div class="centeringin clearfix">
@@ -34,7 +35,7 @@
       <div class="cl"></div>
       <?php } ?>
 
-      <div class="section summary mb-10">
+      <div class="section summary mb-10 overflow-x-auto overflow-y-hidden">
         <h4 class="font-black text-2xl">Товары в заказе</h4>
         <div class="body">
           <table class="products js-element w-full border-collapse">
@@ -130,7 +131,7 @@
               </td>
 
               <!-- Цена -->
-              <td class="nowrap px-4 py-3 text-right">
+              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
                 <?php if(abs($c['price'])) { ?>
                 <?php if(abs($c['item']['discount']) != 1) { ?>
                 <div class="text-xs text-gray-500 line-through">
@@ -146,7 +147,7 @@
               </td>
 
               <!-- Сумма -->
-              <td class="nowrap px-4 py-3 text-right">
+              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
                 <div class="font-medium">
                   <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
                 </div>
@@ -163,13 +164,13 @@
                   <td class="custom_t1 fwb" colspan="6" class="itog">
                     Итого:
                   </td>
-                  <td class="custom_t2 fwb price">
+                  <td class="custom_t2 fwb price text-2xl font-bold">
                     <?php echo Catalog::priceFormat($totalPrice); ?> руб.
                   </td>
                 </tr>
                 <tr>
                   <td class="custom_t1" colspan="6"></td>
-                  <td class="custom_t2">
+                  <td class="custom_t2 text-xl font-bold">
                     <?php echo $totalAmount; ?> шт.
                   </td>
                 </tr>
@@ -185,7 +186,7 @@
             method="post"
             class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
             id="cart-form"
-            style="width: 100%"
+            style="width: 100%; float: none;"
           >
             <div class="payment_method-step3">
               <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
