@@ -234,7 +234,7 @@
                   ?>
           <div id="material-selected2" class="item-current-material">
             <span class="b">Выбран цвет:</span>
-            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
+            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB; border-radius: 8px;">
               <?php if($mActive['image']['ext']) { ?>
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_76x61_0.<?php echo $mActive['image']['ext']; ?>" width="76" alt="">
               <?php } ?>
