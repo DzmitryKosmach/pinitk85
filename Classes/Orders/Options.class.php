@@ -707,7 +707,7 @@ class Orders_Options extends ExtDbList
       return array(
         // 'price' => round($calcOptions['garbage'], Catalog::PRICES_DECIMAL),
         'price' => 0,
-        'info' => 'Нужен'
+        'info' => 'Нужен (Уточняйте у менеджера)'
       );
     }
   }
