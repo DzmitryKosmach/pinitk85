@@ -64,6 +64,25 @@ class mCart {
 			self::remove($itemId, intval($_GET['material_id']));
 			exit;
 		}
+		if($itemId = intval($_GET['change_material'])){
+			// Изменение материала товара в корзине
+			$oldMaterialId = intval($_GET['old_material_id']);
+			$newMaterialId = intval($_GET['new_material_id']);
+			if($oldMaterialId && $newMaterialId && $oldMaterialId != $newMaterialId){
+				// Получаем количество товара со старым материалом
+				$amount = isset($_SESSION[Catalog_Cart::SESS_KEY][$itemId][$oldMaterialId]) 
+					? $_SESSION[Catalog_Cart::SESS_KEY][$itemId][$oldMaterialId] 
+					: 0;
+				if($amount > 0){
+					// Удаляем старый материал
+					Catalog_Cart::remove($itemId, $oldMaterialId);
+					// Добавляем с новым материалом
+					Catalog_Cart::add($itemId, $amount, $newMaterialId);
+				}
+			}
+			header('Location: ' . Url::a('catalog-cart-step1'));
+			exit;
+		}
 
 		// Данные корзины
 		self::$cart = Catalog_Cart::get();

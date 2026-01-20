@@ -126,31 +126,110 @@
                   </td>
 
                   <!-- Цвет -->
-                  <td class="material px-4 py-3 text-center" style="min-width: 100px;">
-                    <?php if ($c['material']): ?>
-                    <div class="flex flex-col items-center justify-center gap-2">
-                      <?php if ($c['material']['_img_ext']): ?>
-                      <a
-                        href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                        target="_blank"
-                        onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                        class="block"
-                      >
-                        <img
-                          src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                          width="24"
-                          height="24"
-                          alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                          class="rounded border"
-                        />
-                      </a>
-                      <?php endif; ?>
-                      <div class="name text-xs text-gray-700">
-                        <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                  <td class="material px-4 py-3" style="min-width: 150px;">
+                    <?php if (!empty($c['item']['materials']) && count($c['item']['materials'])): ?>
+                      <?php
+                        // Получаем активный материал
+                        $mActive = null;
+                        $mActiveId = $c['material'] ? intval($c['material']['id']) : 0;
+                        if ($mActiveId && isset($materials[$mActiveId])) {
+                          $mActive = $materials[$mActiveId];
+                        }
+                        $mActiveName = array();
+                        if ($mActive) {
+                          $mActiveName = Catalog_Materials::getFullName($mActive['id']);
+                        }
+                      ?>
+                      <div class="flex flex-col gap-2">
+                        <?php if ($mActive && isset($mActive['image']['ext']) && $mActive['image']['ext']): ?>
+                        <div class="flex justify-center">
+                          <a
+                            href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['id']; ?>.<?php echo $mActive['image']['ext']; ?>"
+                            target="_blank"
+                            onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+                            class="block"
+                          >
+                            <img
+                              src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['id']; ?>_24x24_0.<?php echo $mActive['image']['ext']; ?>"
+                              width="24"
+                              height="24"
+                              alt="<?php echo hsch(implode(' / ', $mActiveName)); ?>"
+                              class="rounded border"
+                            />
+                          </a>
+                        </div>
+                        <?php endif; ?>
+                        <div class="text-xs font-semibold text-gray-700 mb-1">Цветовая гамма:</div>
+                        <select
+                          name="material[<?php echo intval($c['item']['id']); ?>]"
+                          class="w-full text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onchange="window.location.href = '<?php echo Url::a('catalog-cart'); ?>?change_material=<?php echo intval($c['item']['id']); ?>&old_material_id=<?php echo $mActiveId; ?>&new_material_id=' + this.value;"
+                        >
+                          <?php foreach($c['item']['materials'] as $im) { ?>
+                            <?php if(isset($materials[$im['material_id']])) { ?>
+                              <?php $m1 = $materials[$im['material_id']]; ?>
+                              <?php if(isset($m1['has_sub']) && $m1['has_sub'] && isset($m1['sub'])) { ?>
+                                <?php foreach($m1['sub'] as $m2) { ?>
+                                  <?php if(isset($m2['has_sub']) && $m2['has_sub'] && isset($m2['sub'])) { ?>
+                                    <?php foreach($m2['sub'] as $m3) { ?>
+                                      <option value="<?php echo $m3['id']; ?>" <?php if($mActive && $m3['id'] == $mActive['id']) { ?>selected<?php } ?>>
+                                        <?php echo $m1['name']; ?> / <?php echo $m2['name']; ?> / <?php echo $m3['name']; ?>
+                                        <?php if(abs($im['price'])) { ?>
+                                          (<?php echo Catalog::priceFormat($im['price']); ?> р.)
+                                        <?php } else { ?>
+                                          (по запросу)
+                                        <?php } ?>
+                                      </option>
+                                    <?php } ?>
+                                  <?php } else { ?>
+                                    <option value="<?php echo $m2['id']; ?>" <?php if($mActive && $m2['id'] == $mActive['id']) { ?>selected<?php } ?>>
+                                      <?php echo $m1['name']; ?> / <?php echo $m2['name']; ?>
+                                      <?php if(abs($im['price'])) { ?>
+                                        (<?php echo Catalog::priceFormat($im['price']); ?> р.)
+                                      <?php } else { ?>
+                                        (по запросу)
+                                      <?php } ?>
+                                    </option>
+                                  <?php } ?>
+                                <?php } ?>
+                              <?php } else { ?>
+                                <option value="<?php echo $m1['id']; ?>" <?php if($mActive && $m1['id'] == $mActive['id']) { ?>selected<?php } ?>>
+                                  <?php echo $m1['name']; ?>
+                                  <?php if(abs($im['price'])) { ?>
+                                    (<?php echo Catalog::priceFormat($im['price']); ?> р.)
+                                  <?php } else { ?>
+                                    (по запросу)
+                                  <?php } ?>
+                                </option>
+                              <?php } ?>
+                            <?php } ?>
+                          <?php } ?>
+                        </select>
                       </div>
-                    </div>
+                    <?php elseif ($c['material']): ?>
+                      <div class="flex flex-col items-center justify-center gap-2">
+                        <?php if ($c['material']['_img_ext']): ?>
+                        <a
+                          href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                          target="_blank"
+                          onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+                          class="block"
+                        >
+                          <img
+                            src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                            width="24"
+                            height="24"
+                            alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                            class="rounded border"
+                          />
+                        </a>
+                        <?php endif; ?>
+                        <div class="name text-xs text-gray-700">
+                          <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                        </div>
+                      </div>
                     <?php else: ?>
-                    &nbsp;
+                      &nbsp;
                     <?php endif; ?>
                   </td>
 

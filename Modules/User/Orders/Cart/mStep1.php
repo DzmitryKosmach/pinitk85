@@ -28,6 +28,30 @@ class mStep1 {
 		}
 		list($totalAmount, $totalPrice, $totalPriceOld) = Catalog_Cart::total();
 
+		// Получаем дерево материалов для всех серий в корзине
+		$seriesIds = array();
+		foreach($cart as $c){
+			if($c['series'] && $c['series']['id']){
+				$seriesIds[] = $c['series']['id'];
+			}
+		}
+		$seriesIds = array_unique($seriesIds);
+		$materials = array();
+		if(count($seriesIds)){
+			$oMaterials = new Catalog_Materials();
+			$materials = $oMaterials->getTree($seriesIds);
+		}
+
+		// Получаем материалы для каждого товара
+		$oItems2Materials = new Catalog_Items_2Materials();
+		foreach($cart as &$c){
+			$c['item']['materials'] = $oItems2Materials->get(
+				'*',
+				'`item_id` = ' . intval($c['item']['id'])
+			);
+		}
+		unset($c);
+
 		// Название страницы "Корзина" для хлебных крошек
 		$oPages = new Pages();
 		$cartPageName = $oPages->getCell('name', '`alias` = \'catalog-cart\'');
@@ -48,6 +72,7 @@ class mStep1 {
 			'totalAmount'	=> $totalAmount,
 			'totalPrice'	=> $totalPrice,
 			'totalPriceOld'	=> $totalPriceOld,
+			'materials'		=> $materials,
 
 			'userInf'	=> $init['user']
 		));
