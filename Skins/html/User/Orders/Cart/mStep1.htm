@@ -1,6 +1,13 @@
 <?php echo CssCopmress::load('cart')?>
 <?php echo JsCopmress::load('series')?>
 
+<?php if (!empty($materials)) { ?>
+<script>
+  // Дерево материалов для попапов (как на странице серии)
+  oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
+</script>
+<?php } ?>
+
 <div id="title" class="title">
   <div class="">
     <div class=" clearfix">
