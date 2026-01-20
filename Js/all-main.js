@@ -1245,54 +1245,65 @@ function showItemPopup1(url, itemId){
         $.fancybox.reposition();
       };
       oMaterials.onSave = function(price, material){
-        // Отображаем цену с выбранным материалом
-        if(price.current > 0){
-          $$$('item1-' + itemId + '-price').className = '';
-          $$$('item1-' + itemId + '-price').innerHTML = priceFormat(price.current);
-          if(price.old){
-            $$$('item1-' + itemId + '-price-old').style.display = '';
-            $$$('item1-' + itemId + '-price-old').innerHTML = priceFormat(price.old);
-          }else{
-            $$$('item1-' + itemId + '-price-old').style.display = 'none';
-            $$$('item1-' + itemId + '-price-old').innerHTML = '0';
-          }
-          if($$$('item1-' + itemId + '-price-in')){
-            $$$('item1-' + itemId + '-price-in').style.display = '';
-            $$$('item1-' + itemId + '-price-in').innerHTML = priceFormat(price.in);
-          }
-        }else{
-          $$$('item1-' + itemId + '-price').innerHTML = 'по запросу';
-          $$$('item1-' + itemId + '-price-old').innerHTML = '0';
-
-          $$$('item1-' + itemId + '-price').className = 'price-by-request';
-          $$$('item1-' + itemId + '-price-old').style.display = 'none';
-          if($$$('item1-' + itemId + '-price-in')){
-            $$$('item1-' + itemId + '-price-in').style.display = 'none';
-          }
-        }
-
-        // Записываем ID материала в соответствующее поле
-        $$$('item1-' + itemId + '-material').value = material.id;
-
-        // Выделяем выбранный материал в полоске с их превьюшками
+        // Отображаем цену с выбранным материалом (если есть элементы на странице)
+        var priceEl     = $$$('item1-' + itemId + '-price');
+        var priceOldEl  = $$$('item1-' + itemId + '-price-old');
+        var priceInEl   = $$$('item1-' + itemId + '-price-in');
+        var materialInp = $$$('item1-' + itemId + '-material');
         var matsPreviewsBlock = $$$('item1-' + itemId + '-materials-preview');
-        var matsPreviews = byTag('DIV', matsPreviewsBlock);
-        var previewNum = 1;
 
-        for(var i = 0, l = matsPreviews.length; i < l; i++){
-          if(matsPreviews[i].id == 'item1-' + itemId + '-m-' + material.topId){
-            matsPreviews[i].className = 'active';
-            previewNum = i + 1;
+        if (priceEl && priceOldEl) {
+          if(price.current > 0){
+            priceEl.className = '';
+            priceEl.innerHTML = priceFormat(price.current);
+            if(price.old){
+              priceOldEl.style.display = '';
+              priceOldEl.innerHTML = priceFormat(price.old);
+            }else{
+              priceOldEl.style.display = 'none';
+              priceOldEl.innerHTML = '0';
+            }
+            if(priceInEl){
+              priceInEl.style.display = '';
+              priceInEl.innerHTML = priceFormat(price.in);
+            }
           }else{
-            matsPreviews[i].className = '';
+            priceEl.innerHTML = 'по запросу';
+            priceOldEl.innerHTML = '0';
+
+            priceEl.className = 'price-by-request';
+            priceOldEl.style.display = 'none';
+            if(priceInEl){
+              priceInEl.style.display = 'none';
+            }
           }
         }
-        matsPreviewsBlock.className = 'materials pos-' + Math.ceil(previewNum/7);
+
+        // Записываем ID материала в соответствующее поле, если оно есть
+        if (materialInp) {
+          materialInp.value = material.id;
+        }
+
+        // Выделяем выбранный материал в полоске с их превьюшками (если она есть)
+        if (matsPreviewsBlock) {
+          var matsPreviews = byTag('DIV', matsPreviewsBlock);
+          var previewNum = 1;
+
+          for(var i = 0, l = matsPreviews.length; i < l; i++){
+            if(matsPreviews[i].id == 'item1-' + itemId + '-m-' + material.topId){
+              matsPreviews[i].className = 'active';
+              previewNum = i + 1;
+            }else{
+              matsPreviews[i].className = '';
+            }
+          }
+          matsPreviewsBlock.className = 'materials pos-' + Math.ceil(previewNum/7);
+        }
       };
-      oMaterials.open(
-        itemId,
-        $$$('item1-' + itemId + '-material').value
-      );
+
+      var matInput = $$$('item1-' + itemId + '-material');
+      var matId = matInput ? matInput.value : 0;
+      oMaterials.open(itemId, matId);
 
       //oPopup.fixSize();
       //oPopup.fixPos();
