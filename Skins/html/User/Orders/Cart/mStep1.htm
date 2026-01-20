@@ -213,6 +213,16 @@
                 </tr>
                 <?php } ?>
 
+                <?php foreach($cart as $c) { ?>
+                  <?php if (!empty($c['item']['materials'])) { ?>
+                    <script>
+                      // Материалы для попапа выбора цвета в корзине (как на странице серии)
+                      oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
+                        AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?>');
+                    </script>
+                  <?php } ?>
+                <?php } ?>
+
                 <!-- Пересчитать -->
                 <tr class="no-borders border-t border-gray-200">
                   <td colspan="4" class="px-4 py-3"></td>
