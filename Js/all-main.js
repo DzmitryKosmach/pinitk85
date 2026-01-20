@@ -3222,8 +3222,10 @@ var oCart = new function(){
 function goToTop(){
 
   var link = $$$('goto-top');
+  if (!link) return;
 
   function fixPos(){
+    if (!link) return;
     var winW = winSize().w;
     if(winW >= 1320){
       link.style.right = Math.round((winW-1240)/2 - (60+20)) + 'px';
@@ -3239,6 +3241,7 @@ function goToTop(){
   );
 
   function checkScroll(){
+    if (!link) return;
     var scrollPos = D.body.scrollTop ? D.body.scrollTop : D.documentElement.scrollTop;
     if(scrollPos >= 500){
       link.style.display = 'block';
@@ -3381,25 +3384,30 @@ document.addEventListener('DOMContentLoaded', function () {
         aroundText.classList.remove('show_search'); // скрыть поиск
       });
     }
-    $(window).scroll(function () {
-      if (!document.querySelector('.new_block .searchinhead .aroundtext input').value && !$(".new_block .searchinhead .aroundtext input").is(":focus")) {
-        aroundText.classList.remove('show_search'); // скрыть поиск при прокрутке
-      };
-    })
+    if (aroundText) {
+      $(window).scroll(function () {
+        var searchInput = document.querySelector('.new_block .searchinhead .aroundtext input');
+        if (searchInput && !searchInput.value && !$(".new_block .searchinhead .aroundtext input").is(":focus")) {
+          aroundText.classList.remove('show_search'); // скрыть поиск при прокрутке
+        };
+      });
+    }
     var catalog_button = document.querySelector('.new_block .catalogmenu .icon.menu'),
       clearfix = document.querySelector('.new_block .catalogmenu.clearfix'),
       liParent = document.querySelector('.new_block .catalogmenu li.parent');
-    catalog_button.addEventListener('click', function () {
-      if (catalog_button.classList.contains('hover')) {
-        clearfix.classList.remove('hover');
-        liParent.classList.remove('hover');
-        catalog_button.classList.remove('hover');
-      } else {
-        clearfix.classList.add('hover');
-        liParent.classList.add('hover');
-        catalog_button.classList.add('hover');
-      };
-    });
+    if (catalog_button && clearfix && liParent) {
+      catalog_button.addEventListener('click', function () {
+        if (catalog_button.classList.contains('hover')) {
+          clearfix.classList.remove('hover');
+          liParent.classList.remove('hover');
+          catalog_button.classList.remove('hover');
+        } else {
+          clearfix.classList.add('hover');
+          liParent.classList.add('hover');
+          catalog_button.classList.add('hover');
+        };
+      });
+    }
   };
 });
 
