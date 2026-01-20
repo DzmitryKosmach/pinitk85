@@ -14,9 +14,11 @@ function RSGoPro_OnOfferChangeDetail($elementObj) {
 		$elementObj.find('.changeimage.imgoffer').hide().removeClass('scrollitem');
 		$elementObj.find('.changeimage.imgofferid'+finedOfferID).show().addClass('scrollitem');
 		$elementObj.find('.changeimage.imgofferid'+finedOfferID).filter(':first').trigger('click');
-		RSGoPro_ScrollReinit('.d_jscrollpane');
-		RSGoPro_ScrollReinit('.popd_jscrollpane');
-		RSGoPro_ScrollReinit('.prs_jscrollpane');
+		if (typeof RSGoPro_ScrollReinit === 'function') {
+			RSGoPro_ScrollReinit('.d_jscrollpane');
+			RSGoPro_ScrollReinit('.popd_jscrollpane');
+			RSGoPro_ScrollReinit('.prs_jscrollpane');
+		}
 		setTimeout(function(){
 			$elementObj.find('.changeimage:visible:first').trigger('click');
 		},50);
@@ -152,14 +154,18 @@ $(document).ready(function(){
 	});
 
 	// jScrollPane -> images and prices
-	RSGoPro_ScrollInit('.d_jscrollpane');
-	RSGoPro_ScrollInit('.popd_jscrollpane');
-	RSGoPro_ScrollInit('.prs_jscrollpane');
-	$(window).resize(function(){
-		RSGoPro_ScrollReinit('.d_jscrollpane');
-		RSGoPro_ScrollReinit('.popd_jscrollpane');
-		RSGoPro_ScrollReinit('.prs_jscrollpane');
-	});
+	if (typeof RSGoPro_ScrollInit === 'function') {
+		RSGoPro_ScrollInit('.d_jscrollpane');
+		RSGoPro_ScrollInit('.popd_jscrollpane');
+		RSGoPro_ScrollInit('.prs_jscrollpane');
+		$(window).resize(function(){
+			if (typeof RSGoPro_ScrollReinit === 'function') {
+				RSGoPro_ScrollReinit('.d_jscrollpane');
+				RSGoPro_ScrollReinit('.popd_jscrollpane');
+				RSGoPro_ScrollReinit('.prs_jscrollpane');
+			}
+		});
+	}
 
 	// Fancybox -> gallery
 	if(!RSDevFunc_PHONETABLET) {

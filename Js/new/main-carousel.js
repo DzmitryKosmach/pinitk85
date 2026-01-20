@@ -127,27 +127,33 @@
         });
 
         // Дополнительная проверка через MutationObserver
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === "childList") {
-                    if (
-                        document.getElementById("carousel") &&
-                        document.getElementById("pagination")
-                    ) {
-                        console.log(
-                            "Элементы появились через MutationObserver"
-                        );
-                        observer.disconnect();
-                        setTimeout(initCarousel, 100);
+        if (typeof MutationObserver !== 'undefined' && document.body) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === "childList") {
+                        if (
+                            document.getElementById("carousel") &&
+                            document.getElementById("pagination")
+                        ) {
+                            console.log(
+                                "Элементы появились через MutationObserver"
+                            );
+                            observer.disconnect();
+                            setTimeout(initCarousel, 100);
+                        }
                     }
-                }
+                });
             });
-        });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
+            try {
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                });
+            } catch (e) {
+                console.warn("Не удалось создать MutationObserver:", e);
+            }
+        }
     } else {
         console.log("Карусель инициализирована сразу!");
     }
