@@ -192,11 +192,11 @@
               <?php if(Catalog_Cart::isItemInCart($itemInf['id'])) { ?>
               <button
                 type="submit"
-                class="submit inbasket !bg-green-600 text-white opacity-90 cursor-pointer"
-                <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
+                class="submit inbasket !bg-green-600 text-white opacity-90 py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                disabled
                 title="В корзине"
               >
-              <i class="icon pngicons"></i>В корзине
+                <i class="icon pngicons"></i>В корзине
               </button>
               <?php } else { ?>
               <button
@@ -214,11 +214,11 @@
         <div class="mt-2" style="clear: both;">
           <?php
               foreach($itemInf['materials'] as $n => $im){
-              if(!isset($materials[$im['material_id']])){
-              unset($itemInf['materials'][$n]);
-              }
-              }
-              $itemInf['materials'] = array_values($itemInf['materials']);
+          if(!isset($materials[$im['material_id']])){
+          unset($itemInf['materials'][$n]);
+          }
+          }
+          $itemInf['materials'] = array_values($itemInf['materials']);
           ?>
 
           <?php $mActive = false; ?>
