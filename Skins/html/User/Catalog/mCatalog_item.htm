@@ -249,6 +249,10 @@
       </div>
 
       <?php if(count($itemInf['materials'])) { ?>
+      <script>
+        // Инициализация материалов для попапа (с ценами)
+        oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?>');
+      </script>
       <div class="item-materials mt-4">
         <div class="b">Цветовая гамма:</div>
 
