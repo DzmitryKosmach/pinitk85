@@ -2404,6 +2404,7 @@ function Search(){
 
     // Получаем объект поля для ввода запросов
     this.inp = $$$(this.inp);
+    if (!this.inp || !this.inp.parentNode) return;
 
     // Создаём блок для вывода подсказок
     var LId = this.inp.id + '-search-res';
@@ -3267,6 +3268,7 @@ document.addEventListener('DOMContentLoaded', function () {
     widthTpanelRight = $('.tpanel_inner_right').outerWidth(true),
     widthTpanelLeft = widthTpanel - widthTpanelRight - 20,
     tPanelMenu = document.querySelector('.tpanel_menu');
+  if (!tpanel_inner || !tpanel_inner_right || !tPanelMenu) return;
   tpanel_inner_right.style.display = "none";
   if (document.querySelector('#tpanel')) {
     var elHeight = $('#header').outerHeight(true);
@@ -3367,12 +3369,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // шапка, мобильный кнопка поиска, меню каталога
     var aroundText = document.querySelector('.new_block .searchinhead .aroundtext');
-    document.querySelector('.new_block .searchinhead .icon1').addEventListener('click', function () {
-      aroundText.classList.add('show_search'); // показать поиск
-    });
-    document.querySelector('.new_block .catalogmenu li.parent').addEventListener('click', function () {
-      aroundText.classList.remove('show_search'); // скрыть поиск
-    })
+    var icon1 = document.querySelector('.new_block .searchinhead .icon1');
+    var catalogMenuParent = document.querySelector('.new_block .catalogmenu li.parent');
+    if (aroundText && icon1) {
+      icon1.addEventListener('click', function () {
+        aroundText.classList.add('show_search'); // показать поиск
+      });
+    }
+    if (aroundText && catalogMenuParent) {
+      catalogMenuParent.addEventListener('click', function () {
+        aroundText.classList.remove('show_search'); // скрыть поиск
+      });
+    }
     $(window).scroll(function () {
       if (!document.querySelector('.new_block .searchinhead .aroundtext input').value && !$(".new_block .searchinhead .aroundtext input").is(":focus")) {
         aroundText.classList.remove('show_search'); // скрыть поиск при прокрутке
