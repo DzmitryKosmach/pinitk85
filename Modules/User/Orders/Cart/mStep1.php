@@ -28,11 +28,15 @@ class mStep1 {
     }
     list($totalAmount, $totalPrice, $totalPriceOld) = Catalog_Cart::total();
 
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // Добавляем материалы — аккуратно, без потери price
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     // Получаем дерево материалов для всех серий в корзине
     $seriesIds = array();
     foreach($cart as $c){
       if(!empty($c['series']['id'])){
-        $seriesIds[] = $c['series']['id'];
+        $seriesIds[] = (int)$c['series']['id'];
       }
     }
     $seriesIds = array_unique($seriesIds);
@@ -42,17 +46,19 @@ class mStep1 {
       $materials = $oMaterials->getTree($seriesIds);
     }
 
-    // Получаем материалы для каждого товара — НО НЕ ВСТРАИВАЕМ ИХ В $cart['item']
-    $itemMaterials = array();
+    // Получаем материалы для каждого товара и добавляем ТОЛЬКО ключ 'materials'
     $oItems2Materials = new Catalog_Items_2Materials();
-    foreach($cart as $c){
-      if (!empty($c['item']['id'])) {
-        $itemMaterials[$c['item']['id']] = $oItems2Materials->get(
-          '*',
-          '`item_id` = ' . intval($c['item']['id'])
-        );
+    foreach($cart as &$c){
+      // Сохраняем исходный item — на всякий случай
+      $itemId = (int)($c['item']['id'] ?? 0);
+      if ($itemId > 0) {
+        // Добавляем ТОЛЬКО подключ 'materials', не трогая остальное
+        $c['item']['materials'] = $oItems2Materials->get('*', '`item_id` = ' . $itemId);
       }
     }
+    unset($c); // разрыв ссылки
+
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     // Название страницы "Корзина" для хлебных крошек
     $oPages = new Pages();
@@ -67,16 +73,16 @@ class mStep1 {
     // Собираем шаблон
     $tpl = Pages::tplFile($pageInf);
     $formHtml = pattExeP(fgc($tpl), array(
-      'pageInf'        => $pageInf,
-      'cartPageName'   => $cartPageName,
-      'cart'           => $cart,
-      'breadcrumbs'    => BreadCrumbs::forPage(intval($pageInf['id'])),
-      'totalAmount'    => $totalAmount,
-      'totalPrice'     => $totalPrice,
-      'totalPriceOld'  => $totalPriceOld,
-      'materials'      => $materials,
-      'itemMaterials'  => $itemMaterials, // ← безопасная передача материалов
-      'userInf'        => $init['user']
+      'pageInf'		=> $pageInf,
+      'cartPageName'	=> $cartPageName,
+      'cart'			=> $cart,
+      'breadcrumbs'	=> BreadCrumbs::forPage(intval($pageInf['id'])),
+      'totalAmount'	=> $totalAmount,
+      'totalPrice'	=> $totalPrice,
+      'totalPriceOld'	=> $totalPriceOld,
+      'materials'		=> $materials,
+
+      'userInf'	=> $init['user']
     ));
 
     // Выводим форму
