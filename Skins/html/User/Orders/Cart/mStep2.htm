@@ -387,18 +387,36 @@
                   </strong>
                 </div>
                 <div>
-                  Доставка/сборка:
+                  Доставка:
                   <strong class="ml-1">
-										<span id="options-price2">
-											<?php
-											echo Catalog::priceFormat(
-												$optionsPrices[Orders_Options::DELIVERY]['price'] +
-												$optionsPrices[Orders_Options::UNLOADING]['price'] +
-												$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
-												$optionsPrices[Orders_Options::GARBAGE]['price']
-											); ?>
-										</span>
+                      <span id="delivery-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
+                      </span>
                     руб.
+                  </strong>
+                </div>
+                <div>
+                  Разгрузка:
+                  <strong class="ml-1">
+                      <span id="unloading-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0); ?>
+                      </span>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Сборка:
+                  <strong class="ml-1">
+                      <span id="assembly-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
+                      </span>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Вывоз мусора:
+                  <strong class="ml-1">
+                    Уточнить у менеджера
                   </strong>
                 </div>
                 <div class="clearfix">
