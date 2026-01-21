@@ -23,7 +23,7 @@ class mCart {
     Catalog_Cart::fix();
 
     // Сохранение способа оплаты в сессию
-    if(isset($_GET['save_paymethod']) && isset(Orders::$paymethods[$_GET['save_paymethod']])){
+    if(isset($_GET['save_paymethod']) && class_exists('Orders') && isset(Orders::$paymethods[$_GET['save_paymethod']])){
       $_SESSION['cart-paymethod'] = $_GET['save_paymethod'];
       if(intval($_GET['ajax'])){
         self::$output = OUTPUT_JSON;
