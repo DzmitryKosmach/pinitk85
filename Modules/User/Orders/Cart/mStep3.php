@@ -66,10 +66,20 @@ class mStep3
         if (isset($_SESSION['cart-paymethod']) && isset(Orders::$paymethods[$_SESSION['cart-paymethod']])) {
             $p = $_SESSION['cart-paymethod'];
         } else {
-            $ak = array_keys(Orders::$paymethods);
-            $p = array_shift($ak);
+            // Выбираем первый доступный способ оплаты (кроме PAYMETHOD_NO)
+            foreach (Orders::$paymethods as $pm => $name) {
+                if ($pm !== Orders::PAYMETHOD_NO) {
+                    $p = $pm;
+                    break;
+                }
+            }
+            // Сохраняем в сессию для последующих загрузок
+            if (isset($p)) {
+                $_SESSION['cart-paymethod'] = $p;
+            }
         }
         $init['paymethod'] = $p;
+        $selectedPayMethod = $p; // Передаем в шаблон
 
         // Собираем шаблон
         $tpl = Pages::tplFile($pageInf);
@@ -81,7 +91,8 @@ class mStep3
             'totalAmount' => $totalAmount,
             'totalPrice' => $totalPrice,
             'totalPriceOld' => $totalPriceOld,
-            'optionsPrices' => self::$optionsPrices
+            'optionsPrices' => self::$optionsPrices,
+            'selectedPayMethod' => $selectedPayMethod
         ));
 
         // Выводим форму
