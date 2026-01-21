@@ -15,13 +15,17 @@
         </a>
         <span class="mx-1">›</span>
         <?php } ?>
-        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <span class="text-gray-700">
+          <?php echo $bcLast['name']; ?>
+        </span>
         <?php } ?>
       </nav>
 
 
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-3xl font-semibold mb-6">
+        <?php echo $pageInf['header']; ?>
+      </h1>
       <?php } ?>
     </div>
   </div>
@@ -40,130 +44,127 @@
         <div class="body">
           <table class="products js-element w-full border-collapse">
             <thead>
-            <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
-              <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
-              <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
-              <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
-            </tr>
+              <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+                <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
+                <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
+                <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
+              </tr>
             </thead>
             <tbody>
-            <?php foreach($cart as $c) { ?>
-            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
-              <!-- Серия -->
-              <td class="item px-4 py-3">
-                <?php if($c['series']) { ?>
-                <a href="<?php echo Catalog_Series::a($c['series']); ?>" class="text-blue-600 hover:text-blue-800">
-                  <?php echo htmlspecialchars($c['series']['name']); ?>
-                </a>
-                <?php } ?>
-              </td>
+              <?php foreach($cart as $c) { ?>
+              <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+                <!-- Серия -->
+                <td class="item px-4 py-3">
+                  <?php if($c['series']) { ?>
+                  <a href="<?php echo Catalog_Series::a($c['series']); ?>" class="text-blue-600 hover:text-blue-800">
+                    <?php echo htmlspecialchars($c['series']['name']); ?>
+                  </a>
+                  <?php } ?>
+                </td>
 
-              <!-- Товар  -->
-              <td class="itemname px-4 py-3">
-                <div class="flex items-start gap-3">
-                  <div class="flex-shrink-0">
-                    <?php if($c['item']['_img_ext']) { ?>
-                    <img
-                      src="<?php echo Catalog::photoUrl(
+                <!-- Товар  -->
+                <td class="itemname px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                      <?php if($c['item']['_img_ext']) { ?>
+                      <img src="<?php echo Catalog::photoUrl(
                     Catalog_Items::$imagePath,
                     $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
                     $c['item']['image-name']
-                  ); ?>"
-                      alt="<?php echo hsch($c['item']['name']); ?>"
-                      class="w-12 h-12 object-cover rounded"
-                    />
-                    <?php } else { ?>
-                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
-                      </svg>
-                    </div>
-                    <?php } ?>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="font-medium text-gray-900"><?php echo $c['item']['name']; ?></div>
-                    <div class="text-xs text-gray-500 mt-1">
-                      Арт.: <?php echo $c['item']['art']; ?><br>
-                      <?php if(trim($c['item']['size']) !== '') { ?>
-                      Размер: <?php echo $c['item']['size']; ?>
+                  ); ?>" alt="<?php echo hsch($c['item']['name']); ?>" class="w-12 h-12 object-cover rounded" />
+                      <?php } else { ?>
+                      <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                        </svg>
+                      </div>
                       <?php } ?>
                     </div>
+                    <div class="min-w-0">
+                      <div class="font-medium text-gray-900">
+                        <?php echo $c['item']['name']; ?>
+                      </div>
+                      <div class="text-xs text-gray-500 mt-1">
+                        Арт.:
+                        <?php echo $c['item']['art']; ?><br>
+                        <?php if(trim($c['item']['size']) !== '') { ?>
+                        Размер:
+                        <?php echo $c['item']['size']; ?>
+                        <?php } ?>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </td>
+                </td>
 
-              <!-- Цвет -->
-              <td class="material px-4 py-3 text-center" style="min-width: 100px;">
-                <?php if ($c['material']): ?>
-                <div class="flex flex-col items-center justify-center gap-2">
-                  <?php if ($c['material']['_img_ext']): ?>
-                  <a
-                    href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                    target="_blank"
-                    onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                    class="block"
-                  >
-                    <img
-                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                      width="24"
-                      height="24"
-                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                      class="rounded border"
-                    />
-                  </a>
+                <!-- Цвет -->
+                <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                  <?php if ($c['material']): ?>
+                  <div class="flex flex-col items-center justify-center gap-2">
+                    <?php if ($c['material']['_img_ext']): ?>
+                    <a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                      target="_blank" onclick="return hs.expand(this, {slideshowGroup: 'default'})" class="block">
+                      <img
+                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                        width="24" height="24"
+                        alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                        class="rounded border" />
+                    </a>
+                    <?php endif; ?>
+                    <div class="name text-xs text-gray-700">
+                      <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                    </div>
+                  </div>
+                  <?php else: ?>
+                  &nbsp;
                   <?php endif; ?>
-                  <div class="name text-xs text-gray-700">
-                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                </td>
+
+                <!-- Кол-во (только текст, без управления) -->
+                <td class="nowrap px-4 py-3">
+                  <?php echo (int)$c['amount']; ?> шт
+                </td>
+
+                <!-- Цена -->
+                <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                  <?php if(abs($c['price'])): ?>
+                  <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
+                  <div class="text-xs text-gray-500 line-through">
+                    <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
                   </div>
-                </div>
-                <?php else: ?>
-                &nbsp;
-                <?php endif; ?>
-              </td>
+                  <?php endif; ?>
+                  <div class="font-medium">
+                    <?php echo Catalog::priceFormat($c['price']); ?> руб.
+                  </div>
+                  <?php else: ?>
+                  <div class="text-gray-500">по запросу</div>
+                  <?php endif; ?>
+                </td>
 
-              <!-- Кол-во (только текст, без управления) -->
-              <td class="nowrap px-4 py-3">
-                <?php echo (int)$c['amount']; ?> шт
-              </td>
+                <!-- Сумма -->
+                <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                  <div class="font-medium">
+                    <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
+                  </div>
+                </td>
+              </tr>
+              <?php } ?>
 
-              <!-- Цена -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <?php if(abs($c['price'])): ?>
-                <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
-                <div class="text-xs text-gray-500 line-through">
-                  <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
-                </div>
-                <?php endif; ?>
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price']); ?> руб.
-                </div>
-                <?php else: ?>
-                <div class="text-gray-500">по запросу</div>
-                <?php endif; ?>
-              </td>
-
-              <!-- Сумма -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
-                </div>
-              </td>
-            </tr>
-            <?php } ?>
-
-            <!-- Скрипты материалов (если нужно для JS) -->
-            <?php foreach($cart as $c) { ?>
-            <?php if (!empty($c['item']['materials'])) { ?>
-            <script>
-              oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
-                AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?>');
-            </script>
-            <?php } ?>
-            <?php } ?>
+              <!-- Скрипты материалов (если нужно для JS) -->
+              <?php foreach($cart as $c) { ?>
+              <?php if (!empty($c['item']['materials'])) { ?>
+              <script>
+                oMaterials.items2mats[<? php echo(int)$c['item']['id']; ?>] =
+                AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?> ');
+              </script>
+              <?php } ?>
+              <?php } ?>
             </tbody>
           </table>
 
@@ -193,28 +194,18 @@
       <div class="order_form_div someform orderforma order-checkout">
         <div class="clearfix ">
 
-          <form
-            method="post"
-            class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
-            id="cart-form"
-            style="width: 100%; float: none;"
-          >
+          <form method="post" class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
+            id="cart-form" style="width: 100%; float: none;">
             <?php
-            // Определяем, какой paymethod должен быть выбран
-            $selectedPayMethod = null;
-
-            // Если есть POST — используем его
-            if (!empty($_POST['paymethod'])) {
-                $selectedPayMethod = $_POST['paymethod'];
-            }
-            // Иначе — выбираем первый доступный (кроме PAYMETHOD_NO)
-            else {
+            // Используем переданный из PHP выбранный способ оплаты (из сессии или первый доступный)
+            // Если не передан, выбираем первый доступный
+            if (!isset($selectedPayMethod) || empty($selectedPayMethod)) {
                 foreach (Orders::$paymethods as $pm => $name) {
-                  if ($pm !== Orders::PAYMETHOD_NO) {
-                  $selectedPayMethod = $pm;
-                  break;
-                  }
-              }
+                    if ($pm !== Orders::PAYMETHOD_NO) {
+                        $selectedPayMethod = $pm;
+                        break;
+                    }
+                }
             }
             ?>
 
@@ -228,27 +219,24 @@
                 ?>
                 <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                   <div class="flex items-center">
-                    <input
-                      type="radio"
-                      name="paymethod"
-                      value="<?php echo htmlspecialchars($pm); ?>"
+                    <input type="radio" name="paymethod" value="<?php echo htmlspecialchars($pm); ?>"
                       id="paymethod-<?php echo htmlspecialchars($pm); ?>"
-                      class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5"
-                    <?php echo $isChecked ? 'checked' : ''; ?>
+                      class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5 js-paymethod-radio"
+                      data-paymethod="<?php echo htmlspecialchars($pm); ?>" <?php echo $isChecked ? 'checked' : '' ; ?>
                     />
                   </div>
 
                   <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="block w-12 h-12 cursor-pointer">
-                    <img
-                      class="block w-full h-full object-contain"
+                    <img class="block w-full h-full object-contain"
                       src="/Skins/img/user/pay-logo-<?php echo htmlspecialchars($pm); ?>.png"
-                      alt="<?php echo htmlspecialchars($name); ?>"
-                    />
+                      alt="<?php echo htmlspecialchars($name); ?>" />
                   </label>
 
                   <div class="data flex-1 min-w-0">
                     <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
+                      <strong class="text-gray-900">
+                        <?php echo htmlspecialchars($name); ?>
+                      </strong>
                       <p class="note text-gray-600 text-sm mt-1">
                         <?php echo htmlspecialchars(Orders::$paymethodsComments[$pm] ?? ''); ?>
                       </p>
@@ -322,16 +310,14 @@
                   </div>
                   <br>
                   <div class="flex flex-col gap-4 w-fit">
-                    <button
-                      onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;"
-                      type="submit"
+                    <button onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;" type="submit"
                       class="btn btn1 px-6 py-3 !bg-main text-white text-center rounded-md font-semibold hover:bg-opacity-90 transition"
-                      form="cart-form"
-                    >
+                      form="cart-form">
                       Оформить заказ
                     </button>
 
-                    <a href="<?php echo Url::a('catalog-cart-step2'); ?>" class="inline-block border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition">
+                    <a href="<?php echo Url::a('catalog-cart-step2'); ?>"
+                      class="inline-block border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition">
                       Вернуться к предыдущему этапу
                     </a>
                   </div>
@@ -346,3 +332,24 @@
     </div>
   </div>
 </div>
+
+<script>
+    // Сохранение выбранного способа оплаты в сессию при изменении
+    (function () {
+      var paymethodRadios = document.querySelectorAll('.js-paymethod-radio');
+      if (paymethodRadios.length) {
+        var saveUrl = '<?php echo addslashes(Url::a('catalog-cart')); ?>';
+        paymethodRadios.forEach(function (radio) {
+          radio.addEventListener('change', function () {
+            if (this.checked) {
+              var paymethod = this.value;
+              // Сохраняем через AJAX в сессию
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', saveUrl + '?save_paymethod=' + encodeURIComponent(paymethod) + '&ajax=1', true);
+              xhr.send();
+            }
+          });
+        });
+      }
+    })();
+</script>
