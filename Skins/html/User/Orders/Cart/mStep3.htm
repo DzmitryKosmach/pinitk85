@@ -199,20 +199,25 @@
             id="cart-form"
             style="width: 100%; float: none;"
           >
+            <?php
+            // Определяем, какой paymethod должен быть выбран
+            $selectedPayMethod = null;
+
             // Если есть POST — используем его
             if (!empty($_POST['paymethod'])) {
-            $selectedPayMethod = $_POST['paymethod'];
+                $selectedPayMethod = $_POST['paymethod'];
             }
             // Иначе — выбираем первый доступный (кроме PAYMETHOD_NO)
             else {
-            foreach (Orders::$paymethods as $pm => $name) {
-            if ($pm !== Orders::PAYMETHOD_NO) {
-            $selectedPayMethod = $pm;
-            break;
-            }
-            }
+                foreach (Orders::$paymethods as $pm => $name) {
+                  if ($pm !== Orders::PAYMETHOD_NO) {
+                  $selectedPayMethod = $pm;
+                  break;
+                  }
+              }
             }
             ?>
+
             <div class="payment_method-step3">
               <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
               <div class="space-y-4">
