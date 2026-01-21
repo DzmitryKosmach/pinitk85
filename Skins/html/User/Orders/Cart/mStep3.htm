@@ -41,27 +41,27 @@
           <table class="products js-element w-full border-collapse">
             <thead>
             <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
-              <th class="item nowrap px-4 py-3 min-w-0 w-32 max-w-32 overflow-hidden text-ellipsis">Серия</th>
-              <th class="custom nowrap px-4 py-3">Товар</th>
-              <th class="custom nowrap px-4 py-3">Цвет</th>
-              <th class="custom nowrap px-4 py-3">Кол-во</th>
-              <th class="custom nowrap px-4 py-3">Цена</th>
-              <th class="custom nowrap px-4 py-3">Сумма</th>
+              <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
+              <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
+              <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach($cart as $c) { ?>
             <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
               <!-- Серия -->
-              <td class="item px-4 py-3 min-w-0 w-32 max-w-32 overflow-hidden text-ellipsis">
+              <td class="item px-4 py-3">
                 <?php if($c['series']) { ?>
                 <a href="<?php echo Catalog_Series::a($c['series']); ?>" class="text-blue-600 hover:text-blue-800">
-                  <?php echo $c['series']['name']; ?>
+                  <?php echo htmlspecialchars($c['series']['name']); ?>
                 </a>
                 <?php } ?>
               </td>
 
-              <!-- Товар -->
+              <!-- Товар  -->
               <td class="itemname px-4 py-3">
                 <div class="flex items-start gap-3">
                   <div class="flex-shrink-0">
@@ -98,9 +98,9 @@
 
               <!-- Цвет -->
               <td class="material px-4 py-3 text-center" style="min-width: 100px;">
-                <?php if($c['material']) { ?>
+                <?php if ($c['material']): ?>
                 <div class="flex flex-col items-center justify-center gap-2">
-                  <?php if($c['material']['_img_ext']) { ?>
+                  <?php if ($c['material']['_img_ext']): ?>
                   <a
                     href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
                     target="_blank"
@@ -115,35 +115,35 @@
                       class="rounded border"
                     />
                   </a>
-                  <?php } ?>
+                  <?php endif; ?>
                   <div class="name text-xs text-gray-700">
                     <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
                   </div>
                 </div>
-                <?php } else { ?>
+                <?php else: ?>
                 &nbsp;
-                <?php } ?>
+                <?php endif; ?>
               </td>
 
-              <!-- Кол-во -->
+              <!-- Кол-во (только текст, без управления) -->
               <td class="nowrap px-4 py-3">
-                <?php echo $c['amount']; ?> шт
+                <?php echo (int)$c['amount']; ?> шт
               </td>
 
               <!-- Цена -->
               <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <?php if(abs($c['price'])) { ?>
-                <?php if(abs($c['item']['discount']) != 1) { ?>
+                <?php if(abs($c['price'])): ?>
+                <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
                 <div class="text-xs text-gray-500 line-through">
                   <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
                 </div>
-                <?php } ?>
+                <?php endif; ?>
                 <div class="font-medium">
                   <?php echo Catalog::priceFormat($c['price']); ?> руб.
                 </div>
-                <?php } else { ?>
+                <?php else: ?>
                 <div class="text-gray-500">по запросу</div>
-                <?php } ?>
+                <?php endif; ?>
               </td>
 
               <!-- Сумма -->
@@ -154,23 +154,32 @@
               </td>
             </tr>
             <?php } ?>
+
+            <!-- Скрипты материалов (если нужно для JS) -->
+            <?php foreach($cart as $c) { ?>
+            <?php if (!empty($c['item']['materials'])) { ?>
+            <script>
+              oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
+                AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?>');
+            </script>
+            <?php } ?>
+            <?php } ?>
             </tbody>
           </table>
 
-          <div class="order_pay">
-            <div class="right">
-              <table class="bx_ordercart_order_sum">
+          <!-- Итоговая сумма -->
+          <div class="order_pay mt-6">
+            <div class="right text-right">
+              <table class="bx_ordercart_order_sum inline-block">
                 <tr>
-                  <td class="custom_t1 fwb text-2xl" colspan="6" class="itog">
-                    Итого:&nbsp;
-                  </td>
-                  <td class="custom_t2 fwb price text-2xl font-bold">
+                  <td class="fwb text-2xl pr-4">Итого:&nbsp;</td>
+                  <td class="fwb price text-2xl font-bold">
                     <?php echo Catalog::priceFormat($totalPrice); ?> руб.
                   </td>
                 </tr>
                 <tr>
-                  <td class="custom_t1" colspan="6"></td>
-                  <td class="custom_t2 text-xl font-bold">
+                  <td class="pr-4"></td>
+                  <td class="text-xl font-bold">
                     <?php echo $totalAmount; ?> шт.
                   </td>
                 </tr>
@@ -180,54 +189,63 @@
         </div>
       </div>
 
+
       <div class="order_form_div someform orderforma order-checkout">
         <div class="clearfix ">
+
           <form
             method="post"
             class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
             id="cart-form"
             style="width: 100%; float: none;"
           >
+            // Если есть POST — используем его
+            if (!empty($_POST['paymethod'])) {
+            $selectedPayMethod = $_POST['paymethod'];
+            }
+            // Иначе — выбираем первый доступный (кроме PAYMETHOD_NO)
+            else {
+            foreach (Orders::$paymethods as $pm => $name) {
+            if ($pm !== Orders::PAYMETHOD_NO) {
+            $selectedPayMethod = $pm;
+            break;
+            }
+            }
+            }
+            ?>
             <div class="payment_method-step3">
               <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
               <div class="space-y-4">
-                <?php
-                $first = true;
-                foreach (Orders::$paymethods as $pm => $name) {
+                <?php foreach (Orders::$paymethods as $pm => $name) {
                 if ($pm === Orders::PAYMETHOD_NO) continue;
 
-                // Определяем, нужно ли ставить checked
-                $isChecked = $first ? 'checked' : '';
-                $first = false; // после первого — false
+                $isChecked = ($pm == $selectedPayMethod) ? 'checked' : '';
                 ?>
                 <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-                  <!-- Радиокнопка -->
                   <div class="flex items-center">
                     <input
                       type="radio"
                       name="paymethod"
-                      value="<?php echo $pm; ?>"
-                      id="paymethod-<?php echo $pm; ?>"
+                      value="<?php echo htmlspecialchars($pm); ?>"
+                      id="paymethod-<?php echo htmlspecialchars($pm); ?>"
                       class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5"
-                    <?php echo $isChecked; ?>
+                    <?php echo $isChecked ? 'checked' : ''; ?>
                     />
                   </div>
 
-                  <!-- Логотип -->
-                  <label for="paymethod-<?php echo $pm; ?>" class="block w-12 h-12 cursor-pointer">
+                  <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="block w-12 h-12 cursor-pointer">
                     <img
                       class="block w-full h-full object-contain"
-                      src="/Skins/img/user/pay-logo-<?php echo $pm; ?>.png"
-                      alt="<?php echo $name; ?>"
+                      src="/Skins/img/user/pay-logo-<?php echo htmlspecialchars($pm); ?>.png"
+                      alt="<?php echo htmlspecialchars($name); ?>"
                     />
                   </label>
 
-                  <!-- Текст: название и описание -->
                   <div class="data flex-1 min-w-0">
-                    <label for="paymethod-<?php echo $pm; ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900"><?php echo $name; ?></strong>
+                    <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="cursor-pointer block">
+                      <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
                       <p class="note text-gray-600 text-sm mt-1">
-                        <?php echo Orders::$paymethodsComments[$pm] ?? ''; ?>
+                        <?php echo htmlspecialchars(Orders::$paymethodsComments[$pm] ?? ''); ?>
                       </p>
                     </label>
                   </div>
