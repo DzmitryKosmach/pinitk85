@@ -63,20 +63,31 @@ class mStep3
 
         // Исходные данные
         $init = array();
-        if (isset($_SESSION['cart-paymethod']) && isset(Orders::$paymethods[$_SESSION['cart-paymethod']])) {
-            $p = $_SESSION['cart-paymethod'];
-        } else {
-            // Выбираем первый доступный способ оплаты (кроме PAYMETHOD_NO)
-            foreach (Orders::$paymethods as $pm => $name) {
-                if ($pm !== Orders::PAYMETHOD_NO) {
-                    $p = $pm;
-                    break;
+        $p = null;
+        if (class_exists('Orders') && isset(Orders::$paymethods)) {
+            if (isset($_SESSION['cart-paymethod']) && isset(Orders::$paymethods[$_SESSION['cart-paymethod']])) {
+                $p = $_SESSION['cart-paymethod'];
+            } else {
+                // Выбираем первый доступный способ оплаты (кроме PAYMETHOD_NO)
+                foreach (Orders::$paymethods as $pm => $name) {
+                    if ($pm !== Orders::PAYMETHOD_NO) {
+                        $p = $pm;
+                        break;
+                    }
+                }
+                // Сохраняем в сессию для последующих загрузок
+                if ($p !== null) {
+                    $_SESSION['cart-paymethod'] = $p;
                 }
             }
-            // Сохраняем в сессию для последующих загрузок
-            if (isset($p)) {
-                $_SESSION['cart-paymethod'] = $p;
+            // Если способ оплаты не найден, используем первый из массива
+            if ($p === null) {
+                $ak = array_keys(Orders::$paymethods);
+                $p = !empty($ak) ? $ak[0] : Orders::PAYMETHOD_NO;
             }
+        } else {
+            // Если класс Orders не загружен, используем значение по умолчанию
+            $p = isset($_SESSION['cart-paymethod']) ? $_SESSION['cart-paymethod'] : 'cash';
         }
         $init['paymethod'] = $p;
         $selectedPayMethod = $p; // Передаем в шаблон
