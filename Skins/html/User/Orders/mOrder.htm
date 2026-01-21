@@ -63,33 +63,6 @@
           </script>
 
           <div class="order-view-left flex-1 !w-full" id="order-view-left">
-            <h4 class="text-2xl font-semibold mb-4">Заказ</h4>
-            <div class="body clearfix">
-              <div style="margin-bottom: 5px;">
-                ID заказа:
-                <strong>
-                  <?php echo $order['id']; ?>
-                </strong>
-              </div>
-              <div style="margin-bottom: 5px;">
-                Оформлен:
-                <strong>
-                  <?php echo date('d.m.Y в H:i', MySQL::fromDateTime($order['date']))?>
-                </strong>
-              </div>
-              <div style="margin-bottom: 5px;">
-                Статус:
-                <strong style="color: <?php echo $order['status_color']; ?>">
-                  <?php echo $order['status_name']; ?>
-                </strong>
-                <?php if($order['date'] != $order['status_date']) { ?>
-                <span style="font-size: 12px;">(обновлён
-                  <?php echo date('d.m.Y в H:i', MySQL::fromDateTime($order['status_date']))?>)
-								</span>
-                <?php } ?>
-              </div>
-            </div>
-
             <h4 class="text-2xl font-semibold mb-4">Данные покупателя</h4>
             <div class="body clearfix" id="fix-size-left">
               <div style="margin-bottom: 5px;">
@@ -131,6 +104,34 @@
               </div>
               <?php } ?>
             </div>
+
+            <h4 class="text-2xl font-semibold mb-4">Заказ</h4>
+            <div class="body clearfix">
+              <div style="margin-bottom: 5px;">
+                ID заказа:
+                <strong>
+                  <?php echo $order['id']; ?>
+                </strong>
+              </div>
+              <div style="margin-bottom: 5px;">
+                Оформлен:
+                <strong>
+                  <?php echo date('d.m.Y в H:i', MySQL::fromDateTime($order['date']))?>
+                </strong>
+              </div>
+              <div style="margin-bottom: 5px;">
+                Статус:
+                <strong style="color: <?php echo $order['status_color']; ?>">
+                  <?php echo $order['status_name']; ?>
+                </strong>
+                <?php if($order['date'] != $order['status_date']) { ?>
+                <span style="font-size: 12px;">(обновлён
+                  <?php echo date('d.m.Y в H:i', MySQL::fromDateTime($order['status_date']))?>)
+								</span>
+                <?php } ?>
+              </div>
+            </div>
+
           </div>
 
           <div class="order-view-right flex-1 !w-full" id="order-view-right">
@@ -172,6 +173,9 @@
                 Вывоз мусора:
                 <strong>
                   <?php echo $options[Orders_Options::GARBAGE]['info']; ?>
+                  <?php if (strtolower($options[Orders_Options::GARBAGE]['info'] ?? '') === 'нужен'): ?>
+                  <span class="text-gray-600 text-sm">(Уточните у менеджера)</span>
+                  <?php endif; ?>
 
                 </strong>
               </div>
@@ -182,20 +186,7 @@
             <div class="body clearfix" id="fix-size-right">
               <div class="order-total clearfix space-y-4">
                 <?php if($order['paymethod'] !== Orders::PAYMETHOD_NO) { ?>
-                <div style="margin-bottom: 5px;">
-                  Сумма заказа:
-                  <strong>
-                    <?php echo Catalog::priceFormat($order['price_out'])?>
-                    руб.
-                  </strong>
-                </div>
-                <div style="margin-bottom: 15px;">
-                  Доставка/сборка:
-                  <strong>
-                    <?php echo Catalog::priceFormat($order['price_options'])?>
-                    руб.
-                  </strong>
-                </div>
+
                 <div class="clearfix">
                   <div class="price">
                     Итого:
@@ -318,7 +309,7 @@
                 <table class="bx_ordercart_order_sum">
                   <tr>
                     <td class="custom_t1 fwb" colspan="6" class="itog">
-                      Итого:
+                      Итого:&nbsp;
                     </td>
                     <td class="custom_t2 fwb price">
                       <?php echo Catalog::priceFormat($order['price_out'])?>

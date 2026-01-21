@@ -161,8 +161,8 @@
             <div class="right">
               <table class="bx_ordercart_order_sum">
                 <tr>
-                  <td class="custom_t1 fwb" colspan="6" class="itog">
-                    Итого:
+                  <td class="custom_t1 fwb text-2xl" colspan="6" class="itog">
+                    Итого:&nbsp;
                   </td>
                   <td class="custom_t2 fwb price text-2xl font-bold">
                     <?php echo Catalog::priceFormat($totalPrice); ?> руб.
@@ -191,9 +191,15 @@
             <div class="payment_method-step3">
               <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
               <div class="space-y-4">
-                <?php foreach (Orders::$paymethods as $pm => $name) { ?>
-                <?php if ($pm === Orders::PAYMETHOD_NO) continue; ?>
+                <?php
+                $first = true;
+                foreach (Orders::$paymethods as $pm => $name) {
+                if ($pm === Orders::PAYMETHOD_NO) continue;
 
+                // Определяем, нужно ли ставить checked
+                $isChecked = $first ? 'checked' : '';
+                $first = false; // после первого — false
+                ?>
                 <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                   <!-- Радиокнопка -->
                   <div class="flex items-center">
@@ -203,6 +209,7 @@
                       value="<?php echo $pm; ?>"
                       id="paymethod-<?php echo $pm; ?>"
                       class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5"
+                    <?php echo $isChecked; ?>
                     />
                   </div>
 
@@ -211,13 +218,14 @@
                     <img
                       class="block w-full h-full object-contain"
                       src="/Skins/img/user/pay-logo-<?php echo $pm; ?>.png"
+                      alt="<?php echo $name; ?>"
                     />
                   </label>
 
                   <!-- Текст: название и описание -->
                   <div class="data flex-1 min-w-0">
                     <label for="paymethod-<?php echo $pm; ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
+                      <strong class="text-gray-900"><?php echo $name; ?></strong>
                       <p class="note text-gray-600 text-sm mt-1">
                         <?php echo Orders::$paymethodsComments[$pm] ?? ''; ?>
                       </p>
@@ -240,17 +248,36 @@
                     </strong>
                   </div>
                   <div>
-                    Доставка/сборка:
+                    Доставка:
                     <strong class="ml-1">
-                      <span id="options-price2">
-                        <?php echo Catalog::priceFormat(
-											$optionsPrices[Orders_Options::DELIVERY]['price'] +
-											$optionsPrices[Orders_Options::UNLOADING]['price'] +
-											$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
-											$optionsPrices[Orders_Options::GARBAGE]['price']
-										); ?>
+                      <span id="delivery-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
                       </span>
                       руб.
+                    </strong>
+                  </div>
+                  <div>
+                    Разгрузка:
+                    <strong class="ml-1">
+                      <span id="unloading-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0); ?>
+                      </span>
+                      руб.
+                    </strong>
+                  </div>
+                  <div>
+                    Сборка:
+                    <strong class="ml-1">
+                      <span id="assembly-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
+                      </span>
+                      руб.
+                    </strong>
+                  </div>
+                  <div>
+                    Вывоз мусора:
+                    <strong class="ml-1">
+                      Уточнить у менеджера
                     </strong>
                   </div>
                   <div class="clearfix">
