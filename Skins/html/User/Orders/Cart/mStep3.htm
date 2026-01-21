@@ -200,15 +200,9 @@
             style="width: 100%; float: none;"
           >
             <?php
-            // Определяем, какой paymethod должен быть выбран
-            $selectedPayMethod = null;
-
-            // Если есть POST — используем его
-            if (!empty($_POST['paymethod'])) {
-                $selectedPayMethod = $_POST['paymethod'];
-            }
-            // Иначе — выбираем первый доступный (кроме PAYMETHOD_NO)
-            else {
+            // Используем переданный из PHP выбранный способ оплаты (из сессии или первый доступный)
+            // Если не передан, выбираем первый доступный
+            if (!isset($selectedPayMethod) || empty($selectedPayMethod)) {
                 foreach (Orders::$paymethods as $pm => $name) {
             if ($pm !== Orders::PAYMETHOD_NO) {
             $selectedPayMethod = $pm;
@@ -228,27 +222,24 @@
                 ?>
                 <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
                   <div class="flex items-center">
-                    <input
-                      type="radio"
-                      name="paymethod"
-                      value="<?php echo htmlspecialchars($pm); ?>"
-                      id="paymethod-<?php echo htmlspecialchars($pm); ?>"
-                      class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5"
-                    <?php echo $isChecked ? 'checked' : ''; ?>
+                    <input type="radio" name="paymethod" value="<?php echo htmlspecialchars($pm); ?>"
+                           id="paymethod-<?php echo htmlspecialchars($pm); ?>"
+                           class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5 js-paymethod-radio"
+                           data-paymethod="<?php echo htmlspecialchars($pm); ?>" <?php echo $isChecked ? 'checked' : '' ; ?>
                     />
                   </div>
 
                   <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="block w-12 h-12 cursor-pointer">
-                    <img
-                      class="block w-full h-full object-contain"
-                      src="/Skins/img/user/pay-logo-<?php echo htmlspecialchars($pm); ?>.png"
-                      alt="<?php echo htmlspecialchars($name); ?>"
-                    />
+                    <img class="block w-full h-full object-contain"
+                         src="/Skins/img/user/pay-logo-<?php echo htmlspecialchars($pm); ?>.png"
+                         alt="<?php echo htmlspecialchars($name); ?>" />
                   </label>
 
                   <div class="data flex-1 min-w-0">
                     <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900"><?php echo htmlspecialchars($name); ?></strong>
+                      <strong class="text-gray-900">
+                        <?php echo htmlspecialchars($name); ?>
+                      </strong>
                       <p class="note text-gray-600 text-sm mt-1">
                         <?php echo htmlspecialchars(Orders::$paymethodsComments[$pm] ?? ''); ?>
                       </p>
