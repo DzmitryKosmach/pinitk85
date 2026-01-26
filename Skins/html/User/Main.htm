@@ -897,7 +897,7 @@ function getHomeUrl() {
     const searchBar = document.getElementById('search-bar');
 
     // --- Настройка порогов с гистерезисом ---
-    const SCROLL_THRESHOLD_DOWN = 120; // Порог для перехода в состояние "при прокрутке" (сделать хедер маленьким)
+    const SCROLL_THRESHOLD_DOWN = 84; // Порог для перехода в состояние "при прокрутке" (сделать хедер маленьким)
     const SCROLL_THRESHOLD_UP = 20;   // Порог для возврата к нормальному состоянию (сделать хедер большим)
     // Убедитесь, что SCROLL_THRESHOLD_DOWN > SCROLL_THRESHOLD_UP
 
@@ -941,7 +941,7 @@ function getHomeUrl() {
       }
 
       // Запускаем обновление состояния с небольшой задержкой
-      scrollTimeout = setTimeout(updateHeaderState, 150); // 100 мс — баланс между отзывчивостью и стабильностью
+      scrollTimeout = setTimeout(updateHeaderState, 50); // 100 мс — баланс между отзывчивостью и стабильностью
     }
 
     // Инициализация
@@ -1239,7 +1239,7 @@ function getHomeUrl() {
     </div>
   </div>
 </div>
-<div class="xCallback !mt-1 !z-[60]">
+<div class="xCallback !mt-1 !z-[60] w-[52px] sm:w-[69px]">
   <button onclick="kcall(); return false;"
           class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
     <!-- Иконка -->
@@ -1403,7 +1403,7 @@ function getHomeUrl() {
 
 <!-- Кнопка "наверх" -->
 <button id="scrollToTopBtn"
-        class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-blue-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-blue-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
+        class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-2 sm:right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-blue-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-blue-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
         aria-label="Наверх">
   <!-- Широкая стрелка SVG -->
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
