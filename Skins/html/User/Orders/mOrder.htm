@@ -220,8 +220,8 @@
                 <th class="item nowrap text-left px-2 py-2 bg-gray-50">Серия</th>
                 <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Товар</th>
                 <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Цвет</th>
-                <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Цена</th>
                 <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Кол-во</th>
+                <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Цена</th>
                 <th class="custom nowrap text-left px-2 py-2 bg-gray-50">Сумма</th>
               </tr>
               <?php foreach($cart as $c) { ?>
@@ -277,6 +277,11 @@
                   &nbsp;
                   <?php } ?>
                 </td>
+
+                <td class="nowrap right px-2 py-2">
+                  <?php echo $c['amount']; ?>
+                  шт
+                </td>
                 <td class="nowrap right px-2 py-2">
                   <?php if(abs($c['price'])) { ?>
                   <?php echo Catalog::priceFormat($c['price'])?>
@@ -292,10 +297,6 @@
                   <?php } else { ?>
                   по запросу
                   <?php } ?>
-                </td>
-                <td class="nowrap right px-2 py-2">
-                  <?php echo $c['amount']; ?>
-                  шт
                 </td>
                 <td class="nowrap right px-2 py-2">
                   <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?>
