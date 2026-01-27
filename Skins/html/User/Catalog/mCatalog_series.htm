@@ -599,8 +599,9 @@
 
                       <?php if($mActive && $mActive['image']['ext']) { ?>
                       <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_21x21_0.<?php echo $mActive['image']['ext']; ?>"
-                           width="21" height="21" class="rounded-full border cursor-pointer"
-                           title="<?php echo hsch(implode(' / ', $mActiveName))?>">
+                           width="21" height="21" class="rounded-sm border cursor-pointer"
+                           title="<?php echo hsch(implode(' / ', $mActiveName))?>"
+                           onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;">
                       <?php } elseif($mActive) { ?>
                       <span class="text-xs text-gray-600 cursor-pointer">
                                     <?php echo implode(' / ', $mActiveName)?>
@@ -1502,41 +1503,41 @@
 
       <!-- Сетка карточек -->
       <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" id="group-grid-<?php echo $groupId; ?>">
-          <?php foreach ($g['items'] as $item) { ?>
-          <?php
+        <?php foreach ($g['items'] as $item) { ?>
+        <?php
             $seriesInf = ($item['series_id'] == $seriesOrig['id'])
             ? $seriesOrig
             : ($crossSeries[$item['series_id']] ?? $seriesOrig);
         ?>
 
-          <div class="bg-white rounded-lg shadow p-2 sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
-            <!-- Изображение -->
-            <?php if (!empty($item['_img_ext'])): ?>
+        <div class="bg-white rounded-lg shadow p-2 sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
+          <!-- Изображение -->
+          <?php if (!empty($item['_img_ext'])): ?>
 
-            <a class="flex justify-center"
-               href="javascript:void(0)"
-               onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-            >
-              <img
-                src="<?php echo Catalog::photoUrl(
+          <a class="flex justify-center"
+             href="javascript:void(0)"
+             onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+          >
+            <img
+              src="<?php echo Catalog::photoUrl(
                                             Catalog_Items::$imagePath,
                                             $item['id'], 170, 140, 1, $item['_img_ext']
                                         ); ?>"
-                alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
-                class="max-w-full h-auto object-contain rounded-md mb-4"
-              /></a>
-            <?php else: ?>
-            <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
-              <span class="text-gray-400 text-sm">Нет фото</span>
-            </div>
-            <?php endif; ?>
+              alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
+              class="max-w-full h-auto object-contain rounded-md mb-4"
+            /></a>
+          <?php else: ?>
+          <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
+            <span class="text-gray-400 text-sm">Нет фото</span>
+          </div>
+          <?php endif; ?>
 
-            <!-- Артикул -->
-            <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
+          <!-- Артикул -->
+          <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
 
-            <!-- Название -->
-            <div class="relative mb-1" style="height: 2.5em;">
-              <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5
+          <!-- Название -->
+          <div class="relative mb-1" style="height: 2.5em;">
+            <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5
             line-clamp-2
             transition-all duration-200
             absolute top-0 left-0 right-0
@@ -1547,13 +1548,13 @@
             hover:rounded
             hover:px-2
             hover:py-1">
-                <a href="javascript:void(0)"
-                   onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-                   class="text-inherit hover:text-inherit block">
-                  <?php echo htmlspecialchars($item['name']); ?>
-                </a>
-              </h3>
-            </div>
+              <a href="javascript:void(0)"
+                 onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                 class="text-inherit hover:text-inherit block">
+                <?php echo htmlspecialchars($item['name']); ?>
+              </a>
+            </h3>
+          </div>
 
           <!-- Габариты -->
           <?php if (!empty($item['size'])): ?>
