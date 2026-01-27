@@ -441,7 +441,7 @@
               <style>
                 @keyframes pulseGlow {
                   0%, 100% {
-                    background-color: #3b82f6; /* blue-500 */
+                    background-color: #1d4ed8; /* blue-700 */
                     color: white;
                     box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
                     border-color: #3b82f6;
@@ -599,7 +599,7 @@
 
                       <?php if($mActive && $mActive['image']['ext']) { ?>
                       <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_21x21_0.<?php echo $mActive['image']['ext']; ?>"
-                           width="21" height="21" class="rounded-sm border cursor-pointer"
+                           width="21" height="21" class="rounded-md border cursor-pointer"
                            title="<?php echo hsch(implode(' / ', $mActiveName))?>"
                            onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;">
                       <?php } elseif($mActive) { ?>
