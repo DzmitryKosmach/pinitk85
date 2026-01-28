@@ -1,4 +1,12 @@
-<?php echo CssCopmress::load('cart'); ?>
+<?php echo CssCopmress::load('cart')?>
+<?php echo JsCopmress::load('series')?>
+
+<?php if (!empty($materials)) { ?>
+<script>
+  // Дерево материалов для попапов (как на странице серии)
+  oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
+</script>
+<?php } ?>
 
 <div id="title" class="title">
   <div class="">
@@ -26,318 +34,408 @@
     </div>
   </div>
 </div>
-
 <div id="content" class="content">
-  <div>
-    <div class="centeringin clearfix">
+  <div class="">
+    <div class="clearfix">
       <?php if(trim($pageInf['text']) !== '') { ?>
-      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
       <div class="cl"></div>
       <?php } ?>
 
-      <div class="section summary mb-10 overflow-x-auto overflow-y-hidden">
-        <h4 class="font-black text-2xl">Товары в заказе</h4>
-        <div class="body">
-          <table class="products js-element w-full border-collapse">
-            <thead>
-            <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
-              <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
-              <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
-              <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach($cart as $c) { ?>
-            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
-              <!-- Серия -->
-              <td class="item px-4 py-3">
-                <?php if($c['series']) { ?>
-                <a href="<?php echo Catalog_Series::a($c['series']); ?>" target="_blank" class="text-blue-600 hover:text-blue-800">
-                  <?php echo htmlspecialchars($c['series']['name']); ?>
-                </a>
-                <?php } ?>
-              </td>
-
-              <!-- Товар  -->
-              <td class="itemname px-4 py-3">
-                <div class="flex items-start gap-3">
-                  <div class="flex-shrink-0">
-                    <?php if($c['item']['_img_ext']) { ?>
-                    <img
-                      src="<?php echo Catalog::photoUrl(
-                    Catalog_Items::$imagePath,
-                    $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
-                    $c['item']['image-name']
-                  ); ?>"
-                      alt="<?php echo hsch($c['item']['name']); ?>"
-                      class="w-12 h-12 object-cover rounded"
-                    />
-                    <?php } else { ?>
-                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
-                      </svg>
-                    </div>
-                    <?php } ?>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="font-medium text-gray-900"><?php echo $c['item']['name']; ?></div>
-                    <div class="text-xs text-gray-500 mt-1">
-                      Арт.: <?php echo $c['item']['art']; ?><br>
-                      <?php if(trim($c['item']['size']) !== '') { ?>
-                      Размер: <?php echo $c['item']['size']; ?>
-                      <?php } ?>
-                    </div>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Цвет -->
-              <td class="material px-4 py-3 text-center" style="min-width: 100px;">
-                <?php if ($c['material']): ?>
-                <div class="flex flex-col items-center justify-center gap-2">
-                  <?php if ($c['material']['_img_ext']): ?>
-                  <a
-                    href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                    target="_blank"
-                    onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                    class="block"
-                  >
-                    <img
-                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                      width="24"
-                      height="24"
-                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                      class="rounded border"
-                    />
-                  </a>
-                  <?php endif; ?>
-                  <div class="name text-xs text-gray-700">
-                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
-                  </div>
-                </div>
-                <?php else: ?>
-                &nbsp;
-                <?php endif; ?>
-              </td>
-
-              <!-- Кол-во (только текст, без управления) -->
-              <td class="nowrap px-4 py-3">
-                <?php echo (int)$c['amount']; ?> шт
-              </td>
-
-              <!-- Цена -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <?php if(abs($c['price'])): ?>
-                <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
-                <div class="text-xs text-gray-500 line-through">
-                  <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
-                </div>
-                <?php endif; ?>
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price']); ?> руб.
-                </div>
-                <?php else: ?>
-                <div class="text-gray-500">по запросу</div>
-                <?php endif; ?>
-              </td>
-
-              <!-- Сумма -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
-                </div>
-              </td>
-            </tr>
-            <?php } ?>
-
-            </tbody>
-          </table>
-
-          <!-- Скрипты материалов (если нужно для JS) -->
-          <?php foreach($cart as $c) { ?>
-          <?php if (!empty($c['item']['materials'])) { ?>
-          <script>
-            // Safety check for dependencies (prevents JS errors)
-            if (typeof oMaterials !== 'undefined' &&
-              oMaterials.items2mats &&
-              typeof AJAX !== 'undefined') {
-              oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
-                AJAX.jsonDecode(<?php echo json_encode(toJson($c['item']['materials'])); ?>);
-            }
-          </script>
-          <?php } ?>
-          <?php } ?>
-
-          <!-- Итоговая сумма -->
-          <div class="order_pay mt-6">
-            <div class="right text-right">
-              <table class="bx_ordercart_order_sum inline-block">
-                <tr>
-                  <td class="fwb text-2xl pr-4">Итого:&nbsp;</td>
-                  <td class="fwb price text-2xl font-bold">
-                    <?php echo Catalog::priceFormat($totalPrice); ?> руб.
-                  </td>
-                </tr>
-                <tr>
-                  <td class="pr-4"></td>
-                  <td class="text-xl font-bold">
-                    <?php echo $totalAmount; ?> шт.
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
       <div class="order_form_div someform orderforma order-checkout">
-        <div class="clearfix ">
+        <form action="<?php echo Url::a('catalog-cart')?>" method="get" class="cart-table-form" style="width: 100%;">
+          <?php /* Это здесь для того, чтобы по нажатии Enter запускался пересчёт формы (основное действиие), а не очистка */?>
+          <div style="display: none"><input type="submit" name="recalc" value="1"></div>
 
-          <form
-            method="post"
-            class="cart-step3-left section paysystem !flex flex-col lg:flex-row gap-6 w-full"
-            id="cart-form"
-            style="width: 100%; float: none;"
-          >
-            <?php
-            // Используем переданный из PHP выбранный способ оплаты (из сессии или первый доступный)
-            // Если не передан, выбираем первый доступный
-            if (!isset($selectedPayMethod) || empty($selectedPayMethod)) {
-                foreach (Orders::$paymethods as $pm => $name) {
-            if ($pm !== Orders::PAYMETHOD_NO) {
-            $selectedPayMethod = $pm;
-            break;
-            }
-            }
-            }
-            ?>
+          <div class="section summary">
+            <h4 class="font-black text-2xl">Ваш заказ</h4>
+            <div class="body">
+              <table class="products js-element w-full border-collapse">
+                <thead>
+                <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+                  <th class="item nowrap px-4 py-3">Серия</th>
+                  <th class="custom nowrap px-4 py-3">Товар</th>
+                  <th class="custom nowrap px-4 py-3">Цвет</th>
+                  <th class="custom nowrap px-4 py-3">Кол-во</th>
+                  <th class="custom nowrap px-4 py-3">Цена</th>
+                  <th class="custom nowrap px-4 py-3">Сумма</th>
+                  <th class="custom nowrap w-1 whitespace-nowrap px-1 py-3"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($cart as $c) { ?>
+                <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+                  <!-- Серия -->
+                  <td class="item px-4 py-3">
+                    <?php if($c['series']) { ?>
+                    <a href="<?php echo Catalog_Series::a($c['series'])?>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                      <?php echo $c['series']['name']; ?>
+                    </a>
+                    <?php } ?>
+                  </td>
 
-            <div class="payment_method-step3">
-              <h4 class="text-2xl font-semibold mb-4">Способ оплаты</h4>
-              <div class="space-y-4">
-                <?php foreach (Orders::$paymethods as $pm => $name) {
-                if ($pm === Orders::PAYMETHOD_NO) continue;
+                  <!-- Товар (изображение + название + артикул + размер) -->
+                  <td class="itemname px-4 py-3">
+                    <?php
+    // Получаем URL для popup, как в вашем примере
+    $seriesInf = ($c['item']['series_id'] == $c['series']['id'])
+      ? $c['series']
+      : ($crossSeries[$c['item']['series_id']] ?? $c['series']);
+    $popupUrl = Catalog_Items::a($seriesInf, $c['item']);
+  ?>
 
-                $isChecked = ($pm == $selectedPayMethod) ? 'checked' : '';
-                ?>
-                <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-                  <div class="flex items-center">
-                    <input type="radio" name="paymethod" value="<?php echo htmlspecialchars($pm); ?>"
-                           id="paymethod-<?php echo htmlspecialchars($pm); ?>"
-                           class="accent-blue-600 w-4 h-4 shrink-0 mt-0.5 js-paymethod-radio"
-                           data-paymethod="<?php echo htmlspecialchars($pm); ?>" <?php echo $isChecked ? 'checked' : '' ; ?>
-                    />
-                  </div>
+                    <a href="javascript:void(0)"
+                       onclick="showItemPopup1('<?php echo addslashes($popupUrl); ?>', <?php echo (int)$c['item']['id']; ?>); return false;"
+                       class="block w-full h-full"
+                    >
+                      <div class="flex items-start gap-3">
+                        <!-- Изображение -->
+                        <div class="flex-shrink-0">
+                          <?php if($c['item']['_img_ext']) { ?>
+                          <img
+                            src="<?php echo Catalog::photoUrl(
+              Catalog_Items::$imagePath,
+              $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
+              $c['item']['image-name']
+            )?>"
+                            alt="<?php echo hsch($c['item']['name']); ?>"
+                            class="w-12 h-12 object-cover rounded"
+                          />
+                          <?php } else { ?>
+                          <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                            </svg>
+                          </div>
+                          <?php } ?>
+                        </div>
 
-                  <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="block w-12 h-12 cursor-pointer">
-                    <img class="block w-full h-full object-contain"
-                         src="/Skins/img/user/pay-logo-<?php echo htmlspecialchars($pm); ?>.png"
-                         alt="<?php echo htmlspecialchars($name); ?>" />
-                  </label>
+                        <!-- Текст -->
+                        <div class="min-w-0">
+                          <div class="font-medium text-gray-900"><?php echo htmlspecialchars($c['item']['name']); ?></div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            Арт.: <?php echo htmlspecialchars($c['item']['art']); ?><br>
+                            <?php if(trim($c['item']['size']) !== '') { ?>
+                            Размер: <?php echo htmlspecialchars($c['item']['size']); ?>
+                            <?php } ?>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </td>
 
-                  <div class="data flex-1 min-w-0">
-                    <label for="paymethod-<?php echo htmlspecialchars($pm); ?>" class="cursor-pointer block">
-                      <strong class="text-gray-900">
-                        <?php echo htmlspecialchars($name); ?>
-                      </strong>
-                      <p class="note text-gray-600 text-sm mt-1">
-                        <?php echo htmlspecialchars(Orders::$paymethodsComments[$pm] ?? ''); ?>
-                      </p>
-                    </label>
-                  </div>
-                </div>
+                  <!-- Цвет -->
+                  <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                    <?php if ($c['material']): ?>
+                    <div class="flex flex-col items-center justify-center gap-2">
+                      <?php if ($c['material']['_img_ext']): ?>
+                      <a
+                        href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                        target="_blank"
+                        onclick="return hs.expand(this, {slideshowGroup: 'default'})"
+                        class="block"
+                      >
+                        <img
+                          src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                          width="24"
+                          height="24"
+                          alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                          class="rounded border"
+                        />
+                      </a>
+                      <?php endif; ?>
+                      <div class="name text-xs text-gray-700">
+                        <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                      </div>
+                    </div>
+                    <?php else: ?>
+                    &nbsp;
+                    <?php endif; ?>
+                  </td>
+
+                  <!-- Количество -->
+                  <td class="nowrap px-4 py-3" style="width: 128px;">
+                    <span class="quantity !flex items-center gap-2 bg-white">
+                      <a
+                        class="minus w-8 h-8 !flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
+                        href="javascript:void(0)"
+                        onclick="oCart.amountMinus(this, true); return false;"
+                      >–</a>
+                      <input
+                        type="text"
+                        name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id']); ?>]"
+                        value="<?php echo $c['amount']; ?>"
+                        class="w-12 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span class="js-measurename text-xs text-gray-500">шт</span>
+                      <a
+                        class="plus w-8 h-8 !flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-100"
+                        href="javascript:void(0)"
+                        onclick="oCart.amountPlus(this); return false;"
+                      >+</a>
+                    </span>
+                  </td>
+
+                  <!-- Цена -->
+                  <td class="nowrap right px-4 py-3">
+                    <?php if(abs($c['price'])): ?>
+                    <!-- Старая цена (если есть скидка) -->
+                    <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
+                    <div class="text-xs text-gray-500 line-through">
+                      <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
+                    </div>
+                    <?php endif; ?>
+                    <!-- Текущая цена -->
+                    <div class="font-medium">
+                      <?php echo Catalog::priceFormat($c['price']); ?> руб.
+                    </div>
+                    <?php else: ?>
+                    <div class="text-gray-500">по запросу</div>
+                    <?php endif; ?>
+                  </td>
+
+                  <!-- Сумма -->
+                  <td class="nowrap right px-4 py-3">
+                    <div class="font-medium">
+                      <?php echo Catalog::priceFormat($c['price'] * $c['amount'])?> руб.
+                    </div>
+                  </td>
+
+                  <!-- Удалить -->
+                  <td class="w-1 whitespace-nowrap px-1 py-3 text-center">
+                    <a
+                      href="<?php echo Url::a('catalog-cart')?>?remove=<?php echo intval($c['item']['id'])?>&amp;material_id=<?php echo intval($c['material']['id'])?>"
+                      class="text-red-600 hover:text-red-800 text-4xl leading-none no-underline hover:no-underline"
+                      aria-label="Удалить товар"
+                    >×</a>
+                  </td>
+                </tr>
                 <?php } ?>
+
+                <?php foreach($cart as $c) { ?>
+                <?php if (!empty($c['item']['materials'])) { ?>
+                <script>
+                  // Материалы для попапа выбора цвета в корзине (как на странице серии)
+                  oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
+                    AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?>');
+                </script>
+                <?php } ?>
+                <?php } ?>
+
+                <!-- Пересчитать -->
+                <tr class="no-borders border-t border-gray-200">
+                  <td colspan="4" class="px-4 py-3"></td>
+                  <td class="px-4 py-3">
+                    <button type="submit" name="recalc" value="1" class="px-4 py-2 bg-main text-white rounded-md hover:bg-main_hover transition font-medium">
+                      пересчитать
+                    </button>
+                  </td>
+                  <td class="px-4 py-3"></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="order_pay">
+                <div class="right">
+                  <table class="bx_ordercart_order_sum">
+                    <tr>
+                      <td class="custom_t1 fwb text-2xl" colspan="6" class="itog">
+                        Итого:
+                      </td>
+                      <td class="custom_t2 fwb price">
+                        <?php echo Catalog::priceFormat($totalPrice)?>
+                        руб.
+                      </td>
+                    </tr>
+                    <?php if($totalPriceOld) { ?>
+                    <tr>
+                      <td class="custom_t1" colspan="6"></td>
+                      <td class="custom_t2" style="text-decoration:line-through; color:#828282;">
+                        <?php echo Catalog::priceFormat(round($totalPriceOld))?>
+                        руб.
+                      </td>
+                    </tr>
+                    <?php } ?>
+                  </table>
+                </div>
               </div>
             </div>
+            <div class="h4 block after:content-[''] after:block after:clear-both">
+              <a class="btn btn1 orderbtn !bg-main px-4 py-2 bg-main text-white rounded-md hover:bg-main_hover transition font-medium"
+                 href="<?php echo Url::a('catalog-cart')?>?clear=1"
+                 onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')">
+                очистить корзину
+              </a>
+            </div>
+          </div>
+        </form>
+        <br><br>
 
-            <div class="cart-step3-right !w-full">
-              <h4 class="text-2xl font-semibold mb-4">Итоговая стоимость</h4>
-              <div class="body clearfix">
-                <div class="order-total clearfix space-y-4">
+        <div class="clearfix flex flex-col md:flex-row gap-6 lg:gap-8">
+          <!-- Форма "Заявка в 1 клик" -->
+          <form
+            action="<?php echo Url::a('catalog-cart-oneclick')?>"
+            method="post"
+            class="form flex-1 !w-full"
+            id="cart-form2"
+          >
+            <h4 class="text-center font-medium text-2xl mb-6">Заявка в 1 клик</h4>
+            <div class="body clearfix space-y-4">
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    type="text"
+                    name="quick[fio]"
+                    value="<?php echo $userInf['fio']; ?>"
+                    placeholder="Контактное лицо *"
+                    maxlength="1000"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    name="quick[phone]"
+                    value="<?php echo $userInf['phone']; ?>"
+                    placeholder="Телефон *"
+                    maxlength="30"
+                    required
+                  >
+                </div>
+              </div>
+              <div class="flex justify-center mt-4">
+                <button
+                  onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;"
+                  type="submit"
+                  class="btn btn1 orderbtn !bg-main px-12 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
+                >
+                  Оформить
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Форма "Заявка с реквизитами" -->
+          <form
+            method="post"
+            class="form flex-1 !w-full !pl-0"
+            id="cart-form1"
+          >
+            <h4 class="text-center font-medium text-2xl mb-6">Заявка с реквизитами</h4>
+            <div class="body clearfix space-y-4">
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    type="text"
+                    name="user[fio]"
+                    placeholder="Контактное лицо *"
+                    maxlength="1000"
+                    msg_maxlen="Контактное лицо не должно превышать 1000 символов"
+                    required
+                    msg_required="Вы не ввели Контактное лицо"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    name="user[phone]"
+                    placeholder="Телефон *"
+                    maxlength="30"
+                    msg_maxlen="Номер телефона не должен превышать 30 символов"
+                    required
+                    msg_required="Вы не ввели контактный телефон"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    type="email"
+                    name="user[email]"
+                    placeholder="E-Mail *"
+                    maxlength="1000"
+                    msg_maxlen="E-mail не должен превышать 1000 символов"
+                    required
+                    msg_required="Вы не ввели ваш E-mail"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    type="text"
+                    name="user[city]"
+                    placeholder="Город *"
+                    maxlength="100"
+                    msg_maxlen="Название города не должно превышать 100 символов"
+                    required
+                    msg_required="Вы не ввели ваш город"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                </div>
+              </div>
+              <div class="line f_text" data-type="TEXT">
+                <div class="vl">
+                  <input
+                    type="text"
+                    name="user[address]"
+                    placeholder="Адрес доставки *"
+                    maxlength="1000"
+                    msg_maxlen="Адрес доставки не должен превышать 1000 символов"
+                    required
+                    msg_required="Вы не ввели адрес доставки"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                </div>
+              </div>
+              <div class="line f_textarea" data-type="TEXTAREA">
+                <div class="vl">
+          <textarea
+            rows="2"
+            name="user[info]"
+            placeholder="Комментарий к заказу"
+            style="min-height: 120px;"
+            maxlength="5000"
+            msg_maxlen="Комментарий к заказу не должен превышать 5000 символов"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+                </div>
+              </div>
+
+              <!-- Итоговая сумма и кнопка -->
+              <div class="order-total clearfix pt-4 border-t border-gray-200">
+                <div class="flex flex-col sm:justify-between gap-3">
                   <div>
-                    Сумма заказа:
-                    <strong class="ml-1">
-                      <?php echo Catalog::priceFormat($totalPrice); ?>
-                      руб.
-                    </strong>
-                  </div>
-                  <div>
-                    Доставка:
-                    <strong class="ml-1">
-                      <span id="delivery-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
-                      </span>
-                      руб.
-                    </strong>
-                  </div>
-                  <div>
-                    Разгрузка:
-                    <strong class="ml-1">
-                      <span id="unloading-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0); ?>
-                      </span>
-                      руб.
-                    </strong>
-                  </div>
-                  <div>
-                    Сборка:
-                    <strong class="ml-1">
-                      <span id="assembly-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
-                      </span>
-                      руб.
-                    </strong>
-                  </div>
-                  <div>
-                    Вывоз мусора:
-                    <strong class="ml-1">
-                      Уточнить у менеджера
-                    </strong>
-                  </div>
-                  <div class="clearfix">
-                    <div class="price">
-                      Итого:
-                      <strong class="ml-1">
-                        <span id="total-price">
-                          <?php echo Catalog::priceFormat(
-											$totalPrice +
-											$optionsPrices[Orders_Options::DELIVERY]['price'] +
-											$optionsPrices[Orders_Options::UNLOADING]['price'] +
-											$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
-											$optionsPrices[Orders_Options::GARBAGE]['price']
-										); ?>
-                        </span>
-                        руб.
-                      </strong>
+                    <span class="text-gray-600">Сумма заказа:</span>
+                    <strong class="ml-1 text-lg"><?php echo Catalog::priceFormat($totalPrice)?> руб.</strong>
+                    <?php if($totalPriceOld): ?>
+                    <div class="text-sm text-gray-500 line-through">
+                      Было: <?php echo Catalog::priceFormat(round($totalPriceOld))?> руб.
                     </div>
+                    <?php endif; ?>
                   </div>
-                  <br>
-                  <div class="flex flex-col gap-4 w-fit">
+                  <div class="flex justify-center">
                     <button
-                      onclick="yaCounter19019251.reachGoal('zakaz_oformlen'); return true;"
                       type="submit"
-                      class="btn btn1 px-6 py-3 !bg-main text-white text-center rounded-md font-semibold hover:bg-opacity-90 transition"
-                      form="cart-form"
+                      class="btn btn1 orderbtn !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
                     >
-                      Оформить заказ
+                      Продолжить оформление
                     </button>
-
-                    <a href="<?php echo Url::a('catalog-cart-step2'); ?>" class="inline-block border-2 border-blue-600 text-blue-600 text-center px-8 py-3 rounded hover:bg-blue-50 transition">
-                      Вернуться к предыдущему этапу
-                    </a>
                   </div>
                 </div>
               </div>
             </div>
           </form>
         </div>
-
 
       </div>
     </div>
