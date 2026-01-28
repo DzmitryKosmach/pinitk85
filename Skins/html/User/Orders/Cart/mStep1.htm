@@ -8,6 +8,14 @@
 </script>
 <?php } ?>
 
+<style>
+  .materials-zoom-overlay img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+</style>
+
 <div id="title" class="title">
   <div class="">
     <div class=" clearfix">
@@ -92,30 +100,16 @@
                         <!-- Изображение -->
                         <div class="flex-shrink-0">
                           <?php if($c['item']['_img_ext']) { ?>
-                          <!-- Оборачиваем в ссылку для открытия модалки -->
-                          <a class="level1 !w-auto !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
-                            <img
-                              src="<?php echo Catalog::photoUrl(
-        Catalog_Items::$imagePath,
-        $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
-        $c['item']['image-name']
-      )?>"
-                              alt="<?php echo hsch($c['item']['name']); ?>"
-                              class="w-12 h-12 object-cover rounded"
-                            />
-                          </a>
-
-                          <!-- Модальное окно с полноразмерным изображением -->
-                          <div class="materials-zoom hidden">
-                            <img src="<?php echo Catalog::photoUrl(
+                          <img
+                            src="<?php echo Catalog::photoUrl(
                               Catalog_Items::$imagePath,
-                              $c['item']['id'], 0, 0, 0, $c['item']['_img_ext'],
+                              $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
                               $c['item']['image-name']
-                            )?>" alt="<?php echo hsch($c['item']['name']); ?>">
-                          </div>
-
+                            )?>"
+                            alt="<?php echo hsch($c['item']['name']); ?>"
+                            class="w-12 h-12 object-cover rounded"
+                          />
                           <?php } else { ?>
-                          <!-- Для элементов без изображения - без модалки -->
                           <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
@@ -144,12 +138,7 @@
                     <?php if ($c['material']): ?>
                     <div class="flex flex-col items-center justify-center gap-2">
                       <?php if ($c['material']['_img_ext']): ?>
-                      <a
-                        href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                        target="_blank"
-                        onclick="return hs.expand(this, {slideshowGroup: 'default'})"
-                        class="block"
-                      >
+                      <a class="level1 !w-auto !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
                         <img
                           src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
                           width="24"
@@ -158,6 +147,12 @@
                           class="rounded border"
                         />
                       </a>
+                      <div class="materials-zoom hidden">
+                        <img
+                          src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
+                          alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                        >
+                      </div>
                       <?php endif; ?>
                       <div class="name text-xs text-gray-700">
                         <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
@@ -227,15 +222,6 @@
                 </tr>
                 <?php } ?>
 
-                <?php foreach($cart as $c) { ?>
-                <?php if (!empty($c['item']['materials'])) { ?>
-                <script>
-                  // Материалы для попапа выбора цвета в корзине (как на странице серии)
-                  oMaterials.items2mats[<?php echo (int)$c['item']['id']; ?>] =
-                    AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($c['item']['materials'])); ?>');
-                </script>
-                <?php } ?>
-                <?php } ?>
 
                 <!-- Пересчитать -->
                 <tr class="no-borders border-t border-gray-200">
@@ -249,6 +235,46 @@
                 </tr>
                 </tbody>
               </table>
+
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const level1Elements = document.querySelectorAll('.level1');
+
+                  level1Elements.forEach(el => {
+                    el.addEventListener('click', function(e) {
+                      e.preventDefault();
+
+                      // Находим соответствующий materials-zoom
+                      const zoom = this.nextElementSibling;
+
+                      if (zoom && zoom.classList.contains('materials-zoom')) {
+                        // Создаем оверлей для модалки
+                        const overlay = document.createElement('div');
+                        overlay.className = 'materials-zoom-overlay fixed inset-0 bg-black bg-opacity-90 z-[1000] flex items-center justify-center cursor-pointer';
+                        overlay.innerHTML = zoom.innerHTML;
+                        document.body.appendChild(overlay);
+
+                        // Закрытие по клику на оверлей
+                        overlay.addEventListener('click', function(e) {
+                          if (e.target === overlay) {
+                            document.body.removeChild(overlay);
+                          }
+                        });
+
+                        // Закрытие по Escape
+                        const closeHandler = (e) => {
+                          if (e.key === 'Escape') {
+                            document.body.removeChild(overlay);
+                            document.removeEventListener('keydown', closeHandler);
+                          }
+                        };
+                        document.addEventListener('keydown', closeHandler);
+                      }
+                    });
+                  });
+                });
+              </script>
+
               <div class="order_pay">
                 <div class="right">
                   <table class="bx_ordercart_order_sum">
