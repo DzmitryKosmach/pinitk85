@@ -92,16 +92,30 @@
                         <!-- Изображение -->
                         <div class="flex-shrink-0">
                           <?php if($c['item']['_img_ext']) { ?>
-                          <img
-                            src="<?php echo Catalog::photoUrl(
-              Catalog_Items::$imagePath,
-              $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
-              $c['item']['image-name']
-            )?>"
-                            alt="<?php echo hsch($c['item']['name']); ?>"
-                            class="w-12 h-12 object-cover rounded"
-                          />
+                          <!-- Оборачиваем в ссылку для открытия модалки -->
+                          <a class="level1 !w-auto !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
+                            <img
+                              src="<?php echo Catalog::photoUrl(
+        Catalog_Items::$imagePath,
+        $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
+        $c['item']['image-name']
+      )?>"
+                              alt="<?php echo hsch($c['item']['name']); ?>"
+                              class="w-12 h-12 object-cover rounded"
+                            />
+                          </a>
+
+                          <!-- Модальное окно с полноразмерным изображением -->
+                          <div class="materials-zoom hidden">
+                            <img src="<?php echo Catalog::photoUrl(
+                              Catalog_Items::$imagePath,
+                              $c['item']['id'], 0, 0, 0, $c['item']['_img_ext'],
+                              $c['item']['image-name']
+                            )?>" alt="<?php echo hsch($c['item']['name']); ?>">
+                          </div>
+
                           <?php } else { ?>
+                          <!-- Для элементов без изображения - без модалки -->
                           <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
