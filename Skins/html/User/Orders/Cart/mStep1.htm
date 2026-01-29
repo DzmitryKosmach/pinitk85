@@ -152,7 +152,7 @@
                             <button class="modal-close bg-red-600 hover:bg-red-700" onclick="closeMaterialModal()">&times;</button>
                           </div>
                           <div class="modal-header">
-                            <h3 class="modal-title break-words hyphens-auto"></h3>
+                            <h3 class="modal-title "></h3>
                           </div>
                           <div class="modal-body flex justify-center">
                             <img src="" alt="" class="modal-image" />
@@ -160,7 +160,7 @@
                         </div>
                       </div>
                       <?php endif; ?>
-                      <div class="name text-xs text-gray-700">
+                      <div class="whitespace-normal text-xs text-gray-700">
                         <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
                       </div>
                     </div>
@@ -328,16 +328,18 @@
                   font-size: 18px;
                   font-weight: 600;
                   color: #111827;
+                  white-space: normal;
                 }
 
                 .modal-close {
-                  background: none;
+                  background-color: #ff0000ab;
                   border: none;
-                  font-size: 28px;
+                  font-size: 32px;
                   cursor: pointer;
-                  color: #6b7280;
+                  color: white;
                   line-height: 1;
-                  padding: 0;
+                  padding: 2px;
+                  margin: 4px;
                   width: 30px;
                   height: 30px;
                   display: flex;
@@ -348,8 +350,7 @@
                 }
 
                 .modal-close:hover {
-                  background-color: #e5e7eb;
-                  color: #374151;
+                  background-color: #ff0000f1;
                 }
 
                 .modal-body {

@@ -256,26 +256,47 @@
 										</span>
                   </div>
                 </td>
-                <td class="material px-2 py-2" style="min-width: 100px;">
-                  <?php if($c['material']) { ?>
-                  <?php if($c['material']['_img_ext']) { ?>
-                  <div class="image">
-                    <a href="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>"
-                       target="_blank"
-                       onclick="return hs.expand(this, {slideshowGroup: 'default'})">
-                      <img class="rounded border"
-                           src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                           width="24" height="24"
-                           alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id'])))?>">
+                <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                  <?php if ($c['material']): ?>
+                  <div class="flex flex-col items-center justify-center gap-2">
+                    <?php if ($c['material']['_img_ext']): ?>
+                    <a
+                      href="javascript:void(0)"
+                      onclick="openMaterialModal('<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>', '<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>')"
+                      class="block"
+                    >
+                      <img
+                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                        width="24"
+                        height="24"
+                        alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                        class="rounded border"
+                      />
                     </a>
+
+                    <!-- Скрытый элемент для модального окна -->
+                    <div class="material-modal hidden">
+                      <div class="modal-overlay"></div>
+                      <div class="modal-content">
+                        <div class="flex justify-end">
+                          <button class="modal-close bg-red-600 hover:bg-red-700" onclick="closeMaterialModal()">&times;</button>
+                        </div>
+                        <div class="modal-header">
+                          <h3 class="modal-title "></h3>
+                        </div>
+                        <div class="modal-body flex justify-center">
+                          <img src="" alt="" class="modal-image" />
+                        </div>
+                      </div>
+                    </div>
+                    <?php endif; ?>
+                    <div class="whitespace-normal text-xs text-gray-700">
+                      <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                    </div>
                   </div>
-                  <?php } ?>
-                  <div class="name">
-                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id']))?>
-                  </div>
-                  <?php } else { ?>
+                  <?php else: ?>
                   &nbsp;
-                  <?php } ?>
+                  <?php endif; ?>
                 </td>
 
                 <td class="nowrap right px-2 py-2">
@@ -305,6 +326,42 @@
               </tr>
               <?php } ?>
             </table>
+
+
+            <script>
+              function openMaterialModal(imageSrc, title) {
+                const modal = document.querySelector('.material-modal');
+                const modalImage = modal.querySelector('.modal-image');
+                const modalTitle = modal.querySelector('.modal-title');
+
+                modalImage.src = imageSrc;
+                modalImage.alt = title;
+                modalTitle.textContent = title;
+
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Запрещаем скролл страницы
+              }
+
+              function closeMaterialModal() {
+                const modal = document.querySelector('.material-modal');
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // Восстанавливаем скролл
+              }
+
+              // Закрытие по клику на оверлей
+              document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.querySelector('.material-modal');
+                modal.querySelector('.modal-overlay').addEventListener('click', closeMaterialModal);
+
+                // Закрытие по ESC
+                document.addEventListener('keydown', function(e) {
+                  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeMaterialModal();
+                  }
+                });
+              });
+            </script>
+
             <div class="order_pay">
               <div class="right">
                 <table class="bx_ordercart_order_sum">
