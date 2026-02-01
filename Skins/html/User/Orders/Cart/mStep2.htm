@@ -587,7 +587,7 @@
                                 <div>
                                     Разгрузка:
                                     <strong class="ml-1">
-                                        <span id="total-unloading-price">
+                                        <span id="unloading-price">
                                             <?php
                         $info = $optionsPrices[Orders_Options::UNLOADING]['info'] ?? '';
                         if (stripos($info, 'уточнить у менеджера') !== false) {
@@ -612,13 +612,13 @@
                                     Вывоз мусора:
                                     <strong class="ml-1"><span id="total-garbage-price">
                                             <?php
-                                        $info = $optionsPrices[Orders_Options::GARBAGE]['info'] ?? '';
-                                        if (stripos($info, 'не нужен') !== false) {
-                                            echo '0 руб.';
-                                        } else {
-                                            echo 'Уточнить у менеджера';
-                                        }
-                                        ?>
+                        $info = $optionsPrices[Orders_Options::GARBAGE]['info'] ?? '';
+                        if (stripos($info, 'не нужен') !== false) {
+                          echo '0 руб.';
+                        } else {
+                          echo 'Уточнить у менеджера';
+                        }
+                        ?>
                                         </span></strong>
                                 </div>
                                 <div class="clearfix">
