@@ -568,14 +568,17 @@ class Orders_Options extends ExtDbList
 
       if ($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
         $info = 'Нужна, есть лифт (' . $floor . ' эт.)';
+        return array(
+          'price' => round($price, Catalog::PRICES_DECIMAL),
+          'info' => $info
+        );
       } else/*if($orderOptions[self::UNLOADING] == self::UNLOADING_STAIRS)*/ {
-        $info = 'Нужна, нет лифта (' . $floor . ' эт.)';
+        // Нужна, нет лифта - уточнить у менеджера
+        return array(
+          'price' => 0,
+          'info' => 'Уточнить у менеджера'
+        );
       }
-
-      return array(
-        'price' => round($price, Catalog::PRICES_DECIMAL),
-        'info' => $info
-      );
     }
   }
 
