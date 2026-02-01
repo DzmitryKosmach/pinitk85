@@ -446,6 +446,13 @@ var oCart = new (function () {
             $$$("garbage-price").innerHTML = 'Уточнить у менеджера';
           }
         }
+        if ($$$("garbage-subtitle")) {
+          if (respond.garbage.info && respond.garbage.info.toLowerCase().indexOf('не нужен') !== -1) {
+            $$$("garbage-subtitle").innerHTML = '0 руб.';
+          } else {
+            $$$("garbage-subtitle").innerHTML = 'уточнить у менеджера';
+          }
+        }
 
         var optionsPrice =
           respond.delivery.price +

@@ -3127,7 +3127,18 @@ var oCart = new (function () {
           $$$("garbage-info").innerHTML = respond.garbage.info;
         }
         if ($$$("garbage-price")) {
-          $$$("garbage-price").innerHTML = priceFormat(respond.garbage.price);
+          if (respond.garbage.info && respond.garbage.info.toLowerCase().indexOf('не нужен') !== -1) {
+            $$$("garbage-price").innerHTML = '0 руб.';
+          } else {
+            $$$("garbage-price").innerHTML = 'Уточнить у менеджера';
+          }
+        }
+        if ($$$("garbage-subtitle")) {
+          if (respond.garbage.info && respond.garbage.info.toLowerCase().indexOf('не нужен') !== -1) {
+            $$$("garbage-subtitle").innerHTML = '0 руб.';
+          } else {
+            $$$("garbage-subtitle").innerHTML = 'уточнить у менеджера';
+          }
         }
 
         var optionsPrice =

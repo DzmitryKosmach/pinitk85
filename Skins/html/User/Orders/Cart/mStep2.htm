@@ -483,7 +483,16 @@
               <div class="persontypes clearfix">
 							<span class="subtitle block text-gray-700 mb-2">
 									Вывоз мусора:
-									<span>уточнить у менеджера</span>
+									<span id="garbage-subtitle">
+                      <?php
+                        $info = $optionsPrices[Orders_Options::GARBAGE]['info'] ?? '';
+                        if (stripos($info, 'не нужен') !== false) {
+                          echo '0 руб.';
+                        } else {
+                          echo 'уточнить у менеджера';
+                        }
+                        ?>
+                    </span>
 								</span>
                 <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
