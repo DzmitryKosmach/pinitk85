@@ -67,7 +67,7 @@ class Orders_Options extends ExtDbList
    * @var array
    */
   static $default = array(
-    self::DELIVERY => self::DELIVERY_NO,
+    self::DELIVERY => self::DELIVERY_MSK,
     self::UNLOADING => self::UNLOADING_NO,
     self::ASSEMBLY => self::ASSEMBLY_NO,
     self::GARBAGE => self::GARBAGE_NO,
