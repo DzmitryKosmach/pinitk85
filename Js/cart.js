@@ -2,491 +2,538 @@
  * Добавление в корзину,  доп. услуги в корзине и рассчёт их стоимости
  */
 var oCart = new (function () {
-  /**
-   *
-   */
-  var elCartItem, elCartTarget;
+    /**
+     *
+     */
+    var elCartItem, elCartTarget;
 
-  /**
-   *
-   */
-  var cartItemHideTimeout = 0;
+    /**
+     *
+     */
+    var cartItemHideTimeout = 0;
 
-  /**
-   *
-   */
-  this.url = "";
+    /**
+     *
+     */
+    this.url = "";
 
-  /**
-   *
-   */
-  this.urlBuyOneClick = "";
+    /**
+     *
+     */
+    this.urlBuyOneClick = "";
 
-  /**
-   *
-   */
-  this.totalPrice = 0;
+    /**
+     *
+     */
+    this.totalPrice = 0;
 
-  this.amountPlus = function (lnk) {
-    var inp = byTag("INPUT", lnk.parentNode)[0];
-    if (typeof inp === "undefined") return;
-    var amount = parseInt(inp.value);
-    if (!isNaN(amount) && amount >= 0) {
-      amount++;
-    } else {
-      amount = 1;
-    }
-    inp.value = amount;
-  };
-
-  this.amountMinus = function (lnk, zero) {
-    if (typeof zero == "undefined") zero = false;
-
-    var inp = byTag("INPUT", lnk.parentNode)[0];
-    if (typeof inp === "undefined") return;
-    var amount = parseInt(inp.value);
-    if (!isNaN(amount) && amount >= 0) {
-      amount--;
-      if (amount < 0) amount = 0;
-    } else {
-      amount = 1;
-    }
-    if (amount == 0 && !zero) {
-      amount = 1;
-    }
-    inp.value = amount;
-  };
-
-  /**
-   * @returns {string}
-   */
-  function collectSet() {
-    var seriesSet = [];
-    var iId, mId, amount;
-    if ($$$("series-set")) {
-      var prices = byTag("SPAN", $$$("series-set"));
-      for (var i = 0, l = prices.length; i < l; i++) {
-        if (
-          prices[i].id.indexOf("item2-") === 0 &&
-          prices[i].id.indexOf("-price") !== -1 &&
-          prices[i].id.indexOf("-price-") === -1
-        ) {
-          iId = parseInt(
-            prices[i].id.replace("item2-", "").replace("-price", "")
-          );
-          mId = $$$("item2-" + iId + "-material")
-            ? parseInt($$$("item2-" + iId + "-material").value)
-            : 0;
-          amount = parseInt($$$("item2-" + iId + "-amount").value);
-
-          if (isNaN(iId)) iId = 0;
-          if (isNaN(mId)) mId = 0;
-          if (isNaN(iId)) amount = 0;
-
-          if (isNaN(amount)) {
-            amount = 0;
-          }
-
-          seriesSet.push(iId + "-" + mId + "-" + amount);
+    this.amountPlus = function (lnk) {
+        var inp = byTag("INPUT", lnk.parentNode)[0];
+        if (typeof inp === "undefined") return;
+        var amount = parseInt(inp.value);
+        if (!isNaN(amount) && amount >= 0) {
+            amount++;
+        } else {
+            amount = 1;
         }
-      }
-    } else if ($$$("single-item-id")) {
-      iId = parseInt($$$("single-item-id").value);
-      mId = $$$("item-" + iId + "-material")
-        ? parseInt($$$("item-" + iId + "-material").value)
-        : 0;
-      amount = parseInt($$$("item-" + iId + "-amount").value);
+        inp.value = amount;
+    };
 
-      if (isNaN(iId)) iId = 0;
-      if (isNaN(mId)) mId = 0;
-      if (isNaN(iId)) amount = 0;
+    this.amountMinus = function (lnk, zero) {
+        if (typeof zero == "undefined") zero = false;
 
-      if (isNaN(amount)) {
-        amount = 0;
-      }
-
-      seriesSet.push(iId + "-" + mId + "-" + amount);
-    }
-    return seriesSet.join(";");
-  }
-
-  this.setInfo = function () {
-    var seriesSet = collectSet();
-    //console.log(this.url + '?set-info=' + encodeURIComponent(seriesSet));
-    AJAX.lookup(
-      this.url + "?set-info=" + encodeURIComponent(seriesSet),
-      function (respond) {
-        respond = AJAX.jsonDecode(respond);
-        if (!respond) return;
-
-        if ($$$("info-delivery")) {
-          $$$("info-delivery").innerHTML = priceFormat(respond[0]);
+        var inp = byTag("INPUT", lnk.parentNode)[0];
+        if (typeof inp === "undefined") return;
+        var amount = parseInt(inp.value);
+        if (!isNaN(amount) && amount >= 0) {
+            amount--;
+            if (amount < 0) amount = 0;
+        } else {
+            amount = 1;
         }
-        if ($$$("info-assembly")) {
-          if (Math.abs(respond[1]) != 0 || respond[3] == "") {
-            $$$("info-assembly").innerHTML = priceFormat(respond[1]);
-            $$$("info-assembly").className = "";
-          } else {
-            $$$("info-assembly").innerHTML = respond[3];
-            $$$("info-assembly").className = "zero";
-          }
+        if (amount == 0 && !zero) {
+            amount = 1;
         }
-        var deliveryContainer = $$$("text-delivery") || $$$("tab-delivery");
-        if (deliveryContainer) {
-          var spans = byTag("SPAN", deliveryContainer);
-          for (var i in spans) {
-            if (typeof spans[i].className == "undefined") continue;
-            if (spans[i].className.indexOf("info-delivery") != -1) {
-              spans[i].innerHTML =
-                "<b>" + priceFormat(respond[0]) + "</b> руб.";
+        inp.value = amount;
+    };
+
+    /**
+     * @returns {string}
+     */
+    function collectSet() {
+        var seriesSet = [];
+        var iId, mId, amount;
+        if ($$$("series-set")) {
+            var prices = byTag("SPAN", $$$("series-set"));
+            for (var i = 0, l = prices.length; i < l; i++) {
+                if (
+                    prices[i].id.indexOf("item2-") === 0 &&
+                    prices[i].id.indexOf("-price") !== -1 &&
+                    prices[i].id.indexOf("-price-") === -1
+                ) {
+                    iId = parseInt(
+                        prices[i].id.replace("item2-", "").replace("-price", "")
+                    );
+                    mId = $$$("item2-" + iId + "-material")
+                        ? parseInt($$$("item2-" + iId + "-material").value)
+                        : 0;
+                    amount = parseInt($$$("item2-" + iId + "-amount").value);
+
+                    if (isNaN(iId)) iId = 0;
+                    if (isNaN(mId)) mId = 0;
+                    if (isNaN(iId)) amount = 0;
+
+                    if (isNaN(amount)) {
+                        amount = 0;
+                    }
+
+                    seriesSet.push(iId + "-" + mId + "-" + amount);
+                }
             }
-            if (spans[i].className.indexOf("info-assembly") != -1) {
-              if (Math.abs(respond[1]) != 0 || respond[3] == "") {
-                spans[i].innerHTML =
-                  "<b>" + priceFormat(respond[1]) + "</b> руб.";
-              } else {
-                spans[i].innerHTML = "<b>" + respond[3] + "</b>";
-              }
+        } else if ($$$("single-item-id")) {
+            iId = parseInt($$$("single-item-id").value);
+            mId = $$$("item-" + iId + "-material")
+                ? parseInt($$$("item-" + iId + "-material").value)
+                : 0;
+            amount = parseInt($$$("item-" + iId + "-amount").value);
+
+            if (isNaN(iId)) iId = 0;
+            if (isNaN(mId)) mId = 0;
+            if (isNaN(iId)) amount = 0;
+
+            if (isNaN(amount)) {
+                amount = 0;
             }
-            if (spans[i].className.indexOf("info-unloading") != -1) {
-              spans[i].innerHTML =
-                "<b>" + priceFormat(respond[2]) + "</b> руб.";
+
+            seriesSet.push(iId + "-" + mId + "-" + amount);
+        }
+        return seriesSet.join(";");
+    }
+
+    this.setInfo = function () {
+        var seriesSet = collectSet();
+        //console.log(this.url + '?set-info=' + encodeURIComponent(seriesSet));
+        AJAX.lookup(
+            this.url + "?set-info=" + encodeURIComponent(seriesSet),
+            function (respond) {
+                respond = AJAX.jsonDecode(respond);
+                if (!respond) return;
+
+                if ($$$("info-delivery")) {
+                    $$$("info-delivery").innerHTML = priceFormat(respond[0]);
+                }
+                if ($$$("info-assembly")) {
+                    if (Math.abs(respond[1]) != 0 || respond[3] == "") {
+                        $$$("info-assembly").innerHTML = priceFormat(
+                            respond[1]
+                        );
+                        $$$("info-assembly").className = "";
+                    } else {
+                        $$$("info-assembly").innerHTML = respond[3];
+                        $$$("info-assembly").className = "zero";
+                    }
+                }
+                var deliveryContainer =
+                    $$$("text-delivery") || $$$("tab-delivery");
+                if (deliveryContainer) {
+                    var spans = byTag("SPAN", deliveryContainer);
+                    for (var i in spans) {
+                        if (typeof spans[i].className == "undefined") continue;
+                        if (spans[i].className.indexOf("info-delivery") != -1) {
+                            spans[i].innerHTML =
+                                "<b>" + priceFormat(respond[0]) + "</b> руб.";
+                        }
+                        if (spans[i].className.indexOf("info-assembly") != -1) {
+                            if (Math.abs(respond[1]) != 0 || respond[3] == "") {
+                                spans[i].innerHTML =
+                                    "<b>" +
+                                    priceFormat(respond[1]) +
+                                    "</b> руб.";
+                            } else {
+                                spans[i].innerHTML =
+                                    "<b>" + respond[3] + "</b>";
+                            }
+                        }
+                        if (
+                            spans[i].className.indexOf("info-unloading") != -1
+                        ) {
+                            spans[i].innerHTML =
+                                "<b>" + priceFormat(respond[2]) + "</b> руб.";
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    );
-  };
+        );
+    };
 
-  this.buyOneClick = function (itemId) {
-    var seriesSet = collectSet();
-    oPopup.loadUrl(
-      "Купить в один клик",
-      this.urlBuyOneClick + "?set=" + encodeURIComponent(seriesSet) + "&ajax=1",
-      false,
-      false,
-      true
-    );
-  };
+    this.buyOneClick = function (itemId) {
+        var seriesSet = collectSet();
+        oPopup.loadUrl(
+            "Купить в один клик",
+            this.urlBuyOneClick +
+                "?set=" +
+                encodeURIComponent(seriesSet) +
+                "&ajax=1",
+            false,
+            false,
+            true
+        );
+    };
 
-  onLoad(function () {
-    elCartItem = $$$("cart-item");
-    elCartTarget = $$$("cart-cnt");
-  });
-
-  this.add = function (elForm, addSet) {
-    addSet = !(typeof addSet === "undefined" || !addSet);
-
-    // Формируем URL для отправки запроса
-    var url = elForm.action + "?";
-    var inputs = byTag("INPUT", elForm);
-    for (var i = 0, l = inputs.length; i < l; i++) {
-      url += inputs[i].name + "=" + encodeURIComponent(inputs[i].value) + "&";
-    }
-    var selects = byTag("SELECT", elForm);
-    for (i = 0, l = selects.length; i < l; i++) {
-      url += selects[i].name + "=" + encodeURIComponent(selects[i].value) + "&";
-    }
-    url += "ajax=1";
-    console.log('DEBUG: Cart URL:', url);
-    //console.log(url);
-    AJAX.lookup(url, function (respond) {
-      console.log('DEBUG: Cart response:', respond);
-      //console.log(respond);
-      respond = AJAX.jsonDecode(respond);
-      if (!respond) return;
-
-      if (addSet) {
-        var btn1, btn2, btn3;
-        btn1 = elForm.findOne(".add2basket");
-        btn2 = elForm.findOne(".buy1click");
-        btn3 = elForm.findOne(".go2basket");
-        if (btn1) {
-          btn1.removeClass("add2basket");
-          btn1.addClass("inbasket");
-          btn1.title = "В корзине";
-          btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
-        }
-        if (btn2) {
-          btn2.style.display = "none";
-        }
-        if (btn3) {
-          btn3.style.display = "";
-        }
-      }
-
-      displayTotal(respond);
+    onLoad(function () {
+        elCartItem = $$$("cart-item");
+        elCartTarget = $$$("cart-cnt");
     });
-  };
 
-  /**
-   *
-   */
-  function displayTotal(cartTotal) {
-    $$$("basketinfo").innerHTML =
-      cartTotal[0] +
-      " " +
-      itemsAmountWord(cartTotal[0]) +
-      " на " +
-      priceFormat(cartTotal[1]) +
-      " руб.";
+    this.add = function (elForm, addSet) {
+        addSet = !(typeof addSet === "undefined" || !addSet);
 
-    $$$("basketinfo-amount").innerHTML = cartTotal[0];
-    $$$("basketinfo-price").innerHTML = priceFormat(cartTotal[1]) + " руб.";
+        // Формируем URL для отправки запроса
+        var url = elForm.action + "?";
+        var inputs = byTag("INPUT", elForm);
+        for (var i = 0, l = inputs.length; i < l; i++) {
+            url +=
+                inputs[i].name +
+                "=" +
+                encodeURIComponent(inputs[i].value) +
+                "&";
+        }
+        var selects = byTag("SELECT", elForm);
+        for (i = 0, l = selects.length; i < l; i++) {
+            url +=
+                selects[i].name +
+                "=" +
+                encodeURIComponent(selects[i].value) +
+                "&";
+        }
+        url += "ajax=1";
+        console.log("DEBUG: Cart URL:", url);
+        //console.log(url);
+        AJAX.lookup(url, function (respond) {
+            console.log("DEBUG: Cart response:", respond);
+            //console.log(respond);
+            respond = AJAX.jsonDecode(respond);
+            if (!respond) return;
 
-    // Update cart badge counts
-    var mobileBadge = $$$("cart-badge-count-mobile");
-    var desktopBadge = $$$("cart-badge-count-desktop");
+            if (addSet) {
+                var btn1, btn2, btn3;
+                btn1 = elForm.findOne(".add2basket");
+                btn2 = elForm.findOne(".buy1click");
+                btn3 = elForm.findOne(".go2basket");
+                if (btn1) {
+                    btn1.removeClass("add2basket");
+                    btn1.addClass("inbasket");
+                    btn1.title = "В корзине";
+                    btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
+                }
+                if (btn2) {
+                    btn2.style.display = "none";
+                }
+                if (btn3) {
+                    btn3.style.display = "";
+                }
+            }
 
-    if (mobileBadge) {
-      mobileBadge.innerHTML = cartTotal[0];
-      if (cartTotal[0] > 0) {
-        mobileBadge.classList.remove("hidden");
-      } else {
-        mobileBadge.classList.add("hidden");
-      }
-    }
+            displayTotal(respond);
+        });
+    };
 
-    if (desktopBadge) {
-      desktopBadge.innerHTML = cartTotal[0];
-      if (cartTotal[0] > 0) {
-        desktopBadge.classList.remove("hidden");
-      } else {
-        desktopBadge.classList.add("hidden");
-      }
-    }
+    /**
+     *
+     */
+    function displayTotal(cartTotal) {
+        $$$("basketinfo").innerHTML =
+            cartTotal[0] +
+            " " +
+            itemsAmountWord(cartTotal[0]) +
+            " на " +
+            priceFormat(cartTotal[1]) +
+            " руб.";
 
-    if (typeof cartTotal[3] === "object") {
-      var iId, btn1, btn2, btn3;
-      for (var i = 0, l = cartTotal[3].length; i < l; i++) {
-        if (typeof cartTotal[3][i] === "undefined") continue;
-        iId = cartTotal[3][i];
+        $$$("basketinfo-amount").innerHTML = cartTotal[0];
+        $$$("basketinfo-price").innerHTML = priceFormat(cartTotal[1]) + " руб.";
 
-        // Items list
-        btn1 = findOne("#catalog-item-" + iId + " .add2basketform .submit");
-        if (btn1) {
-          btn1.addClass("in-cart");
-          btn1.title = "В корзине";
+        // Update cart badge counts
+        var mobileBadge = $$$("cart-badge-count-mobile");
+        var desktopBadge = $$$("cart-badge-count-desktop");
+
+        if (mobileBadge) {
+            mobileBadge.innerHTML = cartTotal[0];
+            if (cartTotal[0] > 0) {
+                mobileBadge.classList.remove("hidden");
+            } else {
+                mobileBadge.classList.add("hidden");
+            }
         }
 
-        // Item page
-        btn1 = findOne("#catalog-item-full-" + iId + " .add2basket");
-        btn2 = findOne("#catalog-item-full-" + iId + " .buy1click");
-        btn3 = findOne("#catalog-item-full-" + iId + " .go2basket");
-        if (btn1) {
-          btn1.removeClass("add2basket");
-          btn1.addClass("inbasket");
-          btn1.title = "В корзине";
-          btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
+        if (desktopBadge) {
+            desktopBadge.innerHTML = cartTotal[0];
+            if (cartTotal[0] > 0) {
+                desktopBadge.classList.remove("hidden");
+            } else {
+                desktopBadge.classList.add("hidden");
+            }
         }
-        if (btn2) {
-          btn2.style.display = "none";
+
+        if (typeof cartTotal[3] === "object") {
+            var iId, btn1, btn2, btn3;
+            for (var i = 0, l = cartTotal[3].length; i < l; i++) {
+                if (typeof cartTotal[3][i] === "undefined") continue;
+                iId = cartTotal[3][i];
+
+                // Items list
+                btn1 = findOne(
+                    "#catalog-item-" + iId + " .add2basketform .submit"
+                );
+                if (btn1) {
+                    btn1.addClass("in-cart");
+                    btn1.title = "В корзине";
+                }
+
+                // Item page
+                btn1 = findOne("#catalog-item-full-" + iId + " .add2basket");
+                btn2 = findOne("#catalog-item-full-" + iId + " .buy1click");
+                btn3 = findOne("#catalog-item-full-" + iId + " .go2basket");
+                if (btn1) {
+                    btn1.removeClass("add2basket");
+                    btn1.addClass("inbasket");
+                    btn1.title = "В корзине";
+                    btn1.innerHTML = '<i class="icon pngicons"></i>В корзине';
+                }
+                if (btn2) {
+                    btn2.style.display = "none";
+                }
+                if (btn3) {
+                    btn3.style.display = "";
+                }
+            }
         }
-        if (btn3) {
-          btn3.style.display = "";
+    }
+
+    /** Получаем слово "товаров" в правильном падеже, в зависимоисти от к-ва товаров
+     * @param	{int}	amount
+     * @returns	{string}
+     */
+    function itemsAmountWord(amount) {
+        amount = parseInt(amount);
+        if (isNaN(amount)) amount = 0;
+
+        if (amount >= 10) {
+            amount += "";
+            amount = parseInt(amount.substr(amount.length - 2));
         }
-      }
-    }
-  }
-
-  /** Получаем слово "товаров" в правильном падеже, в зависимоисти от к-ва товаров
-   * @param	{int}	amount
-   * @returns	{string}
-   */
-  function itemsAmountWord(amount) {
-    amount = parseInt(amount);
-    if (isNaN(amount)) amount = 0;
-
-    if (amount >= 10) {
-      amount += "";
-      amount = parseInt(amount.substr(amount.length - 2));
-    }
-    if (10 <= amount && amount <= 20) {
-      return "товаров";
-    }
-
-    amount += "";
-    amount = parseInt(amount.substr(amount.length - 1));
-    if (
-      amount == 0 ||
-      amount == 5 ||
-      amount == 6 ||
-      amount == 7 ||
-      amount == 8 ||
-      amount == 9
-    ) {
-      return "товаров";
-    }
-    if (amount == 1) {
-      return "товар";
-    }
-    if (amount == 2 || amount == 3 || amount == 4) {
-      return "товарa";
-    }
-    return "товаров";
-  }
-
-  /**
-   *
-   */
-  var prevOptions = {};
-
-  var calcOptionsTimeout = 0;
-
-  /**
-   * При изменении опций заказа в корзине вызывается этот метод и стоимость опций пересчитывается
-   */
-  this.calcOptions = function () {
-    if (calcOptionsTimeout) {
-      clearTimeout(calcOptionsTimeout);
-    }
-    calcOptionsTimeout = setTimeout(function () {
-      var form = $$$("cart-options");
-      if (!form) return;
-
-      // При выборе доставки "До трансп.компании", остальные опции выключаются
-      if ($$$("delivery-3").checked) {
-        $$$("unloading-0").checked = true;
-        $$$("unloading-1").disabled = true;
-        $$$("unloading-2").disabled = true;
-
-        $$$("assembly-0").checked = true;
-        $$$("assembly-1").disabled = true;
-
-        $$$("garbage-0").checked = true;
-        $$$("garbage-1").disabled = true;
-      } else {
-        $$$("unloading-1").disabled = false;
-        $$$("unloading-2").disabled = false;
-        $$$("assembly-1").disabled = false;
-        $$$("garbage-1").disabled = false;
-      }
-
-      // Показать/скрыть ползунок выбора расстояния за МКАД
-      if ($$$("delivery-2").checked) {
-        $$$("delivery-distance-block").style.display = "";
-      } else {
-        $$$("delivery-distance-block").style.display = "none";
-      }
-
-      // Показать/скрыть ползунок выбора этажа для разгрузки
-      if ($$$("unloading-1").checked || $$$("unloading-2").checked) {
-        $$$("unloading-floor-block").style.display = "";
-      } else {
-        $$$("unloading-floor-block").style.display = "none";
-      }
-
-      var i, l, name;
-      var options = {};
-      var inputs = byTag("INPUT", form);
-      for (i = 0, l = inputs.length; i < l; i++) {
-        if (!inputs[i].name) {
-          continue;
+        if (10 <= amount && amount <= 20) {
+            return "товаров";
         }
+
+        amount += "";
+        amount = parseInt(amount.substr(amount.length - 1));
         if (
-          (inputs[i].type == "radio" || inputs[i].type == "checkbox") &&
-          !inputs[i].checked
+            amount == 0 ||
+            amount == 5 ||
+            amount == 6 ||
+            amount == 7 ||
+            amount == 8 ||
+            amount == 9
         ) {
-          continue;
+            return "товаров";
         }
-        options[inputs[i].name] = inputs[i].value;
-      }
-
-      var changed = false;
-      for (i in options) {
-        if (
-          typeof prevOptions[i] == "undefined" ||
-          prevOptions[i] != options[i]
-        ) {
-          changed = true;
-          break;
+        if (amount == 1) {
+            return "товар";
         }
-      }
-      if (!changed) return;
-      prevOptions = options;
-
-      var url = oCart.url + "?ajax=1&options-calc=1";
-      for (i in options) {
-        url += "&" + encodeURIComponent(i) + "=" + options[i];
-      }
-      AJAX.lookup(url, function (respond) {
-        respond = AJAX.jsonDecode(respond);
-        if (!respond) return;
-
-        if ($$$("delivery-info")) {
-          $$$("delivery-info").innerHTML = respond.delivery.info;
+        if (amount == 2 || amount == 3 || amount == 4) {
+            return "товарa";
         }
-        if ($$$("delivery-price")) {
-          $$$("delivery-price").innerHTML = priceFormat(respond.delivery.price);
-        }
-
-        if ($$$("unloading-info")) {
-          $$$("unloading-info").innerHTML = respond.unloading.info;
-        }
-        if ($$$("unloading-price")) {
-          if (respond.unloading.info && respond.unloading.info.toLowerCase().indexOf('уточнить у менеджера') !== -1) {
-            $$$("unloading-price").innerHTML = 'Уточнить у менеджера';
-          } else {
-            $$$("unloading-price").innerHTML = priceFormat(respond.unloading.price) + ' руб.';
-          }
-        }
-        if ($$$("unloading-subtitle")) {
-          if (respond.unloading.info && respond.unloading.info.toLowerCase().indexOf('уточнить у менеджера') !== -1) {
-            $$$("unloading-subtitle").innerHTML = 'уточнить у менеджера';
-          } else {
-            $$$("unloading-subtitle").innerHTML = priceFormat(respond.unloading.price) + ' руб.';
-          }
-        }
-
-        if ($$$("assembly-info")) {
-          $$$("assembly-info").innerHTML = respond.assembly.info;
-        }
-        if ($$$("assembly-price")) {
-          $$$("assembly-price").innerHTML = priceFormat(respond.assembly.price);
-        }
-
-        if ($$$("garbage-info")) {
-          $$$("garbage-info").innerHTML = respond.garbage.info;
-        }
-        if ($$$("garbage-price")) {
-          if (respond.garbage.info && respond.garbage.info.toLowerCase().indexOf('не нужен') !== -1) {
-            $$$("garbage-price").innerHTML = '0 руб.';
-          } else {
-            $$$("garbage-price").innerHTML = 'Уточнить у менеджера';
-          }
-        }
-        if ($$$("garbage-subtitle")) {
-          if (respond.garbage.info && respond.garbage.info.toLowerCase().indexOf('не нужен') !== -1) {
-            $$$("garbage-subtitle").innerHTML = '0 руб.';
-          } else {
-            $$$("garbage-subtitle").innerHTML = 'уточнить у менеджера';
-          }
-        }
-
-        var optionsPrice =
-          respond.delivery.price +
-          respond.unloading.price +
-          respond.assembly.price +
-          respond.garbage.price;
-
-        if ($$$("options-price1")) {
-          $$$("options-price1").innerHTML = priceFormat(optionsPrice);
-        }
-        if ($$$("options-price2")) {
-          $$$("options-price2").innerHTML = priceFormat(optionsPrice);
-        }
-        if ($$$("total-price")) {
-          $$$("total-price").innerHTML = priceFormat(
-            oCart.totalPrice + optionsPrice
-          );
-        }
-      });
-    }, 100);
-  };
-  onLoad(function () {
-    oCart.calcOptions();
-    if ($$$("options-calc-nojs")) {
-      $$$("options-calc-nojs").style.display = "none";
+        return "товаров";
     }
-  });
+
+    /**
+     *
+     */
+    var prevOptions = {};
+
+    var calcOptionsTimeout = 0;
+
+    /**
+     * При изменении опций заказа в корзине вызывается этот метод и стоимость опций пересчитывается
+     */
+    this.calcOptions = function () {
+        if (calcOptionsTimeout) {
+            clearTimeout(calcOptionsTimeout);
+        }
+        calcOptionsTimeout = setTimeout(function () {
+            var form = $$$("cart-options");
+            if (!form) return;
+
+            // При выборе доставки "До трансп.компании", остальные опции выключаются
+            if ($$$("delivery-3").checked) {
+                $$$("unloading-0").checked = true;
+                $$$("unloading-1").disabled = true;
+                $$$("unloading-2").disabled = true;
+
+                $$$("assembly-0").checked = true;
+                $$$("assembly-1").disabled = true;
+
+                $$$("garbage-0").checked = true;
+                $$$("garbage-1").disabled = true;
+            } else {
+                $$$("unloading-1").disabled = false;
+                $$$("unloading-2").disabled = false;
+                $$$("assembly-1").disabled = false;
+                $$$("garbage-1").disabled = false;
+            }
+
+            // Показать/скрыть ползунок выбора расстояния за МКАД
+            if ($$$("delivery-2").checked) {
+                $$$("delivery-distance-block").style.display = "";
+            } else {
+                $$$("delivery-distance-block").style.display = "none";
+            }
+
+            // Показать/скрыть ползунок выбора этажа для разгрузки
+            if ($$$("unloading-1").checked || $$$("unloading-2").checked) {
+                $$$("unloading-floor-block").style.display = "";
+            } else {
+                $$$("unloading-floor-block").style.display = "none";
+            }
+
+            var i, l, name;
+            var options = {};
+            var inputs = byTag("INPUT", form);
+            for (i = 0, l = inputs.length; i < l; i++) {
+                if (!inputs[i].name) {
+                    continue;
+                }
+                if (
+                    (inputs[i].type == "radio" ||
+                        inputs[i].type == "checkbox") &&
+                    !inputs[i].checked
+                ) {
+                    continue;
+                }
+                options[inputs[i].name] = inputs[i].value;
+            }
+
+            var changed = false;
+            for (i in options) {
+                if (
+                    typeof prevOptions[i] == "undefined" ||
+                    prevOptions[i] != options[i]
+                ) {
+                    changed = true;
+                    break;
+                }
+            }
+            if (!changed) return;
+            prevOptions = options;
+
+            var url = oCart.url + "?ajax=1&options-calc=1";
+            for (i in options) {
+                url += "&" + encodeURIComponent(i) + "=" + options[i];
+            }
+            AJAX.lookup(url, function (respond) {
+                respond = AJAX.jsonDecode(respond);
+                if (!respond) return;
+
+                var deliveryPriceText = priceFormat(respond.delivery.price);
+                var unloadingPriceText =
+                    respond.unloading.info &&
+                    respond.unloading.info
+                        .toLowerCase()
+                        .indexOf("уточнить у менеджера") !== -1
+                        ? "Уточнить у менеджера"
+                        : priceFormat(respond.unloading.price) + " руб.";
+                var unloadingSubtitleText =
+                    respond.unloading.info &&
+                    respond.unloading.info
+                        .toLowerCase()
+                        .indexOf("уточнить у менеджера") !== -1
+                        ? "уточнить у менеджера"
+                        : priceFormat(respond.unloading.price) + " руб.";
+                var assemblyPriceText = priceFormat(respond.assembly.price);
+                var garbagePriceText =
+                    respond.garbage.info &&
+                    respond.garbage.info.toLowerCase().indexOf("не нужен") !==
+                        -1
+                        ? "0 руб."
+                        : "Уточнить у менеджера";
+                var garbageSubtitleText =
+                    respond.garbage.info &&
+                    respond.garbage.info.toLowerCase().indexOf("не нужен") !==
+                        -1
+                        ? "0 руб."
+                        : "уточнить у менеджера";
+
+                if ($$$("delivery-info")) {
+                    $$$("delivery-info").innerHTML = respond.delivery.info;
+                }
+                if ($$$("delivery-price")) {
+                    $$$("delivery-price").innerHTML = deliveryPriceText;
+                }
+                if ($$$("total-delivery-price")) {
+                    $$$("total-delivery-price").innerHTML = deliveryPriceText;
+                }
+
+                if ($$$("unloading-info")) {
+                    $$$("unloading-info").innerHTML = respond.unloading.info;
+                }
+                if ($$$("unloading-price")) {
+                    $$$("unloading-price").innerHTML = unloadingPriceText;
+                }
+                if ($$$("unloading-subtitle")) {
+                    $$$("unloading-subtitle").innerHTML = unloadingSubtitleText;
+                }
+                if ($$$("total-unloading-price")) {
+                    $$$("total-unloading-price").innerHTML = unloadingPriceText;
+                }
+
+                if ($$$("assembly-info")) {
+                    $$$("assembly-info").innerHTML = respond.assembly.info;
+                }
+                if ($$$("assembly-price")) {
+                    $$$("assembly-price").innerHTML = assemblyPriceText;
+                }
+                if ($$$("total-assembly-price")) {
+                    $$$("total-assembly-price").innerHTML = assemblyPriceText;
+                }
+
+                if ($$$("garbage-info")) {
+                    $$$("garbage-info").innerHTML = respond.garbage.info;
+                }
+                if ($$$("garbage-price")) {
+                    $$$("garbage-price").innerHTML = garbagePriceText;
+                }
+                if ($$$("garbage-subtitle")) {
+                    $$$("garbage-subtitle").innerHTML = garbageSubtitleText;
+                }
+                if ($$$("total-garbage-price")) {
+                    $$$("total-garbage-price").innerHTML = garbagePriceText;
+                }
+
+                var optionsPrice =
+                    respond.delivery.price +
+                    respond.unloading.price +
+                    respond.assembly.price +
+                    respond.garbage.price;
+
+                if ($$$("options-price1")) {
+                    $$$("options-price1").innerHTML = priceFormat(optionsPrice);
+                }
+                if ($$$("options-price2")) {
+                    $$$("options-price2").innerHTML = priceFormat(optionsPrice);
+                }
+                if ($$$("total-price")) {
+                    $$$("total-price").innerHTML = priceFormat(
+                        oCart.totalPrice + optionsPrice
+                    );
+                }
+            });
+        }, 100);
+    };
+    onLoad(function () {
+        oCart.calcOptions();
+        if ($$$("options-calc-nojs")) {
+            $$$("options-calc-nojs").style.display = "none";
+        }
+    });
 })();

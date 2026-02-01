@@ -1,6 +1,7 @@
 <?php echo CssCopmress::load('cart'); ?>
 <script>
-  oCart.totalPrice = <?php echo $totalPrice?>;
+  oCart.totalPrice = <? php echo $totalPrice ?>;
+  oCart.url = '<?php echo Url::a('catalog - cart'); ?>';
 </script>
 
 <div id="title" class="title">
@@ -18,13 +19,17 @@
         </a>
         <span class="mx-1">›</span>
         <?php } ?>
-        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <span class="text-gray-700">
+          <?php echo $bcLast['name']; ?>
+        </span>
         <?php } ?>
       </nav>
 
 
       <?php if(trim($pageInf['header'])) { ?>
-      <h1 class="pagetitle text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
+      <h1 class="pagetitle text-3xl font-semibold mb-6">
+        <?php echo $pageInf['header']; ?>
+      </h1>
       <?php } ?>
     </div>
   </div>
@@ -43,135 +48,136 @@
         <div class="body">
           <table class="products js-element w-full border-collapse">
             <thead>
-            <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
-              <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
-              <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
-              <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
-              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
-            </tr>
+              <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+                <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
+                <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
+                <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
+                <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
+              </tr>
             </thead>
             <tbody>
-            <?php foreach($cart as $c) { ?>
-            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
-              <!-- Серия -->
-              <td class="item px-4 py-3">
-                <?php if($c['series']) { ?>
-                <a href="<?php echo Catalog_Series::a($c['series']); ?>" target="_blank" class="text-blue-600 hover:text-blue-800">
-                  <?php echo htmlspecialchars($c['series']['name']); ?>
-                </a>
-                <?php } ?>
-              </td>
+              <?php foreach($cart as $c) { ?>
+              <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+                <!-- Серия -->
+                <td class="item px-4 py-3">
+                  <?php if($c['series']) { ?>
+                  <a href="<?php echo Catalog_Series::a($c['series']); ?>" target="_blank"
+                    class="text-blue-600 hover:text-blue-800">
+                    <?php echo htmlspecialchars($c['series']['name']); ?>
+                  </a>
+                  <?php } ?>
+                </td>
 
-              <!-- Товар  -->
-              <td class="itemname px-4 py-3">
-                <div class="flex items-start gap-3">
-                  <div class="flex-shrink-0">
-                    <?php if($c['item']['_img_ext']) { ?>
-                    <img
-                      src="<?php echo Catalog::photoUrl(
+                <!-- Товар  -->
+                <td class="itemname px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                      <?php if($c['item']['_img_ext']) { ?>
+                      <img src="<?php echo Catalog::photoUrl(
                     Catalog_Items::$imagePath,
                     $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
                     $c['item']['image-name']
-                  ); ?>"
-                      alt="<?php echo hsch($c['item']['name']); ?>"
-                      class="w-12 h-12 object-cover rounded"
-                    />
-                    <?php } else { ?>
-                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
-                      </svg>
-                    </div>
-                    <?php } ?>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="font-medium text-gray-900"><?php echo $c['item']['name']; ?></div>
-                    <div class="text-xs text-gray-500 mt-1">
-                      Арт.: <?php echo $c['item']['art']; ?><br>
-                      <?php if(trim($c['item']['size']) !== '') { ?>
-                      Размер: <?php echo $c['item']['size']; ?>
+                  ); ?>" alt="<?php echo hsch($c['item']['name']); ?>" class="w-12 h-12 object-cover rounded" />
+                      <?php } else { ?>
+                      <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                        </svg>
+                      </div>
                       <?php } ?>
                     </div>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Цвет -->
-              <td class="material px-4 py-3 text-center" style="min-width: 100px;">
-                <?php if ($c['material']): ?>
-                <div class="flex flex-col items-center justify-center gap-2">
-                  <?php if ($c['material']['_img_ext']): ?>
-                  <a
-                    href="javascript:void(0)"
-                    onclick="openMaterialModal('<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>', '<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>')"
-                    class="block"
-                  >
-                    <img
-                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
-                      width="24"
-                      height="24"
-                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
-                      class="rounded border"
-                    />
-                  </a>
-
-                  <!-- Скрытый элемент для модального окна -->
-                  <div class="material-modal hidden">
-                    <div class="modal-overlay"></div>
-                    <div class="modal-content">
-                      <div class="flex justify-end">
-                        <button class="modal-close bg-red-600 hover:bg-red-700" onclick="closeMaterialModal()">&times;</button>
+                    <div class="min-w-0">
+                      <div class="font-medium text-gray-900">
+                        <?php echo $c['item']['name']; ?>
                       </div>
-                      <div class="modal-header">
-                        <h3 class="modal-title "></h3>
-                      </div>
-                      <div class="modal-body flex justify-center">
-                        <img src="" alt="" class="modal-image" />
+                      <div class="text-xs text-gray-500 mt-1">
+                        Арт.:
+                        <?php echo $c['item']['art']; ?><br>
+                        <?php if(trim($c['item']['size']) !== '') { ?>
+                        Размер:
+                        <?php echo $c['item']['size']; ?>
+                        <?php } ?>
                       </div>
                     </div>
                   </div>
-                  <?php endif; ?>
-                  <div class="whitespace-normal text-xs text-gray-700">
-                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                </td>
+
+                <!-- Цвет -->
+                <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                  <?php if ($c['material']): ?>
+                  <div class="flex flex-col items-center justify-center gap-2">
+                    <?php if ($c['material']['_img_ext']): ?>
+                    <a href="javascript:void(0)"
+                      onclick="openMaterialModal('<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>', '<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>')"
+                      class="block">
+                      <img
+                        src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                        width="24" height="24"
+                        alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                        class="rounded border" />
+                    </a>
+
+                    <!-- Скрытый элемент для модального окна -->
+                    <div class="material-modal hidden">
+                      <div class="modal-overlay"></div>
+                      <div class="modal-content">
+                        <div class="flex justify-end">
+                          <button class="modal-close bg-red-600 hover:bg-red-700"
+                            onclick="closeMaterialModal()">&times;</button>
+                        </div>
+                        <div class="modal-header">
+                          <h3 class="modal-title "></h3>
+                        </div>
+                        <div class="modal-body flex justify-center">
+                          <img src="" alt="" class="modal-image" />
+                        </div>
+                      </div>
+                    </div>
+                    <?php endif; ?>
+                    <div class="whitespace-normal text-xs text-gray-700">
+                      <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                    </div>
                   </div>
-                </div>
-                <?php else: ?>
-                &nbsp;
-                <?php endif; ?>
-              </td>
+                  <?php else: ?>
+                  &nbsp;
+                  <?php endif; ?>
+                </td>
 
-              <!-- Кол-во (только текст, без управления) -->
-              <td class="nowrap px-4 py-3">
-                <?php echo (int)$c['amount']; ?> шт
-              </td>
+                <!-- Кол-во (только текст, без управления) -->
+                <td class="nowrap px-4 py-3">
+                  <?php echo (int)$c['amount']; ?> шт
+                </td>
 
-              <!-- Цена -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <?php if(abs($c['price'])): ?>
-                <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
-                <div class="text-xs text-gray-500 line-through">
-                  <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
-                </div>
-                <?php endif; ?>
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price']); ?> руб.
-                </div>
-                <?php else: ?>
-                <div class="text-gray-500">по запросу</div>
-                <?php endif; ?>
-              </td>
+                <!-- Цена -->
+                <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                  <?php if(abs($c['price'])): ?>
+                  <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
+                  <div class="text-xs text-gray-500 line-through">
+                    <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
+                  </div>
+                  <?php endif; ?>
+                  <div class="font-medium">
+                    <?php echo Catalog::priceFormat($c['price']); ?> руб.
+                  </div>
+                  <?php else: ?>
+                  <div class="text-gray-500">по запросу</div>
+                  <?php endif; ?>
+                </td>
 
-              <!-- Сумма -->
-              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
-                <div class="font-medium">
-                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
-                </div>
-              </td>
-            </tr>
-            <?php } ?>
+                <!-- Сумма -->
+                <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                  <div class="font-medium">
+                    <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
+                  </div>
+                </td>
+              </tr>
+              <?php } ?>
 
             </tbody>
           </table>
@@ -197,12 +203,12 @@
             }
 
             // Закрытие по клику на оверлей
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
               const modal = document.querySelector('.material-modal');
               modal.querySelector('.modal-overlay').addEventListener('click', closeMaterialModal);
 
               // Закрытие по ESC
-              document.addEventListener('keydown', function(e) {
+              document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
                   closeMaterialModal();
                 }
@@ -329,41 +335,42 @@
 
       <div class="order_form_div someform orderforma order-checkout">
         <div class="clearfix flex flex-col lg:flex-row gap-6">
-          <form action="<?php echo Url::a('catalog-cart'); ?>" method="post" class="cart-step2-left form flex-1 w-full" style="width: 100%;">
+          <form action="<?php echo Url::a('catalog-cart'); ?>" method="post" class="cart-step2-left form flex-1 w-full"
+            style="width: 100%;">
             <h4 class="text-2xl font-semibold mb-4">Опции заказа</h4>
             <div class="body clearfix" id="cart-options">
               <div class="persontypes clearfix">
-							  <span class="subtitle block text-gray-700 mb-2">
-									Доставка:
-									<span id="delivery-price">
-										<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price']); ?>
-									</span>
-									руб.
-								</span>
+                <span class="subtitle block text-gray-700 mb-2">
+                  Доставка:
+                  <span id="delivery-price">
+                    <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price']); ?>
+                  </span>
+                  руб.
+                </span>
                 <div class="flex flex-row gap-4 sm:gap-6 flex-wrap">
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-0"
-                           value="<?php echo Orders_Options::DELIVERY_NO?>"
-                    <?php if($totalPrice < Orders_Options::pickupMinSum()) { ?>disabled<?php } ?>
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]"
+                      id="delivery-0" value="<?php echo Orders_Options::DELIVERY_NO?>" <?php if($totalPrice <
+                      Orders_Options::pickupMinSum()) { ?>disabled
+                    <?php } ?>
                     onchange="oCart.calcOptions()">
                     <label for="delivery-0" class="text-gray-700">самовывоз</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-1"
-                           value="<?php echo Orders_Options::DELIVERY_MSK?>"
-                           onchange="oCart.calcOptions()">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]"
+                      id="delivery-1" value="<?php echo Orders_Options::DELIVERY_MSK?>" onchange="oCart.calcOptions()">
                     <label for="delivery-1" class="text-gray-700">по Москве</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-2"
-                           value="<?php echo Orders_Options::DELIVERY_OUTMSK?>"
-                           onchange="oCart.calcOptions()">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]"
+                      id="delivery-2" value="<?php echo Orders_Options::DELIVERY_OUTMSK?>"
+                      onchange="oCart.calcOptions()">
                     <label for="delivery-2" class="text-gray-700">за МКАД</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-3"
-                           value="<?php echo Orders_Options::DELIVERY_TO_SHIPPING_COMPANY?>"
-                           onchange="oCart.calcOptions()">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]"
+                      id="delivery-3" value="<?php echo Orders_Options::DELIVERY_TO_SHIPPING_COMPANY?>"
+                      onchange="oCart.calcOptions()">
                     <label for="delivery-3" class="text-gray-700">до транспортной компании</label>
                   </div>
                 </div>
@@ -374,19 +381,29 @@
                 </div>
                 <div class="vl range-block flex items-center gap-3">
                   <div class="range-element flex-1">
-                    <input type="range" id="delivery-distance-r" min="<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>" max="<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>" class="w-full">
-                    <div class="flex justify-between text-xs text-gray-500"><div class="min"><?php echo Orders_Options::DELIVERY_DISTANCE_MIN?></div><div class="max"><?php echo Orders_Options::DELIVERY_DISTANCE_MAX?></div></div>
+                    <input type="range" id="delivery-distance-r"
+                      min="<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>"
+                      max="<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500">
+                      <div class="min">
+                        <?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>
+                      </div>
+                      <div class="max">
+                        <?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>
+                      </div>
+                    </div>
                   </div>
-                  <input type="text" name="options[<?php echo Orders_Options::DELIVERY_DISTANCE?>]" id="delivery-distance-t" class="text w-24 border border-gray-300 rounded px-2 py-1">
+                  <input type="text" name="options[<?php echo Orders_Options::DELIVERY_DISTANCE?>]"
+                    id="delivery-distance-t" class="text w-24 border border-gray-300 rounded px-2 py-1">
                   <div class="units text-gray-600">
                     &nbsp;км
                   </div>
                   <script>
-                    onLoad(function(){
+                    onLoad(function () {
                       rangeInput(
                         $$$('delivery-distance-r'),
                         $$$('delivery-distance-t'),
-                        function(){
+                        function () {
                           oCart.calcOptions();
                         }
                       );
@@ -396,10 +413,10 @@
               </div>
 
               <div class="persontypes clearfix">
-							  <span class="subtitle block text-gray-700 mb-2">
-									Разгрузка:
-									<span id="unloading-subtitle">
-										<?php
+                <span class="subtitle block text-gray-700 mb-2">
+                  Разгрузка:
+                  <span id="unloading-subtitle">
+                    <?php
                         $info = $optionsPrices[Orders_Options::UNLOADING]['info'] ?? '';
                         if (stripos($info, 'уточнить у менеджера') !== false) {
                           echo 'уточнить у менеджера';
@@ -407,28 +424,24 @@
                           echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0) . ' руб.';
                         }
                         ?>
-									</span>
-								</span>
+                  </span>
+                </span>
                 <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-0"
-                           value="<?php echo Orders_Options::UNLOADING_NO?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]"
+                      id="unloading-0" value="<?php echo Orders_Options::UNLOADING_NO?>" onchange="oCart.calcOptions()">
                     <label for="unloading-0" class="text-gray-700">не нужна</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-1"
-                           value="<?php echo Orders_Options::UNLOADING_ELEVATOR?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]"
+                      id="unloading-1" value="<?php echo Orders_Options::UNLOADING_ELEVATOR?>"
+                      onchange="oCart.calcOptions()">
                     <label for="unloading-1" class="text-gray-700">нужна, есть лифт</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-2"
-                           value="<?php echo Orders_Options::UNLOADING_STAIRS?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]"
+                      id="unloading-2" value="<?php echo Orders_Options::UNLOADING_STAIRS?>"
+                      onchange="oCart.calcOptions()">
                     <label for="unloading-2" class="text-gray-700">нужна, нет лифта</label>
                   </div>
                 </div>
@@ -438,20 +451,29 @@
                   Этаж
                 </div>
                 <div class="vl range-block flex items-center gap-3">
-                  <div class="range-element flex-1" >
-                    <input type="range" id="unloading-floor-r" min="<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>" max="<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>" class="w-full">
-                    <div class="flex justify-between text-xs text-gray-500"><div class="min"><?php echo Orders_Options::UNLOADING_FLOOR_MIN?></div><div class="max"><?php echo Orders_Options::UNLOADING_FLOOR_MAX?></div></div>
+                  <div class="range-element flex-1">
+                    <input type="range" id="unloading-floor-r" min="<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>"
+                      max="<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500">
+                      <div class="min">
+                        <?php echo Orders_Options::UNLOADING_FLOOR_MIN?>
+                      </div>
+                      <div class="max">
+                        <?php echo Orders_Options::UNLOADING_FLOOR_MAX?>
+                      </div>
+                    </div>
                   </div>
-                  <input type="text" name="options[<?php echo Orders_Options::UNLOADING_FLOOR?>]" id="unloading-floor-t" class="text w-16 border border-gray-300 rounded px-2 py-1" value="1">
+                  <input type="text" name="options[<?php echo Orders_Options::UNLOADING_FLOOR?>]" id="unloading-floor-t"
+                    class="text w-16 border border-gray-300 rounded px-2 py-1" value="1">
                   <div class="units text-gray-600">
                     &nbsp;эт
                   </div>
                   <script>
-                    onLoad(function(){
+                    onLoad(function () {
                       rangeInput(
                         $$$('unloading-floor-r'),
                         $$$('unloading-floor-t'),
-                        function(){
+                        function () {
                           oCart.calcOptions();
                         }
                       );
@@ -461,36 +483,32 @@
               </div>
 
               <div class="persontypes clearfix">
-							<span class="subtitle block text-gray-700 mb-2">
-									Сборка:
-									<span id="assembly-price">
-										<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price']); ?>
-									</span>
-									руб.
-								</span>
+                <span class="subtitle block text-gray-700 mb-2">
+                  Сборка:
+                  <span id="assembly-price">
+                    <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price']); ?>
+                  </span>
+                  руб.
+                </span>
                 <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-0"
-                           value="<?php echo Orders_Options::ASSEMBLY_NO?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]"
+                      id="assembly-0" value="<?php echo Orders_Options::ASSEMBLY_NO?>" onchange="oCart.calcOptions()">
                     <label for="assembly-0" class="small text-gray-700">не нужна</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-1"
-                           value="<?php echo Orders_Options::ASSEMBLY_YES?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]"
+                      id="assembly-1" value="<?php echo Orders_Options::ASSEMBLY_YES?>" onchange="oCart.calcOptions()">
                     <label for="assembly-1" class="small text-gray-700">нужна</label>
                   </div>
                 </div>
               </div>
 
               <div class="persontypes clearfix">
-							<span class="subtitle block text-gray-700 mb-2">
-									Вывоз мусора:
-									<span id="garbage-subtitle">
-                      <?php
+                <span class="subtitle block text-gray-700 mb-2">
+                  Вывоз мусора:
+                  <span id="garbage-subtitle">
+                    <?php
                         $info = $optionsPrices[Orders_Options::GARBAGE]['info'] ?? '';
                         if (stripos($info, 'не нужен') !== false) {
                           echo '0 руб.';
@@ -498,28 +516,26 @@
                           echo 'уточнить у менеджера';
                         }
                         ?>
-                    </span>
-								</span>
+                  </span>
+                </span>
                 <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-0"
-                           value="<?php echo Orders_Options::GARBAGE_NO?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]"
+                      id="garbage-0" value="<?php echo Orders_Options::GARBAGE_NO?>" onchange="oCart.calcOptions()">
                     <label for="garbage-0" class="small text-gray-700">не нужен</label>
                   </div>
                   <div class="label left flex items-center gap-2 mt-2">
-                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-1"
-                           value="<?php echo Orders_Options::GARBAGE_YES?>"
-                           onchange="oCart.calcOptions()"
-                    >
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]"
+                      id="garbage-1" value="<?php echo Orders_Options::GARBAGE_YES?>" onchange="oCart.calcOptions()">
                     <label for="garbage-1" class="small text-gray-700">нужен</label>
                   </div>
                 </div>
               </div>
             </div>
             <div class="clearfix" id="options-calc-nojs">
-              <button type="submit" class="btn btn1 orderbtn !bg-main px-4 py-2 text-white rounded-md hover:bg-opacity-90 transition" name="options-calc" value="1">
+              <button type="submit"
+                class="btn btn1 orderbtn !bg-main px-4 py-2 text-white rounded-md hover:bg-opacity-90 transition"
+                name="options-calc" value="1">
                 рассчитать
               </button>
             </div>
@@ -538,17 +554,17 @@
                 <div>
                   Доставка:
                   <strong class="ml-1">
-                      <span id="delivery-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
-                      </span>
+                    <span id="total-delivery-price">
+                      <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
+                    </span>
                     руб.
                   </strong>
                 </div>
                 <div>
                   Разгрузка:
                   <strong class="ml-1">
-                      <span id="unloading-price">
-                        <?php
+                    <span id="total-unloading-price">
+                      <?php
                         $info = $optionsPrices[Orders_Options::UNLOADING]['info'] ?? '';
                         if (stripos($info, 'уточнить у менеджера') !== false) {
                           echo 'Уточнить у менеджера';
@@ -556,22 +572,22 @@
                           echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0) . ' руб.';
                         }
                         ?>
-                      </span>
+                    </span>
                   </strong>
                 </div>
                 <div>
                   Сборка:
                   <strong class="ml-1">
-                      <span id="assembly-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
-                      </span>
+                    <span id="total-assembly-price">
+                      <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
+                    </span>
                     руб.
                   </strong>
                 </div>
                 <div>
                   Вывоз мусора:
-                  <strong class="ml-1" id="garbage-price">
-                    <?php
+                  <strong class="ml-1"><span id="total-garbage-price">
+                      <?php
                         $info = $optionsPrices[Orders_Options::GARBAGE]['info'] ?? '';
                         if (stripos($info, 'не нужен') !== false) {
                           echo '0 руб.';
@@ -579,14 +595,14 @@
                           echo 'Уточнить у менеджера';
                         }
                         ?>
-                  </strong>
+                    </span></strong>
                 </div>
                 <div class="clearfix">
                   <div class="price">
                     Итого:
                     <strong class="ml-1">
-											<span id="total-price">
-												<?php
+                      <span id="total-price">
+                        <?php
 												echo Catalog::priceFormat(
 													$totalPrice +
 													$optionsPrices[Orders_Options::DELIVERY]['price'] +
@@ -594,7 +610,7 @@
 													$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
 													$optionsPrices[Orders_Options::GARBAGE]['price']
 												); ?>
-											</span>
+                      </span>
                       руб.
                     </strong>
                   </div>
@@ -602,11 +618,13 @@
 
                 <br>
                 <div class="flex flex-col gap-4 w-fit">
-                  <a href="<?php echo Url::a('catalog-cart-step3'); ?>" class="btn btn1 inline-block bg-blue-600 text-white text-center font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-700 transition">
+                  <a href="<?php echo Url::a('catalog-cart-step3'); ?>"
+                    class="btn btn1 inline-block bg-blue-600 text-white text-center font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-700 transition">
                     Продолжить оформление заказа
                   </a>
 
-                  <a href="<?php echo Url::a('catalog-cart-step1'); ?>" class="inline-block border-2 border-blue-600 text-blue-600 text-center !whitespace-normal !break-words px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-50 transition">
+                  <a href="<?php echo Url::a('catalog-cart-step1'); ?>"
+                    class="inline-block border-2 border-blue-600 text-blue-600 text-center !whitespace-normal !break-words px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-50 transition">
                     Вернуться к предыдущему этапу
                   </a>
                 </div>
