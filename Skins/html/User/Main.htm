@@ -38,6 +38,17 @@ function getHomeUrl() {
     // По умолчанию - корневой путь (для сервера)
     return '/';
 }
+function phonePartial($tel, $display, $class = '') {
+    if (preg_match('/^(.+?\d{3})-\d{2}-(\d{2})$/', $display, $m)) {
+        $prefix = $m[1];
+        $suffix = '-**-**'.$m[2];
+    } else {
+        $prefix = substr($display, 0, 10);
+        $suffix = '***';
+    }
+    $cls = trim('js-phone-masked ' . $class);
+    return '<span class="'.$cls.'" data-tel="'.htmlspecialchars($tel).'" data-display="'.htmlspecialchars($display).'"><span class="phone-prefix">'.$prefix.'</span><span class="phone-faded">'.$suffix.'</span> <span class="phone-show-link" role="button" tabindex="0">Показать номер</span></span>';
+}
 //ob_start();
 ?>
 
@@ -165,6 +176,15 @@ function getHomeUrl() {
     * {
       text-align: inherit;
     }
+    .phone-faded, .phone-show-link {
+      color: #9ca3af;
+      font-weight: normal;
+    }
+    .phone-show-link {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      cursor: pointer;
+    }
   </style>
 
   <script src="//yandex.st/share/share.js"></script>
@@ -217,6 +237,29 @@ function getHomeUrl() {
     onLoad(function () {
       seoHideDecode();
     });
+    function revealPhone(wrap) {
+      var tel = wrap.getAttribute('data-tel');
+      var display = wrap.getAttribute('data-display');
+      var cls = wrap.getAttribute('class') || '';
+      if (!tel || !display) return;
+      cls = cls.replace('js-phone-masked', '').trim();
+      wrap.outerHTML = '<a href="tel:' + tel + '" class="' + cls + ' hover:underline">' + display + '</a>';
+    }
+    document.addEventListener('click', function(e) {
+      var t = e.target.closest('.phone-show-link');
+      if (!t) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var wrap = t.closest('.js-phone-masked');
+      if (wrap) revealPhone(wrap);
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.closest('.phone-show-link')) {
+        e.preventDefault();
+        var wrap = e.target.closest('.js-phone-masked');
+        if (wrap) revealPhone(wrap);
+      }
+    });
   </script>
   <?php echo JsCopmress::load('main-async', true); ?>
 
@@ -260,7 +303,7 @@ function getHomeUrl() {
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <!-- Tailwind -->
-  <link rel="stylesheet" href="/dist/output.css">
+  <link rel="stylesheet" href="/pinitk85/dist/output.css">
   <?php echo CssCopmress::load('series') ?>
 
 </head>
@@ -499,7 +542,7 @@ function getHomeUrl() {
           <div class="flex flex-col items-end">
             <!-- Верхний телефон -->
             <div class="flex items-center justify-end gap-1 cursor-pointer">
-              <a href="tel:+74959204824" class="hover:underline">+7 (495) 920-48-24</a>
+              <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'hover:underline'); ?>
               <svg xmlns="http://www.w3.org/2000/svg"
                    class="h-3 w-3 text-gray-500 group-hover:rotate-180 transition-transform" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
@@ -509,15 +552,9 @@ function getHomeUrl() {
 
             <!-- Выпадающий список -->
             <div
-              class="absolute left-0 mt-1 w-full bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-10">
-              <a href="tel:+74959204824"
-                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                +7 (495) 920-48-24
-              </a>
-              <a href="tel:88002349084"
-                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                8 (800) 234-90-84
-              </a>
+              class="absolute left-0 mt-1 w-32 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-10">
+              <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+              <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
             </div>
           </div>
         </div>
@@ -550,14 +587,8 @@ function getHomeUrl() {
           <!-- Выпадающий список -->
           <div
             class="xl:hidden absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-10">
-            <a href="tel:+74959204824"
-               class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-              +7 (495) 920-48-24
-            </a>
-            <a href="tel:88002349084"
-               class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-              8 (800) 234-90-84
-            </a>
+            <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+            <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
           </div>
         </div>
 
@@ -1002,7 +1033,7 @@ function getHomeUrl() {
       <div class="mt-4 space-y-1">
         <p class="flex gap-4 font-semibold">
           <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
-          <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
+          <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
         </p>
         <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
       </div>
@@ -1077,7 +1108,7 @@ function getHomeUrl() {
       <div class="mt-4 space-y-1">
         <p class="flex gap-4 font-semibold">
           <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
-          <span>+7 (495) 920-48-24<br />8 (800) 234-90-84</span>
+          <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
         </p>
         <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
       </div>
