@@ -424,9 +424,18 @@ var oCart = new (function () {
           $$$("unloading-info").innerHTML = respond.unloading.info;
         }
         if ($$$("unloading-price")) {
-          $$$("unloading-price").innerHTML = priceFormat(
-            respond.unloading.price
-          );
+          if (respond.unloading.info && respond.unloading.info.toLowerCase().indexOf('уточнить у менеджера') !== -1) {
+            $$$("unloading-price").innerHTML = 'Уточнить у менеджера';
+          } else {
+            $$$("unloading-price").innerHTML = priceFormat(respond.unloading.price) + ' руб.';
+          }
+        }
+        if ($$$("unloading-subtitle")) {
+          if (respond.unloading.info && respond.unloading.info.toLowerCase().indexOf('уточнить у менеджера') !== -1) {
+            $$$("unloading-subtitle").innerHTML = 'уточнить у менеджера';
+          } else {
+            $$$("unloading-subtitle").innerHTML = priceFormat(respond.unloading.price) + ' руб.';
+          }
         }
 
         if ($$$("assembly-info")) {

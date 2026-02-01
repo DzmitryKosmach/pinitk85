@@ -155,10 +155,14 @@
               <div style="margin-bottom: 5px;">
                 Разгрузка:
                 <strong>
-                  <?php echo $options[Orders_Options::UNLOADING]['info']; ?>
-                  (
-                  <?php echo Catalog::priceFormat($options[Orders_Options::UNLOADING]['price'])?>
-                  руб.)
+                  <?php
+                    $info = $options[Orders_Options::UNLOADING]['info'] ?? '';
+                    if (stripos($info, 'уточнить у менеджера') !== false) {
+                      echo 'Уточнить у менеджера';
+                    } else {
+                      echo $info . ' (' . Catalog::priceFormat($options[Orders_Options::UNLOADING]['price'] ?? 0) . ' руб.)';
+                    }
+                    ?>
                 </strong>
               </div>
               <div style="margin-bottom: 5px;">

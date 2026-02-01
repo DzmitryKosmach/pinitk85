@@ -409,9 +409,15 @@
                     Разгрузка:
                     <strong class="ml-1">
                       <span id="unloading-price">
-                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0); ?>
+                        <?php
+                        $info = $optionsPrices[Orders_Options::UNLOADING]['info'] ?? '';
+                        if (stripos($info, 'уточнить у менеджера') !== false) {
+                          echo 'Уточнить у менеджера';
+                        } else {
+                          echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0) . ' руб.';
+                        }
+                        ?>
                       </span>
-                      руб.
                     </strong>
                   </div>
                   <div>
