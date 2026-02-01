@@ -67,7 +67,7 @@ class Orders_Options extends ExtDbList
    * @var array
    */
   static $default = array(
-    self::DELIVERY => self::DELIVERY_MSK,
+    self::DELIVERY => self::DELIVERY_NO,  // Было: DELIVERY_MSK, стало: DELIVERY_NO
     self::UNLOADING => self::UNLOADING_NO,
     self::ASSEMBLY => self::ASSEMBLY_NO,
     self::GARBAGE => self::GARBAGE_NO,
@@ -501,7 +501,14 @@ class Orders_Options extends ExtDbList
         'price' => 0,
         'info' => 'Не нужна'
       );
-    } else {
+    } elseif ($orderOptions[self::UNLOADING] == self::UNLOADING_STAIRS) {
+      // Нужна, нет лифта - уточнить у менеджера
+      return array(
+        'price' => 1, // Используем 1 вместо 0, чтобы показать, что нужно уточнять
+        'info' => 'Нужна, нет лифта (уточнить у менеджера)'
+      );
+    } else/*if($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR)*/ {
+      // Нужна, есть лифт - обычный расчет
       $price = 0;
 
       // Вычисляем сумарные значения заказанных товаров
@@ -548,10 +555,8 @@ class Orders_Options extends ExtDbList
       if ($totalNonMetallPrice) {    // Необходимость разгрузки мебели определяется не по положительному весу, а по положительной цене, т.к. вес может быть нулевым
         $f = $floor;
 
-        if ($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
-          // При наличии лифта считаем разгрузку как на 1-й этаж
-          $f = self::UNLOADING_FLOOR_MIN;
-        }
+        // При наличии лифта считаем разгрузку как на 1-й этаж
+        $f = self::UNLOADING_FLOOR_MIN;
 
         $p = $calcOptions['office-unloading-by-floor-kg'] * $totalNonMetallWeight * $f;
 
@@ -566,11 +571,7 @@ class Orders_Options extends ExtDbList
         $price += $p;
       }
 
-      if ($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
-        $info = 'Нужна, есть лифт (' . $floor . ' эт.)';
-      } else/*if($orderOptions[self::UNLOADING] == self::UNLOADING_STAIRS)*/ {
-        $info = 'Нужна, нет лифта (' . $floor . ' эт.)';
-      }
+      $info = 'Нужна, есть лифт (' . $floor . ' эт.)';
 
       return array(
         'price' => round($price, Catalog::PRICES_DECIMAL),
@@ -705,9 +706,8 @@ class Orders_Options extends ExtDbList
       );
     } else/*if($orderOptions[self::GARBAGE] == self::GARBAGE_YES)*/ {
       return array(
-        // 'price' => round($calcOptions['garbage'], Catalog::PRICES_DECIMAL),
-        'price' => 1,
-        'info' => 'Нужен (Уточняйте у менеджера)'
+        'price' => 1, // Используем 1 вместо реальной цены
+        'info' => 'Нужен (уточнить у менеджера)'
       );
     }
   }
