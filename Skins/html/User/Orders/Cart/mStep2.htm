@@ -1,768 +1,597 @@
-<?php
-
-/**
- * Опции калькулятора корзины
- *
- * @author    Seka
- */
-
-class Orders_Options extends ExtDbList
-{
-  /**
-   * @var string
-   */
-  static string $tab = 'orders_options';
-
-  /**
-   * Основные параметры заказа
-   */
-  const DELIVERY = 'delivery';
-  const UNLOADING = 'unloading';
-  const ASSEMBLY = 'assembly';
-  const GARBAGE = 'garbage';
-
-  /**
-   * Доп. параметры заказа
-   */
-  const DELIVERY_DISTANCE = 'delivery-distance';
-  const UNLOADING_FLOOR = 'unloading-floor';
-
-  /**
-   * Ограничения
-   */
-  const DELIVERY_DISTANCE_MIN = 0;
-  const DELIVERY_DISTANCE_MAX = 150;
-  const UNLOADING_FLOOR_MIN = 1;
-  const UNLOADING_FLOOR_MAX = 100;
-
-  /**
-   * Варианты доставки
-   */
-  const DELIVERY_NO = 0;        // Самовывоз
-  const DELIVERY_MSK = 1;        // По Москве
-  const DELIVERY_OUTMSK = 2;    // За МКАД
-  const DELIVERY_TO_SHIPPING_COMPANY = 3;    // До транспортной компании
-
-  /**
-   * Варианты разгрузки
-   */
-  const UNLOADING_NO = 0;            // Не нужна
-  const UNLOADING_ELEVATOR = 1;    // Нужна, есть лифт
-  const UNLOADING_STAIRS = 2;        // Нужна, нет лифта
-
-  /**
-   * Варианты сборки
-   */
-  const ASSEMBLY_NO = 0;    // Не нужна
-  const ASSEMBLY_YES = 1;    // Нужна
-
-  /**
-   * Варианты для вывоза мусора
-   */
-  const GARBAGE_NO = 0;    // Не нужен
-  const GARBAGE_YES = 1;    // Нужен
-
-  /**
-   * Значения по-умолчанию для формы с опциями заказа
-   * @var array
-   */
-  static $default = array(
-    self::DELIVERY => self::DELIVERY_MSK,
-self::UNLOADING => self::UNLOADING_NO,
-self::ASSEMBLY => self::ASSEMBLY_NO,
-self::GARBAGE => self::GARBAGE_NO,
-self::DELIVERY_DISTANCE => 0,
-self::UNLOADING_FLOOR => 0
-);
-
-static $metallUnloadingWeights = array(
-array(
-'from' => 0,
-'to' => 50,
-'options' => array(
-'metal-unloading-0-50',
-'metal-unloading-0-50-each-floor'
-)
-),
-array(
-'from' => 51,
-'to' => 100,
-'options' => array(
-'metal-unloading-51-100',
-'metal-unloading-51-100-each-floor'
-)
-),
-array(
-'from' => 101,
-'to' => 150,
-'options' => array(
-'metal-unloading-101-150',
-'metal-unloading-101-150-each-floor'
-)
-),
-array(
-'from' => 151,
-'to' => 200,
-'options' => array(
-'metal-unloading-151-200',
-'metal-unloading-151-200-each-floor'
-)
-),
-array(
-'from' => 201,
-'to' => 250,
-'options' => array(
-'metal-unloading-201-250',
-'metal-unloading-201-250-each-floor'
-)
-),
-array(
-'from' => 251,
-'to' => 300,
-'options' => array(
-'metal-unloading-251-300',
-'metal-unloading-251-300-each-floor'
-)
-),
-array(
-'from' => 301,
-'to' => 350,
-'options' => array(
-'metal-unloading-301-350',
-'metal-unloading-301-350-each-floor'
-)
-),
-array(
-'from' => 351,
-'to' => 400,
-'options' => array(
-'metal-unloading-351-400',
-'metal-unloading-351-400-each-floor'
-)
-),
-array(
-'from' => 401,
-'to' => 450,
-'options' => array(
-'metal-unloading-401-450',
-'metal-unloading-401-450-each-floor'
-)
-),
-array(
-'from' => 451,
-'to' => 500,
-'options' => array(
-'metal-unloading-451-500',
-'metal-unloading-451-500-each-floor'
-)
-),
-array(
-'from' => 501,
-'to' => 1000000000,
-'options' => array(
-'metal-unloading-501-infin',
-'metal-unloading-501-infin-each-floor'
-)
-)
-);
-
-
-/** Мин. сумма заказа, при которой достпен самовывоз
-* @static
-* @return float
-*/
-static function pickupMinSum()
-{
-static $cache = false;
-if ($cache !== false) {
-return $cache;
-}
-
-static $o;
-if (!$o) {
-$o = new self();
-}
-$cache = round(
-$o->getCell('value', '`name` = \'' . MySQL::mres('pickup-min-sum') . '\''),
-Catalog::PRICES_DECIMAL
-);
-return $cache;
-}
-
-
-/**
-* @param array $cart Содержимое корзины (возвращается методом Catalog_Cart::get()) или заказа (такая же структура)
-* @param array $orderOptions Опции заказа, выбранные покупателем; Ожидается массив, по структуре аналогичный Orders_Options::$default
-* @param array $calcOnly
-* @return    array
-* Формат ответа:
-* array(
-*        self::DELIVERY    => array(
-*            'price'    => общая стоимость доставки,
-*            'info'    => описание опций доставки
-*        ),
-*        self::UNLOADING    => array(
-*            'price'    => общая стоимость разгрузки,
-*            'info'    => описание опций разгрузки
-*        ),
-*        self::ASSEMBLY    => array(
-*            'price'    => общая стоимость сборки,
-*            'info'    => описание опций сборки,
-*            'comment'    => если цена сборки 0, то здесь поясняется, почему
-*        ),
-*        self::GARBAGE    => array(
-*            'price'    => общая стоимость вывоза мусора,
-*            'info'    => описание опций вывоза мусора
-*        )
-* );
-* @see    Orders_Options::$default
-* @see    Catalog_Cart::get()
-*/
-function calc(
-$cart = array(),
-&$orderOptions = array(),
-$calcOnly = array(self::DELIVERY, self::UNLOADING, self::ASSEMBLY, self::GARBAGE)
-) {
-//print_array($cart); exit;
-$result = array();
-foreach ($calcOnly as $p) {
-$result[$p] = array(
-'price' => 0,
-'info' => ''
-);
-}
-
-if (!is_array($cart) || !count($cart)) {
-return $result;
-}
-
-// Опции калькулятора
-//static $calcOptions;
-//if (!$calcOptions) {
-$calcOptions = $this->getHash('name, value');
-foreach ($calcOptions as &$v) {
-$v = round($v, Catalog::PRICES_DECIMAL);
-}
-unset($v);
-//}
-
-// Проверяем корректность опций заказа
-$orderOptions = self::checkOptions($orderOptions);
-
-// Доставка
-if (in_array(self::DELIVERY, $calcOnly)) {
-$result[self::DELIVERY] = self::calcDelivery($cart, $orderOptions, $calcOptions);
-}
-
-// Разгрузка
-if (in_array(self::UNLOADING, $calcOnly)) {
-$result[self::UNLOADING] = self::calcUnloading($cart, $orderOptions, $calcOptions);
-}
-
-// Сборка
-if (in_array(self::ASSEMBLY, $calcOnly)) {
-$result[self::ASSEMBLY] = self::calcAssembly($cart, $orderOptions, $calcOptions);
-}
-
-// Вывоз мусора
-if (in_array(self::GARBAGE, $calcOnly)) {
-$result[self::GARBAGE] = self::calcGarbage($cart, $orderOptions, $calcOptions);
-}
-
-return $result;
-}
-
-
-/** Проверяем корректность опций корзины
-* Некорректные значения исправляются с возвращается исправленный массив
-* @static
-* @param array $options Опции заказа, выбранные покупателем; Ожидается массив, по структуре аналогичный Orders_Options::$default
-* @return    array
-* @see    Orders_Options::$default
-*/
-protected static function checkOptions($options)
-{
-if (!in_array(
-$options[self::DELIVERY],
-array(self::DELIVERY_NO, self::DELIVERY_MSK, self::DELIVERY_OUTMSK, self::DELIVERY_TO_SHIPPING_COMPANY)
-)) {
-// Доставка
-$options[self::DELIVERY] = self::DELIVERY_NO;
-}
-if (!in_array(
-$options[self::UNLOADING],
-array(self::UNLOADING_NO, self::UNLOADING_ELEVATOR, self::UNLOADING_STAIRS)
-)) {
-// Разгрузка
-$options[self::UNLOADING] = self::UNLOADING_NO;
-}
-if (!in_array($options[self::ASSEMBLY], array(self::ASSEMBLY_NO, self::ASSEMBLY_YES))) {
-// Сборка
-$options[self::ASSEMBLY] = self::ASSEMBLY_NO;
-}
-if (!in_array($options[self::GARBAGE], array(self::GARBAGE_NO, self::GARBAGE_YES))) {
-// Вывоз мусора
-$options[self::GARBAGE] = self::GARBAGE_NO;
-}
-
-if ($options[self::DELIVERY] == self::DELIVERY_OUTMSK) {
-// Расстояние доставки за МКАД
-$options[self::DELIVERY_DISTANCE] = abs($options[self::DELIVERY_DISTANCE]);
-if ($options[self::DELIVERY_DISTANCE] < self::DELIVERY_DISTANCE_MIN) {
-$options[self::DELIVERY_DISTANCE] = self::DELIVERY_DISTANCE_MIN;
-}
-if ($options[self::DELIVERY_DISTANCE] > self::DELIVERY_DISTANCE_MAX) {
-$options[self::DELIVERY_DISTANCE] = self::DELIVERY_DISTANCE_MAX;
-}
-} else {
-$options[self::DELIVERY_DISTANCE] = self::DELIVERY_DISTANCE_MIN;
-}
-if ($options[self::UNLOADING] == self::UNLOADING_STAIRS || $options[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
-// Этаж для разгрузки без лифта
-$options[self::UNLOADING_FLOOR] = abs($options[self::UNLOADING_FLOOR]);
-if ($options[self::UNLOADING_FLOOR] < self::UNLOADING_FLOOR_MIN) {
-$options[self::UNLOADING_FLOOR] = self::UNLOADING_FLOOR_MIN;
-}
-if ($options[self::UNLOADING_FLOOR] > self::UNLOADING_FLOOR_MAX) {
-$options[self::UNLOADING_FLOOR] = self::UNLOADING_FLOOR_MAX;
-}
-} else {
-$options[self::UNLOADING_FLOOR] = self::UNLOADING_FLOOR_MIN;
-}
-
-return $options;
-}
-
-
-/** Вычисляем итоговую стоимость доставки
-* @static
-* @param array $cart
-* @param array $orderOptions
-* @param array $calcOptions
-* @return    array
-* Формат ответа:
-* array(
-*        'price'    => ...,
-*        'info'    => '...'
-* )
-*/
-protected static function calcDelivery($cart, &$orderOptions, $calcOptions)
-{
-if (count($cart) == 1 && $orderOptions[self::DELIVERY] == self::DELIVERY_MSK && abs(
-$cart[0]['item']['price_delivery']
-)) {
-// Один товар с особой ценой доставки по МСК
-return array(
-'price' => round($cart[0]['item']['price_delivery'], Catalog::PRICES_DECIMAL),
-'info' => 'По Москве'
-);
-}
-
-// Вычисляем сумарные значения заказанных товаров
-$totalPrice = $totalNonMetallPrice = $totalMetallPrice = 0;
-$accessoriesOnly = true;
-$nonMetallWthDiscount = false;
-
-//dd($cart);
-foreach ($cart as $c) {
-$p = $c['price'] * intval($c['amount']);
-$totalPrice += $p;
-if ($c['item']['is_metal']) {
-// Металл. мебель
-$totalMetallPrice += $p;
-} else {
-// Неметалл. мебель
-$totalNonMetallPrice += $p;
-if (!$c['item']['is_accessories']) {
-// Среди неметалл. мебели не только аксессуары
-$accessoriesOnly = false;
-}
-if (abs($c['item']['discount']) != 1) {
-// Среди неметалл. мебели есть товары со скидкой
-$nonMetallWthDiscount = true;
-}
-}
-}
-
-if ($orderOptions[self::DELIVERY] == self::DELIVERY_NO && $totalPrice < $calcOptions['pickup-min-sum']) {
-// Самовывоз доступен при заказе от 'pickup-min-sum'
-$orderOptions[self::DELIVERY] = self::DELIVERY_MSK;
-}
-if ($orderOptions[self::DELIVERY] == self::DELIVERY_NO) {
-// Самовывоз
-return array(
-'price' => 0,
-'info' => 'Самовывоз'
-);
-}
-
-// Доставка по МСК фиксирована, но зависит от различных параметров, которые проверяются ниже
-$nonMetallMsk = $calcOptions['office-delivery-msk'];
-$metallMsk = $calcOptions['metal-delivery-msk'];
-
-// Доставка за МКАД - это стоимость по МСК + расстояние * 2 * стоимость километра
-$nonMetallOutmsk = $calcOptions['office-delivery-outmsk'];
-$metallOutmsk = $calcOptions['metal-delivery-outmsk'];
-
-// Корректировка коэффициентов в зависимости от некоторых параметров
-if ($accessoriesOnly) {
-// В заказе из неметаллической мебели только аксессуары
-if ($orderOptions[self::DELIVERY] == self::DELIVERY_MSK || $orderOptions[self::DELIVERY] == self::DELIVERY_TO_SHIPPING_COMPANY) {
-// Фикс. часть стоимости доставки за МКАД и в пределах МСК для аксессуаров различается
-$nonMetallMsk = $calcOptions['accessories-delivery-msk'];
-} else {
-// Стоимость 1 КМ за МКАД для аксессуаров отличается от немет. мебели
-$nonMetallMsk = $calcOptions['accessories-delivery-outmsk-fixed'];
-$nonMetallOutmsk = $calcOptions['accessories-delivery-outmsk'];
-}
-} else {
-// В заказе из неметаллической мебели НЕ только аксессуары, считаем доставку по тарифу офисной мебели
-if ($calcOptions['office-delivery-free'] && $totalNonMetallPrice >= $calcOptions['office-delivery-free']) {
-if (!$nonMetallWthDiscount || !$calcOptions['office-delivery-msk-if-discount']) {
-// Бесплатная доставка немет. мебели при сумме немет. мебели от 'office-delivery-free'
-$nonMetallMsk = 0;
-} else {
-// В заказе есть товары со скидкой, так что доставка всё равно платная, но дешевле
-$nonMetallMsk = $calcOptions['office-delivery-msk-if-discount'];
-}
-} elseif ($calcOptions['office-delivery-msk-lower-from'] && $totalNonMetallPrice >= $calcOptions['office-delivery-msk-lower-from']) {
-// Понижение стоимости доставки немет. мебели в пределах МСК при сумме от 'office-delivery-msk-lower-from'
-$nonMetallMsk = $calcOptions['office-delivery-msk-lower'];
-}
-}
-if ($calcOptions['metal-delivery-free'] && $totalMetallPrice >= $calcOptions['metal-delivery-free']) {
-// Бесплатная доставка металлической мебели (в пределах МСК)
-$metallMsk = 0;
-}
-
-if ($orderOptions[self::DELIVERY] == self::DELIVERY_MSK) {
-// По Москве
-$price = 0;
-if ($totalNonMetallPrice) {
-$price += $nonMetallMsk;
-}
-if ($totalMetallPrice) {
-$price += $metallMsk;
-}
-return array(
-'price' => round($price, Catalog::PRICES_DECIMAL),
-'info' => 'По Москве'
-);
-} elseif ($orderOptions[self::DELIVERY] == self::DELIVERY_TO_SHIPPING_COMPANY) {
-// До трансп.компании (рассчёт как По Москве)
-$price = 0;
-if ($totalNonMetallPrice) {
-$price += $nonMetallMsk;
-}
-if ($totalMetallPrice) {
-$price += $metallMsk;
-}
-return array(
-'price' => round($price, Catalog::PRICES_DECIMAL),
-'info' => 'До транспортной компании'
-);
-} else/*if($orderOptions[self::DELIVERY] == self::DELIVERY_OUTMSK)*/ {
-// За МКАД
-$km = abs(round($orderOptions[self::DELIVERY_DISTANCE]));
-$price = 0;
-if ($totalNonMetallPrice) {
-$price += $nonMetallMsk;
-$price += $nonMetallOutmsk * $km * 2;
-}
-if ($totalMetallPrice) {
-$price += $metallMsk;
-$price += $metallOutmsk * $km * 2;
-}
-return array(
-'price' => round($price, Catalog::PRICES_DECIMAL),
-'info' => 'За МКАД (' . $km . ' км)'
-);
-}
-}
-
-
-/** Вычисляем итоговую стоимость разгрузки
-* @static
-* @param array $cart
-* @param array $orderOptions
-* @param array $calcOptions
-* @return    array
-* Формат ответа:
-* array(
-*        'price'    => ...,
-*        'info'    => '...'
-* )
-*/
-protected static function calcUnloading($cart, &$orderOptions, $calcOptions)
-{
-if ($orderOptions[self::UNLOADING] == self::UNLOADING_NO) {
-// Разгрузка не нужна
-return array(
-'price' => 0,
-'info' => 'Не нужна'
-);
-} else {
-$price = 0;
-
-// Вычисляем сумарные значения заказанных товаров
-$totalNonMetallPrice = $totalMetallPrice = 0;    // Сумарная цена
-$totalNonMetallWeight = $totalMetallWeight = 0;    // Вес
-
-foreach ($cart as $c) {
-$c['amount'] = intval($c['amount']);
-if (abs($c['item']['price_unloading'])) {
-$price += $c['item']['price_unloading'] * $c['amount'];
-} else {
-$p = $c['price'] * $c['amount'];
-$w = $c['item']['weight'] * $c['amount'];
-if ($c['item']['is_metal']) {
-// Металл. мебель
-$totalMetallPrice += $p;
-$totalMetallWeight += $w;
-} else {
-// Неметалл. мебель
-$totalNonMetallPrice += $p;
-$totalNonMetallWeight += $w;
-}
-}
-}
-$totalNonMetallWeight = round($totalNonMetallWeight);
-$totalMetallWeight = round($totalMetallWeight);
-
-// Этаж
-$floor = abs(round($orderOptions[self::UNLOADING_FLOOR]));
-
-if ($totalMetallPrice) {        // Необходимость разгрузки мебели определяется не по положительному весу, а по положительной цене, т.к. вес может быть нулевым
-// Металл. мебель
-$p = 0;
-foreach (self::$metallUnloadingWeights as $w) {
-// Опции зависят от веса
-if ($w['from'] <= $totalMetallWeight && $totalMetallWeight <= $w['to']) {
-$p = $calcOptions[$w['options'][0]] + $floor * $calcOptions[$w['options'][1]];
-break;
-}
-}
-$price += $p;
-}
-
-if ($totalNonMetallPrice) {    // Необходимость разгрузки мебели определяется не по положительному весу, а по положительной цене, т.к. вес может быть нулевым
-$f = $floor;
-
-if ($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
-// При наличии лифта считаем разгрузку как на 1-й этаж
-$f = self::UNLOADING_FLOOR_MIN;
-}
-
-$p = $calcOptions['office-unloading-by-floor-kg'] * $totalNonMetallWeight * $f;
-
-if ($p < $calcOptions['office-unloading-min']) {
-$p = $calcOptions['office-unloading-min'];
-}
-
-if ($p > $calcOptions['office-unloading-max']) {
-$p = $calcOptions['office-unloading-max'];
-}
-
-$price += $p;
-}
-
-if ($orderOptions[self::UNLOADING] == self::UNLOADING_ELEVATOR) {
-$info = 'Нужна, есть лифт (' . $floor . ' эт.)';
-} else/*if($orderOptions[self::UNLOADING] == self::UNLOADING_STAIRS)*/ {
-$info = 'Нужна, нет лифта (' . $floor . ' эт.)';
-}
-
-return array(
-'price' => round($price, Catalog::PRICES_DECIMAL),
-'info' => $info
-);
-}
-}
-
-
-/** Вычисляем итоговую стоимость сборки
-* @static
-* @param array $cart
-* @param array $orderOptions
-* @param array $calcOptions
-* @return    array
-* Формат ответа:
-* array(
-*        'price'        => ...,
-*        'info'        => '...',
-*        'comment'    => '...'    // В случае нулевой стоимости сборки здесь даётся пояснение: бесплатно или не требуется (для металл.мебели)
-* )
-*/
-protected static function calcAssembly($cart, &$orderOptions, $calcOptions)
-{
-if ($orderOptions[self::ASSEMBLY] == self::ASSEMBLY_NO) {
-// Сборка не нужна
-return array(
-'price' => 0,
-'info' => 'Не нужна',
-'comment' => ''
-);
-} else/*if($orderOptions[self::ASSEMBLY] == self::ASSEMBLY_YES)*/ {
-// Сборка нужна
-
-// Цены на сборку металл. мебели разных серий
-static $metallSeries;
-if (!$metallSeries) {
-$oMetallSeries = new Catalog_MetallSeries();
-$metallSeries = $oMetallSeries->getHash('id, price_accembly');
-}
-
-$assemblyNonMetall = 0;
-$isUsualFurn = false;
-$assemblyNonMetallHangers = 0;
-$assemblyMetall = 0;
-$comment = '';
-foreach ($cart as $c) {
-if (!intval($c['amount'])) {
-continue;
-}
-if (intval($c['item']['free_assembly'])) {
-$comment = 'Бесплатно';
-continue;
-}
-if (intval($c['item']['no_assembly'])) {
-if ($comment === '') {
-$comment = 'Не требуется';
-}
-continue;
-}
-
-if ($c['item']['is_metal']) {
-// Металл. мебель
-$isMetall = true;
-if (abs($c['item']['price_assembly'])) {
-$assemblyMetall += $c['item']['price_assembly'] * $c['amount'];
-} elseif (isset($metallSeries[$c['item']['metall_series_id']])) {
-$assemblyMetall += $metallSeries[$c['item']['metall_series_id']] * $c['amount'];
-} else {
-$assemblyMetall += $calcOptions['metal-assembly-default'] * $c['amount'];
-}
-} else {
-// Неметалл. мебель
-if ($c['item']['is_hanger']) {
-// Вешалка (фикс. стоимость сборки)
-if (abs($c['item']['price_assembly'])) {
-$assemblyNonMetallHangers += $c['item']['price_assembly'] * $c['amount'];
-} else {
-$assemblyNonMetallHangers += $calcOptions['office-assembly-hanger-price'] * $c['amount'];
-}
-} else {
-// Обычная мебель (стоимость сборки - 6% от стоимости мебели)
-$isUsualFurn = true;
-if (abs($c['item']['price_assembly'])) {
-$assemblyNonMetall += $c['item']['price_assembly'] * $c['amount'];
-} else {
-$assemblyNonMetall += $c['price'] * $c['amount'] * Catalog::percent2num(
-$calcOptions['office-assembly-percent']
-);
-}
-}
-}
-}
-if ($isUsualFurn && $assemblyNonMetall < $calcOptions['office-assembly-min']) {
-// Сборка оф.меб. не менее...
-$assemblyNonMetall = $calcOptions['office-assembly-min'];
-}
-$assemblyNonMetall += $assemblyNonMetallHangers;    // Отдельно прибаввляем сборку вешалок
-
-$price = round($assemblyNonMetall + $assemblyMetall, Catalog::PRICES_DECIMAL);
-if ($price != 0) {
-$comment = '';
-}
-
-return array(
-'price' => $price,
-'info' => 'Нужна',
-'comment' => $price == 0 ? $comment : ''
-);
-}
-}
-
-
-/** Вычисляем итоговую стоимость вывоза мусора
-* @static
-* @param array $cart
-* @param array $orderOptions
-* @param array $calcOptions
-* @return    array
-* Формат ответа:
-* array(
-*        'price'    => ...,
-*        'info'    => '...'
-* )
-*/
-protected static function calcGarbage($cart, &$orderOptions, $calcOptions)
-{
-if ($orderOptions[self::GARBAGE] == self::GARBAGE_NO) {
-return array(
-'price' => 0,
-'info' => 'Не нужен'
-);
-} else/*if($orderOptions[self::GARBAGE] == self::GARBAGE_YES)*/ {
-return array(
-// 'price' => round($calcOptions['garbage'], Catalog::PRICES_DECIMAL),
-'price' => 1,
-'info' => 'Нужен (Уточняйте у менеджера)'
-);
-}
-}
-
-
-/**
-* @param int $itemId
-* @return    number
-*/
-static function deliveryForItem($itemId)
-{
-$itemId = intval($itemId);
-
-$cart = Catalog_Cart::get(array(
-$itemId => array(
-0 => 1
-)
-));
-$options = array(
-self::DELIVERY => self::DELIVERY_MSK,
-self::UNLOADING => self::UNLOADING_ELEVATOR,
-self::ASSEMBLY => self::ASSEMBLY_YES,
-self::GARBAGE => self::GARBAGE_NO,
-self::DELIVERY_DISTANCE => 0,
-self::UNLOADING_FLOOR => 0
-);
-$o = new self();
-$result = $o->calc($cart, $options, array(self::DELIVERY));
-return abs($result[self::DELIVERY]['price']);
-}
-
-
-/**
-* @param $set
-* @return array
-*/
-static function deliveryAndAssemblyForSet($set)
-{
-$cart = Catalog_Cart::get($set);
-//print_array($cart);
-$options = array(
-self::DELIVERY => self::DELIVERY_MSK,
-self::UNLOADING => self::UNLOADING_ELEVATOR,
-self::ASSEMBLY => self::ASSEMBLY_YES,
-self::GARBAGE => self::GARBAGE_NO,
-self::DELIVERY_DISTANCE => 0,
-self::UNLOADING_FLOOR => 0
-);
-$o = new self();
-$result = $o->calc($cart, $options);
-return array(
-$result[self::DELIVERY]['price'],
-$result[self::ASSEMBLY]['price'],
-$result[self::UNLOADING]['price'],
-$result[self::ASSEMBLY]['comment']
-);
-}
-}
+<?php echo CssCopmress::load('cart'); ?>
+<script>
+  oCart.totalPrice = <?php echo $totalPrice?>;
+</script>
+
+<div id="title" class="title">
+  <div class="">
+    <div class=" clearfix">
+      <!-- Хлебные крошки -->
+      <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6 ">
+        <?php if(count($breadcrumbs)) { ?>
+        <?php $bcLast = array_pop($breadcrumbs); ?>
+        <?php $position = 0; ?>
+        <?php foreach($breadcrumbs as $bc) { ?>
+        <?php $position++; ?>
+        <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+          <?php echo $bc['name']; ?>
+        </a>
+        <span class="mx-1">›</span>
+        <?php } ?>
+        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <?php } ?>
+      </nav>
+
+
+      <?php if(trim($pageInf['header'])) { ?>
+      <h1 class="pagetitle text-3xl font-semibold mb-6"><?php echo $pageInf['header']; ?></h1>
+      <?php } ?>
+    </div>
+  </div>
+</div>
+
+<div id="content" class="content">
+  <div>
+    <div class="centeringin clearfix">
+      <?php if(trim($pageInf['text']) !== '') { ?>
+      <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
+      <div class="cl"></div>
+      <?php } ?>
+
+      <div class="section summary mb-10 overflow-x-auto overflow-y-hidden">
+        <h4 class="font-black text-2xl">Товары в заказе</h4>
+        <div class="body">
+          <table class="products js-element w-full border-collapse">
+            <thead>
+            <tr class="bg-gray-50 text-left text-sm font-medium text-gray-600">
+              <th class="item px-4 py-3 whitespace-nowrap">Серия</th>
+              <th class="custom px-4 py-3 whitespace-nowrap">Товар</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-center" style="min-width: 100px;">Цвет</th>
+              <th class="custom px-4 py-3 whitespace-nowrap" style="width: 128px;">Кол-во</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Цена</th>
+              <th class="custom px-4 py-3 whitespace-nowrap text-right" style="width: 120px;">Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($cart as $c) { ?>
+            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+              <!-- Серия -->
+              <td class="item px-4 py-3">
+                <?php if($c['series']) { ?>
+                <a href="<?php echo Catalog_Series::a($c['series']); ?>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                  <?php echo htmlspecialchars($c['series']['name']); ?>
+                </a>
+                <?php } ?>
+              </td>
+
+              <!-- Товар  -->
+              <td class="itemname px-4 py-3">
+                <div class="flex items-start gap-3">
+                  <div class="flex-shrink-0">
+                    <?php if($c['item']['_img_ext']) { ?>
+                    <img
+                      src="<?php echo Catalog::photoUrl(
+                    Catalog_Items::$imagePath,
+                    $c['item']['id'], 60, 60, 1, $c['item']['_img_ext'],
+                    $c['item']['image-name']
+                  ); ?>"
+                      alt="<?php echo hsch($c['item']['name']); ?>"
+                      class="w-12 h-12 object-cover rounded"
+                    />
+                    <?php } else { ?>
+                    <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 11a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    </div>
+                    <?php } ?>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-medium text-gray-900"><?php echo $c['item']['name']; ?></div>
+                    <div class="text-xs text-gray-500 mt-1">
+                      Арт.: <?php echo $c['item']['art']; ?><br>
+                      <?php if(trim($c['item']['size']) !== '') { ?>
+                      Размер: <?php echo $c['item']['size']; ?>
+                      <?php } ?>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Цвет -->
+              <td class="material px-4 py-3 text-center" style="min-width: 100px;">
+                <?php if ($c['material']): ?>
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <?php if ($c['material']['_img_ext']): ?>
+                  <a
+                    href="javascript:void(0)"
+                    onclick="openMaterialModal('<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>.<?php echo $c['material']['_img_ext']; ?>', '<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>')"
+                    class="block"
+                  >
+                    <img
+                      src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $c['material']['id']; ?>_24x24_0.<?php echo $c['material']['_img_ext']; ?>"
+                      width="24"
+                      height="24"
+                      alt="<?php echo hsch(implode(' / ', Catalog_Materials::getFullName($c['material']['id']))); ?>"
+                      class="rounded border"
+                    />
+                  </a>
+
+                  <!-- Скрытый элемент для модального окна -->
+                  <div class="material-modal hidden">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                      <div class="flex justify-end">
+                        <button class="modal-close bg-red-600 hover:bg-red-700" onclick="closeMaterialModal()">&times;</button>
+                      </div>
+                      <div class="modal-header">
+                        <h3 class="modal-title "></h3>
+                      </div>
+                      <div class="modal-body flex justify-center">
+                        <img src="" alt="" class="modal-image" />
+                      </div>
+                    </div>
+                  </div>
+                  <?php endif; ?>
+                  <div class="whitespace-normal text-xs text-gray-700">
+                    <?php echo implode('<br>', Catalog_Materials::getFullName($c['material']['id'])); ?>
+                  </div>
+                </div>
+                <?php else: ?>
+                &nbsp;
+                <?php endif; ?>
+              </td>
+
+              <!-- Кол-во (только текст, без управления) -->
+              <td class="nowrap px-4 py-3">
+                <?php echo (int)$c['amount']; ?> шт
+              </td>
+
+              <!-- Цена -->
+              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                <?php if(abs($c['price'])): ?>
+                <?php if (abs($c['item']['discount']) != 1 && $c['item']['discount'] > 0.0001): ?>
+                <div class="text-xs text-gray-500 line-through">
+                  <?php echo Catalog::priceFormat($c['price'] / $c['item']['discount']); ?> руб.
+                </div>
+                <?php endif; ?>
+                <div class="font-medium">
+                  <?php echo Catalog::priceFormat($c['price']); ?> руб.
+                </div>
+                <?php else: ?>
+                <div class="text-gray-500">по запросу</div>
+                <?php endif; ?>
+              </td>
+
+              <!-- Сумма -->
+              <td class="nowrap px-4 py-3 text-right whitespace-nowrap">
+                <div class="font-medium">
+                  <?php echo Catalog::priceFormat($c['price'] * $c['amount']); ?> руб.
+                </div>
+              </td>
+            </tr>
+            <?php } ?>
+
+            </tbody>
+          </table>
+
+          <script>
+            function openMaterialModal(imageSrc, title) {
+              const modal = document.querySelector('.material-modal');
+              const modalImage = modal.querySelector('.modal-image');
+              const modalTitle = modal.querySelector('.modal-title');
+
+              modalImage.src = imageSrc;
+              modalImage.alt = title;
+              modalTitle.textContent = title;
+
+              modal.classList.remove('hidden');
+              document.body.style.overflow = 'hidden'; // Запрещаем скролл страницы
+            }
+
+            function closeMaterialModal() {
+              const modal = document.querySelector('.material-modal');
+              modal.classList.add('hidden');
+              document.body.style.overflow = ''; // Восстанавливаем скролл
+            }
+
+            // Закрытие по клику на оверлей
+            document.addEventListener('DOMContentLoaded', function() {
+              const modal = document.querySelector('.material-modal');
+              modal.querySelector('.modal-overlay').addEventListener('click', closeMaterialModal);
+
+              // Закрытие по ESC
+              document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                  closeMaterialModal();
+                }
+              });
+            });
+          </script>
+
+          <style>
+            .material-modal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 1000;
+            }
+
+            .material-modal.hidden {
+              display: none;
+            }
+
+            .modal-overlay {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.7);
+              backdrop-filter: blur(3px);
+            }
+
+            .modal-content {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background: white;
+              border-radius: 12px;
+              max-width: 90%;
+              max-height: 90%;
+              width: auto;
+              overflow: hidden;
+              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+
+            .modal-header {
+              padding: 16px 24px;
+              border-bottom: 1px solid #e5e7eb;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              background: #f9fafb;
+            }
+
+            .modal-title {
+              margin: 0;
+              font-size: 18px;
+              font-weight: 600;
+              color: #111827;
+              white-space: normal;
+            }
+
+            .modal-close {
+              background-color: #ff0000ab;
+              border: none;
+              font-size: 32px;
+              cursor: pointer;
+              color: white;
+              line-height: 1;
+              padding: 2px;
+              margin: 4px;
+              width: 30px;
+              height: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              transition: background-color 0.2s;
+            }
+
+            .modal-close:hover {
+              background-color: #ff0000f1;
+            }
+
+            .modal-body {
+              padding: 24px;
+              text-align: center;
+              max-height: calc(90vh - 73px);
+              overflow: auto;
+            }
+
+            .modal-image {
+              max-width: 100%;
+              max-height: 70vh;
+              height: auto;
+              width: auto;
+              border-radius: 8px;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+          </style>
+
+          <!-- Итоговая сумма -->
+          <div class="order_pay mt-6">
+            <div class="right text-right">
+              <table class="bx_ordercart_order_sum inline-block">
+                <tr>
+                  <td class="fwb text-2xl pr-4">Итого:&nbsp;</td>
+                  <td class="fwb price text-2xl font-bold">
+                    <?php echo Catalog::priceFormat($totalPrice); ?> руб.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="pr-4"></td>
+                  <td class="text-xl font-bold">
+                    <?php echo $totalAmount; ?> шт.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="order_form_div someform orderforma order-checkout">
+        <div class="clearfix flex flex-col lg:flex-row gap-6">
+          <form action="<?php echo Url::a('catalog-cart'); ?>" method="post" class="cart-step2-left form flex-1 w-full" style="width: 100%;">
+            <h4 class="text-2xl font-semibold mb-4">Опции заказа</h4>
+            <div class="body clearfix" id="cart-options">
+              <div class="persontypes clearfix">
+							  <span class="subtitle block text-gray-700 mb-2">
+									Доставка:
+									<span id="delivery-price">
+										<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price']); ?>
+									</span>
+									руб.
+								</span>
+                <div class="flex flex-row gap-4 sm:gap-6 flex-wrap">
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-0"
+                           value="<?php echo Orders_Options::DELIVERY_NO?>"
+                    <?php if($totalPrice < Orders_Options::pickupMinSum()) { ?>disabled<?php } ?>
+                    onchange="oCart.calcOptions()">
+                    <label for="delivery-0" class="text-gray-700">самовывоз</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-1"
+                           value="<?php echo Orders_Options::DELIVERY_MSK?>"
+                           onchange="oCart.calcOptions()">
+                    <label for="delivery-1" class="text-gray-700">по Москве</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-2"
+                           value="<?php echo Orders_Options::DELIVERY_OUTMSK?>"
+                           onchange="oCart.calcOptions()">
+                    <label for="delivery-2" class="text-gray-700">за МКАД</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::DELIVERY?>]" id="delivery-3"
+                           value="<?php echo Orders_Options::DELIVERY_TO_SHIPPING_COMPANY?>"
+                           onchange="oCart.calcOptions()">
+                    <label for="delivery-3" class="text-gray-700">до транспортной компании</label>
+                  </div>
+                </div>
+              </div>
+              <div class="line f_text mb-6" data-type="TEXT" id="delivery-distance-block">
+                <div class="nm">
+                  Расстояние
+                </div>
+                <div class="vl range-block flex items-center gap-3">
+                  <div class="range-element flex-1">
+                    <input type="range" id="delivery-distance-r" min="<?php echo Orders_Options::DELIVERY_DISTANCE_MIN?>" max="<?php echo Orders_Options::DELIVERY_DISTANCE_MAX?>" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500"><div class="min"><?php echo Orders_Options::DELIVERY_DISTANCE_MIN?></div><div class="max"><?php echo Orders_Options::DELIVERY_DISTANCE_MAX?></div></div>
+                  </div>
+                  <input type="text" name="options[<?php echo Orders_Options::DELIVERY_DISTANCE?>]" id="delivery-distance-t" class="text w-24 border border-gray-300 rounded px-2 py-1">
+                  <div class="units text-gray-600">
+                    &nbsp;км
+                  </div>
+                  <script>
+                    onLoad(function(){
+                      rangeInput(
+                        $$$('delivery-distance-r'),
+                        $$$('delivery-distance-t'),
+                        function(){
+                          oCart.calcOptions();
+                        }
+                      );
+                    });
+                  </script>
+                </div>
+              </div>
+
+              <div class="persontypes clearfix">
+							  <span class="subtitle block text-gray-700 mb-2">
+									Разгрузка:
+									<span id="unloading-price">
+										<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price']); ?>
+									</span>
+									руб.
+								</span>
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-0"
+                           value="<?php echo Orders_Options::UNLOADING_NO?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="unloading-0" class="text-gray-700">не нужна</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-1"
+                           value="<?php echo Orders_Options::UNLOADING_ELEVATOR?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="unloading-1" class="text-gray-700">нужна, есть лифт</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::UNLOADING?>]" id="unloading-2"
+                           value="<?php echo Orders_Options::UNLOADING_STAIRS?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="unloading-2" class="text-gray-700">нужна, нет лифта</label>
+                  </div>
+                </div>
+              </div>
+              <div class="line f_text mb-6" data-type="TEXT" id="unloading-floor-block">
+                <div class="nm">
+                  Этаж
+                </div>
+                <div class="vl range-block flex items-center gap-3">
+                  <div class="range-element flex-1" >
+                    <input type="range" id="unloading-floor-r" min="<?php echo Orders_Options::UNLOADING_FLOOR_MIN?>" max="<?php echo Orders_Options::UNLOADING_FLOOR_MAX?>" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500"><div class="min"><?php echo Orders_Options::UNLOADING_FLOOR_MIN?></div><div class="max"><?php echo Orders_Options::UNLOADING_FLOOR_MAX?></div></div>
+                  </div>
+                  <input type="text" name="options[<?php echo Orders_Options::UNLOADING_FLOOR?>]" id="unloading-floor-t" class="text w-16 border border-gray-300 rounded px-2 py-1" value="1">
+                  <div class="units text-gray-600">
+                    &nbsp;эт
+                  </div>
+                  <script>
+                    onLoad(function(){
+                      rangeInput(
+                        $$$('unloading-floor-r'),
+                        $$$('unloading-floor-t'),
+                        function(){
+                          oCart.calcOptions();
+                        }
+                      );
+                    });
+                  </script>
+                </div>
+              </div>
+
+              <div class="persontypes clearfix">
+							<span class="subtitle block text-gray-700 mb-2">
+									Сборка:
+									<span id="assembly-price">
+										<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price']); ?>
+									</span>
+									руб.
+								</span>
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-0"
+                           value="<?php echo Orders_Options::ASSEMBLY_NO?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="assembly-0" class="small text-gray-700">не нужна</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::ASSEMBLY?>]" id="assembly-1"
+                           value="<?php echo Orders_Options::ASSEMBLY_YES?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="assembly-1" class="small text-gray-700">нужна</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="persontypes clearfix">
+							<span class="subtitle block text-gray-700 mb-2">
+									Вывоз мусора:
+									<span>уточнить у менеджера</span>
+								</span>
+                <div class="flex flex-row flex-wrap gap-4 sm:gap-6">
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-0"
+                           value="<?php echo Orders_Options::GARBAGE_NO?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="garbage-0" class="small text-gray-700">не нужен</label>
+                  </div>
+                  <div class="label left flex items-center gap-2 mt-2">
+                    <input type="radio" class="accent-blue-600" name="options[<?php echo Orders_Options::GARBAGE?>]" id="garbage-1"
+                           value="<?php echo Orders_Options::GARBAGE_YES?>"
+                           onchange="oCart.calcOptions()"
+                    >
+                    <label for="garbage-1" class="small text-gray-700">нужен</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix" id="options-calc-nojs">
+              <button type="submit" class="btn btn1 orderbtn !bg-main px-4 py-2 text-white rounded-md hover:bg-opacity-90 transition" name="options-calc" value="1">
+                рассчитать
+              </button>
+            </div>
+          </form>
+          <div class="cart-step2-right flex-1 !w-full">
+            <h4 class="text-2xl font-semibold mb-4">Итоговая стоимость</h4>
+            <div class="body clearfix">
+              <div class="order-total clearfix space-y-4">
+                <div>
+                  Сумма заказа:
+                  <strong class="ml-1">
+                    <?php echo Catalog::priceFormat($totalPrice); ?>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Доставка:
+                  <strong class="ml-1">
+                      <span id="delivery-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'] ?? 0); ?>
+                      </span>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Разгрузка:
+                  <strong class="ml-1">
+                      <span id="unloading-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'] ?? 0); ?>
+                      </span>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Сборка:
+                  <strong class="ml-1">
+                      <span id="assembly-price">
+                        <?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'] ?? 0); ?>
+                      </span>
+                    руб.
+                  </strong>
+                </div>
+                <div>
+                  Вывоз мусора:
+                  <strong class="ml-1" id="garbage-price">
+                    <?php
+                        $price = $optionsPrices[Orders_Options::GARBAGE]['price'];
+                        echo $price == 0 ? '0 руб.' : 'Уточнить у менеджера';
+                        ?>
+                  </strong>
+                </div>
+                <div class="clearfix">
+                  <div class="price">
+                    Итого:
+                    <strong class="ml-1">
+											<span id="total-price">
+												<?php
+												echo Catalog::priceFormat(
+													$totalPrice +
+													$optionsPrices[Orders_Options::DELIVERY]['price'] +
+													$optionsPrices[Orders_Options::UNLOADING]['price'] +
+													$optionsPrices[Orders_Options::ASSEMBLY]['price'] +
+													$optionsPrices[Orders_Options::GARBAGE]['price']
+												); ?>
+											</span>
+                      руб.
+                    </strong>
+                  </div>
+                </div>
+
+                <br>
+                <div class="flex flex-col gap-4 w-fit">
+                  <a href="<?php echo Url::a('catalog-cart-step3'); ?>" class="btn btn1 inline-block bg-blue-600 text-white text-center font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-700 transition">
+                    Продолжить оформление заказа
+                  </a>
+
+                  <a href="<?php echo Url::a('catalog-cart-step1'); ?>" class="inline-block border-2 border-blue-600 text-blue-600 text-center !whitespace-normal !break-words px-4 sm:px-8 py-2 sm:py-3 rounded hover:bg-blue-50 transition">
+                    Вернуться к предыдущему этапу
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
