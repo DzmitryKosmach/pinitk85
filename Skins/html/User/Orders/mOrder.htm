@@ -172,11 +172,14 @@
               <div style="margin-bottom: 5px;">
                 Вывоз мусора:
                 <strong>
-                  <?php echo $options[Orders_Options::GARBAGE]['info']; ?>
-                  <?php if (strtolower($options[Orders_Options::GARBAGE]['info'] ?? '') === 'нужен'): ?>
-                  <span class="text-gray-600 text-sm">(Уточните у менеджера)</span>
-                  <?php endif; ?>
-
+                  <?php
+                    $info = $options[Orders_Options::GARBAGE]['info'] ?? '';
+                    if (stripos($info, 'не нужен') !== false) {
+                      echo '0 руб.';
+                    } else {
+                      echo 'Уточнить у менеджера';
+                    }
+                    ?>
                 </strong>
               </div>
               <?php } ?>
