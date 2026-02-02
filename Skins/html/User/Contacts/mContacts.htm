@@ -1,344 +1,346 @@
 ﻿<?php if(!$ajaxForm) { ?>
 <!-- Хлебные крошки -->
 <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
-  <?php if(count($breadcrumbs)) { ?>
-  <?php $bcLast = array_pop($breadcrumbs); ?>
-  <?php $position = 0; ?>
-  <?php foreach($breadcrumbs as $bc) { ?>
-  <?php $position++; ?>
-  <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
-    <?php echo $bc['name']; ?>
-  </a>
-  <span class="mx-1">›</span>
-  <?php } ?>
-  <span class="text-gray-700">
+    <?php if(count($breadcrumbs)) { ?>
+    <?php $bcLast = array_pop($breadcrumbs); ?>
+    <?php $position = 0; ?>
+    <?php foreach($breadcrumbs as $bc) { ?>
+    <?php $position++; ?>
+    <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+        <?php echo $bc['name']; ?>
+    </a>
+    <span class="mx-1">›</span>
+    <?php } ?>
+    <span class="text-gray-700">
       <?php echo $bcLast['name']; ?>
     </span>
-  <?php } ?>
+    <?php } ?>
 </nav>
 
 
 <?php if(trim($pageInf['header'])) { ?>
 <h1 class="pagetitle text-2xl">
-  <?php echo $pageInf['header']; ?>
+    <?php echo $pageInf['header']; ?>
 </h1>
 <?php } ?>
 
 
 <div id="content" class="content">
-  <div class="">
-    <div class="clearfix">
-      <?php } else { ?>
-      <script src="/Js/core/all-core.js"></script>
-      <?php } ?>
+    <div class="">
+        <div class="clearfix">
+            <?php } else { ?>
+            <script src="/Js/core/all-core.js"></script>
+            <?php } ?>
 
-      <div>
-        <?php if(!$ajaxForm) { ?>
-        <?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
-        <div class="">
-
-
-        <div class="">
-          <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-        </div>
+            <div>
+                <?php if(!$ajaxForm) { ?>
+                <?php if($reason === Contacts_Feedback::REASON_OTHER) { ?>
+                <div class="">
 
 
-          <div class="cl"></div>
-          <?php if(!$ajaxForm) { ?>
-          <div class="mt-12">
-            <p><b>Схема проезда:</b></p>
-            <div class="map-wrapper relative w-full" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
-              <iframe
-                id="yandex-map"
-                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;source=constructor"
-                frameborder="0"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                allowfullscreen
-                loading="lazy"
-              ></iframe>
+                    <div class="">
+                        <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+                    </div>
 
-              <!-- Более прозрачный оверлей -->
-              <div class="map-overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer z-10">
+
+                    <div class="cl"></div>
+                    <?php if(!$ajaxForm) { ?>
+                    <div class="mt-12">
+                        <p><b>Схема проезда:</b></p>
+                        <div class="map-wrapper relative w-full" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+                            <iframe
+                                id="yandex-map"
+                                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad6da56af96f51863646f242696f7c170f9c75fd409fba6697878dbce27d99961&amp;source=constructor"
+                                frameborder="0"
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                allowfullscreen
+                                loading="lazy"
+                            ></iframe>
+
+                            <!-- Более прозрачный оверлей -->
+                            <div class="map-overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer z-10">
                 <span class="text-white text-sm font-medium bg-black bg-opacity-20 px-3 py-1 rounded opacity-90">
                   Нажмите, чтобы использовать карту
                 </span>
-              </div>
-            </div>
-          </div>
+                            </div>
+                        </div>
+                    </div>
 
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              const overlay = document.querySelector('.map-overlay');
-              if (overlay) {
-                overlay.addEventListener('click', function () {
-                  this.style.display = 'none';
-                });
-              }
-            });
-          </script>
-          <?php } ?>
-        </div>
-        <a id="form"></a>
-        <?php } ?>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const overlay = document.querySelector('.map-overlay');
+                            if (overlay) {
+                                overlay.addEventListener('click', function () {
+                                    this.style.display = 'none';
+                                });
+                            }
+                        });
+                    </script>
+                    <?php } ?>
+                </div>
+                <a id="form"></a>
+                <?php } ?>
 
-        <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
-        <div>
-          <?php echo Options::name('found-cheaper')?>
-          <div class="cl"></div>
-          <br><br><br>
-        </div>
-        <a class="form"></a>
-        <?php } ?>
+                <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
+                <div>
+                    <?php echo Options::name('found-cheaper')?>
+                    <div class="cl"></div>
+                    <br><br><br>
+                </div>
+                <a class="form"></a>
+                <?php } ?>
 
-        <script>
-          onLoad(function () {
-            if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
-              D.location.href = '#form';
-            }
-          });
-        </script>
+                <script>
+                    onLoad(function () {
+                        if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
+                            D.location.href = '#form';
+                        }
+                    });
+                </script>
 
-        <?php } else { ?>
-        <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
-        <?php $fc = trim(Options::name('found-cheaper')); ?>
-        <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
-        <div>
-          <?php echo Options::name('found-cheaper')?>
-          <div class="cl"></div>
-          <br><br>
-        </div>
-        <?php } ?>
-        <?php } ?>
-        <?php } ?>
+                <?php } else { ?>
+                <?php if($reason === Contacts_Feedback::REASON_CHEAPER) { ?>
+                <?php $fc = trim(Options::name('found-cheaper')); ?>
+                <?php if($fc !== '' && $fc !== '&nbsp;') { ?>
+                <div>
+                    <?php echo Options::name('found-cheaper')?>
+                    <div class="cl"></div>
+                    <br><br>
+                </div>
+                <?php } ?>
+                <?php } ?>
+                <?php } ?>
 
-        <?php if(!$ajaxForm) { ?>
-        <h2 id="professionals" class="text-[21px] md:text-3xl font-semibold mt-8 md:mt-16  mb-4 md:mb-8">
-          Команда профессионалов
-        </h2>
+                <?php if(!$ajaxForm) { ?>
+                <h2 id="professionals" class="text-[21px] md:text-3xl font-semibold mt-8 md:mt-16  mb-4 md:mb-8">
+                    Команда профессионалов
+                </h2>
 
-        <div class="workers-container">
-          <div class="relative grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
-            <?php
+                <div class="workers-container">
+                    <div class="relative grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+                        <?php
               for ($i = 0; $i < 8; $i++) {
                   include(Config::path('skins') . '/html/Components/worker_card.htm');
               }
             ?>
-          </div>
-          <button id="toggleCardsBtn" class="mt-6 mb-16 mx-auto block px-5 py-2.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
-            Показать всех
-          </button>
-        </div>
+                    </div>
+                    <button id="toggleCardsBtn" class="mt-6 mb-16 mx-auto block px-5 py-2.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+                        Показать всех
+                    </button>
+                </div>
 
-        <script>
+                <script>
 
-          document.addEventListener('DOMContentLoaded', function () {
-            const container = document.querySelector('.workers-container');
-            const cards = container.querySelectorAll('.worker-card');
-            const btn = document.getElementById('toggleCardsBtn');
-            let isExpanded = false;
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const container = document.querySelector('.workers-container');
+                        const cards = container.querySelectorAll('.worker-card');
+                        const btn = document.getElementById('toggleCardsBtn');
+                        let isExpanded = false;
 
-            // Определяем, сколько карточек показывать в "свёрнутом" состоянии
-            function getVisibleCount() {
-              if (window.innerWidth >= 1024) return 4; // lg
-              if (window.innerWidth >= 640) return 3;  // sm2 (предполагаем, что sm2 = 640px+)
-              return 2; // mobile
-            }
+                        // Определяем, сколько карточек показывать в "свёрнутом" состоянии
+                        function getVisibleCount() {
+                            if (window.innerWidth >= 1024) return 4; // lg
+                            if (window.innerWidth >= 640) return 3;  // sm2 (предполагаем, что sm2 = 640px+)
+                            return 2; // mobile
+                        }
 
-            // Скрываем или показываем карточки
-            function updateVisibility() {
-              const visible = getVisibleCount();
-              cards.forEach((card, index) => {
-                if (isExpanded) {
-                  card.style.display = ''; // показать все
-                } else {
-                  card.style.display = index < visible ? '' : 'none';
-                }
-              });
+                        // Скрываем или показываем карточки
+                        function updateVisibility() {
+                            const visible = getVisibleCount();
+                            cards.forEach((card, index) => {
+                                if (isExpanded) {
+                                    card.style.display = ''; // показать все
+                                } else {
+                                    card.style.display = index < visible ? '' : 'none';
+                                }
+                            });
 
-              // Меняем текст кнопки
-              btn.textContent = isExpanded ? 'Скрыть' : 'Показать всех';
-            }
+                            // Меняем текст кнопки
+                            btn.textContent = isExpanded ? 'Скрыть' : 'Показать всех';
+                        }
 
-            // Переключение состояния
-            btn.addEventListener('click', () => {
-              isExpanded = !isExpanded;
-              updateVisibility();
-            });
+                        // Переключение состояния
+                        btn.addEventListener('click', () => {
+                            isExpanded = !isExpanded;
+                            updateVisibility();
+                        });
 
-            // Обновляем при изменении размера окна (если свёрнуто)
-            window.addEventListener('resize', () => {
-              if (!isExpanded) {
-                updateVisibility();
-              }
-            });
+                        // Обновляем при изменении размера окна (если свёрнуто)
+                        window.addEventListener('resize', () => {
+                            if (!isExpanded) {
+                                updateVisibility();
+                            }
+                        });
 
-            // Инициализация
-            updateVisibility();
-          });
+                        // Инициализация
+                        updateVisibility();
+                    });
 
-        </script>
-        <?php } ?>
-
-
-        <?php if(!$ajaxForm) { ?>
+                </script>
+                <?php } ?>
 
 
-        <h2 id="addresses" class="text-[21px] md:text-3xl font-semibold mt-8">Адреса пунктов выдачи заказов. <span class="whitespace-nowrap">Телефон: 8 (800) 234-90-84</span></h2>
+                <?php if(!$ajaxForm) { ?>
 
-        <div id="points">
-          <?php
+
+                <h2 id="addresses" class="text-[21px] md:text-3xl font-semibold mt-8">Адреса пунктов выдачи заказов. <span class="text-2xl whitespace-nowrap">
+          Телефон: <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'text-gray-700'); ?></span>
+                </h2>
+
+                <div id="points">
+                    <?php
         $city = '';
         $letter = '';
         $i = 0;
         $itemNumber = 0;
         foreach ($points as $c => $point) {
-          $itemNumber++;
-          ?>
-          <?php if($city != $c) {
+                    $itemNumber++;
+                    ?>
+                    <?php if($city != $c) {
                 ?>
-          <?php if($i == 0) { ?>
-          <div class="item">
-            <?php } ?>
-            <div>
-              <?php if (mb_substr($c, 0, 1) !== $letter) { ?>
-              <p class="letter"><b>
-                <?php echo mb_substr($c, 0, 1); ?>
-              </b></p>
-              <?php $letter = mb_substr($c, 0, 1); } ?>
-              <div class="toggle-container">
-                <a href="#" class="toggle-link" data-target="#contentBlock<?php echo $itemNumber; ?>">
-                  <?php echo $c; ?>
-                </a>
-                <div class="content-block" id="contentBlock<?php echo $itemNumber; ?>">
-                  <?php foreach ($point as $p) { ?>
-                  <p>
-                    <?php echo $p; ?>
-                  </p>
-                  <?php } ?>
-                </div>
-              </div>
-            </div>
-            <?php if($i == 101) { ?>
-          </div>
-          <?php } ?>
-          <?php
+                    <?php if($i == 0) { ?>
+                    <div class="item">
+                        <?php } ?>
+                        <div>
+                            <?php if (mb_substr($c, 0, 1) !== $letter) { ?>
+                            <p class="letter"><b>
+                                <?php echo mb_substr($c, 0, 1); ?>
+                            </b></p>
+                            <?php $letter = mb_substr($c, 0, 1); } ?>
+                            <div class="toggle-container">
+                                <a href="#" class="toggle-link" data-target="#contentBlock<?php echo $itemNumber; ?>">
+                                    <?php echo $c; ?>
+                                </a>
+                                <div class="content-block" id="contentBlock<?php echo $itemNumber; ?>">
+                                    <?php foreach ($point as $p) { ?>
+                                    <p>
+                                        <?php echo $p; ?>
+                                    </p>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if($i == 101) { ?>
+                    </div>
+                    <?php } ?>
+                    <?php
             $city = $c;
             } ?>
-          <?php
+                    <?php
             $i++;
             if ($i > 101) {
-          $i = 0;
-          }
-          } ?>
-          <?php if ($i < 100) { echo "</div>"; } ?>
-        </div>
-
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            const toggleLinks = document.querySelectorAll('.toggle-link');
-
-            toggleLinks.forEach(link => {
-              link.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                // Получаем целевой блок из атрибута data-target
-                const targetBlockId = this.getAttribute('data-target');
-                const targetBlock = document.querySelector(targetBlockId);
-
-                document.querySelectorAll('.toggle-link.bold').forEach(block => {
-                  block.classList.remove('bold');
-                });
-
-
-                // Переключаем жирный текст ссылки
-                link.classList.toggle('bold');
-
-                // Скрываем все блоки, которые были открыты для других ссылок
-                document.querySelectorAll('.content-block.show').forEach(block => {
-                  if (block !== targetBlock) {
-                    block.classList.remove('show');
-                  }
-                });
-
-                // Переключаем класс 'show' для целевого блока
-                targetBlock.classList.toggle('show');
-              });
-            });
-          });
-
-        </script>
-
-        <div style="margin-top: 20px;"><br></div>
-
-        <h2>Есть вопросы? Напишите нам!</h2>
-        <p><br><br></p>
-        <?php } ?>
-
-        <div id="form-errors" class="errortext text-red-700 mb-4"></div>
-        <div class="someform clearfix space-y-4">
-          <?php if($ajaxForm) { ?>
-          <form id="contacts-form1" class="flex flex-col gap-2">
-            <?php } else { ?>
-            <form id="contacts-form" class="flex flex-col gap-2">
-              <?php } ?>
-              <?php if($ajaxForm) { ?>
-              <input type="hidden" name="XMLHttpRequest" value="1">
-              <script>
-                function _processform_contacts() {
-                  var obForm = top.BX('contacts-form1');
-                  top.BX.bind(
-                    obForm,
-                    'submit',
-                    function () {
-                      BX.ajax.submitComponentForm(this, 'contacts-form1', true);
+                    $i = 0;
                     }
-                  );
-                  top.BX.removeCustomEvent('onAjaxSuccess', _processform_contacts);
-                }
-                if (top.BX('contacts-form1')) {
-                  _processform_contacts();
-                } else {
-                  top.BX.addCustomEvent('onAjaxSuccess', _processform_contacts);
-                }
-              </script>
+                    } ?>
+                    <?php if ($i < 100) { echo "</div>"; } ?>
+                </div>
 
-              <script>
-                grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
-              </script>
-              <?php } ?>
-              <div class="line clearfix">
-                <input type="text" name="name" value="" placeholder="Ваше имя*:" maxlength="100"
-                       msg_maxlen="Имя не должно превышать 100 символов" required msg_required="Вы не ввели ваше имя"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-              </div>
-              <div class="line clearfix">
-                <input type="text" name="email" value="" placeholder="Ваш E-mail:" maxlength="1000"
-                       msg_maxlen="E-mail не должен превышать 1000 символов"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-              </div>
-              <div class="line clearfix">
-                <input
-                  class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="text" name="phone" value="" placeholder="Номер телефона:" maxlength="20" required
-                  msg_maxlen="Номер телефона не должен превышать 20 символов">
-              </div>
-              <div class="line clearfix">
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const toggleLinks = document.querySelectorAll('.toggle-link');
+
+                        toggleLinks.forEach(link => {
+                            link.addEventListener('click', function (event) {
+                                event.preventDefault();
+
+                                // Получаем целевой блок из атрибута data-target
+                                const targetBlockId = this.getAttribute('data-target');
+                                const targetBlock = document.querySelector(targetBlockId);
+
+                                document.querySelectorAll('.toggle-link.bold').forEach(block => {
+                                    block.classList.remove('bold');
+                                });
+
+
+                                // Переключаем жирный текст ссылки
+                                link.classList.toggle('bold');
+
+                                // Скрываем все блоки, которые были открыты для других ссылок
+                                document.querySelectorAll('.content-block.show').forEach(block => {
+                                    if (block !== targetBlock) {
+                                        block.classList.remove('show');
+                                    }
+                                });
+
+                                // Переключаем класс 'show' для целевого блока
+                                targetBlock.classList.toggle('show');
+                            });
+                        });
+                    });
+
+                </script>
+
+                <div style="margin-top: 20px;"><br></div>
+
+                <h2>Есть вопросы? Напишите нам!</h2>
+                <p><br><br></p>
+                <?php } ?>
+
+                <div id="form-errors" class="errortext text-red-700 mb-4"></div>
+                <div class="someform clearfix space-y-4">
+                    <?php if($ajaxForm) { ?>
+                    <form id="contacts-form1" class="flex flex-col gap-2">
+                        <?php } else { ?>
+                        <form id="contacts-form" class="flex flex-col gap-2">
+                            <?php } ?>
+                            <?php if($ajaxForm) { ?>
+                            <input type="hidden" name="XMLHttpRequest" value="1">
+                            <script>
+                                function _processform_contacts() {
+                                    var obForm = top.BX('contacts-form1');
+                                    top.BX.bind(
+                                        obForm,
+                                        'submit',
+                                        function () {
+                                            BX.ajax.submitComponentForm(this, 'contacts-form1', true);
+                                        }
+                                    );
+                                    top.BX.removeCustomEvent('onAjaxSuccess', _processform_contacts);
+                                }
+                                if (top.BX('contacts-form1')) {
+                                    _processform_contacts();
+                                } else {
+                                    top.BX.addCustomEvent('onAjaxSuccess', _processform_contacts);
+                                }
+                            </script>
+
+                            <script>
+                                grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
+                            </script>
+                            <?php } ?>
+                            <div class="line clearfix">
+                                <input type="text" name="name" value="" placeholder="Ваше имя*:" maxlength="100"
+                                       msg_maxlen="Имя не должно превышать 100 символов" required msg_required="Вы не ввели ваше имя"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="line clearfix">
+                                <input type="text" name="email" value="" placeholder="Ваш E-mail:" maxlength="1000"
+                                       msg_maxlen="E-mail не должен превышать 1000 символов"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="line clearfix">
+                                <input
+                                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    type="text" name="phone" value="" placeholder="Номер телефона:" maxlength="20" required
+                                    msg_maxlen="Номер телефона не должен превышать 20 символов">
+                            </div>
+                            <div class="line clearfix">
                   <textarea name="text" placeholder="Текст сообщения:" maxlength="5000"
                             msg_maxlen="Текст сообщения не должен превышать 5000 символов"
                             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-              </div>
-              <div class="line clearfix">
-                <?php if($ajaxForm) { ?>
-                <div class="captcha-item" id="captcha_contacts-form1"></div>
-                <?php } else { ?>
-                <div class="captcha-item" id="captcha_contacts-form"></div>
-                <?php } ?>
-                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
-                <input type="hidden" name="enigma<?php echo time(); ?>"
-                       value="<?php echo bin2hex(random_bytes(8)) ?>">
-              </div>
+                            </div>
+                            <div class="line clearfix">
+                                <?php if($ajaxForm) { ?>
+                                <div class="captcha-item" id="captcha_contacts-form1"></div>
+                                <?php } else { ?>
+                                <div class="captcha-item" id="captcha_contacts-form"></div>
+                                <?php } ?>
+                                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
+                                <input type="hidden" name="enigma<?php echo time(); ?>"
+                                       value="<?php echo bin2hex(random_bytes(8)) ?>">
+                            </div>
 
-              <?php
+                            <?php
         header('Content-Type: text/html; charset=utf-8');
         $asdkapcha1 = mt_rand(11, 20);
         $asdkapcha2 = mt_rand(1, 10);
@@ -355,118 +357,118 @@
         }
         /*
         <div class="line clearfix">
-              Сколько будет: <?php echo $randkapcha;? >?
-              <input type="text" required   name="randkapcha" />
-              <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
-        </div>
+                            Сколько будет: <?php echo $randkapcha;? >?
+                            <input type="text" required   name="randkapcha" />
+                            <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
+                </div>
 
-        */
-        ?>
-        <div class="line buttons clearfix">
-          <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition"
-                 type="submit" name="submit" value="Отправить">
-        </div>
-        </form>
+                */
+                ?>
+                <div class="line buttons clearfix">
+                    <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition"
+                           type="submit" name="submit" value="Отправить">
+                </div>
+                </form>
 
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <?php if(!$ajaxForm) { ?>
+    <?php if(!$ajaxForm) { ?>
 </div>
 </div>
 
 <?php } ?>
 
 <style>
-  .cookie_notice {
-    display: none;
-    position: fixed;
-    z-index: 9999999;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 15px;
-    font-family: Verdana, sans-serif;
-    color: #FFF;
-    background: #337AB7;
-    padding: 10px 20px;
-    border-top: 4px solid #BFE2FF;
-  }
+    .cookie_notice {
+        display: none;
+        position: fixed;
+        z-index: 9999999;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 15px;
+        font-family: Verdana, sans-serif;
+        color: #FFF;
+        background: #337AB7;
+        padding: 10px 20px;
+        border-top: 4px solid #BFE2FF;
+    }
 
-  /* Оформление кнопок */
-  .cookie_btn {
-    display: inline-block;
-    margin: 10px 6px 4px 6px;
-    text-decoration: none;
-    position: relative;
-    font-size: 13px;
-    padding: 4px 12px;
-    color: #FFF;
-    font-weight: bold;
-    text-transform: uppercase;
-    background: #337AB7;
-    border: 2px solid #BFE2FF;
-  }
+    /* Оформление кнопок */
+    .cookie_btn {
+        display: inline-block;
+        margin: 10px 6px 4px 6px;
+        text-decoration: none;
+        position: relative;
+        font-size: 13px;
+        padding: 4px 12px;
+        color: #FFF;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: #337AB7;
+        border: 2px solid #BFE2FF;
+    }
 
-  .cookie_btn:hover {
-    color: #FFF;
-  }
+    .cookie_btn:hover {
+        color: #FFF;
+    }
 
-  .cookie_btn:after,
-  .cookie_btn:before {
-    position: absolute;
-    height: 2px;
-    left: 50%;
-    background: #FFF;
-    bottom: -6px;
-    content: "";
-    transition: all 280ms ease-in-out;
-    width: 0;
-  }
+    .cookie_btn:after,
+    .cookie_btn:before {
+        position: absolute;
+        height: 2px;
+        left: 50%;
+        background: #FFF;
+        bottom: -6px;
+        content: "";
+        transition: all 280ms ease-in-out;
+        width: 0;
+    }
 
-  .cookie_btn:before {
-    top: -6px;
-  }
+    .cookie_btn:before {
+        top: -6px;
+    }
 
-  .cookie_btn:hover:after,
-  .cookie_btn:hover:before {
-    width: 100%;
-    left: 0;
-  }
+    .cookie_btn:hover:after,
+    .cookie_btn:hover:before {
+        width: 100%;
+        left: 0;
+    }
 </style>
 
 <div class="cookie_notice">
-  Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей (данные об IP-адресе, местоположении
-  и др.) для обеспечения работоспособности и улучшения качества обслуживания. Продолжая использовать наш сайт, вы
-  автоматически соглашаетесь с использованием данных технологий.
-  <div>
-    <a class="cookie_btn" id="cookie_close" href="#close">Ок</a>
+    Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей (данные об IP-адресе, местоположении
+    и др.) для обеспечения работоспособности и улучшения качества обслуживания. Продолжая использовать наш сайт, вы
+    автоматически соглашаетесь с использованием данных технологий.
+    <div>
+        <a class="cookie_btn" id="cookie_close" href="#close">Ок</a>
 
-  </div>
+    </div>
 </div>
 
 <script>
-  // функция возвращает cookie с именем name, если есть, если нет, то undefined
-  function getCookie(name) {
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-  }
-  let cookiecook = getCookie("cookiecook"),
-    cookiewin = document.getElementsByClassName('cookie_notice')[0];
-  // проверяем, есть ли у нас cookie, с которой мы не показываем окно и если нет, запускаем показ
-  if (cookiecook != "no") {
-    // показываем
-    cookiewin.style.display = "block";
-    // закрываем по клику
-    document.getElementById("cookie_close").addEventListener("click", function () {
-      cookiewin.style.display = "none";
-      // записываем cookie на 1 день, с которой мы не показываем окно
-      let date = new Date;
-      date.setDate(date.getDate() + 1);
-      document.cookie = "cookiecook=no; path=/; expires=" + date.toUTCString();
-    });
-  }
+    // функция возвращает cookie с именем name, если есть, если нет, то undefined
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    let cookiecook = getCookie("cookiecook"),
+        cookiewin = document.getElementsByClassName('cookie_notice')[0];
+    // проверяем, есть ли у нас cookie, с которой мы не показываем окно и если нет, запускаем показ
+    if (cookiecook != "no") {
+        // показываем
+        cookiewin.style.display = "block";
+        // закрываем по клику
+        document.getElementById("cookie_close").addEventListener("click", function () {
+            cookiewin.style.display = "none";
+            // записываем cookie на 1 день, с которой мы не показываем окно
+            let date = new Date;
+            date.setDate(date.getDate() + 1);
+            document.cookie = "cookiecook=no; path=/; expires=" + date.toUTCString();
+        });
+    }
 </script>
