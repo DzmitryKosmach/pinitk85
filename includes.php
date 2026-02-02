@@ -113,3 +113,66 @@ function dp(...$vars)
         echo PHP_EOL . "</pre>" . PHP_EOL;
     }
 }
+
+function phonePartial($tel, $display, $class = '', $showText = true) {
+    if (preg_match('/^(.+?\d{3})-\d{2}-(\d{2})$/', $display, $m)) {
+        $prefix = $m[1];
+        $suffix = '-**-**'.$m[2];
+    } else {
+        $prefix = substr($display, 0, 10);
+        $suffix = '***';
+    }
+    $cls = trim('js-phone-masked ' . $class);
+
+    $showLink = $showText
+        ? '<span class="phone-show-link" role="button" tabindex="0">Показать номер</span>'
+        : '';
+
+    return '<span class="'.$cls.'" data-tel="'.htmlspecialchars($tel).'" data-display="'.htmlspecialchars($display).'"><span class="phone-prefix">'.$prefix.'</span><span class="phone-faded">'.$suffix.'</span> '.$showLink.'</span>';
+}
+
+function emailPartial($email, $display = null, $class = '', $showText = true) {
+// Если display не передан, используем сам email
+    if ($display === null) {
+        $display = $email;
+    }
+
+// Разбираем адрес на имя и домен
+    $parts = explode('@', $display);
+
+    if (count($parts) === 2) {
+        $username = $parts[0];
+        $domain = $parts[1];
+
+// Маскируем имя пользователя (оставляем первые 2 символа)
+        $usernameLen = mb_strlen($username);
+        $prefix = mb_substr($username, 0, 2);
+        $suffix = str_repeat('*', max(1, $usernameLen - 2));
+
+// Маскируем домен (оставляем первые 2 символа)
+        $domainParts = explode('.', $domain);
+        $domainPrefix = mb_substr($domainParts[0], 0, 2);
+        $domainSuffix = str_repeat('*', max(1, mb_strlen($domainParts[0]) - 2));
+
+// Собираем домен обратно
+        $maskedDomain = $domainPrefix . $domainSuffix;
+        if (count($domainParts) > 1) {
+            $maskedDomain .= '.' . implode('.', array_slice($domainParts, 1));
+        }
+
+        $emailPrefix = $prefix;
+        $emailFaded = $suffix . '@' . $maskedDomain;
+    } else {
+// Если формат некорректный, маскируем весь адрес
+        $emailPrefix = mb_substr($display, 0, 5);
+        $emailFaded = str_repeat('*', max(1, mb_strlen($display) - 5));
+    }
+
+    $cls = trim('js-email-masked ' . $class);
+
+    $showLink = $showText
+        ? '<span class="phone-show-link" role="button" tabindex="0"></br>Показать email</span>'
+        : '';
+
+    return '<span class="'.$cls.'" data-email="'.htmlspecialchars($email).'" data-display="'.htmlspecialchars($display).'"><span class="phone-prefix">'.$emailPrefix.'</span><span class="phone-faded">'.$emailFaded.'</span> '.$showLink.'</span>';
+}
