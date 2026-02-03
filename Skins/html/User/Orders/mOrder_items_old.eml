@@ -5,8 +5,8 @@
 		<th>Артикул</th>
 		<th>Материал</th>
 		<th>Размер</th>
-		<th>Количество</th>
 		<th>Цена</th>
+		<th>Количество</th>
 		<th>Сумма</th>
 	</tr>
 	<?php foreach($cart as $c) { ?>
@@ -17,7 +17,6 @@
 				<?php } else { ?>
 					&nbsp;
 				<?php } ?>
-			</td>
 			<td>
 				<strong><?php echo $c['item']['name']?></strong>
 			</td>
@@ -39,14 +38,14 @@
 				<?php } ?>
 			</td>
 			<td align="right">
-				<?php echo $c['amount']?> шт.
-			</td>
-			<td align="right">
 				<?php if(abs($c['price'])) { ?>
 					<?php echo Catalog::priceFormat($c['price'])?> р.
 				<?php } else { ?>
 					по запросу
 				<?php } ?>
+			</td>
+			<td align="right">
+				<?php echo $c['amount']?> шт.
 			</td>
 			<td align="right">
 				<?php echo Catalog::priceFormat($c['price'] * $c['amount'])?> р.
@@ -57,44 +56,40 @@
 	<?php if($paymethod !== Orders::PAYMETHOD_NO) { ?>
 		<tr>
 			<td>&nbsp;</td>
-			<td colspan="5">
+			<td colspan="6">
 				<b>Доставка:</b>
 				<?php echo $optionsPrices[Orders_Options::DELIVERY]['info']?>
 			</td>
-			<td>&nbsp;</td>
 			<td align="right">
 				<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::DELIVERY]['price'])?> р.
 			</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td colspan="5">
+			<td colspan="6">
 				<b>Разгрузка:</b>
 				<?php echo $optionsPrices[Orders_Options::UNLOADING]['info']?>
 			</td>
-			<td>&nbsp;</td>
 			<td align="right">
 				<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::UNLOADING]['price'])?> р.
 			</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td colspan="5">
+			<td colspan="6">
 				<b>Сборка:</b>
 				<?php echo $optionsPrices[Orders_Options::ASSEMBLY]['info']?>
 			</td>
-			<td>&nbsp;</td>
 			<td align="right">
 				<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::ASSEMBLY]['price'])?> р.
 			</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td colspan="5">
+			<td colspan="6">
 				<b>Вывоз мусора:</b>
 				<?php echo $optionsPrices[Orders_Options::GARBAGE]['info']?>
 			</td>
-			<td>&nbsp;</td>
 			<td align="right">
 				<?php echo Catalog::priceFormat($optionsPrices[Orders_Options::GARBAGE]['price'])?> р.
 			</td>
@@ -102,9 +97,8 @@
 	<?php } ?>
 
 	<tr>
-		<th colspan="5" align="left">Итого:</th>
+		<th colspan="6" align="left">Итого:</th>
 		<th align="right"><?php echo $totalAmount?> шт.</th>
-		<th>&nbsp;</th>
 		<th align="right">
 			<?php if($paymethod !== Orders::PAYMETHOD_NO) { ?>
 				<?php echo Catalog::priceFormat($totalPriceOut + $priceOptions)?>
