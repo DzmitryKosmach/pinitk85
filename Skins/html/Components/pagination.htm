@@ -13,12 +13,15 @@ function addOrReplaceQueryParam($key, $value) {
 }
 ?>
 
+<?php
+$isAdminPagination = (isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], 'admin-') !== false || strpos($_SERVER['REQUEST_URI'], '/admin-') !== false));
+?>
 <div class="flex w-full justify-center items-center flex-col mt-4">
   <?php if($totalPages >
   1) { ?>
 
-  <!-- Кнопка "Загрузить еще" -->
-  <?php if ($currentPage < $totalPages): ?>
+  <!-- Кнопка "Загрузить еще" (только не в админке) -->
+  <?php if (!$isAdminPagination && $currentPage < $totalPages): ?>
   <div class="max-w-[300px] mb-4 w-full">
     <a
       href="<?php echo addOrReplaceQueryParam('page', $currentPage + 1); ?>"
@@ -127,7 +130,8 @@ function addOrReplaceQueryParam($key, $value) {
     <?php } ?>
   </div>
 
-  <!-- Кнопка "Все товары" -->
+  <!-- Кнопка "Все товары" (только не в админке) -->
+  <?php if (!$isAdminPagination): ?>
   <div class="max-w-[300px] w-full">
     <a
       href="<?php echo addOrReplaceQueryParam('onpage', -1); ?>"
@@ -136,5 +140,6 @@ function addOrReplaceQueryParam($key, $value) {
       Все товары
     </a>
   </div>
+  <?php endif; ?>
   <?php } ?>
 </div>
