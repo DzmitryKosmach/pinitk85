@@ -481,15 +481,11 @@ function getHomeUrl() {
 
                             <!-- Выпадающий список -->
                             <div
-                                class="absolute right-0 top-full mt-0 w-40 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]">
-                                <a href="tel:+74959204824"
-                                   class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                                    +7 (495) 920-48-24
-                                </a>
-                                <a href="tel:88002349084"
-                                   class="block px-3 py-2 text-sm text-gray-700 hover:bg-main_hover_menu hover:underline">
-                                    8 (800) 234-90-84
-                                </a>
+                                class="absolute right-0 top-full mt-0 w-44 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]">
+                                <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+
+                                <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+
                             </div>
                         </div>
 
