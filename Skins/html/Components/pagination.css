@@ -24,7 +24,7 @@
 .pagination-wrapper {
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     flex-direction: column;
     margin-top: 1rem; /* mt-4 = 16px */
@@ -32,6 +32,7 @@
 
 /* -------- Обертка кнопки "Загрузить еще" -------- */
 .pagination-load-more-wrapper {
+    display: none;
     max-width: 300px;
     margin-bottom: 1rem; /* mb-4 = 16px */
     width: 100%;
@@ -39,6 +40,7 @@
 
 /* -------- Обертка кнопки "Все товары" -------- */
 .pagination-show-all-wrapper {
+    display: none;
     max-width: 300px;
     width: 100%;
 }
