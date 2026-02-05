@@ -283,6 +283,7 @@
                         <?php } else { ?>
                         <form id="contacts-form" class="flex flex-col gap-2">
                             <?php } ?>
+
                             <?php if($ajaxForm) { ?>
                             <input type="hidden" name="XMLHttpRequest" value="1">
                             <script>
@@ -308,27 +309,32 @@
                                 grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
                             </script>
                             <?php } ?>
+
                             <div class="line clearfix">
                                 <input type="text" name="name" value="" placeholder="Ваше имя*:" maxlength="100"
                                        msg_maxlen="Имя не должно превышать 100 символов" required msg_required="Вы не ввели ваше имя"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             </div>
+
                             <div class="line clearfix">
                                 <input type="text" name="email" value="" placeholder="Ваш E-mail:" maxlength="1000"
                                        msg_maxlen="E-mail не должен превышать 1000 символов"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             </div>
+
                             <div class="line clearfix">
                                 <input
-                                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                     type="text" name="phone" value="" placeholder="Номер телефона:" maxlength="20" required
                                     msg_maxlen="Номер телефона не должен превышать 20 символов">
                             </div>
+
                             <div class="line clearfix">
-                  <textarea name="text" placeholder="Текст сообщения:" maxlength="5000"
-                            msg_maxlen="Текст сообщения не должен превышать 5000 символов"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <textarea name="text" placeholder="Текст сообщения:" maxlength="5000"
+                  msg_maxlen="Текст сообщения не должен превышать 5000 символов"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"></textarea>
                             </div>
+
                             <div class="line clearfix">
                                 <?php if($ajaxForm) { ?>
                                 <div class="captcha-item" id="captcha_contacts-form1"></div>
@@ -356,10 +362,10 @@
             if ($randkapchasravall[1] == "-") $randkapchasravalls = $randkapchasravall[0] - $randkapchasravall[2];
         }
         /*
-        <div class="line clearfix">
-                            Сколько будет: <?php echo $randkapcha;? >?
+    <div class="line clearfix">
+                            Сколько будет: <?php echo $randkapcha;?>?
                             <input type="text" required   name="randkapcha" />
-                            <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;? >" />
+                            <input type="hidden" name="randkapchasrav" value="<?php echo $randkapchasrav;?>" />
                 </div>
 
                 */
