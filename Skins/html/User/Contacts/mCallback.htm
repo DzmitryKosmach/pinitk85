@@ -104,14 +104,14 @@
                        msg_maxlen="Имя не должно превышать 100 символов"
                        required
                        msg_required="Вы не ввели ваше имя"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
                     >
 			</div>
             <div style="display:none">
                 <input type="text" name="last_name" id="last_name" autocomplete="off" maxlength="100">
             </div>
             <div class="line clearfix">
-                <input class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="phone" value="" placeholder="Номер телефона*:"
+                <input class="maskPhone w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all" type="text" name="phone" value="" placeholder="Номер телефона*:"
                        maxlength="20"
                        msg_maxlen="Номер телефона не должен превышать 20 символов"
                        required
@@ -145,6 +145,11 @@
 
 
 <style>
+    /* Убираем горизонтальный скролл из-за фиксированной ширины формы .someform form */
+    .content .someform form {
+        width: 100%;
+        max-width: 400px;
+    }
 
 .cookie_notice {
 	display: none;
