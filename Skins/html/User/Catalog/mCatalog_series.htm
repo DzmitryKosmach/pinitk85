@@ -837,7 +837,7 @@
           <?php if(!$m['current-series']) continue; ?>
           <?php if($m['has_sub']) { ?>
           <a class="level1 !w-auto !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
-            <div class="flex gap-3 flex-wrap">
+            <div class="flex gap-3 flex-wrap mb-1">
               <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
                 <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
                   <?php if($m['image']['ext']) { ?>
@@ -850,7 +850,7 @@
                 </div>
               </div>
             </div>
-            <div class="name"><?php echo $m['name']; ?></div>
+            <div class="name text-[12px] leading-3 whitespace-normal"><?php echo $m['name']; ?></div>
           </a>
           <div class="materials-zoom hidden">
             <div class="level1-sub">
