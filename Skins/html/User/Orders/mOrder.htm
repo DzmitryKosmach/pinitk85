@@ -7,7 +7,7 @@
   <?php $position = 0; ?>
   <?php foreach($breadcrumbs as $bc) { ?>
   <?php $position = $position + 1; ?>
-  <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700">
+  <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline">
     <?php echo $bc['name']; ?>
   </a>
   <span class="mx-1">›</span>

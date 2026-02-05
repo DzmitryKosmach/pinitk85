@@ -1088,7 +1088,7 @@ function getHomeUrl() {
 
         <!-- Блок 2: Контакты -->
         <div class="lg:col-span-1">
-            <h3 class="font-semibold text-base mb-2">КОНТАКТЫ</h3>
+            <h3 class="font-semibold text-base mb-2"><a href="/contacts/" class="hover:underline">КОНТАКТЫ</a></h3>
             <div class="flex items-center gap-1 mb-2">
                 <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
                 <p class="mb-2">
@@ -1117,7 +1117,9 @@ function getHomeUrl() {
 
         <!-- Блок 3: Товары -->
         <div class="lg:col-span-2">
-            <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+            <a href="/catalog/">
+                <h3 class="font-semibold text-base mb-2 hover:underline">ТОВАРЫ</h3>
+            </a>
             <div class="flex gap-8">
                 <ul class="columns-2 gap-x-8 space-y-1 leading-6">
                     <?php foreach($catsMenu as $n =>
@@ -1135,7 +1137,7 @@ function getHomeUrl() {
         <!-- Блок 4: Карта сайта -->
         <div class="lg:col-span-1">
             <a href="/sitemap/">
-                <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
+                <h3 class="font-semibold text-base mb-2 hover:underline">КАРТА САЙТА</h3>
             </a>
         </div>
     </div>
@@ -1144,7 +1146,7 @@ function getHomeUrl() {
     <div class="lg:hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
         <!-- Блок 1: Компания -->
         <div>
-            <h3 class="font-semibold text-base mb-1">КОНТАКТЫ</h3>
+            <h3 class="font-semibold text-base mb-1"><a href="/contacts/" class="hover:underline">КОНТАКТЫ</a></h3>
             <div class="mt-4 space-y-1">
                 <p class="flex gap-4 font-semibold">
                     <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
@@ -1195,7 +1197,9 @@ function getHomeUrl() {
         <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
             <!-- Блок 3: Товары -->
             <div class="lg:col-span-2">
-                <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+                <a href="/catalog/">
+                    <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
+                </a>
                 <div class="flex gap-8">
                     <ul class="columns-2 gap-x-8 space-y-1 leading-6">
                         <?php foreach($catsMenu as $n =>
@@ -1213,7 +1217,7 @@ function getHomeUrl() {
             <!-- Блок 4: Карта сайта -->
             <div>
                 <a href="/sitemap/">
-                    <h3 class="font-semibold text-base mb-2">КАРТА САЙТА</h3>
+                    <h3 class="font-semibold text-base mb-2 hover:underline">КАРТА САЙТА</h3>
                 </a>
             </div>
         </div>
