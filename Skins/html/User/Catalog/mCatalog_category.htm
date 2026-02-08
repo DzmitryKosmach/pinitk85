@@ -6,133 +6,186 @@
 <?php echo JsCopmress::load('category')?>
 
 <script>
-  oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
+    oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
 </script>
 
 <div>
-  <div>
-    <!-- Хлебные крошки -->
-    <nav
-      class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-4 "
-    >
-      <?php if(count($breadcrumbs)) { ?>
-      <?php $bcLast = array_pop($breadcrumbs); ?>
-      <?php $position = 0; ?>
-      <?php foreach($breadcrumbs as $bc) { ?>
-      <?php $position = $position + 1; ?>
-      <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline">
-        <?php echo $bc['name']; ?>
-      </a>
-      <span class="mx-1">›</span>
-      <?php } ?>
-      <span class="text-gray-700">
+    <div>
+        <!-- Хлебные крошки -->
+        <nav
+            class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-4 "
+        >
+            <?php if(count($breadcrumbs)) { ?>
+            <?php $bcLast = array_pop($breadcrumbs); ?>
+            <?php $position = 0; ?>
+            <?php foreach($breadcrumbs as $bc) { ?>
+            <?php $position = $position + 1; ?>
+            <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline">
+                <?php echo $bc['name']; ?>
+            </a>
+            <span class="mx-1">›</span>
+            <?php } ?>
+            <span class="text-gray-700">
         <?php echo $bcLast['name']; ?>
       </span>
-      <?php } ?>
-    </nav>
+            <?php } ?>
+        </nav>
 
-    <section class="">
-      <div>
-        <h1 class="text-xl md:text-2xl font-bold mb-2 ">
-          <?php echo $pageInf['header']; ?>
-        </h1>
+        <section class="">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold mb-2 ">
+                    <?php echo $pageInf['header']; ?>
+                </h1>
 
-        <?php if (!empty($pages)): ?>
-        <!-- Табы -->
-        <div
-          class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] pt-2 z-20 bg-body"
-        >
-          <div class="text-[11px] sm3:text-sm lg:text-base mb-4 lg:mb-8">
-            <!-- Контейнер для всех табов (скрытый) -->
-            <div id="allTabsContainer" class="hidden">
-              <?php foreach ($pages as $p): ?>
-              <?php $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id'])); ?>
-              <?php if ($isActive): ?>
-              <a href="<?php echo $bc['url']; ?>"
-                 class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-10 lg:px-6 leading-3 font-medium rounded-xl bg-blue-600 text-white border border-blue-600 shadow text-center flex items-center justify-center"
-                 data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
-                 data-tab-href="<?php echo $bc['url']; ?>"
-                 data-is-active="true"
-              >
-                <?php echo htmlspecialchars($p['name']); ?>
-              </a>
+                <?php if (!empty($pages)): ?>
+                <!-- Табы -->
+                <div
+                    class="sticky top-[54px] sm3:top-[32px] lg:top-[36px] pt-2 z-20 bg-body"
+                    data-category-url="<?php echo isset($catInf['id']) ? Catalog_Categories::a($catInf['id'], isset($isDiscountPage) ? $isDiscountPage : false) : ''; ?>"
+                >
+                    <div class="text-[11px] sm3:text-sm lg:text-base mb-4 lg:mb-8">
+                        <!-- Контейнер для всех табов (скрытый) -->
+                        <div id="allTabsContainer" class="hidden">
+                            <?php 
+                            // Получаем выбранные табы из URL параметров
+                            $selectedPagesFromUrl = array();
+                            if (isset($_GET['f']) && is_array($_GET['f'])) {
+                                foreach ($_GET['f'] as $groupId => $pageIds) {
+                                    if (is_array($pageIds)) {
+                                        foreach ($pageIds as $pageId) {
+                                            $selectedPagesFromUrl[] = intval($pageId);
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                            <?php foreach ($pages as $p): ?>
+                            <?php 
+                            $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id']));
+                            // Также проверяем, выбран ли таб через фильтры
+                            $isSelectedFromFilter = in_array($p['id'], $selectedPagesFromUrl);
+                            $isSelected = $isActive || $isSelectedFromFilter;
+                            ?>
+                            <button
+                                type="button"
+                                class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-10 lg:px-6 leading-3 rounded-xl border shadow text-center flex items-center justify-center transition cursor-pointer"
+                                data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                                data-tab-href="<?php echo Catalog_Pages::a($p['id']); ?>"
+                                data-tab-id="<?php echo $p['id']; ?>"
+                                data-group-id="<?php echo $p['group_id']; ?>"
+                                data-is-selected="<?php echo $isSelected ? 'true' : 'false'; ?>"
+                            >
+                                <?php echo htmlspecialchars($p['name']); ?>
+                            </button>
+                            <?php endforeach; ?>
+                        </div>
 
-              <?php else: ?>
-              <a
-                href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                class="all-tab-item flex-1 min-h-8 px-1 md:px-4 lg:min-h-10 lg:px-6 leading-3 rounded-xl bg-white border border-gray-300 shadow text-center flex items-center justify-center text-gray-800 hover:bg-gray-50 transition"
-                data-tab-name="<?php echo htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8'); ?>"
-                data-tab-href="<?php echo Catalog_Pages::a($p['id']); ?>"
-                data-is-active="false"
-              >
-                <?php echo htmlspecialchars($p['name']); ?>
-              </a>
-              <?php endif; ?>
-              <?php endforeach; ?>
-            </div>
+                        <!-- Основной ряд: видимые табы + кнопка "Ещё/Свернуть" -->
+                        <div id="visibleTabsRow" class="flex flex-wrap items-center gap-1 sm:gap-2">
+                            <!-- Табы и кнопка "Ещё/Свернуть" будут вставлены сюда JS -->
+                        </div>
 
-            <!-- Основной ряд: видимые табы + кнопка "Ещё/Свернуть" -->
-            <div id="visibleTabsRow" class="flex flex-wrap items-center gap-1 sm:gap-2">
-              <!-- Табы и кнопка "Ещё/Свернуть" будут вставлены сюда JS -->
-            </div>
+                        <!-- Скрытые табы (изначально скрыты) -->
+                        <div
+                            id="hiddenWrapper"
+                            class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out mt-2"
+                        >
+                            <div id="hiddenTabsContainer" class="flex flex-wrap gap-1 sm:gap-2 pb-2">
+                                <!-- Скрытые табы будут вставлены сюда JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Скрытые табы (изначально скрыты) -->
-            <div
-              id="hiddenWrapper"
-              class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out mt-2"
-            >
-              <div id="hiddenTabsContainer" class="flex flex-wrap gap-1 sm:gap-2 pb-2">
-                <!-- Скрытые табы будут вставлены сюда JS -->
-              </div>
-            </div>
-          </div>
-        </div>
+                <style>
+                    /* Анимация "пульс" для кнопки */
+                    @keyframes pulseAttention {
+                        0%,
+                        100% {
+                            transform: scale(1);
+                        }
+                        50% {
+                            transform: scale(1.08);
+                        }
+                    }
+                    .attention {
+                        animation: pulseAttention 1.5s infinite;
+                    }
+                </style>
 
-        <style>
-          /* Анимация "пульс" для кнопки */
-          @keyframes pulseAttention {
-            0%,
-            100% {
-              transform: scale(1);
-            }
-            50% {
-              transform: scale(1.08);
-            }
-          }
-          .attention {
-            animation: pulseAttention 1.5s infinite;
-          }
-        </style>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        // --- Конфигурация ---
+                        const MIN_VISIBLE_TABS = 1; // Минимальное количество видимых табов
+                        const TAB_GAP = 8; // Приблизительный зазор между табами в px (gap-1 ~ 4px, gap-2 ~ 8px на sm+)
+                        const SHOW_MORE_BTN_WIDTH = 60; // Приблизительная ширина кнопки "Ещё" в px
 
-        <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            // --- Конфигурация ---
-            const MIN_VISIBLE_TABS = 1; // Минимальное количество видимых табов
-            const TAB_GAP = 8; // Приблизительный зазор между табами в px (gap-1 ~ 4px, gap-2 ~ 8px на sm+)
-            const SHOW_MORE_BTN_WIDTH = 60; // Приблизительная ширина кнопки "Ещё" в px
+                        // --- DOM элементы ---
+                        const allTabsContainer = document.getElementById('allTabsContainer');
+                        const visibleTabsRow = document.getElementById('visibleTabsRow');
+                        const hiddenTabsContainer = document.getElementById('hiddenTabsContainer');
+                        const hiddenWrapper = document.getElementById("hiddenWrapper");
 
-            // --- DOM элементы ---
-            const allTabsContainer = document.getElementById('allTabsContainer');
-            const visibleTabsRow = document.getElementById('visibleTabsRow');
-            const hiddenTabsContainer = document.getElementById('hiddenTabsContainer');
-            const hiddenWrapper = document.getElementById("hiddenWrapper");
-
-            if (!allTabsContainer || !visibleTabsRow || !hiddenTabsContainer || !hiddenWrapper) {
-              console.error("Не найдены необходимые DOM элементы для управления табами.");
-              return;
-            }
+                        if (!allTabsContainer || !visibleTabsRow || !hiddenTabsContainer || !hiddenWrapper) {
+                            console.error("Не найдены необходимые DOM элементы для управления табами.");
+                            return;
+                        }
 
             // --- Хранилище данных ---
-            let allTabsData = []; // [{name, href, isActive, element}, ...]
+            let allTabsData = []; // [{name, href, id, groupId, isSelected, element}, ...]
+            let selectedTabs = new Set(); // Множество ID выбранных табов
             let isExpanded = localStorage.getItem("tabsExpanded") === "true";
             let currentVisibleCount = MIN_VISIBLE_TABS; // Начальное значение
+            let filterTimeout = null;
+            const FILTER_DELAY = 300; // Задержка перед отправкой запроса (мс)
 
-            // --- Функции ---
+            // Получаем URL категории
+            const tabsContainer = document.querySelector('[data-category-url]');
+            const categoryUrl = tabsContainer ? tabsContainer.getAttribute('data-category-url') : '';
 
-            // Создание кнопки "Ещё/Свернуть"
-            function createShowMoreButton() {
-              const buttonContainer = document.createElement('div');
-              buttonContainer.innerHTML = `
+            // Восстановление выбранных табов из URL параметров (приоритет) или localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlFilters = urlParams.getAll('f[]') || [];
+            
+            // Парсим параметры f[group_id][]
+            const filterParamsFromUrl = {};
+            urlParams.forEach((value, key) => {
+              const match = key.match(/^f\[(\d+)\]\[\]$/);
+              if (match) {
+                const groupId = match[1];
+                if (!filterParamsFromUrl[groupId]) {
+                  filterParamsFromUrl[groupId] = [];
+                }
+                filterParamsFromUrl[groupId].push(value);
+              }
+            });
+            
+            // Если есть фильтры в URL, используем их
+            if (Object.keys(filterParamsFromUrl).length > 0) {
+              // Собираем все ID страниц из URL фильтров
+              Object.values(filterParamsFromUrl).forEach(pageIds => {
+                pageIds.forEach(pageId => {
+                  selectedTabs.add(pageId);
+                });
+              });
+            } else {
+              // Иначе восстанавливаем из localStorage
+              const savedSelectedTabs = localStorage.getItem("selectedTabs");
+              if (savedSelectedTabs) {
+                try {
+                  selectedTabs = new Set(JSON.parse(savedSelectedTabs));
+                } catch (e) {
+                  console.error("Ошибка при восстановлении выбранных табов:", e);
+                }
+              }
+            }
+
+                        // --- Функции ---
+
+                        // Создание кнопки "Ещё/Свернуть"
+                        function createShowMoreButton() {
+                            const buttonContainer = document.createElement('div');
+                            buttonContainer.innerHTML = `
         <button
           id="showMoreBtn"
           class="flex align-middle text-white min-h-8 px-1 text-[11px] sm3:text-sm md:px-2 lg:min-h-10 lg:px-3 rounded-xl shadow flex items-center justify-center gap-1 transition whitespace-nowrap"
@@ -154,372 +207,647 @@
           </svg>
         </button>
       `;
-              return buttonContainer.firstElementChild;
-            }
+                            return buttonContainer.firstElementChild;
+                        }
 
             // Инициализация данных табов из DOM
             function initializeTabsData() {
               const allTabElements = allTabsContainer.querySelectorAll('.all-tab-item');
-              allTabsData = Array.from(allTabElements).map(el => ({
-                name: el.getAttribute('data-tab-name'),
-                href: el.getAttribute('data-tab-href'),
-                isActive: el.getAttribute('data-is-active') === 'true',
-                element: el // Сохраняем оригинальный элемент
-              }));
-            }
-
-            // Расчет максимального количества табов, помещающихся в видимый ряд
-            function calculateVisibleTabsCount() {
-              const containerWidth = visibleTabsRow.offsetWidth;
-              if (containerWidth <= 0) return MIN_VISIBLE_TABS;
-
-              // измеряем ВСЕ табы
-              const widths = allTabsData.map(t => {
-                const clone = t.element.cloneNode(true);
-                clone.style.visibility = 'hidden';
-                clone.style.position = 'absolute';
-                clone.classList.remove('flex-1');
-                document.body.appendChild(clone);
-                const w = clone.offsetWidth;
-                document.body.removeChild(clone);
-                return w;
-              });
-
-              let used = SHOW_MORE_BTN_WIDTH; // сразу учитываем кнопку
-              let count = 0;
-
-              for (let w of widths) {
-                if (used + w > containerWidth) break;
-                used += w + TAB_GAP;
-                count++;
-              }
-
-              --count;
-
-              return Math.max(MIN_VISIBLE_TABS, count);
-            }
-
-
-            // Обновление отображения табов на основе currentVisibleCount и isExpanded
-            function updateTabsDisplay() {
-              visibleTabsRow.innerHTML = ''; // Очищаем видимый ряд
-              hiddenTabsContainer.innerHTML = ''; // Очищаем скрытый контейнер
-
-              const totalTabs = allTabsData.length;
-
-              if (totalTabs === 0) {
-                // Если нет табов, просто убедимся, что кнопка скрыта
-                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
-                if (existingBtn) {
-                  existingBtn.remove();
+              allTabsData = Array.from(allTabElements).map(el => {
+                const tabId = el.getAttribute('data-tab-id');
+                const groupId = el.getAttribute('data-group-id');
+                const wasSelected = el.getAttribute('data-is-selected') === 'true';
+                
+                // Если таб был выбран изначально, добавляем его в selectedTabs
+                if (wasSelected && !selectedTabs.has(tabId)) {
+                  selectedTabs.add(tabId);
                 }
-                hiddenWrapper.classList.add("max-h-0", "opacity-0");
-                hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                
+                return {
+                  name: el.getAttribute('data-tab-name'),
+                  href: el.getAttribute('data-tab-href'),
+                  id: tabId,
+                  groupId: groupId,
+                  isSelected: selectedTabs.has(tabId),
+                  element: el // Сохраняем оригинальный элемент
+                };
+              });
+              
+              // Сохраняем выбранные табы
+              saveSelectedTabs();
+            }
+
+                        // Сохранение выбранных табов в localStorage
+                        function saveSelectedTabs() {
+                            localStorage.setItem("selectedTabs", JSON.stringify(Array.from(selectedTabs)));
+                        }
+
+                        // Обновление стилей таба в зависимости от состояния выбора
+                        function updateTabStyles(tabElement, isSelected) {
+                            if (isSelected) {
+                                tabElement.classList.remove("bg-white", "border-gray-300", "text-gray-800", "hover:bg-gray-50");
+                                tabElement.classList.add("bg-blue-600", "text-white", "border-blue-600", "font-medium");
+                            } else {
+                                tabElement.classList.remove("bg-blue-600", "text-white", "border-blue-600", "font-medium");
+                                tabElement.classList.add("bg-white", "border-gray-300", "text-gray-800", "hover:bg-gray-50");
+                            }
+                        }
+
+            // Формирование параметров фильтрации из выбранных табов
+            function buildFilterParams() {
+              const filterParams = {};
+              
+              // Группируем выбранные табы по group_id
+              allTabsData.forEach(tab => {
+                if (selectedTabs.has(tab.id)) {
+                  if (!filterParams[tab.groupId]) {
+                    filterParams[tab.groupId] = [];
+                  }
+                  filterParams[tab.groupId].push(tab.id);
+                }
+              });
+              
+              return filterParams;
+            }
+
+            // Отправка AJAX запроса для фильтрации
+            function sendFilterRequest() {
+              if (!categoryUrl) {
+                console.warn("URL категории не найден");
                 return;
               }
 
-              const visibleCount = Math.min(currentVisibleCount, totalTabs);
-              const needsMoreButton = totalTabs > visibleCount;
-
-              // Заполняем видимый ряд табами
-              for (let i = 0; i < visibleCount; i++) {
-                const tabData = allTabsData[i];
-                const clone = tabData.element.cloneNode(true); // Клонируем элемент
-                visibleTabsRow.appendChild(clone);
-              }
-
-              // Создаем и добавляем кнопку "Ещё/Свернуть" в видимый ряд, если нужно
-              if (needsMoreButton) {
-                const showMoreBtn = createShowMoreButton();
-                visibleTabsRow.appendChild(showMoreBtn);
-
-                // Управляем состоянием кнопки и скрытого блока
-                if (isExpanded) {
-                  hiddenWrapper.classList.remove("max-h-0", "opacity-0");
-                  hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100"); // max-h-[1000px] или другое значение
-                  document.getElementById("btnText").textContent = "Скрыть";
-                  showMoreBtn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
-                  showMoreBtn.classList.add("bg-gray-600", "hover:bg-gray-700");
-                  document.getElementById("btnIcon").classList.add("rotate-180");
+              const filterParams = buildFilterParams();
+              
+              // Если нет выбранных табов, отправляем запрос на базовый URL категории
+              if (Object.keys(filterParams).length === 0) {
+                // Сбрасываем фильтры - отправляем запрос без параметров f
+                let url = categoryUrl;
+                const params = [];
+                params.push('AJAX_CALL=Y');
+                params.push('get=catalog');
+                params.push('set_filter=Y');
+                
+                if (url.indexOf('?') < 0) {
+                  url = url + '?' + params.join('&');
                 } else {
-                  hiddenWrapper.classList.add("max-h-0", "opacity-0");
-                  hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
-                  document.getElementById("btnText").textContent = "Ещё";
-                  showMoreBtn.classList.remove("bg-gray-600", "hover:bg-gray-700");
-                  showMoreBtn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
-                  document.getElementById("btnIcon").classList.remove("rotate-180");
+                  url = url + '&' + params.join('&');
                 }
-
-                // Добавляем обработчик клика к новой кнопке
-                showMoreBtn.addEventListener("click", () => {
-                  isExpanded = !isExpanded; // Переключаем состояние
-                  updateTabsDisplay(); // Обновляем отображение
-                  localStorage.setItem("tabsExpanded", isExpanded.toString()); // Сохраняем состояние
+                
+                sendAjaxRequest(url);
+                return;
+              }
+              
+              // Формируем URL с параметрами фильтрации
+              let url = categoryUrl;
+              const params = [];
+              
+              // Добавляем параметры фильтров f[group_id][]
+              for (const groupId in filterParams) {
+                filterParams[groupId].forEach(pageId => {
+                  params.push(`f[${groupId}][]=${pageId}`);
                 });
-
+              }
+              
+              // Добавляем параметры AJAX запроса
+              params.push('AJAX_CALL=Y');
+              params.push('get=catalog');
+              params.push('set_filter=Y');
+              
+              if (url.indexOf('?') < 0) {
+                url = url + '?' + params.join('&');
               } else {
-                // Если кнопка не нужна, убедимся, что она удалена из видимого ряда
-                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
-                if (existingBtn) {
-                  existingBtn.remove();
-                }
-                // Убедимся, что скрытый блок скрыт, если кнопка не нужна
-                hiddenWrapper.classList.add("max-h-0", "opacity-0");
-                hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                url = url + '&' + params.join('&');
               }
 
-              // Заполняем скрытый контейнер оставшимися табами
-              for (let i = visibleCount; i < totalTabs; i++) {
-                const tabData = allTabsData[i];
-                const clone = tabData.element.cloneNode(true); // Клонируем элемент
-                hiddenTabsContainer.appendChild(clone);
+              sendAjaxRequest(url);
+            }
+
+            // Функция отправки AJAX запроса
+            function sendAjaxRequest(url) {
+              // Отправляем AJAX запрос аналогично RSGoPro_FilterAjax
+              if (typeof BX !== 'undefined' && BX.ajax) {
+                // Показываем индикатор загрузки (если функция доступна)
+                if (typeof RSGoPro_Area2Darken === 'function') {
+                  const catalogSection = document.querySelector('section');
+                  if (catalogSection) {
+                    RSGoPro_Area2Darken($(catalogSection), 'animashka');
+                  }
+                }
+                if (typeof RSGoPro_BeforeSend === 'function') {
+                  RSGoPro_BeforeSend('disable');
+                }
+
+                BX.ajax({
+                  url: url,
+                  method: 'GET',
+                  dataType: 'html',
+                  scriptsRunFirst: false,
+                  emulateOnload: false,
+                  start: true,
+                  cache: false,
+                  onsuccess: function(data) {
+                    // Находим контейнер каталога в ответе
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data;
+                    
+                    // Ищем контейнер с товарами (может быть #catalogContent или .grid)
+                    const catalogContent = document.getElementById('catalogContent');
+                    const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
+                    
+                    if (newContent && catalogContent) {
+                      catalogContent.innerHTML = newContent.innerHTML;
+                      
+                      // Перезапускаем скрипты, если нужно
+                      if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
+                        RSGoPro_FilterOnDocumentReady();
+                      }
+                      if (typeof RSGoPro_Area2Darken === 'function') {
+                        const catalogSection = document.querySelector('section');
+                        if (catalogSection) {
+                          RSGoPro_Area2Darken($(catalogSection));
+                        }
+                      }
+                      if (typeof RSGoPro_BeforeSend === 'function') {
+                        RSGoPro_BeforeSend();
+                      }
+                      
+                      // Перезагружаем скрипты материалов, если они есть
+                      if (typeof oMaterials !== 'undefined' && typeof AJAX !== 'undefined') {
+                        const materialsScript = tempDiv.querySelector('script');
+                        if (materialsScript && materialsScript.textContent.includes('oMaterials.tree')) {
+                          try {
+                            eval(materialsScript.textContent);
+                          } catch (e) {
+                            console.warn('Ошибка при выполнении скрипта материалов:', e);
+                          }
+                        }
+                      }
+                    }
+                  },
+                  onfailure: function() {
+                    console.warn('FILTER -> ajax load failed');
+                    if (typeof RSGoPro_Area2Darken === 'function') {
+                      const catalogSection = document.querySelector('section');
+                      if (catalogSection) {
+                        RSGoPro_Area2Darken($(catalogSection));
+                      }
+                    }
+                    if (typeof RSGoPro_BeforeSend === 'function') {
+                      RSGoPro_BeforeSend();
+                    }
+                    if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
+                      RSGoPro_FilterOnDocumentReady();
+                    }
+                  }
+                });
+              } else {
+                // Fallback: обычный fetch, если BX.ajax недоступен
+                fetch(url)
+                  .then(response => response.text())
+                  .then(html => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
+                    const catalogContent = document.getElementById('catalogContent');
+                    if (newContent && catalogContent) {
+                      catalogContent.innerHTML = newContent.innerHTML;
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Ошибка при загрузке фильтров:', error);
+                  });
               }
             }
 
-            // Обработчик изменения размера окна
-            function handleResize() {
-              // Используем setTimeout, чтобы дать браузеру время обновить размеры элементов
-              setTimeout(() => {
-                const newVisibleCount = calculateVisibleTabsCount();
-                if (newVisibleCount !== currentVisibleCount) {
-                  currentVisibleCount = newVisibleCount;
-                  updateTabsDisplay();
-                }
-              }, 10); // Небольшая задержка для стабильности
+            // Обработчик клика по табу
+            function handleTabClick(tabData, tabElement) {
+              const isCurrentlySelected = selectedTabs.has(tabData.id);
+              
+              if (isCurrentlySelected) {
+                // Снимаем выбор
+                selectedTabs.delete(tabData.id);
+                tabData.isSelected = false;
+              } else {
+                // Добавляем выбор
+                selectedTabs.add(tabData.id);
+                tabData.isSelected = true;
+              }
+              
+              // Обновляем стили
+              updateTabStyles(tabElement, tabData.isSelected);
+              
+              // Сохраняем состояние
+              saveSelectedTabs();
+              
+              // Обновляем все клоны этого таба
+              updateAllTabClones(tabData.id, tabData.isSelected);
+              
+              // Отправляем запрос на фильтрацию с задержкой
+              if (filterTimeout) {
+                clearTimeout(filterTimeout);
+              }
+              filterTimeout = setTimeout(() => {
+                sendFilterRequest();
+              }, FILTER_DELAY);
             }
 
-            // --- Инициализация ---
-            initializeTabsData();
-            // Восстановливаем состояние из localStorage
-            if (isExpanded && allTabsData.length > currentVisibleCount) {
-              // Если сохранено состояние "развернуто", и есть табы для скрытия
-              // оставляем isExpanded = true, но пересчитаем количество видимых табов при первом рендере
-            }
-            updateTabsDisplay(); // Первичный рендер
-            handleResize(); // Рассчитать начальное количество табов после отображения
+                        // Обновление всех клонов таба (в видимом и скрытом контейнерах)
+                        function updateAllTabClones(tabId, isSelected) {
+                            const originalElement = allTabsContainer.querySelector(`[data-tab-id="${tabId}"]`);
+                            const allClones = document.querySelectorAll(`[data-tab-id="${tabId}"]`);
 
-            // --- Слушатели событий ---
-            window.addEventListener('resize', handleResize);
+                            allClones.forEach(clone => {
+                                // Обновляем все клоны, включая оригинал (если он виден)
+                                updateTabStyles(clone, isSelected);
+                            });
 
-          });
-        </script>
+                            // Обновляем также оригинальный элемент в allTabsContainer
+                            if (originalElement) {
+                                updateTabStyles(originalElement, isSelected);
+                            }
+                        }
 
-        <?php endif; ?>
+                        // Расчет максимального количества табов, помещающихся в видимый ряд
+                        function calculateVisibleTabsCount() {
+                            const containerWidth = visibleTabsRow.offsetWidth;
+                            if (containerWidth <= 0) return MIN_VISIBLE_TABS;
 
-        <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
-          <?php if($pageWithSeries) { ?>
-          <?php if(count($series)) { ?>
-          <?php foreach($series as $sn =>
-          $s) { ?>
-          <?php include(_ROOT . Catalog_Series::$tpl)?>
-          <?php } ?>
-          <?php } else { ?>
-          <?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
-          <?php } ?>
-          <?php } else { ?>
-          <?php if(count($items)) { ?>
-          <?php echo CssCopmress::load('series')?>
-          <?php echo JsCopmress::load('series')?>
+                            // измеряем ВСЕ табы
+                            const widths = allTabsData.map(t => {
+                                const clone = t.element.cloneNode(true);
+                                clone.style.visibility = 'hidden';
+                                clone.style.position = 'absolute';
+                                clone.classList.remove('flex-1');
+                                document.body.appendChild(clone);
+                                const w = clone.offsetWidth;
+                                document.body.removeChild(clone);
+                                return w;
+                            });
 
-          <script>
-            oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
-          </script>
-          <?php foreach($items as $in =>
-          $i) { ?>
-          <?php
+                            let used = SHOW_MORE_BTN_WIDTH; // сразу учитываем кнопку
+                            let count = 0;
+
+                            for (let w of widths) {
+                                if (used + w > containerWidth) break;
+                                used += w + TAB_GAP;
+                                count++;
+                            }
+
+                            --count;
+
+                            return Math.max(MIN_VISIBLE_TABS, count);
+                        }
+
+
+                        // Обновление отображения табов на основе currentVisibleCount и isExpanded
+                        function updateTabsDisplay() {
+                            visibleTabsRow.innerHTML = ''; // Очищаем видимый ряд
+                            hiddenTabsContainer.innerHTML = ''; // Очищаем скрытый контейнер
+
+                            const totalTabs = allTabsData.length;
+
+                            if (totalTabs === 0) {
+                                // Если нет табов, просто убедимся, что кнопка скрыта
+                                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
+                                if (existingBtn) {
+                                    existingBtn.remove();
+                                }
+                                hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                                hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                                return;
+                            }
+
+                            const visibleCount = Math.min(currentVisibleCount, totalTabs);
+                            const needsMoreButton = totalTabs > visibleCount;
+
+                            // Заполняем видимый ряд табами
+                            for (let i = 0; i < visibleCount; i++) {
+                                const tabData = allTabsData[i];
+                                const clone = tabData.element.cloneNode(true); // Клонируем элемент
+
+                                // Обновляем состояние выбора из selectedTabs
+                                tabData.isSelected = selectedTabs.has(tabData.id);
+                                updateTabStyles(clone, tabData.isSelected);
+
+                                // Добавляем обработчик клика
+                                clone.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    handleTabClick(tabData, clone);
+                                });
+
+                                visibleTabsRow.appendChild(clone);
+                            }
+
+                            // Создаем и добавляем кнопку "Ещё/Свернуть" в видимый ряд, если нужно
+                            if (needsMoreButton) {
+                                const showMoreBtn = createShowMoreButton();
+                                visibleTabsRow.appendChild(showMoreBtn);
+
+                                // Управляем состоянием кнопки и скрытого блока
+                                if (isExpanded) {
+                                    hiddenWrapper.classList.remove("max-h-0", "opacity-0");
+                                    hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100"); // max-h-[1000px] или другое значение
+                                    document.getElementById("btnText").textContent = "Скрыть";
+                                    showMoreBtn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    showMoreBtn.classList.add("bg-gray-600", "hover:bg-gray-700");
+                                    document.getElementById("btnIcon").classList.add("rotate-180");
+                                } else {
+                                    hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                                    hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                                    document.getElementById("btnText").textContent = "Ещё";
+                                    showMoreBtn.classList.remove("bg-gray-600", "hover:bg-gray-700");
+                                    showMoreBtn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    document.getElementById("btnIcon").classList.remove("rotate-180");
+                                }
+
+                                // Добавляем обработчик клика к новой кнопке
+                                showMoreBtn.addEventListener("click", () => {
+                                    isExpanded = !isExpanded; // Переключаем состояние
+                                    updateTabsDisplay(); // Обновляем отображение
+                                    localStorage.setItem("tabsExpanded", isExpanded.toString()); // Сохраняем состояние
+                                });
+
+                            } else {
+                                // Если кнопка не нужна, убедимся, что она удалена из видимого ряда
+                                const existingBtn = visibleTabsRow.querySelector('#showMoreBtn');
+                                if (existingBtn) {
+                                    existingBtn.remove();
+                                }
+                                // Убедимся, что скрытый блок скрыт, если кнопка не нужна
+                                hiddenWrapper.classList.add("max-h-0", "opacity-0");
+                                hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
+                            }
+
+                            // Заполняем скрытый контейнер оставшимися табами
+                            for (let i = visibleCount; i < totalTabs; i++) {
+                                const tabData = allTabsData[i];
+                                const clone = tabData.element.cloneNode(true); // Клонируем элемент
+
+                                // Обновляем состояние выбора из selectedTabs
+                                tabData.isSelected = selectedTabs.has(tabData.id);
+                                updateTabStyles(clone, tabData.isSelected);
+
+                                // Добавляем обработчик клика
+                                clone.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    handleTabClick(tabData, clone);
+                                });
+
+                                hiddenTabsContainer.appendChild(clone);
+                            }
+                        }
+
+                        // Обработчик изменения размера окна
+                        function handleResize() {
+                            // Используем setTimeout, чтобы дать браузеру время обновить размеры элементов
+                            setTimeout(() => {
+                                const newVisibleCount = calculateVisibleTabsCount();
+                                if (newVisibleCount !== currentVisibleCount) {
+                                    currentVisibleCount = newVisibleCount;
+                                    updateTabsDisplay();
+                                }
+                            }, 10); // Небольшая задержка для стабильности
+                        }
+
+                        // --- Инициализация ---
+                        initializeTabsData();
+
+                        // Применяем стили к оригинальным элементам на основе selectedTabs
+                        allTabsData.forEach(tabData => {
+                            updateTabStyles(tabData.element, tabData.isSelected);
+                        });
+
+                        // Восстановливаем состояние из localStorage
+                        if (isExpanded && allTabsData.length > currentVisibleCount) {
+                            // Если сохранено состояние "развернуто", и есть табы для скрытия
+                            // оставляем isExpanded = true, но пересчитаем количество видимых табов при первом рендере
+                        }
+                        updateTabsDisplay(); // Первичный рендер
+                        handleResize(); // Рассчитать начальное количество табов после отображения
+
+                        // --- Слушатели событий ---
+                        window.addEventListener('resize', handleResize);
+
+                    });
+                </script>
+
+                <?php endif; ?>
+
+                <div id="catalogContent" class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
+                    <?php if($pageWithSeries) { ?>
+                    <?php if(count($series)) { ?>
+                    <?php foreach($series as $sn =>
+                    $s) { ?>
+                    <?php include(_ROOT . Catalog_Series::$tpl)?>
+                    <?php } ?>
+                    <?php } else { ?>
+                    <?php echo Pages::msgErr('По вашему запросу серии мебели не найдены.')?>
+                    <?php } ?>
+                    <?php } else { ?>
+                    <?php if(count($items)) { ?>
+                    <?php echo CssCopmress::load('series')?>
+                    <?php echo JsCopmress::load('series')?>
+
+                    <script>
+                        oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
+                    </script>
+                    <?php foreach($items as $in =>
+                    $i) { ?>
+                    <?php
                                     $seriesInf = array(
                                         'id'            =>
-          $i['series_id'], 'category_id' => $i['category_id'], 'url' =>
-          $i['s_url'] ); ?>
-          <?php include(Config::path('skins') . '/html/Components/items_card.htm'); ?>
-          <?php } ?>
+                    $i['series_id'], 'category_id' => $i['category_id'], 'url' =>
+                    $i['s_url'] ); ?>
+                    <?php include(Config::path('skins') . '/html/Components/items_card.htm'); ?>
+                    <?php } ?>
 
-          <?php } else { ?>
-          <?php echo Pages::msgErr('По вашему запросу товары не найдены.')?>
-          <?php } ?>
-          <?php } ?>
-        </div>
+                    <?php } else { ?>
+                    <?php echo Pages::msgErr('По вашему запросу товары не найдены.')?>
+                    <?php } ?>
+                    <?php } ?>
+                </div>
 
-        <div class="flex w-full justify-center items-center flex-col mt-8">
-          <?php echo $toggle; ?>
-        </div>
-      </div>
-    </section>
+                <div class="flex w-full justify-center items-center flex-col mt-8">
+                    <?php echo $toggle; ?>
+                </div>
+            </div>
+        </section>
 
-    <section>
-      <!-- Наши преимущества -->
-      <h2 class="text-xl xl:text-2xl font-bold mt-16 mb-8">
-        Наши преимущества
-      </h2>
+        <section>
+            <!-- Наши преимущества -->
+            <h2 class="text-xl xl:text-2xl font-bold mt-16 mb-8">
+                Наши преимущества
+            </h2>
 
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium"
-      >
-        <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-          <div
-            class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-          >
-            <img
-              src="/images/category/sofa.png"
-              class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
-              alt=""
-            />
-          </div>
-          <p class="text-base xl:text-lg font-medium">
-            Эксклюзивный дизайн:
-            <span class="block text-sm xl:text-lg font-normal"
-            >Наши дизайнерские коллекции мебели для кабинета руководителя
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium"
+            >
+                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
+                    <div
+                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
+                    >
+                        <img
+                            src="/images/category/sofa.png"
+                            class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
+                            alt=""
+                        />
+                    </div>
+                    <p class="text-base xl:text-lg font-medium">
+                        Эксклюзивный дизайн:
+                        <span class="block text-sm xl:text-lg font-normal"
+                        >Наши дизайнерские коллекции мебели для кабинета руководителя
               эконом класса представлены в стильном сером, лофт и других
               современных оттенках. Создайте стильное рабочее
               пространство.</span
-            >
-          </p>
-        </div>
-        <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-          <div
-            class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-          >
-            <img
-              src="/images/category/ruler.png"
-              class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
-              alt=""
-            />
-          </div>
-          <p class="text-base xl:text-lg font-medium">
-            Функциональные решения:
-            <span class="block text-sm xl:text-lg font-normal"
-            >Компьютерные столы, перегородки, металлические сейфы и
+                        >
+                    </p>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
+                    <div
+                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
+                    >
+                        <img
+                            src="/images/category/ruler.png"
+                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            alt=""
+                        />
+                    </div>
+                    <p class="text-base xl:text-lg font-medium">
+                        Функциональные решения:
+                        <span class="block text-sm xl:text-lg font-normal"
+                        >Компьютерные столы, перегородки, металлические сейфы и
               эргономичные вешалки – наши мебельные решения предлагают высший
               уровень функциональности.</span
-            >
-          </p>
-        </div>
-        <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-          <div
-            class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-          >
-            <img
-              src="/images/category/shelves.png"
-              class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
-              alt=""
-            />
-          </div>
-          <p class="text-base xl:text-lg font-medium">
-            Мобильные и модульные системы: 
-            <span class="block text-sm xl:text-lg font-normal"
-            >Модульные стеллажи, перегородки и мобильные секции обеспечивают
+                        >
+                    </p>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
+                    <div
+                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
+                    >
+                        <img
+                            src="/images/category/shelves.png"
+                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            alt=""
+                        />
+                    </div>
+                    <p class="text-base xl:text-lg font-medium">
+                        Мобильные и модульные системы: 
+                        <span class="block text-sm xl:text-lg font-normal"
+                        >Модульные стеллажи, перегородки и мобильные секции обеспечивают
               гибкость в создании уникального офисного пространства.</span
-            >
-          </p>
-        </div>
-        <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-          <div
-            class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-          >
-            <img
-              src="/images/category/time.png"
-              class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
-              alt=""
-            />
-          </div>
-          <p class="text-base xl:text-lg font-medium">
-            Долгий срок службы:
-            <span class="block text-sm xl:text-lg font-normal"
-            >Использование массива дерева и металла гарантирует долгий срок
+                        >
+                    </p>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
+                    <div
+                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
+                    >
+                        <img
+                            src="/images/category/time.png"
+                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            alt=""
+                        />
+                    </div>
+                    <p class="text-base xl:text-lg font-medium">
+                        Долгий срок службы:
+                        <span class="block text-sm xl:text-lg font-normal"
+                        >Использование массива дерева и металла гарантирует долгий срок
               службы мебели. Гарантия качества подтверждена отзывами наших
               клиентов.</span
-            >
-          </p>
-        </div>
-      </div>
-    </section>
+                        >
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <section class="mt-16">
-      <?php if(!Pages::isMobile() && $catInf && trim($catInf['text']) !== '') { ?>
-      <div id="catalog-page">
-        <?php if($tagPageInfo['text']) { ?>
-        <?php echo $tagPageInfo['text']; ?>
-        <?php } else { ?>
-        <?php echo $catInf['text']; ?>
-        <?php } ?>
+        <section class="mt-16">
+            <?php if(!Pages::isMobile() && $catInf && trim($catInf['text']) !== '') { ?>
+            <div id="catalog-page">
+                <?php if($tagPageInfo['text']) { ?>
+                <?php echo $tagPageInfo['text']; ?>
+                <?php } else { ?>
+                <?php echo $catInf['text']; ?>
+                <?php } ?>
 
-        <div class="cl"></div>
-      </div>
-      <style>
-        /* Стили только для контента внутри #catalog-page */
-        #catalog-page h1,
-        #catalog-page h2,
-        #catalog-page h3 {
-          font-size: 1.5rem !important;        /* text-lg */
-          font-weight: 600;           /* font-semibold */
-          margin-top: 1rem;           /* mt-4 */
-          margin-bottom: 0.5rem;      /* mb-2 */
-          line-height: 1.25 !important;
-        }
+                <div class="cl"></div>
+            </div>
+            <style>
+                /* Стили только для контента внутри #catalog-page */
+                #catalog-page h1,
+                #catalog-page h2,
+                #catalog-page h3 {
+                    font-size: 1.5rem !important;        /* text-lg */
+                    font-weight: 600;           /* font-semibold */
+                    margin-top: 1rem;           /* mt-4 */
+                    margin-bottom: 0.5rem;      /* mb-2 */
+                    line-height: 1.25 !important;
+                }
 
-        #catalog-page h1 {
-          font-size: 2rem !important;
-        }
+                #catalog-page h1 {
+                    font-size: 2rem !important;
+                }
 
-        #catalog-page p {
-          font-size: 1rem;            /* text-base */
-          line-height: 1.5;           /* leading-6 */
-          margin-bottom: 0.75rem;     /* mb-3 */
-          margin-top: 0;
-        }
+                #catalog-page p {
+                    font-size: 1rem;            /* text-base */
+                    line-height: 1.5;           /* leading-6 */
+                    margin-bottom: 0.75rem;     /* mb-3 */
+                    margin-top: 0;
+                }
 
-        #catalog-page ul,
-        #catalog-page ol {
-          list-style-type: disc;
-          padding-left: 1.25rem;      /* pl-5 */
-          margin-bottom: 0.75rem;     /* mb-3 */
-          margin-top: 0;
-        }
+                #catalog-page ul,
+                #catalog-page ol {
+                    list-style-type: disc;
+                    padding-left: 1.25rem;      /* pl-5 */
+                    margin-bottom: 0.75rem;     /* mb-3 */
+                    margin-top: 0;
+                }
 
-        #catalog-page ul ul,
-        #catalog-page ol ol {
-          list-style-type: circle;
-          padding-left: 1rem;         /* pl-4 */
-          margin-bottom: 0.5rem;
-        }
+                #catalog-page ul ul,
+                #catalog-page ol ol {
+                    list-style-type: circle;
+                    padding-left: 1rem;         /* pl-4 */
+                    margin-bottom: 0.5rem;
+                }
 
-        #catalog-page li {
-          font-size: 1rem;
-          margin-bottom: 0.5rem;     /* space-y-1 */
-          line-height: 1.5;
-        }
+                #catalog-page li {
+                    font-size: 1rem;
+                    margin-bottom: 0.5rem;     /* space-y-1 */
+                    line-height: 1.5;
+                }
 
-        #catalog-page a {
-          color: #2563bb;
-          text-decoration: underline;
-        }
+                #catalog-page a {
+                    color: #2563bb;
+                    text-decoration: underline;
+                }
 
-        #catalog-page a:hover {
-          color: #1e40af;             /* text-blue-800 */
-        }
+                #catalog-page a:hover {
+                    color: #1e40af;             /* text-blue-800 */
+                }
 
-        #catalog-page strong,
-        #catalog-page b {
-          font-weight: 700;           /* font-bold */
-        }
+                #catalog-page strong,
+                #catalog-page b {
+                    font-weight: 700;           /* font-bold */
+                }
 
-        #catalog-page em,
-        #catalog-page i {
-          font-style: italic;
-        }
+                #catalog-page em,
+                #catalog-page i {
+                    font-style: italic;
+                }
 
-        /* Убираем лишние отступы у первого и последнего элемента */
-        #catalog-page > p > *:first-child,
-        #catalog-page > p > :first-child {
-          margin-top: 0 !important;
-        }
+                /* Убираем лишние отступы у первого и последнего элемента */
+                #catalog-page > p > *:first-child,
+                #catalog-page > p > :first-child {
+                    margin-top: 0 !important;
+                }
 
-        #catalog-page > p > *:last-child,
-        #catalog-page > p > :last-child {
-          margin-bottom: 0 !important;
-        }
-      </style>
-      <?php } ?>
-    </section>
-  </div>
+                #catalog-page > p > *:last-child,
+                #catalog-page > p > :last-child {
+                    margin-bottom: 0 !important;
+                }
+            </style>
+            <?php } ?>
+        </section>
+    </div>
 </div>
