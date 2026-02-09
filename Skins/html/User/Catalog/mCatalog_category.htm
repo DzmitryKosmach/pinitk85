@@ -357,30 +357,41 @@
                     
                     if (newContent && catalogContent) {
                       catalogContent.innerHTML = newContent.innerHTML;
+                    }
+                    
+                    // Обновляем пагинацию
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
+                    
+                    if (newPagination && paginationContainer) {
+                      paginationContainer.innerHTML = newPagination.innerHTML;
                       
-                      // Перезапускаем скрипты, если нужно
-                      if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
-                        RSGoPro_FilterOnDocumentReady();
+                      // Добавляем обработчики для новых ссылок пагинации
+                      attachPaginationHandlers();
+                    }
+                    
+                    // Перезапускаем скрипты, если нужно
+                    if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
+                      RSGoPro_FilterOnDocumentReady();
+                    }
+                    if (typeof RSGoPro_Area2Darken === 'function') {
+                      const catalogSection = document.querySelector('section');
+                      if (catalogSection) {
+                        RSGoPro_Area2Darken($(catalogSection));
                       }
-                      if (typeof RSGoPro_Area2Darken === 'function') {
-                        const catalogSection = document.querySelector('section');
-                        if (catalogSection) {
-                          RSGoPro_Area2Darken($(catalogSection));
-                        }
-                      }
-                      if (typeof RSGoPro_BeforeSend === 'function') {
-                        RSGoPro_BeforeSend();
-                      }
-                      
-                      // Перезагружаем скрипты материалов, если они есть
-                      if (typeof oMaterials !== 'undefined' && typeof AJAX !== 'undefined') {
-                        const materialsScript = tempDiv.querySelector('script');
-                        if (materialsScript && materialsScript.textContent.includes('oMaterials.tree')) {
-                          try {
-                            eval(materialsScript.textContent);
-                          } catch (e) {
-                            console.warn('Ошибка при выполнении скрипта материалов:', e);
-                          }
+                    }
+                    if (typeof RSGoPro_BeforeSend === 'function') {
+                      RSGoPro_BeforeSend();
+                    }
+                    
+                    // Перезагружаем скрипты материалов, если они есть
+                    if (typeof oMaterials !== 'undefined' && typeof AJAX !== 'undefined') {
+                      const materialsScript = tempDiv.querySelector('script');
+                      if (materialsScript && materialsScript.textContent.includes('oMaterials.tree')) {
+                        try {
+                          eval(materialsScript.textContent);
+                        } catch (e) {
+                          console.warn('Ошибка при выполнении скрипта материалов:', e);
                         }
                       }
                     }
@@ -413,11 +424,114 @@
                     if (newContent && catalogContent) {
                       catalogContent.innerHTML = newContent.innerHTML;
                     }
+                    
+                    // Обновляем пагинацию
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
+                    if (newPagination && paginationContainer) {
+                      paginationContainer.innerHTML = newPagination.innerHTML;
+                      attachPaginationHandlers();
+                    }
                   })
                   .catch(error => {
                     console.error('Ошибка при загрузке фильтров:', error);
                   });
               }
+            }
+
+            // Функция для добавления обработчиков на ссылки пагинации
+            function attachPaginationHandlers() {
+              const paginationContainer = document.getElementById('paginationContainer');
+              if (!paginationContainer) return;
+              
+              // Находим все ссылки пагинации
+              const paginationLinks = paginationContainer.querySelectorAll('a[href*="page"], a[href*="onpage"]');
+              
+              paginationLinks.forEach(link => {
+                // Удаляем старый обработчик, если есть
+                link.removeEventListener('click', handlePaginationClick);
+                // Добавляем новый обработчик
+                link.addEventListener('click', handlePaginationClick);
+              });
+            }
+
+            // Обработчик клика по ссылкам пагинации
+            function handlePaginationClick(e) {
+              e.preventDefault();
+              
+              const link = e.currentTarget;
+              let href = link.getAttribute('href');
+              
+              if (!href) return;
+              
+              // Парсим параметры из href
+              let page = null;
+              let onpage = null;
+              
+              // Если ссылка начинается с ?, это query string
+              if (href.startsWith('?')) {
+                const params = new URLSearchParams(href.substring(1));
+                page = params.get('page');
+                onpage = params.get('onpage');
+              } else {
+                // Пробуем распарсить как полный URL или относительный путь
+                try {
+                  const url = new URL(href, window.location.href);
+                  const params = new URLSearchParams(url.search);
+                  page = params.get('page');
+                  onpage = params.get('onpage');
+                  
+                  // Также проверяем путь на наличие /page_X/
+                  const pathMatch = url.pathname.match(/\/page[_-](\d+)\//);
+                  if (pathMatch && !page) {
+                    page = pathMatch[1];
+                  }
+                  
+                  // Проверяем на /page_all/
+                  if (url.pathname.includes('/page_all/') && !onpage) {
+                    onpage = '-1';
+                  }
+                } catch (e) {
+                  // Если не удалось распарсить, пробуем извлечь из строки напрямую
+                  const pageMatch = href.match(/[?&]page=(\d+)/);
+                  const onpageMatch = href.match(/[?&]onpage=(-?\d+)/);
+                  if (pageMatch) page = pageMatch[1];
+                  if (onpageMatch) onpage = onpageMatch[1];
+                }
+              }
+              
+              // Формируем URL с учетом выбранных табов
+              const filterParams = buildFilterParams();
+              let requestUrl = categoryUrl;
+              const requestParams = [];
+              
+              // Добавляем параметры фильтров f[group_id][]
+              for (const groupId in filterParams) {
+                filterParams[groupId].forEach(pageId => {
+                  requestParams.push(`f[${groupId}][]=${pageId}`);
+                });
+              }
+              
+              // Добавляем параметр страницы или onpage
+              if (page) {
+                requestParams.push(`page=${page}`);
+              } else if (onpage) {
+                requestParams.push(`onpage=${onpage}`);
+              }
+              
+              // Добавляем параметры AJAX запроса
+              requestParams.push('AJAX_CALL=Y');
+              requestParams.push('get=catalog');
+              requestParams.push('set_filter=Y');
+              
+              if (requestUrl.indexOf('?') < 0) {
+                requestUrl = requestUrl + '?' + requestParams.join('&');
+              } else {
+                requestUrl = requestUrl + '&' + requestParams.join('&');
+              }
+              
+              // Отправляем AJAX запрос
+              sendAjaxRequest(requestUrl);
             }
 
             // Обработчик клика по табу
@@ -625,6 +739,9 @@
                         }
                         updateTabsDisplay(); // Первичный рендер
                         handleResize(); // Рассчитать начальное количество табов после отображения
+                        
+                        // Добавляем обработчики для пагинации при инициализации
+                        attachPaginationHandlers();
 
                         // --- Слушатели событий ---
                         window.addEventListener('resize', handleResize);
@@ -668,7 +785,7 @@
                     <?php } ?>
                 </div>
 
-                <div class="flex w-full justify-center items-center flex-col mt-8">
+                <div id="paginationContainer" class="flex w-full justify-center items-center flex-col mt-8">
                     <?php echo $toggle; ?>
                 </div>
             </div>
