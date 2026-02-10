@@ -659,100 +659,38 @@
             <div class="slider overflow-hidden">
                 <div class="slider-track flex w-full transition-transform duration-300 space-x-4 py-6">
 
-                    <!-- Отзыв -->
-                    <div class="card flex-none bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[220px]">
-                        <p class="text-sm text-gray-500 mb-2">17.10.24</p>
-                        <p class="text-gray-800 text-sm md:text-base mb-4 overflow-hidden text-ellipsis line-clamp-5">
-                            Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной. Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной.
-                        </p>
-                        <div class="flex justify-between items-center mt-auto pt-2">
-                            <span class="font-semibold">Ирина</span>
-                            <div class="flex items-center gap-1 text-yellow-400">
-                                <!-- Звезды -->
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                <span class="text-black text-sm ml-1">5</span>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        $reviews = [
+                            [
+                                'date' => '2024-10-17',
+                    'text' => 'Давно мечтала обновить мебель в ванной, и нашла отличный вариант на Дары мебели! Огромный выбор, глаза разбегаются! Давно мечтала обновить мебель в ванной, и нашла отличный вариант на Дары мебели! Огромный выбор, глаза разбегаются!',
+                    'name' => 'Ирина',
+                    'rate' => 5
+                    ],
+                    [
+                    'date' => '2024-10-15',
+                    'text' => 'Отличный магазин! Быстрая доставка и качественная мебель.',
+                    'name' => 'Анна',
+                    'rate' => 4
+                    ],
+                    [
+                    'date' => '2024-10-10',
+                    'text' => 'Покупала кухонный гарнитур, очень довольна выбором.',
+                    'name' => 'Мария',
+                    'rate' => null  // Звезды не будут показаны
+                    ],
+                    [
+                    'date' => '2024-10-05',
+                    'text' => 'Прекрасный сервис и ассортимент!',
+                    'name' => 'Елена',
+                    'rate' => 5
+                    ]
+                    ];
+                    ?>
 
-                    <!-- Отзыв -->
-                    <div class="card flex-none bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[220px]">
-                        <p class="text-sm text-gray-500  mb-2">17.10.24</p>
-                        <p class="text-gray-800 text-sm md:text-base mb-4 overflow-hidden text-ellipsis line-clamp-5">
-                            Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели!
-                        </p>
-                        <div class="flex justify-between items-center mt-auto pt-2">
-                            <span class="font-semibold">Ирина</span>
-                            <div class="flex items-center gap-1 text-yellow-400">
-                                <!-- Звезды -->
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                <span class="text-black text-sm ml-1">5</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Отзыв -->
-                    <div class="card flex-none bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[220px]">
-                        <p class="text-sm text-gray-500 mb-2">17.10.24</p>
-                        <p class="text-gray-800 text-sm md:text-base mb-4 overflow-hidden text-ellipsis line-clamp-5">
-                            Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной.
-                        </p>
-                        <div class="flex justify-between items-center mt-auto pt-2">
-                            <span class="font-semibold">Ирина</span>
-                            <div class="flex items-center gap-1 text-yellow-400">
-                                <!-- Звезды -->
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                <span class="text-black text-sm ml-1">5</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Отзыв -->
-                    <div class="card flex-none bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[220px]">
-                        <p class="text-sm text-gray-500 mb-2">17.10.24</p>
-                        <p class="text-gray-800 text-sm md:text-base mb-4 overflow-hidden text-ellipsis line-clamp-5">
-                            Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной. Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной.
-                        </p>
-                        <div class="flex justify-between items-center mt-auto pt-2">
-                            <span class="font-semibold">Ирина</span>
-                            <div class="flex items-center gap-1 text-yellow-400">
-                                <!-- Звезды -->
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                <span class="text-black text-sm ml-1">5</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Отзыв -->
-                    <div class="card flex-none bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[220px]">
-                        <p class="text-sm text-gray-500 mb-2">17.10.24</p>
-                        <p class="text-gray-800 text-sm md:text-base mb-4 overflow-hidden text-ellipsis line-clamp-5">
-                            Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной. Давно мечтала обновить мебель в ванной, и нашла отличный вариант
-                            на Дары мебели! Огромный выбор, глаза разбегаются! Нашла именно
-                            то, что искала – красивую и функциональную тумбу с раковиной.
-                        </p>
-                        <div class="flex justify-between items-center mt-auto pt-2">
-                            <span class="font-semibold">Ирина</span>
-                            <div class="flex items-center gap-1 text-yellow-400">
-                                <!-- Звезды -->
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                <span class="text-black text-sm ml-1">5</span>
-                            </div>
-                        </div>
-                    </div>
+                    <?php foreach ($reviews as $review): ?>
+                    <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
+                    <?php endforeach; ?>
 
                 </div>
             </div>
