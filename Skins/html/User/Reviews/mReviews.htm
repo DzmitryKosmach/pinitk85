@@ -1,137 +1,125 @@
-<div class="content-text" style="padding-top: 20px;">
-	<?php if(!$ajaxForm) { ?>
 
-	<?php if(trim($pageInf['header'])) { ?>
-	<h1 class="text-2xl md:text-3xl font-semibold mb-4">
-		<?php echo $pageInf['header']?>
-	</h1>
-	<?php } ?>
-	<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
-	<div class="cl"></div>
-	<?php } ?>
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+    <a href="/" class="hover:text-gray-700 hover:underline">Главная</a>
+    <span class="mx-1">›</span>
+    <span class="uppercase">Отзывы о сайте</span>
+</nav>
 
-	<div class="content-white">
-		<?php if(!$ajaxForm) { ?>
-		<div class="reviews grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-			<?php foreach($reviews as $r) { ?>
-			<div class="reviews-item bg-white rounded-lg shadow p-4 md:p-6 flex gap-4">
-				<?php if($r['_img_ext']) { ?>
-				<div class="photo w-18 h-18 rounded-full bg-gray-200 bg-cover bg-center"
-					style="background-image: url('<?php echo Config::pathRel('images') . Reviews::$imagePath . $r['id']?>_72x72_0.<?php echo $r['_img_ext']?>');">
-				</div>
-				<?php } else { ?>
-				<div class="photo w-18 h-18 rounded-full bg-gray-200"></div>
-				<?php } ?>
-				<div class="flex-1">
-					<div class="name font-semibold text-base md:text-lg text-gray-900">
-						<?php echo $r['name']?>
-						<span class="date ml-2 text-sm text-gray-500">(
-							<?php echo date('d.m.Y', MySQL::fromDate($r['date']))?>)
-						</span>
-					</div>
-					<div class="text text-gray-700 mt-1 leading-relaxed">
-						«
-						<?php echo nl2br($r['text'])?>»
-					</div>
-				</div>
-			</div>
-			<?php } ?>
-		</div>
+<div class="content-text" >
+    <?php if(!$ajaxForm) { ?>
 
-		<div class="mt-6">
-			<?php echo $toggle; ?>
-		</div>
+    <?php if(trim($pageInf['header'])) { ?>
+    <h1 class="text-2xl md:text-3xl font-semibold mb-4">
+        <?php echo $pageInf['header']?>
+    </h1>
+    <?php } ?>
+    <?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text'])?>
+    <div class="cl"></div>
+    <?php } ?>
 
-		<a name="new" class="block mt-10"></a>
-		<h2 class="text-xl md:text-2xl font-semibold mb-4">Написать отзыв</h2>
+    <div class="content-white">
+        <?php if(!$ajaxForm) { ?>
+        <div class="reviews grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <?php foreach($reviews as $review) { ?>
+            <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
+            <?php } ?>
+        </div>
 
-		<div id="form-errors" class="form-errors"></div>
-		<script>
-			onLoad(function () {
-				if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
-					D.location.href = '#new';
-				}
-			});
-		</script>
+        <div class="mt-6">
+            <?php echo $toggle; ?>
+        </div>
 
-		<?php } else { ?>
-		<div id="form-errors" class="form-errors"></div>
-		<?php } ?>
+        <a name="new" class="block mt-10"></a>
+        <h2 class="text-xl md:text-2xl font-semibold mb-4">Написать отзыв</h2>
 
-		<div class="content kdiv">
-			<form action="<?php echo Url::a('reviews') . ($ajaxForm ? '?ajax=1' : '')?>" method="post" class="form kf">
-				<div class="space-y-4">
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
-						<div class="label required ktd">Ваше имя</div>
-						<div class="md:col-span-2 kinp">
-							<input type="text" name="name"
-								class="text ki w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								maxlength="192" msg_maxlen="Имя не должно превышать 192 символа" required
-								msg_required="Вы не ввели ваше имя">
-						</div>
-					</div>
+        <div id="form-errors" class="form-errors"></div>
+        <script>
+            onLoad(function () {
+                if ($$$('form-errors') && $$$('form-errors').style.display != 'none') {
+                    D.location.href = '#new';
+                }
+            });
+        </script>
 
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
-						<div class="label required ktd">E-mail</div>
-						<div class="md:col-span-2 kinp">
-							<input type="email" name="email"
-								class="text ki w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								maxlength="1000" msg_maxlen="E-mail не должен превышать 1000 символов" required
-								msg_required="Вы не ввели ваш E-mail">
-						</div>
-					</div>
+        <?php } else { ?>
+        <div id="form-errors" class="form-errors"></div>
+        <?php } ?>
 
-					<?php if($object === Reviews::OBJ_SERIES) { ?>
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
-						<div class="label required">Ваша оценка</div>
-						<div class="md:col-span-2 rate-radio flex items-center gap-4">
-							<input type="radio" name="rate" id="rate-5" value="5"><label for="rate-5"
-								class="mr-3">&nbsp;</label>
-							<input type="radio" name="rate" id="rate-4" value="4"><label for="rate-4"
-								class="mr-3">&nbsp;</label>
-							<input type="radio" name="rate" id="rate-3" value="3"><label for="rate-3"
-								class="mr-3">&nbsp;</label>
-							<input type="radio" name="rate" id="rate-2" value="2"><label for="rate-2"
-								class="mr-3">&nbsp;</label>
-							<input type="radio" name="rate" id="rate-1" value="1"><label for="rate-1">&nbsp;</label>
-						</div>
-					</div>
-					<?php } ?>
+        <div class="content kdiv">
+            <form action="<?php echo Url::a('reviews') . ($ajaxForm ? '?ajax=1' : '')?>" method="post" class="form kf">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                        <div class="label required ktd">Ваше имя</div>
+                        <div class="md:col-span-2 kinp">
+                            <input type="text" name="name"
+                                   class="text ki w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   maxlength="192" msg_maxlen="Имя не должно превышать 192 символа" required
+                                   msg_required="Вы не ввели ваше имя">
+                        </div>
+                    </div>
 
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
-						<div class="label ktd">Текст отзыва</div>
-						<div class="md:col-span-2 kinp">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                        <div class="label required ktd">E-mail</div>
+                        <div class="md:col-span-2 kinp">
+                            <input type="email" name="email"
+                                   class="text ki w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   maxlength="1000" msg_maxlen="E-mail не должен превышать 1000 символов" required
+                                   msg_required="Вы не ввели ваш E-mail">
+                        </div>
+                    </div>
+
+                    <?php if($object === Reviews::OBJ_SERIES) { ?>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
+                        <div class="label required">Ваша оценка</div>
+                        <div class="md:col-span-2 rate-radio flex items-center gap-4">
+                            <input type="radio" name="rate" id="rate-5" value="5"><label for="rate-5"
+                                                                                         class="mr-3">&nbsp;</label>
+                            <input type="radio" name="rate" id="rate-4" value="4"><label for="rate-4"
+                                                                                         class="mr-3">&nbsp;</label>
+                            <input type="radio" name="rate" id="rate-3" value="3"><label for="rate-3"
+                                                                                         class="mr-3">&nbsp;</label>
+                            <input type="radio" name="rate" id="rate-2" value="2"><label for="rate-2"
+                                                                                         class="mr-3">&nbsp;</label>
+                            <input type="radio" name="rate" id="rate-1" value="1"><label for="rate-1">&nbsp;</label>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
+                        <div class="label ktd">Текст отзыва</div>
+                        <div class="md:col-span-2 kinp">
 							<textarea
-								class="text w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								name="text" id="text" style="height: 120px;width: 100%;" maxlength="5000"
-								msg_maxlen="Текст сообщения не должен превышать 5000 символов"></textarea>
-							<?php if(!$ajaxForm) { ?>
-							<div class="mt-2 text-sm text-gray-500">Осталось знаков: <span id="text-counter">5000</span>
-							</div>
-							<script>
-								charsCounter.add(
-									$$$('text'),
-									$$$('text-counter'),
-									5000
-								);
-							</script>
-							<?php } ?>
-						</div>
-					</div>
+                                class="text w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                name="text" id="text" style="height: 120px;width: 100%;" maxlength="5000"
+                                msg_maxlen="Текст сообщения не должен превышать 5000 символов"></textarea>
+                            <?php if(!$ajaxForm) { ?>
+                            <div class="mt-2 text-sm text-gray-500">Осталось знаков: <span id="text-counter">5000</span>
+                            </div>
+                            <script>
+                                charsCounter.add(
+                                    $$$('text'),
+                                    $$$('text-counter'),
+                                    5000
+                                );
+                            </script>
+                            <?php } ?>
+                        </div>
+                    </div>
 
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
-						<div></div>
-						<div class="md:col-span-2 flex items-center justify-between">
-							<div class="captcha-item" id="captcha_multi_mode-form"></div>
-							<input type="hidden" name="object">
-							<input type="hidden" name="object_id">
-							<button type="submit"
-								class="button button-orange !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition">Отправить
-								отзыв</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
+                        <div></div>
+                        <div class="md:col-span-2 flex items-center justify-between">
+                            <div class="captcha-item" id="captcha_multi_mode-form"></div>
+                            <input type="hidden" name="object">
+                            <input type="hidden" name="object_id">
+                            <button type="submit"
+                                    class="button button-orange !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition">Отправить
+                                отзыв</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
