@@ -1354,15 +1354,15 @@
                     );
                     $formatter->setPattern('d MMMM yyyy');
         ?>
-        <div class="reviews grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div class="reviews grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        <?php  foreach ($comments as $review) { ?>
+            <?php
+                foreach ($comments as $review) {
+                    php include(Config::path('skins') . '/html/Components/review_card.htm');
+                }
+            ?>
 
-        <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
-
-        <?php } ?>
-
-        /div>
+        </div>
         <?php
                 }
                 ?>
