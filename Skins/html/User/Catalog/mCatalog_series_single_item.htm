@@ -1175,24 +1175,43 @@
 
     <script>
         function showTab(tabName) {
+            // Скрыть все вкладки контента
             document.querySelectorAll('.description1 .text').forEach(div => {
                 div.style.display = 'none';
             });
 
+            // Показать выбранную вкладку контента
             const contentTab = document.getElementById('tab-' + tabName);
             if (contentTab) {
                 contentTab.style.display = 'block';
             }
 
+            // Обновить стили кнопок
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600');
                 btn.classList.add('bg-white', 'text-gray-900');
             });
 
+            // Найти активную кнопку
             const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
             if (activeButton) {
                 activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600');
                 activeButton.classList.remove('bg-white');
+            }
+
+            // Если выбрана вкладка "reviews", выполнить плавный скролл к отзывам
+            if (tabName === 'reviews') {
+                const reviewsElement = document.getElementById('reviews');
+                if (reviewsElement) {
+                    // Вычислить смещение с учетом фиксированного шапки или других элементов
+                    const headerOffset = 60; // Вы можете настроить это значение
+
+                    window.scrollTo({
+                        top: headerOffset,
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
                 positionTabSmart(activeButton);
             }
         }
@@ -1336,7 +1355,7 @@
         </section>
     </noindex>
 
-    <div class="detailtabs tabs mt-8">
+    <div id="reviews" class="detailtabs tabs mt-8">
         <div class="headers clearfix flex items-center justify-between">
             <h3 class="text-xl md:text-2xl font-semibold">Отзывы</h3>
         </div>
