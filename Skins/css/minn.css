@@ -1,12 +1,12 @@
 /* Скрыть скроллбар для всей страницы */
-html {
-  -ms-overflow-style: none;  /* IE и Edge */
-  scrollbar-width: none;     /* Firefox */
-}
+/*html {*/
+/*  -ms-overflow-style: none;  !* IE и Edge *!*/
+/*  scrollbar-width: none;     !* Firefox *!*/
+/*}*/
 
-html::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Opera */
-}
+/*html::-webkit-scrollbar {*/
+/*  display: none;             !* Chrome, Safari, Opera *!*/
+/*}*/
 
 .rr{
   padding: 0!important;

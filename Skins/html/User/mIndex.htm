@@ -659,38 +659,11 @@
             <div class="slider overflow-hidden">
                 <div class="slider-track flex w-full transition-transform duration-300 space-x-4 py-6">
 
-                    <?php
-                        $reviews = [
-                            [
-                                'date' => '2024-10-17',
-                    'text' => 'Давно мечтала обновить мебель в ванной, и нашла отличный вариант на Дары мебели! Огромный выбор, глаза разбегаются! Давно мечтала обновить мебель в ванной, и нашла отличный вариант на Дары мебели! Огромный выбор, глаза разбегаются!',
-                    'name' => 'Ирина',
-                    'rate' => 5
-                    ],
-                    [
-                    'date' => '2024-10-15',
-                    'text' => 'Отличный магазин! Быстрая доставка и качественная мебель.',
-                    'name' => 'Анна',
-                    'rate' => 4
-                    ],
-                    [
-                    'date' => '2024-10-10',
-                    'text' => 'Покупала кухонный гарнитур, очень довольна выбором.',
-                    'name' => 'Мария',
-                    'rate' => null  // Звезды не будут показаны
-                    ],
-                    [
-                    'date' => '2024-10-05',
-                    'text' => 'Прекрасный сервис и ассортимент!',
-                    'name' => 'Елена',
-                    'rate' => 5
-                    ]
-                    ];
-                    ?>
-
-                    <?php foreach ($reviews as $review): ?>
-                    <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
-                    <?php endforeach; ?>
+                    <?php if (!empty($reviews)) { ?>
+                        <?php foreach ($reviews as $review) { ?>
+                            <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
+                        <?php } ?>
+                    <?php } ?>
 
                 </div>
             </div>

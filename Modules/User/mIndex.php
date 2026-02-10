@@ -108,14 +108,16 @@ class mIndex
             self::LETTERS_CNT
         ));*/
 
-        // Отзывы
-        /*$oReviews = new Reviews();
-        $reviews = $oReviews->imageExtToData($oReviews->get(
-            '*',
-            '`object` = \'' . Reviews::OBJ_SITE . '\' AND `approved` = 1',
-            '`date` DESC, `id` DESC',
-            self::REVIEWS_CNT
-        ));*/
+        // Отзывы для блока "Отзывы покупателей" на главной
+        $oReviews = new Reviews();
+        $reviews = $oReviews->imageExtToData(
+            $oReviews->get(
+                '*',
+                '`object` = \'' . Reviews::OBJ_SITE . '\' AND `approved` = 1',
+                '`date` DESC, `id` DESC',
+                self::REVIEWS_CNT
+            )
+        );
 
         // Новости
         $oNews = new News();
@@ -144,13 +146,13 @@ class mIndex
         return pattExeP(fgc($tpl), array(
             'pageInf' => $pageInf,
             'slides' => $slides,
-            'categories' => $categories,
+            'categories'  => $categories,
             'seriesPromo' => $seriesPromo,
-            //'projects'		=> $projects,
-            //'letters'		=> $letters,
-            //'reviews'	=> $reviews,
-            'news' => $news,
-            //'articles'	=> $articles
+            //'projects'   => $projects,
+            //'letters'    => $letters,
+            'reviews'     => $reviews,
+            'news'        => $news,
+            //'articles'   => $articles
 
         ));
     }
