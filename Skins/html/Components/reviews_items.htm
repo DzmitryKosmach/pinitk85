@@ -1,0 +1,135 @@
+<div id="reviews" class="detailtabs tabs mt-8">
+    <div class="headers clearfix flex items-center justify-between">
+        <h3 class="text-xl md:text-2xl font-semibold">Отзывы</h3>
+    </div>
+    <br>
+    <?php
+                if (!count($comments)) {
+                    ?>
+    <p class="errortext text-red-600 mb-4">Еще никто не поделился своим мнением. Станьте первым!</p>
+    <?php
+                } else {
+                    $formatter = new IntlDateFormatter(
+                        'ru_RU',
+                        IntlDateFormatter::LONG,
+                        IntlDateFormatter::LONG
+                    );
+                    $formatter->setPattern('d MMMM yyyy');
+    ?>
+    <div class="reviews grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+
+        <?php
+                foreach ($comments as $review) {
+                    include(Config::path('skins') . '/html/Components/review_card.htm');
+                }
+            ?>
+
+    </div>
+
+    <?php } ?>
+
+    <div class="contents mt-6">
+        <div class="content selected review bg-white rounded-lg shadow p-4 md:p-6" id="review">
+            <div class="contentbody relative clearfix space-y-4">
+
+                <p>
+                    <a
+                        class="add2review absolute top-[-14px] left-0 w-fit btn3 inline-block px-4 py-2 rounded-md bg-main text-white hover:bg-opacity-90 transition"
+                        href="#addreview">Добавить отзыв</a>
+                </p>
+                <p><br></p>
+                <p><br></p>
+
+                <?php
+                            if (isset($_SESSION['review_flash_msg'])) {
+                                echo $_SESSION['review_flash_msg'];
+                            }
+
+                            if (!isset($_SESSION['review_flash_status']) || $_SESSION['review_flash_status']) {
+                            ?>
+
+                <div id="detailreviews">
+                    <div class="contentinner">
+                        <div class="reviewform noned">
+                            <form action="" method="POST" id="reviewForm" class="space-y-4">
+
+                                <input type="hidden" name="series" value="<?php echo $seriesInf['id']; ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
+
+                                <div class="rating clearfix grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                                    <input type="hidden" name="REVIEW_TEXT_rate"
+                                           value="<?php echo isset($_SESSION['rating']) ? $_SESSION['rating'] : '0'; ?>">
+
+                                    <span>Оцените товар: </span>
+                                    <style>
+                                        .stars .hover, .stars .selected {
+                                            color:yellow;
+                                        }
+                                        .noned {
+                                            display: none;
+                                        }
+                                    </style>
+                                    <div class="stars flex flex-row gap-0">
+                                        <a class="icon pngicons text-2xl pr-0.5 text-gray-200" href="#" data-id="1">★</a><a class="icon pngicons text-2xl pr-0.5 text-gray-200" href="#" data-id="2">★</a><a class="icon pngicons text-2xl pr-0.5 text-gray-200" href="#" data-id="3">★</a><a class="icon pngicons text-2xl pr-0.5 text-gray-200" href="#" data-id="4">★</a><a class="icon pngicons text-2xl pr-0.5 text-gray-200" href="#" data-id="5">★</a>
+                                    </div>
+
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                                    <div class="fieldname text-sm font-medium text-gray-700">Ваше имя</div>
+                                    <div class="md:col-span-2">
+                                        <input type="text" name="REVIEW_AUTHOR" id="REVIEW_USER" maxlength="192"
+                                               value="<?php echo isset($_SESSION['review_name']) ? $_SESSION['review_name'] : 'Гость'; ?>"
+                                               required
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                                    <div class="fieldname text-sm font-medium text-gray-700">Контактный e-mail</div>
+                                    <div class="md:col-span-2">
+                                        <input type="email" name="REVIEW_AUTHOR_EMAIL" id="REVIEW_EMAIL"
+                                               value="<?php echo isset($_SESSION['review_email']) ? $_SESSION['review_email'] : ''; ?>"
+                                               required
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <small class="block mt-1 text-xs text-gray-500">Не будет опубликован на сайте.</small>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
+                                    <div class="fieldname text-sm font-medium text-gray-700">Ваш отзыв</div>
+                                    <div class="md:col-span-2">
+                        <textarea
+                            class="comment w-full min-h-[120px] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            name="REVIEW_TEXT_comment" id="REVIEW_TEXT_comment"
+                            required><?php echo isset($_SESSION['review_comment']) ? $_SESSION['review_comment'] : ''; ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-end">
+                                    <input class="send px-6 py-3 bg-main text-white rounded-md hover:bg-opacity-90 transition"
+                                           name="send_button" id="send_review" type="button" value="Отправить">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        //$('#detailreviews').find('.reviewform').removeClass('noned');
+                    </script>
+                </div>
+                <?php
+          }
+
+          unset($_SESSION['review_flash_msg']);
+          unset($_SESSION['review_flash_status']);
+
+          unset($_SESSION['review_name']);
+          unset($_SESSION['review_email']);
+          unset($_SESSION['review_comment']);
+          unset($_SESSION['review_rating']);
+          ?>
+            </div>
+        </div>
+    </div>
+</div>
