@@ -1205,9 +1205,11 @@
                 if (reviewsElement) {
                     // Вычислить смещение с учетом фиксированного шапки или других элементов
                     const headerOffset = 60; // Вы можете настроить это значение
+                    const elementPosition = reviewsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
                     window.scrollTo({
-                        top: headerOffset,
+                        top: offsetPosition,
                         behavior: 'smooth'
                     });
                 }
