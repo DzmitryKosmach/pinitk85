@@ -14,7 +14,7 @@
 
         <?php
       for ($i = 1; $i <= 136; $i++) {
-          $imagePath = "/images/clients/client" . $i . ".jpg";
+          $imagePath = "/images/clients/client (" . $i . ").jpg";
           echo '<div class="client-card hidden transition-all duration-500 ease-in-out opacity-0">';
         include(Config::path('skins') . '/html/Components/client_card.htm');
         echo '</div>';
@@ -38,10 +38,10 @@
         const clientCards = document.querySelectorAll('.client-card');
         const showMoreClientsBtn = document.getElementById('showMoreClientsBtn');
         let currentIndex = 0;
-        const batchSize = 16;
+        const batchSize = 18;
         const totalCards = clientCards.length;
 
-        // Показать первые 16 карточек
+        // Показать первые 18 карточек
         showNextBatch();
 
         showMoreClientsBtn.addEventListener('click', function() {
