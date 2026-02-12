@@ -1,27 +1,28 @@
 <?php
 class ModuleMain
 {
-  public static function main($pageInf)
-  {
-    // Отладка
-    error_log('mBrands module called');
-    error_log('pageInf: ' . print_r($pageInf, true));
+    public static function main($pageInf)
+    {
+        // Загружаем письма клиентов
+        $oLetters = new Clients_Letters();
+        $letters = $oLetters->imageExtToData(
+            $oLetters->get(
+                '*',
+                '',
+                '`order` DESC'
+            )
+        );
 
-    $tpl = Config::path('skins') . '/html/User/mLetters.htm';
+        $tpl = Config::path('skins') . '/html/User/mLetters.htm';
 
-    // Проверка существования шаблона
-    if (!file_exists($tpl)) {
-      error_log('Template not found: ' . $tpl);
-      die('Template not found: ' . $tpl);
+        if (!file_exists($tpl)) {
+            error_log('Template not found: ' . $tpl);
+            return '';
+        }
+
+        return pattExeP(fgc($tpl), array(
+            'pageInf' => $pageInf,
+            'letters' => $letters,
+        ));
     }
-
-    // Отладка данных
-    $data = array(
-      'pageInf' => $pageInf,
-      'title' => $pageInf['name'] ?? 'Благодарственные письма'
-    );
-    error_log('Template data: ' . print_r($data, true));
-
-    return pattExeP(fgc($tpl), $data);
-  }
 }

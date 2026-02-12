@@ -4,10 +4,10 @@
 >
     <div class="flex justify-center">
         <img
-            src="<?= $letter['_img_ext'] ?>"
+            src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>_220x312_0.<?php echo $letter['_img_ext']; ?>"
             alt="Письмо клиента"
             class="max-w-full h-auto object-contain rounded-md cursor-pointer"
-            data-modal-src="<?= $letter['_img_ext'] ?>"
+            data-modal-src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>.<?php echo $letter['_img_ext']; ?>"
             data-modal-alt="Письмо клиента"
         />
     </div>
