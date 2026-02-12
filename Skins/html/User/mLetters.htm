@@ -1,117 +1,180 @@
 <!-- Хлебные крошки -->
 <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
-  <a href="/" class="hover:text-gray-700 hover:underline">Главная</a>
-  <span class="mx-1">›</span>
-  <span class="uppercase">Благодарственные письма</span>
+    <a href="/" class="hover:text-gray-700 hover:underline">Главная</a>
+    <span class="mx-1">›</span>
+    <span class="uppercase">Благодарственные письма</span>
 </nav>
 
-<section class="mb-24">
-  <h1 class="text-[21px] md:text-4xl font-semibold mb-4 md:mb-8">
-    Благодарственные письма
-  </h1>
+<section class="mb-16">
+    <h1 class="text-[21px] md:text-4xl font-semibold mb-4 md:mb-8">
+        Благодарственные письма
+    </h1>
 
-  <div
-    class="relative grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6"
-  >
-    <?php
-      for ($i = 0; $i < 16; $i++) {
-          include(Config::path('skins') . '/html/Components/letter_card.htm');
-      }
-    ?>
-  </div>
+    <div class="relative grid grid-cols-2 sm2:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-4 lg:gap-6">
+        <?php if (!empty($letters)) { ?>
+        <?php foreach ($letters as $letter) { ?>
+        include(Config::path('skins') . '/html/Components/letter_card.htm');
+        <?php } ?>
+        <?php } ?>
+    </div>
 
-  <?php echo $toggle; ?>
+    <?php if (!empty($letters) && count($letters) > 18): ?>
+    <div class="flex justify-center mt-8">
+        <button id="showMoreLettersBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+            Показать еще
+        </button>
+    </div>
+    <?php endif; ?>
 </section>
 
 <!-- Модальное окно (light-box) -->
 <div
-  id="imageModal"
-  class="fixed inset-0 bg-black bg-opacity-70 z-[1000] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    id="imageModal"
+    class="fixed inset-0 bg-black bg-opacity-70 z-[1000] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
 >
-  <div class="relative max-w-[90vw] max-h-[90vh]">
-    <img
-      id="modalImage"
-      src=""
-      alt=""
-      class="max-w-full max-h-full object-contain rounded shadow-lg"
-    />
-    <button
-      id="closeModal"
-      class="absolute -top-12 right-0 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition"
-      aria-label="Закрыть"
-    >
-      ✕
-    </button>
-  </div>
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+        <img
+            id="modalImage"
+            src=""
+            alt=""
+            class="max-w-full max-h-full object-contain rounded shadow-lg"
+        />
+        <button
+            id="closeModal"
+            class="absolute -top-12 right-0 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition"
+            aria-label="Закрыть"
+        >
+            ✕
+        </button>
+    </div>
 </div>
 
 <style>
-  /* Плавное появление и масштабирование */
-  #imageModal.show {
-    opacity: 1;
-    pointer-events: all;
-  }
+    /* Плавное появление и масштабирование */
+    #imageModal.show {
+        opacity: 1;
+        pointer-events: all;
+    }
 
-  #modalImage {
-    transform: scale(0.8);
-    transition: transform 0.3s ease;
-  }
+    #modalImage {
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+    }
 
-  #imageModal.show #modalImage {
-    transform: scale(1);
-  }
+    #imageModal.show #modalImage {
+        transform: scale(1);
+    }
+
+    /* Анимация появления карточек */
+    .client-card.hidden {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .client-card:not(.hidden) {
+        opacity: 1;
+        max-height: 500px;
+        overflow: visible;
+    }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("modalImage");
-    const closeModalBtn = document.getElementById("closeModal");
-    const images = document.querySelectorAll("img[data-modal-src]");
+    document.addEventListener("DOMContentLoaded", () => {
+        // ===== Модальное окно =====
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const closeModalBtn = document.getElementById("closeModal");
+        const images = document.querySelectorAll("img[data-modal-src]");
 
-    const openModal = (src, alt) => {
-      modalImg.src = src;
-      modalImg.alt = alt || "";
-      document.body.classList.add("overflow-hidden"); // запретить прокрутку
-      setTimeout(() => {
-        modal.classList.add("show");
-      }, 10); // небольшая задержка для плавного появления
-    };
+        const openModal = (src, alt) => {
+            modalImg.src = src;
+            modalImg.alt = alt || "";
+            document.body.classList.add("overflow-hidden"); // запретить прокрутку
+            setTimeout(() => {
+                modal.classList.add("show");
+            }, 10); // небольшая задержка для плавного появления
+        };
 
-    const closeModal = () => {
-      modal.classList.remove("show");
-      document.body.classList.remove("overflow-hidden");
-      // Опционально: очистить src после анимации
-      setTimeout(() => {
-        modalImg.src = "";
-      }, 300);
-    };
+        const closeModal = () => {
+            modal.classList.remove("show");
+            document.body.classList.remove("overflow-hidden");
+            // Опционально: очистить src после анимации
+            setTimeout(() => {
+                modalImg.src = "";
+            }, 300);
+        };
 
-    // Открытие по клику на изображение
-    images.forEach((img) => {
-      img.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const src = img.getAttribute("data-modal-src");
-        const alt = img.getAttribute("data-modal-alt") || img.alt;
-        openModal(src, alt);
-      });
+        // Открытие по клику на изображение
+        images.forEach((img) => {
+            img.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const src = img.getAttribute("data-modal-src");
+                const alt = img.getAttribute("data-modal-alt") || img.alt;
+                openModal(src, alt);
+            });
+        });
+
+        // Закрытие по кнопке
+        closeModalBtn.addEventListener("click", closeModal);
+
+        // Закрытие по клику вне изображения
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Закрытие по нажатию Escape
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal.classList.contains("show")) {
+                closeModal();
+            }
+        });
+
+        // ===== Показ карточек =====
+        const clientCards = document.querySelectorAll('.client-card');
+        const showMoreBtn = document.getElementById('showMoreLettersBtn');
+
+        if (showMoreBtn) {
+            let currentIndex = 0;
+            const batchSize = 18;
+            const totalCards = clientCards.length;
+
+            // Показать первые 18 карточек
+            showNextBatch();
+
+            showMoreBtn.addEventListener('click', function() {
+                showNextBatch();
+            });
+
+            function showNextBatch() {
+                const endIndex = Math.min(currentIndex + batchSize, totalCards);
+
+                // Плавно показать следующую партию
+                for (let i = currentIndex; i < endIndex; i++) {
+                    setTimeout(() => {
+                        clientCards[i].classList.remove('hidden');
+                        clientCards[i].classList.add('opacity-100');
+                    }, (i - currentIndex) * 30); // Небольшая задержка для плавности
+                }
+
+                currentIndex = endIndex;
+
+                // Скрыть кнопку, если все карточки показаны
+                if (currentIndex >= totalCards) {
+                    showMoreBtn.style.display = 'none';
+                }
+            }
+        } else {
+            // Если кнопки нет, показать все карточки сразу
+            clientCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.remove('hidden');
+                    card.classList.add('opacity-100');
+                }, index * 30);
+            });
+        }
     });
-
-    // Закрытие по кнопке
-    closeModalBtn.addEventListener("click", closeModal);
-
-    // Закрытие по клику вне изображения
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    // Закрытие по нажатию Escape
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("show")) {
-        closeModal();
-      }
-    });
-  });
 </script>

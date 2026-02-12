@@ -100,13 +100,13 @@ class mIndex
         $projects = $oPics->get1stPhotos($projects);*/
 
         // Письма клиентов
-        /*$oLetters = new Clients_Letters();
+        $oLetters = new Clients_Letters();
         $letters = $oLetters->imageExtToData($oLetters->get(
             '*',
             '`in_index` = 1',
             '`order` DESC',
             self::LETTERS_CNT
-        ));*/
+        ));
 
         // Отзывы для блока "Отзывы покупателей" на главной
         $oReviews = new Reviews();
@@ -149,7 +149,7 @@ class mIndex
             'categories'  => $categories,
             'seriesPromo' => $seriesPromo,
             //'projects'   => $projects,
-            //'letters'    => $letters,
+            'letters'    => $letters,
             'reviews'     => $reviews,
             'news'        => $news,
             //'articles'   => $articles

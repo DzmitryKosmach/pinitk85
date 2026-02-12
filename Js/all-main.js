@@ -560,10 +560,10 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     kw = i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep);
     kd = decimals
         ? dec_point +
-          Math.abs(number - i)
-              .toFixed(decimals)
-              .replace(/-/, 0)
-              .slice(2)
+        Math.abs(number - i)
+            .toFixed(decimals)
+            .replace(/-/, 0)
+            .slice(2)
         : "";
 
     return km + kw + kd;
@@ -953,13 +953,13 @@ function winSize() {
     var w = window.innerWidth
         ? window.innerWidth
         : document.documentElement.clientWidth
-        ? document.documentElement.clientWidth
-        : document.body.offsetWidth;
+            ? document.documentElement.clientWidth
+            : document.body.offsetWidth;
     var h = window.innerHeight
         ? window.innerHeight
         : document.documentElement.clientHeight
-        ? document.documentElement.clientHeight
-        : document.body.offsetHeight;
+            ? document.documentElement.clientHeight
+            : document.body.offsetHeight;
     return { w: w, h: h };
 }
 
@@ -2288,9 +2288,9 @@ var oMaterials = new (function () {
             (imageBig ? '<div class="image-big">' + imageBig + "</div>" : "") +
             "</div>" +
             '<div class="info material-info">' +
-            '<div class="name">' +
+            '<div class="name-wrapper"><div class="name">' +
             m.name +
-            "</div>" +
+            "</div></div>" +
             '<div class="price">' +
             price +
             "</div>" +
@@ -2547,8 +2547,8 @@ function Search() {
         if ($$$(LId) !== false) {
             alert(
                 "Element with ID '" +
-                    LId +
-                    "' is already exist. This ID reserved for search results layer."
+                LId +
+                "' is already exist. This ID reserved for search results layer."
             );
             return;
         }
@@ -3044,9 +3044,9 @@ var oCart = new (function () {
         oPopup.loadUrl(
             "Купить в один клик",
             this.urlBuyOneClick +
-                "?set=" +
-                encodeURIComponent(seriesSet) +
-                "&ajax=1",
+            "?set=" +
+            encodeURIComponent(seriesSet) +
+            "&ajax=1",
             false,
             false,
             true
@@ -3334,13 +3334,13 @@ var oCart = new (function () {
                 var garbagePriceText =
                     respond.garbage.info &&
                     respond.garbage.info.toLowerCase().indexOf("не нужен") !==
-                        -1
+                    -1
                         ? "0 руб."
                         : "Уточнить у менеджера";
                 var garbageSubtitleText =
                     respond.garbage.info &&
                     respond.garbage.info.toLowerCase().indexOf("не нужен") !==
-                        -1
+                    -1
                         ? "0 руб."
                         : "уточнить у менеджера";
 
