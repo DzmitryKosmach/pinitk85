@@ -130,14 +130,31 @@
         padding-left: 2px;
     }
 
-    #materials-popup .material .name {
+    #materials-popup .material .name-wrapper {
         display: table-cell;
         vertical-align: middle;
         height: 26px;
+    }
+
+    #materials-popup .material .name {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         line-height: 13px;
         font-size: 11px;
         color: #0075c2;
         text-decoration: underline;
+
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    #materials-popup .material .name:hover {
+        -webkit-line-clamp: unset;
+        overflow: visible;
     }
 
     #materials-popup .material .price {

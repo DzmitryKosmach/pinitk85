@@ -513,10 +513,18 @@
 
                 </h2>
                 <div class="flex flex-wrap justify-center gap-4">
-          <span class="ratio-[220/304]"><img src="images/index/doc1.webp" alt="Письмо 1"
+                    <?php if (!empty($letters)) { ?>
+                    <?php foreach ($letters as $letter) { ?>
+                    <span class="ratio-[220/304]">
+                                <img src="<?= $letter['_img_ext'] ?>" alt="Письмо"
+                                     class="max-w-[220px] h-full object-cover rounded shadow" />
+                            </span>
+                    <?php } ?>
+                    <?php } ?>
+                    <!-- <span class="ratio-[220/304]"><img src="images/index/doc1.webp" alt="Письмо 1"
                                              class="max-w-[220px] h-full object-cover rounded shadow" /></span>
                     <span class="ratio-[220/304]"><img src="images/index/doc2.webp" alt="Письмо 2"
-                                                       class="max-w-[220px] h-full object-cover rounded shadow" /><span>
+                                                       class="max-w-[220px] h-full object-cover rounded shadow" /><span> -->
                 </div>
                 <div class="text-center mt-12">
                     <a href="/letters/" target="_blank"
@@ -660,9 +668,9 @@
                 <div class="slider-track flex w-full transition-transform duration-300 space-x-4 py-6">
 
                     <?php if (!empty($reviews)) { ?>
-                        <?php foreach ($reviews as $review) { ?>
-                            <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
-                        <?php } ?>
+                    <?php foreach ($reviews as $review) { ?>
+                    <?php include(Config::path('skins') . '/html/Components/review_card.htm'); ?>
+                    <?php } ?>
                     <?php } ?>
 
                 </div>
