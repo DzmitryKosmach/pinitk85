@@ -1180,10 +1180,13 @@ function getHomeUrl() {
                 <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email" class="w-4 h-4 mr-1" />
                 <div>
                     <p>
-                        Для заказа: <br /><a href="mailto:zakaz@mebelioni.ru" class="text-blue-600">zakaz@mebelioni.ru</a>
+                        Для заказа: <br />
+                        <?php echo emailPartial('zakaz@mebelioni.ru', 'zakaz@mebelioni.ru', 'text-blue-600'); ?>
                     </p>
                     <p>
-                        Для информации: <br /><a href="mailto:info@mebelioni.ru" class="text-blue-600">info@mebelioni.ru</a>
+                        Для информации: <br />
+                        <?php echo emailPartial('info@mebelioni.ru', 'info@mebelioni.ru', 'text-blue-600'); ?>
+
                     </p>
                 </div>
             </div>
@@ -1225,7 +1228,7 @@ function getHomeUrl() {
 
     <!-- Нижний подвал -->
     <div class="max-w-1440 mx-auto mt-8 px-4 sm:px-6 lg:px-8 text-gray-700 text-[10px] leading-3">
-        ©
+        © 2012-
         <?php echo date('Y'); ?>
         Все права защищены. Информация сайта защищена законом об авторских
         правах.
