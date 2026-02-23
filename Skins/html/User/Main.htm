@@ -293,27 +293,7 @@ function getHomeUrl() {
             }
         });
 
-        /* Мобильное меню телефона: открытие по клику, закрытие только при клике вне или по ссылке вызова */
-        (function() {
-            var container = document.getElementById('mobile-phone-dropdown');
-            var trigger = document.getElementById('mobile-phone-trigger');
-            var menu = document.getElementById('mobile-phone-menu');
-            if (!container || !trigger || !menu) return;
-
-            trigger.addEventListener('click', function(e) {
-                e.preventDefault();
-                container.classList.toggle('mobile-phone-open');
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!container.classList.contains('mobile-phone-open')) return;
-                var isInside = container.contains(e.target);
-                var isTelLink = e.target.closest('a[href^="tel:"]');
-                if (!isInside || isTelLink) {
-                    container.classList.remove('mobile-phone-open');
-                }
-            });
-        })();
+                
     </script>
     <?php echo JsCopmress::load('main-async', true); ?>
 
