@@ -292,8 +292,31 @@ function getHomeUrl() {
                 if (wrap) revealPhone(wrap);
             }
         });
+
+        /* Мобильное меню телефона: открытие по клику, закрытие только при клике вне или по ссылке вызова */
+        (function() {
+            var container = document.getElementById('mobile-phone-dropdown');
+            var trigger = document.getElementById('mobile-phone-trigger');
+            var menu = document.getElementById('mobile-phone-menu');
+            if (!container || !trigger || !menu) return;
+
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                container.classList.toggle('mobile-phone-open');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!container.classList.contains('mobile-phone-open')) return;
+                var isInside = container.contains(e.target);
+                var isTelLink = e.target.closest('a[href^="tel:"]');
+                if (!isInside || isTelLink) {
+                    container.classList.remove('mobile-phone-open');
+                }
+            });
+        })();
     </script>
     <?php echo JsCopmress::load('main-async', true); ?>
+
 
     <?php echo JsCopmress::load('carousel'); ?>
 
@@ -467,10 +490,9 @@ function getHomeUrl() {
                     <!-- Иконки -->
                     <div class="flex items-center gap-2">
                         <!-- Телефон (иконка с дропдауном) -->
-                        <div class="relative inline-block group">
+                        <div id="mobile-phone-dropdown" class="relative inline-block group">
                             <!-- Иконка -->
-                             <a class="block"
-                               aria-label="Позвонить">
+                            <a id="mobile-phone-trigger" href="javascript:void(0)" class="block" aria-label="Позвонить">
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50 transition-opacity">
                                     <path
@@ -479,9 +501,9 @@ function getHomeUrl() {
                                 </svg>
                             </a>
 
-                            <!-- Выпадающий список -->
-                            <div
-                                class="absolute right-0 top-full mt-0 w-44 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100]">
+                            <!-- Выпадающий список (на мобилках открывается по клику, не закрывается при "Показать номер") -->
+                            <div id="mobile-phone-menu"
+                                class="absolute right-0 top-full mt-0 w-44 bg-white shadow-lg rounded-md py-2 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-200 z-[100] group-[.mobile-phone-open]:opacity-100 group-[.mobile-phone-open]:scale-100 group-[.mobile-phone-open]:visible">
                                 <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
 
                                 <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
@@ -1503,6 +1525,12 @@ function getHomeUrl() {
         }
         .fancybox-skin {
             padding: 12px !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .fancybox-skin {
+            height: 0 !important;
         }
     }
 </style>
