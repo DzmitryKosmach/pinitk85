@@ -293,7 +293,7 @@ function getHomeUrl() {
             }
         });
 
-                
+
     </script>
     <?php echo JsCopmress::load('main-async', true); ?>
 
@@ -523,14 +523,18 @@ function getHomeUrl() {
                                     }
                                 });
 
-                                // Клик вне меню или по tel: закрывает его
+                                // Клик вне меню или по tel: закрывает его,
+                                // но при клике по "Показать номер" меню остаётся открытым
                                 document.addEventListener('click', function (e) {
                                     if (menu.classList.contains('invisible')) return;
 
                                     var isInside  = container.contains(e.target);
                                     var isTelLink = e.target.closest('a[href^="tel:"]');
+                                    var isShowLink = e.target.closest('.phone-show-link');
 
-                                    if (!isInside || isTelLink) {
+                                    // Закрываем, если кликнули вне меню
+                                    // или по tel:-ссылке (но не по "Показать номер")
+                                    if (!isInside || (isTelLink && !isShowLink)) {
                                         closeMenu();
                                     }
                                 });
