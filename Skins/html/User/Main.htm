@@ -489,9 +489,9 @@ function getHomeUrl() {
                                  class="absolute right-0 top-full mt-0 w-44 bg-white shadow-lg rounded-md py-2
                                     opacity-0 scale-95 invisible
                                     transition-all duration-200 z-[100]">
-                                <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+                                <?php echo phonePartial('+74959204824', '+7 (495) 920-48-24', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu show-number-link'); ?>
 
-                                <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu'); ?>
+                                <?php echo phonePartial('88002349084', '8 (800) 234-90-84', 'block px-4 py-2 text-sm text-gray-700 hover:bg-main_hover_menu show-number-link'); ?>
                             </div>
                         </div>
 
@@ -515,6 +515,7 @@ function getHomeUrl() {
 
                                 trigger.addEventListener('click', function (e) {
                                     e.preventDefault();
+                                    e.stopPropagation();
                                     var isOpen = !menu.classList.contains('invisible');
                                     if (isOpen) {
                                         closeMenu();
@@ -523,18 +524,22 @@ function getHomeUrl() {
                                     }
                                 });
 
-                                // Клик вне меню или по tel: закрывает его,
-                                // но при клике по "Показать номер" меню остаётся открытым
+                                // Клик вне меню закрывает его
                                 document.addEventListener('click', function (e) {
                                     if (menu.classList.contains('invisible')) return;
 
-                                    var isInside  = container.contains(e.target);
-                                    var isTelLink = e.target.closest('a[href^="tel:"]');
-                                    var isShowLink = e.target.closest('.phone-show-link');
+                                    var isInside = container.contains(e.target);
 
-                                    // Закрываем, если кликнули вне меню
-                                    // или по tel:-ссылке (но не по "Показать номер")
-                                    if (!isInside || (isTelLink && !isShowLink)) {
+                                    // Проверяем, не кликнули ли по кнопке "Показать номер"
+                                    var isShowNumberButton = e.target.closest('.phone-show-link');
+
+                                    if (isShowNumberButton) {
+                                        // Не закрываем меню при клике на "Показать номер"
+                                        return;
+                                    }
+
+                                    // Закрываем только если кликнули вне меню
+                                    if (!isInside) {
                                         closeMenu();
                                     }
                                 });
@@ -558,8 +563,8 @@ function getHomeUrl() {
                               ?>
                                 <span id="cart-badge-count-mobile"
                                       class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $count; ?>
-                  </span>
+                                    <?php echo $count; ?>
+                                </span>
                             </a>
                         </div>
 
