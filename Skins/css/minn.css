@@ -480,7 +480,7 @@
   .modal.modal--order-call {
     width: 100%;
     margin-left: 0;
-    top:31% !important;
+    /*top:31% !important;*/
     left: 0;
   }
 }
