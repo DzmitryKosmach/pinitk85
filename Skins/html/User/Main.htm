@@ -1563,6 +1563,16 @@ function getHomeUrl() {
         }
     }
 
+    /* Для очень маленьких экранов фиксируем модалку по центру */
+    @media (max-width: 415px) {
+        .fancybox-opened .fancybox-wrap {
+            top: 50% !important;
+            left: 50% !important;
+            margin-left: 0 !important;
+            transform: translate(-50%, -50%) !important;
+        }
+    }
+
     @media (max-width: 640px) {
         .fancybox-skin {
             height: auto !important;
