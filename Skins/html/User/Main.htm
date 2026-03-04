@@ -44,22 +44,33 @@ function getHomeUrl() {
 
 <head>
     <meta charset="utf-8" />
-    <meta name="robots" content="noindex, nofollow" />
+
     <?php
-	// noindex start
-		if(strpos($_SERVER['REQUEST_URI'], '/preimuschestva/') !== false ){
-		echo '
-	<meta name="robots" content="noindex, nofollow">
-    '; } // noindex end if(strpos($_SERVER['REQUEST_URI'], '?price') !== false )
-    { echo '
-    <meta name="robots" content="noindex, nofollow" />
-    '; } if(strpos($_SERVER['REQUEST_URI'], 'sort') !== false ) { echo '
-    <meta name="robots" content="noindex, nofollow" />
-    '; } if(strpos($_SERVER['REQUEST_URI'], '/search/') !== false ) { echo '
-    <meta name="robots" content="noindex, nofollow" />
-    '; } if(strpos($_SERVER['REQUEST_URI'], '/sitemap/') !== false ) { echo '
-    <meta name="robots" content="noindex" />
-    '; } ?>
+// noindex start
+
+    // 2. Страницы с ценой (?price)
+    // Важно: REQUEST_URI обычно не содержит '?', лучше проверять $_GET или после знака вопроса
+    if(strpos($_SERVER['REQUEST_URI'], 'price') !== false) {
+    echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+    }
+
+    // 3. Страницы с сортировкой (sort)
+    // Внимание: это условие может сработать, если слово 'sort' есть в любом месте URL
+    if(strpos($_SERVER['REQUEST_URI'], 'sort') !== false) {
+    echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+    }
+
+    // 4. Страницы поиска
+    if(strpos($_SERVER['REQUEST_URI'], '/search/') !== false) {
+    echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+    }
+
+    // 5. Sitemap
+    if(strpos($_SERVER['REQUEST_URI'], '/sitemap/') !== false) {
+    echo '<meta name="robots" content="noindex" />' . "\n";
+    }
+    // noindex end
+    ?>
     <?php
 	function myerror () {
 		$url_without_query = strtok($_SERVER["REQUEST_URI"], '?');
