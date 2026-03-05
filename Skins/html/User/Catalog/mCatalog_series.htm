@@ -1221,7 +1221,13 @@
         <!-- Заголовок -->
         <h2 class="text-2xl font-bold mb-4">
             Элементы мебели
-            <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesInf['name']); ?></span>
+            <?php
+            // Используем исходную информацию о серии, т.к. $seriesInf мог быть переопределён в циклах
+            $seriesName = isset($seriesOrig['name']) ? $seriesOrig['name'] : ($seriesInf['name'] ?? '');
+            if (trim($seriesName) !== ''):
+            ?>
+                <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesName); ?></span>
+            <?php endif; ?>
         </h2>
 
         <?php if (count($itemsGroups) > 1) { ?>
