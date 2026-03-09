@@ -165,6 +165,12 @@
                             <?php $p = $photos[0]; ?>
                             <div class="relative w-full" id="mainImageContainer">
 
+                                <?php if (!empty($seriesInf['out_of_production'])): ?>
+                                    <div class="absolute z-20 top-3 left-3 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded shadow-lg uppercase tracking-wide">
+                                        Снято с производства
+                                    </div>
+                                <?php endif; ?>
+
                                 <img
                                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                                     alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
