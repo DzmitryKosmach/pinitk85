@@ -412,12 +412,12 @@
 
                         <!-- Основное изображение -->
                         <div id="section-photo" class="pic w-full relative">
-                            <?php if(intval($seriesInf['out_of_production'])) { ?>
-                            <div class="out-of-production">
-                                <div>Снято с производства</div>
-                            </div>
-                            <?php } ?>
-                            <div id="mainImageContainer"  class="w-full !flex justify-center aspect-[600/400]">
+                            <div id="mainImageContainer"  class="relative w-full !flex justify-center aspect-[600/400]">
+                                <?php if (!empty($seriesInf['out_of_production'])): ?>
+                                <div class="absolute z-20 top-3 left-3 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded shadow-lg uppercase tracking-wide">
+                                    Снято с производства
+                                </div>
+                                <?php endif; ?>
                                 <?php
                                 $p = $photos[0];
                                 ?>
