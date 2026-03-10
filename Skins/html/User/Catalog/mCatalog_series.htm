@@ -815,33 +815,19 @@
                         <div id="series-materials-clip" class="overflow-hidden transition-all duration-300">
                         <div id="series-materials-row" class="series-materials new flex gap-2 flex-nowrap transition-all duration-300">
                         <?php
-							function recurseSubMaterials($materials, $prevLevelName){
-								foreach($materials as $m){
-									if($m['has_sub']){
-										print '<div class="series-materials-level2 ">';
-                        print '		<div class="cl"></div>';
-                        print '			<span class="b">' . $prevLevelName . ' / ' . $m['name'] . '</span>';
-
-                        recurseSubMaterials($m['sub'], $prevLevelName . ' / ' . $m['name']);
-
-                        print '			<div class="cl"></div>';
-                        print '</div>';
-                    }else{
-                    print '
-                    <div class="series-materials-level3">
-                        <div class="image">' .
-                            (
-                            $m['image']['ext'] ?
-                            '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' :
-                            ''
-                            ) .
-                            '</div>
-                        <div class="name hidden">' . $m['name'] . '</div>
-                    </div>';
-                    }
-                    }
-                    }
-                    ?>
+							function firstMaterialImage($m) {
+								if (!empty($m['image']['ext'])) {
+									return array('id' => $m['image']['id'], 'ext' => $m['image']['ext'], 'name' => $m['name']);
+								}
+								if (!empty($m['has_sub']) && is_array($m['sub'])) {
+									foreach ($m['sub'] as $sub) {
+										$img = firstMaterialImage($sub);
+										if ($img) return $img;
+									}
+								}
+								return null;
+							}
+							?>
                     <?php foreach($materials as $m) { ?>
                     <?php if(!$m['current-series']) continue; ?>
                     <?php if($m['has_sub']) { ?>
@@ -862,10 +848,12 @@
                         <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
                     </a>
                     <div class="materials-zoom hidden">
-                        <div class="level1-sub">
-                            <?php recurseSubMaterials($m['sub'], $m['name']); ?>
-                            <div class="cl"></div>
-                        </div>
+                        <?php
+                        $zoomImg = (!empty($m['image']['ext'])) ? array('id' => $m['image']['id'], 'ext' => $m['image']['ext'], 'name' => $m['name']) : firstMaterialImage($m);
+                        if ($zoomImg):
+                        ?>
+                        <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $zoomImg['id']; ?>.<?php echo $zoomImg['ext']; ?>" alt="<?php echo hsch($zoomImg['name']); ?>">
+                        <?php endif; ?>
                     </div>
                     <?php } else { ?>
                     <?php if($m['image']['ext']) { ?>
