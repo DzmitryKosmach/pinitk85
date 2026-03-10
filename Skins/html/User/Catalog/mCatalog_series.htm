@@ -809,9 +809,11 @@
 
                     <!-- Цветовая гамма -->
                     <?php if(count($materials)) { ?>
-                    <span class="mb-1 font-semibold">Цветовая гамма:</span>
+                    <span id="series-materials-heading" class="mb-1 font-semibold block scroll-mt-[52px]">Цветовая гамма:</span>
 
-                    <div class="series-materials new !mt-0 flex gap-2 flex-wrap">
+                    <div id="series-materials-wrapper" class="!mt-0">
+                        <div id="series-materials-clip" class="overflow-hidden transition-all duration-300">
+                        <div id="series-materials-row" class="series-materials new flex gap-2 flex-nowrap transition-all duration-300">
                         <?php
 							function recurseSubMaterials($materials, $prevLevelName){
 								foreach($materials as $m){
@@ -843,7 +845,7 @@
                     <?php foreach($materials as $m) { ?>
                     <?php if(!$m['current-series']) continue; ?>
                     <?php if($m['has_sub']) { ?>
-                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
+                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " href="javascript:void(0)">
                         <div class="flex gap-3 flex-wrap mb-1">
                             <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
                                 <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
@@ -867,7 +869,7 @@
                     </div>
                     <?php } else { ?>
                     <?php if($m['image']['ext']) { ?>
-                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out hover:scale-110" href="javascript:void(0)">
+                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " href="javascript:void(0)">
                         <div class="flex gap-3 flex-wrap mb-1">
                             <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
                                 <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
@@ -892,7 +894,88 @@
                     <?php } ?>
                     <?php } ?>
                     <div class="cl"></div>
-                </div>
+                        </div>
+                        </div>
+                        <button id="series-materials-toggle" type="button" class="hidden mt-2 text-sm text-blue-600 hover:text-blue-700 underline cursor-pointer">
+                            Показать все
+                        </button>
+                    </div>
+
+                    <style>
+                        #series-materials-row > a, #series-materials-row > .level1 { flex-shrink: 0; }
+                        /* Отключаем scale при наведении в свернутом состоянии */
+                        #series-materials-row.flex-nowrap a.level1:hover,
+                        #series-materials-row.flex-nowrap .level1:hover { transform: none !important; }
+                    </style>
+                    <script>
+                        (function() {
+                            var wrapper = document.getElementById('series-materials-wrapper');
+                            var clip = document.getElementById('series-materials-clip');
+                            var row = document.getElementById('series-materials-row');
+                            var toggleBtn = document.getElementById('series-materials-toggle');
+                            if (!wrapper || !clip || !row || !toggleBtn) return;
+
+                            var CARD_WIDTH = 64, GAP = 8;
+                            var isExpanded = false;
+
+                            function countVisibleCards() {
+                                var cards = row.querySelectorAll('a.level1, .level1');
+                                return cards.length;
+                            }
+
+                            function setClipWidth() {
+                                if (isExpanded) {
+                                    clip.style.maxWidth = '';
+                                    return;
+                                }
+                                var w = wrapper.clientWidth;
+                                var n = Math.max(1, Math.floor((w + GAP) / (CARD_WIDTH + GAP)));
+                                clip.style.maxWidth = (n * (CARD_WIDTH + GAP) - GAP) + 'px';
+                            }
+
+                            function updateToggleVisibility() {
+                                if (isExpanded) {
+                                    toggleBtn.classList.remove('hidden');
+                                    toggleBtn.textContent = 'Свернуть';
+                                    return;
+                                }
+                                setClipWidth();
+                                var hasOverflow = row.scrollWidth > clip.clientWidth;
+                                if (hasOverflow) {
+                                    toggleBtn.classList.remove('hidden');
+                                    toggleBtn.textContent = 'Показать все';
+                                } else {
+                                    toggleBtn.classList.add('hidden');
+                                }
+                            }
+
+                            toggleBtn.addEventListener('click', function() {
+                                isExpanded = !isExpanded;
+                                if (isExpanded) {
+                                    row.classList.remove('flex-nowrap');
+                                    row.classList.add('flex-wrap');
+                                    clip.style.maxWidth = '';
+                                    toggleBtn.textContent = 'Свернуть';
+                                } else {
+                                    row.classList.add('flex-nowrap');
+                                    row.classList.remove('flex-wrap');
+                                    setClipWidth();
+                                    toggleBtn.textContent = 'Показать все';
+                                    var heading = document.getElementById('series-materials-heading');
+                                    if (heading) {
+                                        heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }
+                                }
+                                updateToggleVisibility();
+                            });
+
+                            if (typeof window.ResizeObserver !== 'undefined') {
+                                new ResizeObserver(updateToggleVisibility).observe(wrapper);
+                            }
+                            setTimeout(updateToggleVisibility, 150);
+                            window.addEventListener('resize', updateToggleVisibility);
+                        })();
+                    </script>
                 <?php } ?>
             </div>
         </div>
