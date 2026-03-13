@@ -815,17 +815,25 @@
                         <div id="series-materials-clip" class="overflow-hidden transition-all duration-300">
                         <div id="series-materials-row" class="series-materials new flex gap-2 flex-nowrap transition-all duration-300">
                         <?php
-							function firstMaterialImage($m) {
-								if (!empty($m['image']['ext'])) {
-									return array('id' => $m['image']['id'], 'ext' => $m['image']['ext'], 'name' => $m['name']);
-								}
-								if (!empty($m['has_sub']) && is_array($m['sub'])) {
-									foreach ($m['sub'] as $sub) {
-										$img = firstMaterialImage($sub);
-										if ($img) return $img;
+							function recurseSubMaterials($materials, $prevLevelName){
+								foreach($materials as $m){
+									if($m['has_sub']){
+										print '<div class="series-materials-level2 ">';
+										print '		<div class="cl"></div>';
+										print '			<span class="b">' . $prevLevelName . ' / ' . $m['name'] . '</span>';
+										recurseSubMaterials($m['sub'], $prevLevelName . ' / ' . $m['name']);
+										print '			<div class="cl"></div>';
+										print '</div>';
+									}else{
+										$label = (isset($m['art']) && $m['art'] !== '') ? $m['art'] : $m['name'];
+										print '<div class="series-materials-level3">
+											<div class="image">' .
+											($m['image']['ext'] ? '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' : '') .
+											'</div>
+											<div class="name">' . hsch($label) . '</div>
+										</div>';
 									}
 								}
-								return null;
 							}
 							?>
                     <?php foreach($materials as $m) { ?>
@@ -848,12 +856,10 @@
                         <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
                     </a>
                     <div class="materials-zoom hidden">
-                        <?php
-                        $zoomImg = (!empty($m['image']['ext'])) ? array('id' => $m['image']['id'], 'ext' => $m['image']['ext'], 'name' => $m['name']) : firstMaterialImage($m);
-                        if ($zoomImg):
-                        ?>
-                        <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $zoomImg['id']; ?>.<?php echo $zoomImg['ext']; ?>" alt="<?php echo hsch($zoomImg['name']); ?>">
-                        <?php endif; ?>
+                        <div class="level1-sub materials-popup-content">
+                            <?php recurseSubMaterials($m['sub'], $m['name']); ?>
+                            <div class="cl"></div>
+                        </div>
                     </div>
                     <?php } else { ?>
                     <?php if($m['image']['ext']) { ?>
@@ -1054,12 +1060,12 @@
             ];
             }
 
-            // 3. Берём первые 6 — основные, остальные — дополнительные
-            $mainOptions = array_slice($processedOptions, 0, 6);
-            $additionalOptions = array_slice($processedOptions, 6);
+            // 3. Берём первые 2 — основные, остальные — дополнительные
+            $mainOptions = array_slice($processedOptions, 0, 2);
+            $additionalOptions = array_slice($processedOptions, 2);
             ?>
 
-            <!-- Основные характеристики (первые 6, включая срок доставки)  -->
+            <!-- Основные характеристики (первые 2, включая срок доставки)  -->
             <?php if (!empty($mainOptions)): ?>
             <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
                 <?php foreach ($mainOptions as $o): ?>
@@ -1657,7 +1663,12 @@
                                 class="flex gap-[2px] sm:gap-[6px] justify-start items-center materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
                                 onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
                             >
-                                <?php foreach($item['materials'] as $mn => $im) { ?>
+                                <?php
+                                $materialsShown = 0;
+                                foreach($item['materials'] as $mn => $im) {
+                                    if ($materialsShown >= 9) break;
+                                    $materialsShown++;
+                                ?>
                                 <?php $m = $materials[$im['material_id']]; ?>
                                 <div class="flex gap-[6px] justify-start items-center">
                                     <div id="item1-<?php echo $item['id']; ?>-m-<?php echo $m['id']; ?>" <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
@@ -1665,8 +1676,8 @@
                                     <img class="rounded" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
                                     <?php } ?>
                                 </div>
-                        </div>
-                        <?php } ?>
+                                </div>
+                                <?php } ?>
                         </a>
                         <?php } ?>
                     </div>
