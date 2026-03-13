@@ -499,6 +499,100 @@
   font-size: 10px !important;
 }
 
+/* Попап материалов в Fancybox — стили как на эталоне, адаптивная сетка */
+.fancybox-inner .materials-popup-content {
+  background: #fff;
+  padding: 24px 32px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  width: 900px;
+  max-width: calc(100vw - 40px);
+  margin: 0 auto;
+}
+.fancybox-inner .materials-popup-content .series-materials-level2 {
+  margin-bottom: 20px;
+  clear: both;
+}
+.fancybox-inner .materials-popup-content .series-materials-level2:last-child {
+  margin-bottom: 0;
+}
+.fancybox-inner .materials-popup-content .series-materials-level2 .b {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.fancybox-inner .materials-popup-content .series-materials-level2 .cl {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+.fancybox-inner .materials-popup-content .series-materials-level3 {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+  width: 60px;
+  height: auto;
+  margin: 0 10px 14px 0;
+  padding: 0;
+  text-align: center;
+}
+.fancybox-inner .materials-popup-content .series-materials-level3 .image {
+  width: 54px;
+  height: 54px;
+  min-height: 54px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  padding: 2px;
+  background: #fff;
+  margin: 0 auto 6px;
+  box-sizing: border-box;
+}
+.fancybox-inner .materials-popup-content .series-materials-level3 .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.fancybox-inner .materials-popup-content .series-materials-level3 .name {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.2;
+  word-break: break-all;
+  padding: 0;
+  display: block;
+  visibility: visible !important;
+}
+
+@media (min-width: 640px) {
+  .fancybox-inner .materials-popup-content .series-materials-level3 {
+    width: 64px;
+    margin: 0 12px 16px 0;
+  }
+  .fancybox-inner .materials-popup-content .series-materials-level3 .image {
+    width: 56px;
+    height: 56px;
+    min-height: 56px;
+  }
+}
+@media (min-width: 1024px) {
+  .fancybox-inner .materials-popup-content .series-materials-level3 {
+    width: 72px;
+    margin: 0 14px 18px 0;
+  }
+  .fancybox-inner .materials-popup-content .series-materials-level3 .image {
+    width: 60px;
+    height: 60px;
+    min-height: 60px;
+  }
+}
+
 
 /* Описание серии */
 .elementdetail .description1 {
