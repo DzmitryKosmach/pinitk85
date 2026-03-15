@@ -119,88 +119,56 @@
 </section>
 
 <section>
-    <h2 class="text-2xl font-bold mb-6">Почему стоит выбрать нас</h2>
+    <div class="flex mt-4 mb-4 items-center flex-row flex-wrap gap-4">
+        <h2 class="text-2xl font-bold ">Почему стоит заказать у нас?</h2>
+
+        <a href="/preimuschestva/" target="_blank">
+        <button id="toggle-benefits-btn"
+                class="self-start md:self-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95">
+            Узнать
+        </button>
+        </a>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-base font-medium">
+        <?php if (!empty($benefits)): ?>
+        <!-- Блок с данными из админки -->
+        <?php foreach ($benefits as $index => $b): ?>
+        <?php $number = ($index % 8) + 1; // Циклически от 1 до 8 ?>
         <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us1.svg" alt="Скидка" class="w-6 h-6" />
+            <div class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
+                <img src="/images/index/us<?php echo $number; ?>.svg" alt="" class="w-6 h-6" />
             </div>
             <p class="text-sm leading-snug">
-                При заказе через сайт дополнительная скидка -5%
+                <?php if (!empty($b['url'])): ?>
+                <a href="<?php echo htmlspecialchars($b['url']); ?>" class="text-inherit hover:underline"><?php echo nl2br(htmlspecialchars($b['text'])); ?></a>
+                <?php else: ?>
+                <?php echo nl2br(htmlspecialchars($b['text'])); ?>
+                <?php endif; ?>
             </p>
         </div>
-
+        <?php endforeach; ?>
+        <?php else: ?>
+        <!-- Fallback, если в админке не заполнены блоки преимуществ -->
+        <?php
+        $fallbackBenefits = array(
+            array('image' => '/images/index/us1.svg', 'text' => 'При заказе через сайт дополнительная скидка -5%'),
+        array('image' => '/images/index/us2.svg', 'text' => 'Качественная гарантия от производителя на 12 месяцев'),
+        array('image' => '/images/index/us3.svg', 'text' => 'Работаем по всей России, отправляем любыми ТК'),
+        array('image' => '/images/index/us4.svg', 'text' => 'Подготовим 3D-проект вашего офиса бесплатно'),
+        array('image' => '/images/index/us5.svg', 'text' => 'Удобные условия покупки как с ПК, так и с ООО'),
+        array('image' => '/images/index/us6.svg', 'text' => 'Сборка мебели (оговаривается с продавцом)'),
+        array('image' => '/images/index/us7.svg', 'text' => 'Экспресс-доставка. Доставка на следующий день'),
+        array('image' => '/images/index/us8.svg', 'text' => 'На рынке уже много лет, наши сотрудники — профессионалы своего дела'),
+        );
+        foreach ($fallbackBenefits as $b): ?>
         <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us2.svg" alt="Скидка" class="w-6 h-6" />
+            <div class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
+                <img src="<?php echo htmlspecialchars($b['image']); ?>" alt="" class="w-6 h-6" />
             </div>
-            <p class="text-sm leading-snug">
-                Качественная гарантия от производителя на 12 месяцев
-            </p>
+            <p class="text-sm leading-snug"><?php echo htmlspecialchars($b['text']); ?></p>
         </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us3.svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                Работаем по всей России, отправляем любыми ТК
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us7.svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                Подготовим 3D-проект вашего офиса бесплатно
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us7 (2).svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                Удобные условия покупки как с ПК, так и с ООО
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us8.svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                Сборка мебели (оговаривается с продавцом)
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us6.svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                Экспресс-доставка. Доставка на следующий день
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div
-                class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us9 (2).svg" alt="Скидка" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                На рынке уже много лет, наши сотрудники — профессионалы своего
-                дела
-            </p>
-        </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 </section>
 

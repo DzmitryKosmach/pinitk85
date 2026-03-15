@@ -126,13 +126,19 @@ function seriesSetPrice(){
 /* Зум картинок материалов серии */
 onLoad(function(){
 	$(document).on('click', '.series-materials a.level1', function(){
+		var viewportWidth = $(window).width();
+
 		$.fancybox.open(
 			this.nextElementSibling.innerHTML,
 			{
-				type			: 'inline',
-				autoSize		: true,
-				padding			: 20,
-				tpl				: {
+				type      : 'inline',
+				// Делаем попап адаптивным и широким
+				autoSize  : false,
+				fitToView : true,
+				maxWidth  : 1100,
+				width     : (viewportWidth < 640 ? '100%' : '90%'),
+				padding   : 10,
+				tpl       : {
 					closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
 				}
 			}

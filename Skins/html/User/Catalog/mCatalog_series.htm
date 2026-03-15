@@ -175,7 +175,7 @@
                                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                                     alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                                     title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                                    class="w-full aspect-[578/409] rounded-xl object-cover cursor-zoom-in"
+                                    class="w-full aspect-[578/409] rounded-xl object-contain cursor-zoom-in"
                                     id="main-product-image"
                                 />
 
@@ -877,7 +877,9 @@
                         <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
                     </a>
                     <div class="materials-zoom hidden">
-                        <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
+                        <div class="materials-popup-content">
+                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
+                        </div>
                     </div>
                     <?php } else { ?>
                     <div class="level1">
@@ -896,6 +898,19 @@
                     </div>
 
                     <style>
+                        /* Адаптивная ширина попапа "Цветовая гамма" */
+                        .materials-popup-content {
+                            width: 100%;
+                            max-width: min(960px, 90vw);
+                        }
+
+                        @media (max-width: 640px) {
+                            .materials-popup-content {
+                                max-width: calc(100vw - 32px);
+                                padding: 12px;
+                            }
+                        }
+
                         #series-materials-row > a, #series-materials-row > .level1 { flex-shrink: 0; }
                         /* Отключаем scale при наведении в свернутом состоянии */
                         #series-materials-row.flex-nowrap a.level1:hover,
