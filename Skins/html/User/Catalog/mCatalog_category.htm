@@ -539,11 +539,9 @@
               const isCurrentlySelected = selectedTabs.has(tabData.id);
               
               if (isCurrentlySelected) {
-                // Снимаем выбор
                 selectedTabs.delete(tabData.id);
                 tabData.isSelected = false;
               } else {
-                // Добавляем выбор
                 selectedTabs.add(tabData.id);
                 tabData.isSelected = true;
               }
@@ -556,8 +554,28 @@
               
               // Обновляем все клоны этого таба
               updateAllTabClones(tabData.id, tabData.isSelected);
-              
-              // Отправляем запрос на фильтрацию с задержкой
+
+              const selectedCount = selectedTabs.size;
+
+              // Если выбран ровно один таб — открываем его теговую страницу с полной перезагрузкой
+              if (selectedCount === 1) {
+                const singleId = Array.from(selectedTabs)[0];
+                const singleTab = allTabsData.find(t => t.id === singleId);
+                if (singleTab && singleTab.href) {
+                  window.location.href = singleTab.href;
+                  return;
+                }
+              }
+
+              // Если не выбрано ни одного таба — открываем теговую страницу раздела (базовый URL категории)
+              if (selectedCount === 0) {
+                if (categoryUrl) {
+                  window.location.href = categoryUrl;
+                  return;
+                }
+              }
+
+              // При нескольких выбранных табах — работаем через AJAX-фильтрацию
               if (filterTimeout) {
                 clearTimeout(filterTimeout);
               }
