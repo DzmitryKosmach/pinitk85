@@ -129,47 +129,8 @@
         </button>
         </a>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-base font-medium">
-        <?php if (!empty($benefits)): ?>
-        <!-- Блок с данными из админки -->
-        <?php foreach ($benefits as $index => $b): ?>
-        <?php $number = ($index % 8) + 1; // Циклически от 1 до 8 ?>
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="/images/index/us<?php echo $number; ?>.svg" alt="" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug">
-                <?php if (!empty($b['url'])): ?>
-                <a href="<?php echo htmlspecialchars($b['url']); ?>" class="text-inherit hover:underline"><?php echo nl2br(htmlspecialchars($b['text'])); ?></a>
-                <?php else: ?>
-                <?php echo nl2br(htmlspecialchars($b['text'])); ?>
-                <?php endif; ?>
-            </p>
-        </div>
-        <?php endforeach; ?>
-        <?php else: ?>
-        <!-- Fallback, если в админке не заполнены блоки преимуществ -->
-        <?php
-        $fallbackBenefits = array(
-            array('image' => '/images/index/us1.svg', 'text' => 'При заказе через сайт дополнительная скидка -5%'),
-        array('image' => '/images/index/us2.svg', 'text' => 'Качественная гарантия от производителя на 12 месяцев'),
-        array('image' => '/images/index/us3.svg', 'text' => 'Работаем по всей России, отправляем любыми ТК'),
-        array('image' => '/images/index/us4.svg', 'text' => 'Подготовим 3D-проект вашего офиса бесплатно'),
-        array('image' => '/images/index/us5.svg', 'text' => 'Удобные условия покупки как с ПК, так и с ООО'),
-        array('image' => '/images/index/us6.svg', 'text' => 'Сборка мебели (оговаривается с продавцом)'),
-        array('image' => '/images/index/us7.svg', 'text' => 'Экспресс-доставка. Доставка на следующий день'),
-        array('image' => '/images/index/us8.svg', 'text' => 'На рынке уже много лет, наши сотрудники — профессионалы своего дела'),
-        );
-        foreach ($fallbackBenefits as $b): ?>
-        <div class="flex items-start gap-3 bg-white p-4 shadow rounded-md">
-            <div class="w-10 h-10 flex items-center justify-center rounded-md shadow-[inset_0_0_10px_4px_rgba(43,72,241,0.2)] shrink-0">
-                <img src="<?php echo htmlspecialchars($b['image']); ?>" alt="" class="w-6 h-6" />
-            </div>
-            <p class="text-sm leading-snug"><?php echo htmlspecialchars($b['text']); ?></p>
-        </div>
-        <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+    <?php include(Config::path('skins') . '/html/Components/benefitsDB.htm'); ?>
+
 </section>
 
 <section class="pt-16">

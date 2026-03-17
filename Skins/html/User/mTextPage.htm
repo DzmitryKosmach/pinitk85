@@ -107,5 +107,9 @@
 			<?php echo ($pageInf['seo_hide'] ? Url_SeoHide::parse($pageInf['text']) : $pageInf['text']); ?>
 			<div class="cl"></div>
 		</div>
+
+        <div class="mt-10">
+            <?php include(Config::path('skins') . '/html/Components/benefitsDB.htm'); ?>
+        </div>
 	</div>
 </div>
