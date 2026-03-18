@@ -127,22 +127,36 @@ function seriesSetPrice(){
 onLoad(function(){
 	$(document).on('click', '.series-materials a.level1', function(){
 		var viewportWidth = $(window).width();
+		var $zoom = $(this).next('.materials-zoom');
+		var $img = $zoom.find('img').first();
+		var isSingleImage = $img.length && $zoom.find('.level1-sub').length === 0;
+		var closeBtnTpl = '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>';
 
-		$.fancybox.open(
-			this.nextElementSibling.innerHTML,
-			{
-				type      : 'inline',
-				// Делаем попап адаптивным и широким
-				autoSize  : false,
+		// Если это один материал (картинка) — открываем как image:
+		// Fancybox сам центрирует и подгоняет модалку под размер изображения.
+		if (isSingleImage) {
+			$.fancybox.open($img.attr('src'), {
+				type      : 'image',
+				autoSize  : true,
 				fitToView : true,
-				maxWidth  : 1100,
-				width     : (viewportWidth < 640 ? '100%' : '90%'),
 				padding   : 10,
-				tpl       : {
-					closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
-				}
-			}
-		);
+				helpers   : { overlay: { locked: false } },
+				tpl       : { closeBtn : closeBtnTpl }
+			});
+			return false;
+		}
+
+		// Иначе (есть подматериалы) — широкий адаптивный inline-попап
+		$.fancybox.open(this.nextElementSibling.innerHTML, {
+			type      : 'inline',
+			autoSize  : false,
+			fitToView : true,
+			maxWidth  : 1100,
+			width     : (viewportWidth < 640 ? '100%' : '90%'),
+			padding   : 10,
+			helpers   : { overlay: { locked: false } },
+			tpl       : { closeBtn : closeBtnTpl }
+		});
 		return false;
 	});
 });

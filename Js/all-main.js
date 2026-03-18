@@ -1234,7 +1234,26 @@ function seriesSetPrice() {
 onLoad(function () {
     $(document).on("click", ".series-materials a.level1", function () {
         var viewportWidth = $(window).width();
+        var $zoom = $(this).next(".materials-zoom");
+        var $img = $zoom.find("img").first();
+        var isSingleImage = $img.length && $zoom.find(".level1-sub").length === 0;
+        var closeBtnTpl =
+            '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>';
 
+        // Один материал (картинка) — открываем как image, чтобы модалка центрировалась и подстраивалась под размер.
+        if (isSingleImage) {
+            $.fancybox.open($img.attr("src"), {
+                type: "image",
+                autoSize: true,
+                fitToView: true,
+                padding: 10,
+                helpers: { overlay: { locked: false } },
+                tpl: { closeBtn: closeBtnTpl },
+            });
+            return false;
+        }
+
+        // Подматериалы — широкий адаптивный inline-попап
         $.fancybox.open(this.nextElementSibling.innerHTML, {
             type: "inline",
             autoSize: false,
@@ -1242,10 +1261,8 @@ onLoad(function () {
             maxWidth: 1100,
             width: viewportWidth < 640 ? "100%" : "90%",
             padding: 10,
-            tpl: {
-                closeBtn:
-                    '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"><span class="text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>',
-            },
+            helpers: { overlay: { locked: false } },
+            tpl: { closeBtn: closeBtnTpl },
         });
         return false;
     });
@@ -1849,7 +1866,7 @@ var oMaterials = new (function () {
             const block = document.getElementById("material-selected");
             if (block) {
                 const top =
-                    block.getBoundingClientRect().top + window.scrollY - 80;
+                    block.getBoundingClientRect().top + window.scrollY - 32;
                 window.scrollTo({ top, behavior: "smooth" });
             }
         }, 100);

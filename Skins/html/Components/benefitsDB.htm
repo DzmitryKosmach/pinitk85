@@ -9,7 +9,18 @@
     <?php foreach ($benefits as $index => $b): ?>
     <?php
         $number = ($index % 8) + 1; // 1..8 для иконок us1..us8
-        $href = !empty($b['url']) ? $b['url'] : '';
+        $href = '';
+        if (!empty($b['url'])) {
+            $hrefRaw = trim($b['url']);
+            // Если ссылка абсолютная (с доменом) — отрезаем протокол и домен
+            if (preg_match('~^https?://[^/]+(.*)$~i', $hrefRaw, $m)) {
+                $hrefPath = $m[1] !== '' ? $m[1] : '/';
+            } else {
+                $hrefPath = $hrefRaw;
+            }
+            // Делаем ссылку всегда корневой относительной: /preimuschestva/...
+            $href = ($hrefPath !== '' && $hrefPath[0] === '/') ? $hrefPath : '/' . $hrefPath;
+        }
         $currentUrl = Url::a(Url::$currentID ?? 0);
         $isCurrent = $href !== '' && rtrim($href, '/') === rtrim($currentUrl, '/');
         $image = !empty($b['image'])
