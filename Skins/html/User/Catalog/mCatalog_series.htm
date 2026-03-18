@@ -1134,6 +1134,7 @@
                 const details = document.getElementById("additionalDetails");
                 const buttonText = document.getElementById("buttonText");
                 const arrow = document.getElementById("arrow");
+                const block = document.getElementById("tabsScroller1");
 
                 // Установим большую max-height для анимации (в px)
                 const fullHeight = "810px"; // подберите по количеству пунктов
@@ -1144,6 +1145,10 @@
                         details.style.maxHeight = null;
                         buttonText.textContent = "Смотреть все характеристики";
                         arrow.classList.remove("rotate-180");
+
+                        // Плавная прокрутка к блоку
+                        const top = block.getBoundingClientRect().top + window.scrollY - 60;
+                        window.scrollTo({ top, behavior: "smooth" });
                     } else {
                         // Раскрытие
                         details.style.maxHeight = fullHeight;

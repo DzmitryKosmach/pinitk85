@@ -114,13 +114,26 @@
 /* Попап материалов в Fancybox (цветовая гамма серии) */
 .fancybox-inner .materials-popup-content {
   background: #fff;
-  padding: 24px 32px;
+  padding: 16px 16px;
   max-height: 85vh;
   overflow-y: auto;
   box-sizing: border-box;
-  width: 900px;
-  max-width: calc(100vw - 40px);
+  /* Адаптивная ширина без горизонтального скролла */
+  width: 100%;
+  max-width: 1040px; /* комфортная ширина для сетки образцов */
   margin: 0 auto;
+}
+@media (min-width: 640px) {
+  .fancybox-inner .materials-popup-content {
+    padding: 20px 24px;
+    max-width: 1120px;
+  }
+}
+@media (min-width: 1280px) {
+  .fancybox-inner .materials-popup-content {
+    padding: 24px 28px;
+    max-width: 1200px;
+  }
 }
 .fancybox-inner .materials-popup-content .series-materials-level2 {
   margin-bottom: 20px;

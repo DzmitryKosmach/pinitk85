@@ -303,7 +303,7 @@ var oMaterials = new (function () {
     setTimeout(function() {
       const block = document.getElementById("material-selected");
       if (block) {
-        const top = block.getBoundingClientRect().top + window.scrollY - 80;
+        const top = block.getBoundingClientRect().top + window.scrollY - 32;
         window.scrollTo({ top, behavior: "smooth" });
       }
     }, 100);
