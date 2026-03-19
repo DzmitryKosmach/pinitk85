@@ -1794,17 +1794,48 @@ var oMaterials = new (function () {
      * Скролим вверх
      */
     this.scrollToSectionPhoto = function () {
-        const block2 = document.getElementById("material-selected2");
-        if (block2) return;
-
         // Небольшая задержка для обновления DOM после выбора материала
         setTimeout(function () {
-            const block = document.getElementById("material-selected");
-            if (block) {
-                const top =
-                    block.getBoundingClientRect().top + window.scrollY - 32;
-                window.scrollTo({ top, behavior: "smooth" });
+            // На mCatalog_item.htm используется блок #material-selected2
+            const block2 = document.getElementById("material-selected2");
+            const block = block2 || document.getElementById("material-selected");
+
+            if (!block) return;
+
+            // Если Fancybox открыт, скроллим ВНУТРИ модалки, а не всю страницу
+            const container =
+                block.closest(".fancybox-inner") || document.querySelector(".fancybox-inner");
+
+            if (
+                container &&
+                container !== document.documentElement &&
+                container !== document.body &&
+                container.scrollHeight > container.clientHeight
+            ) {
+                const containerRect = container.getBoundingClientRect();
+                const targetRect = block.getBoundingClientRect();
+                let newScrollTop =
+                    container.scrollTop +
+                    (targetRect.top - containerRect.top) -
+                    6;
+
+                const maxScrollTop = container.scrollHeight - container.clientHeight;
+                if (newScrollTop < 0) newScrollTop = 0;
+                if (maxScrollTop > 0 && newScrollTop > maxScrollTop) {
+                    newScrollTop = maxScrollTop;
+                }
+
+                if (typeof container.scrollTo === "function") {
+                    container.scrollTo({ top: newScrollTop, behavior: "smooth" });
+                } else {
+                    container.scrollTop = newScrollTop;
+                }
+                return;
             }
+
+            // Fallback: скроллим страницу
+            const top = block.getBoundingClientRect().top + window.scrollY - 32;
+            window.scrollTo({ top, behavior: "smooth" });
         }, 100);
     };
 
