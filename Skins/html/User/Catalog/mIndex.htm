@@ -152,10 +152,10 @@
 					<?php } ?>
 				</div>
 				<?php /*<div class="ajaxpages">
-						<a rel="nofollow" href="#" data-ajaxurl="/" data-ajaxpagesid="ajaxpages_main" data-navpagenomer="1" data-navpagecount="16" data-navnum="2">
+						<button type="button" data-ajaxurl="/" data-ajaxpagesid="ajaxpages_main" data-navpagenomer="1" data-navpagecount="16" data-navnum="2">
 							<i class="animashka"></i>
 							<span>Загрузить еще</span>
-						</a>
+                        </button>
 					</div>*/?>
 			</div>
 			<?php } ?>
@@ -163,46 +163,6 @@
 	</div>
 </div>
 
-<!--
-<div class="index-motivation">
-	<div class="centering">
-	<?php for($i = 1; $i <= 3; $i++) { ?>
-		<div class="block">
-			<div class="title"><?php echo Options::name('index-motivation' . $i . '-title')?></div>
-			<div class="text">
-				<?php echo Options::name('index-motivation' . $i . '-text')?>
-			</div>
-			<div class="center">
-				<?php $bf = trim(Options::name('index-motivation' . $i . '-but-func')); ?>
-				<?php if($bf !== '') { ?>
-					<?php if($bf === 'callback') { ?>
-						<a
-							href="javascript:void(0)"
-							onclick="oCallback.switchBlock($$$('callback-container<?php echo $i?>')); return false;"
-							class="callback button"
-							>
-							<?php echo Options::name('index-motivation' . $i . '-but')?>
-						</a>
-						<div id="callback-container<?php echo $i?>" style="position: relative"></div>
-					<?php } else { ?>
-						<a
-
-							rel="nofollow"
-							href="<?php echo Url::a('contacts')?>?reason=<?php echo $bf?>"
-							class="button fancyajax fancybox.ajax"
-							title="<?php echo Options::name('index-motivation' . $i . '-but')?>"
-							>
-							<?php echo Options::name('index-motivation' . $i . '-but')?>
-						</a>
-					<?php } ?>
-				<?php } ?>
-			</div>
-		</div>
-	<?php } ?>
-	</div>
-</div>
-
-<div class="spacer"><img src="/Skins/img/blank.gif" width="10" alt=""></div>-->
 
 <div class="index-benefits">
     <h2>Преимущества работы с нами</h2>
