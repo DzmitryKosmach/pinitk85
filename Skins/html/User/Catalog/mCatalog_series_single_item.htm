@@ -268,20 +268,26 @@
 <div id="title" class="title">
     <div>
         <!-- Хлебные крошки -->
-        <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+        <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6" itemscope itemtype="http://schema.org/BreadcrumbList">
             <?php if(count($breadcrumbs)) { ?>
             <?php $bcLast = array_pop($breadcrumbs); ?>
             <?php $position = 0; ?>
             <?php foreach($breadcrumbs as $bc) { ?>
             <?php $position = $position + 1; ?>
-            <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline">
-                <?php echo $bc['name']; ?>
-            </a>
+            <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline" itemprop="item">
+                    <span itemprop="name"><?php echo $bc['name']; ?></span>
+                </a>
+                <meta itemprop="position" content="<?php echo $position; ?>">
+            </span>
             <span class="mx-1">›</span>
             <?php } ?>
-            <span class="text-gray-700">
-                    <?php echo $bcLast['name']; ?>
+            <span class="text-gray-700" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
+                    <span itemprop="name"><?php echo $bcLast['name']; ?></span>
                 </span>
+                <meta itemprop="position" content="<?php echo $position + 1; ?>">
+            </span>
             <?php } ?>
         </nav>
 
@@ -400,7 +406,10 @@
     </div>
 </div>
 
-<div id="content" class="content">
+<div id="content" class="content" itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="brand" content="<?php echo $pageInf['header']; ?>">
+    <meta itemprop="name" content="<?php echo $pageInf['header']; ?>">
+    <link itemprop="url" href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <div>
         <div>
             <div class="flex flex-col sm2:flex-row gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
@@ -428,6 +437,7 @@
 									 )?>"
                                      alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                                      title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                                     itemprop="image"
                                 >
                                 <?php /*<div class="glass_lupa"></div>*/?>
 
@@ -650,6 +660,16 @@
           $defaultQty = $isBulk ? 4 : 1;
         ?>
                 <div>
+                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+                        <meta itemprop="priceCurrency" content="RUB">
+                        <meta itemprop="price" content="<?= abs($priceMin) ? $priceMin : 0 ?>">
+                        <link itemprop="url" href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+                        <?php if(!empty($seriesInf['in_stock'])) { ?>
+                        <link itemprop="availability" href="http://schema.org/InStock">
+                        <?php } else { ?>
+                        <link itemprop="availability" href="http://schema.org/OutOfStock">
+                        <?php } ?>
+                    </div>
 
                     <form class="add2basketform clearfix main-cart-form"
                           id="catalog-item-full-<?= $itemId ?>"

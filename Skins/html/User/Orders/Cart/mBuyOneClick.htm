@@ -88,7 +88,9 @@
                 })
               });
 
-              grecaptcha.render('captcha_1click-form', {'sitekey' : '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
+              if (window.__mebelioniRenderRecaptchaById) {
+                window.__mebelioniRenderRecaptchaById('captcha_1click-form');
+              }
             </script>
             <div class="line clearfix">
               <input type="text" name="fio" value="" placeholder="Ваше имя*:"

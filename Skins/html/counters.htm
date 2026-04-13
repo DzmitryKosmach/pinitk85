@@ -1,5 +1,9 @@
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
+<!-- Yandex.Metrika counter (отложенная загрузка — не блокирует первый рендер и уменьшает «unused JS» в критической цепочке) -->
+<script type="text/javascript">
+(function(){
+    function initYm(){
+        if (window.__ymStarted) return;
+        window.__ymStarted = true;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
@@ -13,6 +17,13 @@
         webvisor:true,
         trackHash:true
     });
+    }
+    if (window.requestIdleCallback) {
+        requestIdleCallback(function(){ initYm(); }, { timeout: 8000 });
+    } else {
+        window.addEventListener('load', function(){ setTimeout(initYm, 4000); });
+    }
+})();
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/19019251" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
