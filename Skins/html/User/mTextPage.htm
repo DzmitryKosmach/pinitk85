@@ -13,7 +13,7 @@
         </a>
         <span class="mx-1">›</span>
         <?php } ?>
-        <span class="text-gray-700"><?php echo $bcLast['name']; ?></span>
+        <span class="text-gray-700 uppercase"><?php echo $bcLast['name']; ?></span>
         <?php } ?>
       </nav>
 
@@ -108,8 +108,14 @@
 			<div class="cl"></div>
 		</div>
 
-        <div class="mt-10">
-            <?php include(Config::path('skins') . '/html/Components/benefitsDB.htm'); ?>
-        </div>
+    <?php
+      $tpUriPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+      $tpShowBenefits = is_string($tpUriPath) && preg_match('~^/preimuschestva(?:/|$)~', $tpUriPath);
+    ?>
+    <?php if ($tpShowBenefits) { ?>
+      <div class="mt-10">
+          <?php include(Config::path('skins') . '/html/Components/benefitsDB.htm'); ?>
+      </div>
+    <?php } ?>
 	</div>
 </div>

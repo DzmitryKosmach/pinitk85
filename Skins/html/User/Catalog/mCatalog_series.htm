@@ -17,25 +17,32 @@
 
 <div itemscope itemtype="http://schema.org/Product" id="content" class="content">
     <meta itemprop="brand" content="<?php echo $pageInf['header']; ?>">
-    <meta itemprop="url"
-          content="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+    <meta itemprop="name" content="<?php echo $pageInf['header']; ?>">
+    <link itemprop="url"
+          href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <div>
         <div>
 
             <!-- Хлебные крошки -->
-            <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+            <nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6" itemscope itemtype="http://schema.org/BreadcrumbList">
                 <?php if(count($breadcrumbs)) { ?>
                 <?php $bcLast = array_pop($breadcrumbs); ?>
                 <?php $position = 0; ?>
                 <?php foreach($breadcrumbs as $bc) { ?>
                 <?php $position = $position + 1; ?>
-                <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline">
-                    <?php echo $bc['name']; ?>
-                </a>
+                <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a href="<?php echo $bc['url']; ?>" class="hover:text-gray-700 hover:underline" itemprop="item">
+                        <span itemprop="name"><?php echo $bc['name']; ?></span>
+                    </a>
+                    <meta itemprop="position" content="<?php echo $position; ?>">
+                </span>
                 <span class="mx-1">›</span>
                 <?php } ?>
-                <span class="text-gray-700">
-                    <?php echo $bcLast['name']; ?>
+                <span class="text-gray-700" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
+                        <span itemprop="name"><?php echo $bcLast['name']; ?></span>
+                    </span>
+                    <meta itemprop="position" content="<?php echo $position + 1; ?>">
                 </span>
                 <?php } ?>
             </nav>
@@ -177,6 +184,7 @@
                                     title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                                     class="w-full aspect-[578/409] rounded-xl object-contain cursor-zoom-in"
                                     id="main-product-image"
+                                    itemprop="image"
                                 />
 
                                 <!-- Точки на изображении с информацией-->
@@ -697,6 +705,16 @@
 
                     <!-- Итоговая цена -->
                     <div class="flex flex-wrap gap-2 sm:gap-4">
+                        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+                            <meta itemprop="priceCurrency" content="RUB">
+                            <meta itemprop="price" content="<?php echo $offer_price; ?>">
+                            <link itemprop="url" href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+                            <?php if(!empty($seriesOrig['in_stock'])) { ?>
+                            <link itemprop="availability" href="http://schema.org/InStock">
+                            <?php } else { ?>
+                            <link itemprop="availability" href="http://schema.org/OutOfStock">
+                            <?php } ?>
+                        </div>
                         <div class="flex items-end sm:pb-1 text-base md:text-lg">Цена комплекта:</div>
                         <div>
                             <p id="series-set-price-old" class="text-lg leading-4 text-gray-500 line-through">

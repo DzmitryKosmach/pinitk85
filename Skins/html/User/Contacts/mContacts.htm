@@ -29,7 +29,7 @@
     <div class="">
         <div class="clearfix">
             <?php } else { ?>
-            <script src="/Js/core/all-core.js"></script>
+            <?php /* AJAX-форма вставляется в страницу с layout Main — jQuery/core уже подключены; лишний all-core.js дублировал загрузку */ ?>
             <?php } ?>
 
             <div>
@@ -306,7 +306,9 @@
                             </script>
 
                             <script>
-                                grecaptcha.render('captcha_contacts-form1', { 'sitekey': '6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL' });
+                                if (window.__mebelioniRenderRecaptchaById) {
+                                    window.__mebelioniRenderRecaptchaById('captcha_contacts-form1');
+                                }
                             </script>
                             <?php } ?>
 

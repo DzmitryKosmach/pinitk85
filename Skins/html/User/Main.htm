@@ -48,6 +48,26 @@ function getHomeUrl() {
     <?php
 // noindex start
 
+    // 1. Добавленные страницы
+    $noindex_pages = [
+        'history',
+        'goszakazy-i-tendery',
+        'our-production',
+        'dlya-biznesa-korporativnym-klientam-dizajneram-i-arhitektoram',
+        'vopros-otvet',
+        'design-project',
+        'oplata2',
+        'oplata',
+        'sertifikaty-kachestva'
+    ];
+
+    foreach ($noindex_pages as $page) {
+        if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+            echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+            break; // если страница найдена, дальше не проверяем
+        }
+    }
+
     // 2. Страницы с ценой (?price)
     // Важно: REQUEST_URI обычно не содержит '?', лучше проверять $_GET или после знака вопроса
     if(strpos($_SERVER['REQUEST_URI'], 'price') !== false) {
@@ -201,8 +221,9 @@ function getHomeUrl() {
             padding: 20px;
         }
 
+        /* Было -20px: виджет reCAPTCHA наезжал на поле телефона и выглядел как «кнопка Close» */
         #captcha_callback-left>div {
-            margin-top: -20px;
+            margin-top: 8px;
         }
 
         ::selection {
@@ -343,8 +364,6 @@ function getHomeUrl() {
     </script>
 
     <?php echo Options::name('head-scripts'); ?>
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCaptchaCallback&render=explicit" async
-            defer></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
 
@@ -371,7 +390,7 @@ function getHomeUrl() {
             <div class="flex items-center gap-2">
                 <!-- Логотип (обычное состояние) -->
                 <a href="<?php echo getHomeUrl(); ?>" id="logo-main" class="transition-all duration-300">
-                    <img src="<?php echo getImagePath('/images/index/logo.png'); ?>" alt="Логотип"
+                    <img src="<?php echo getImagePath('/images/index/logo.webp'); ?>" alt="Логотип"
                          class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]" />
                 </a>
 
@@ -559,7 +578,7 @@ function getHomeUrl() {
 
                         <!-- Корзина -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-cart')?>">
+                            <a href="<?php echo Url::a('catalog-cart')?>" aria-label="Корзина">
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50">
                                     <path
@@ -579,10 +598,9 @@ function getHomeUrl() {
                             </a>
                         </div>
 
-
                         <!-- Избранное -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-favorite')?>">
+                            <a href="<?php echo Url::a('catalog-favorite')?>" aria-label="Избранное">
                                 <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -591,18 +609,18 @@ function getHomeUrl() {
                                 </svg>
                                 <!-- Бейдж с количеством товаров в избранном -->
                                 <?php
-                    $favoriteCount = Catalog_Favorites::count();
-                  ?>
+                                    $favoriteCount = Catalog_Favorites::count();
+                                ?>
                                 <span id="favorite-badge-count-desktop"
                                       class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $favoriteCount; ?>
-                  </span>
+                                    <?php echo $favoriteCount; ?>
+                                </span>
                             </a>
                         </div>
 
                         <!-- Сравнение -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-compare')?>">
+                            <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить">
                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -616,8 +634,8 @@ function getHomeUrl() {
                                     ?>
                                 <span id="compare-badge-count-desktop"
                                       class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
-                    <?php echo $compareCount; ?>
-                  </span>
+                                    <?php echo $compareCount; ?>
+                                </span>
                             </a>
                         </div>
                     </div>
@@ -855,7 +873,7 @@ function getHomeUrl() {
         <!-- Поле поиска -->
         <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex">
             <input type="text" name="text" placeholder="Поиск"
-                   class="w-full min-w-0 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 focus:outline-none"
+                   class="w-full min-w-0 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 rounded-r-lg focus:outline-none"
                    value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
                    autocomplete="off" />
         </form>
@@ -1126,7 +1144,7 @@ function getHomeUrl() {
 <footer class="bg-footer text-black text-sm pt-8 pb-4 mt-6">
     <div class="md:hidden block w-full text-center">
         <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"><img
-            src="<?php echo getImagePath('/images/index/logo-footer.png'); ?>" alt="Логотип" class="mb-4" /></a>
+            src="<?php echo getImagePath('/images/index/logo-footer.webp'); ?>" alt="Логотип" class="mb-4" /></a>
     </div>
 
     <!-- Блок основной -->
@@ -1404,11 +1422,12 @@ function getHomeUrl() {
 </div>
 
 <div
-    class="modal modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
+    class="modal scale-90 xs2:scale-100 modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
     id="kmodal" style="display:none; left: 50%;">
     <a href="javascript:void(0);"
-       class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-5xl text-black-500 z-10 rounded-full hover:bg-red-400 transition-colors"
-       onclick="kclose(); return false;">
+       class="modal-order-call__close absolute top-2 right-2 w-10 h-10 flex items-center justify-center text-3xl text-gray-600 hover:text-black z-[25] rounded-full hover:bg-red-400 transition-colors"
+       onclick="kclose(); return false;"
+       aria-label="Закрыть">
         ×
     </a>
 
@@ -1432,24 +1451,34 @@ function getHomeUrl() {
         </div>
     </div>
 
-    <div id="wix_call" class="modal-order-call bg-white p-6 md:p-8 mt-8" style="display: block">
+    <div id="wix_call" class="modal-order-call rounded-2xl bg-white p-6 md:p-8 mt-12 relative z-[1]" style="display: block">
         <div class="modal-order-call__caption text-lg font-semibold text-start mb-6" id="timertext">
             Хотите мы вам перезвоним?
         </div>
-        <div class="modal-order-call__label mb-2">
-            <label id="design-order-phone-modal" class="label block text-gray-700 font-medium">Телефон:<sup
-                class="text-red-500">*</sup></label>
-        </div>
-
         <form action="/contacts/callback/" method="POST" id="form_2calls_myFormId">
             <div class="modal-order-call-form space-y-4">
                 <div class="flex flex-col gap-4">
                     <div class="modal-order-call-form__input">
                         <div>
+                            <label for="wi_name_modal" class="label block text-gray-700 font-medium mb-2">Ваше имя:<sup
+                                class="text-red-500">*</sup></label>
                             <input
-                                class="maskPhone !w-full pl-4 pr-10 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
-                                type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required="" />
-                            <input type="hidden" name="name" value="жду звонка" />
+                                class="!w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                                type="text" name="name" value="" id="wi_name_modal" placeholder="Введите имя" maxlength="100"
+                                required autocomplete="name" />
+                            <div style="display:none" aria-hidden="true">
+                                <input type="text" name="last_name" id="last_name_cb" autocomplete="off" maxlength="100" tabindex="-1" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-order-call-form__input">
+                        <div>
+                            <label for="wi_tele233" class="label block text-gray-700 font-medium mb-2">Телефон:<sup
+                                class="text-red-500">*</sup></label>
+                            <input
+                                class="maskPhone !w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                                type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required
+                                inputmode="tel" autocomplete="tel" />
                             <input type="hidden" name="XMLHttpRequest" value="1" />
                             <div class="text-xs text-gray-400 mt-1">
                                 Внимание! Не забудьте указать код города
@@ -1469,7 +1498,7 @@ function getHomeUrl() {
                      id="captcha_callback-left">
                 </div>
             </div>
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_token']; ?>" />
+            <input type="hidden" name="csrf_token" value="<?php echo isset($_SESSION['_token']) ? hsch($_SESSION['_token']) : ''; ?>" />
             <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>" />
         </form>
         <script>
@@ -1480,6 +1509,7 @@ function getHomeUrl() {
                         url: jQuery(this).attr("action"),
                         type: "POST",
                         data: jQuery(this).serialize(),
+                        dataType: "text",
                         success: function (d) {
                             console.log(d);
                             if (d.search('{"location":') === 0) {
@@ -1490,7 +1520,7 @@ function getHomeUrl() {
                                 }
                             }
                             var error = jQuery(d).find("#form-errors").html();
-                            if (typeof error != "undefined") {
+                            if (typeof error != "undefined" && error !== null && String(error).trim() !== "") {
                                 jQuery("#timertext").html(
                                     '<span style="color:red;">' + error + "</span>"
                                 );
@@ -1502,8 +1532,8 @@ function getHomeUrl() {
                                 return false;
                             }
                         },
-                        errors: function (data) {
-                            console.log(data);
+                        error: function (xhr, status, err) {
+                            console.log(status, err, xhr && xhr.responseText);
                         },
                     });
                     return false;
@@ -1669,24 +1699,19 @@ function getHomeUrl() {
     }
 
     function jduzvonka(k) {
-        var phone = jQuery("#wi_tele233").val();
-        if (phone.length > 10) {
-            jQuery("#wi_tele233").removeClass("errk");
-            /*$.ajax({
-            type: "POST",
-            url: '/mail.php',
-            data: {'phone': phone},
-            success: function(data) {
-                kclose();
-                alert('Ждите звонка!');
-            },
-            //dataType: 'json'
-        });*/
-            return true;
-        } else {
-            jQuery("#wi_tele233").addClass("errk");
+        var name = jQuery.trim(jQuery("#wi_name_modal").val() || "");
+        var phone = jQuery.trim(jQuery("#wi_tele233").val() || "");
+        jQuery("#wi_name_modal").removeClass("errk");
+        jQuery("#wi_tele233").removeClass("errk");
+        if (name.length < 1) {
+            jQuery("#wi_name_modal").addClass("errk");
             return false;
         }
+        if (phone.length > 10) {
+            return true;
+        }
+        jQuery("#wi_tele233").addClass("errk");
+        return false;
     }
 
     function getCookie(name) {
@@ -1781,14 +1806,104 @@ function getHomeUrl() {
 </script>
 
 <script>
-    var onloadCaptchaCallback = function () {
+    (function () {
         var siteKey = "6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL";
-        $(".captcha-item").each(function (index) {
-            grecaptcha.render($(this).attr("id"), {
-                sitekey: siteKey,
-            });
+        var loadStarted = false;
+
+        function renderCaptchaWidgets() {
+            if (!window.grecaptcha || !window.grecaptcha.render) {
+                return;
+            }
+            var nodes = document.querySelectorAll(".captcha-item");
+            for (var i = 0; i < nodes.length; i++) {
+                var el = nodes[i];
+                if (!el.id || el.getAttribute("data-recaptcha-inited") === "1") {
+                    continue;
+                }
+                el.setAttribute("data-recaptcha-inited", "1");
+                grecaptcha.render(el.id, { sitekey: siteKey });
+            }
+        }
+
+        window.onloadCaptchaCallback = function () {
+            renderCaptchaWidgets();
+        };
+
+        function injectRecaptcha() {
+            if (window.grecaptcha && window.grecaptcha.render) {
+                renderCaptchaWidgets();
+                return;
+            }
+            if (loadStarted) {
+                return;
+            }
+            loadStarted = true;
+            var s = document.createElement("script");
+            s.src = "https://www.google.com/recaptcha/api.js?onload=onloadCaptchaCallback&render=explicit";
+            s.async = true;
+            s.defer = true;
+            document.head.appendChild(s);
+        }
+
+        window.__mebelioniLoadRecaptcha = injectRecaptcha;
+
+        /** Для AJAX-форм: дождаться API и отрисовать один виджет по id */
+        window.__mebelioniRenderRecaptchaById = function (widgetId) {
+            var tries = 0;
+            function step() {
+                if (window.grecaptcha && window.grecaptcha.render) {
+                    var el = document.getElementById(widgetId);
+                    if (!el) {
+                        return;
+                    }
+                    if (el.getAttribute("data-recaptcha-inited") === "1") {
+                        return;
+                    }
+                    el.setAttribute("data-recaptcha-inited", "1");
+                    grecaptcha.render(widgetId, { sitekey: siteKey });
+                    return;
+                }
+                injectRecaptcha();
+                if (++tries < 200) {
+                    setTimeout(step, 50);
+                }
+            }
+            step();
+        };
+
+        function scheduleCaptcha() {
+            if (!document.querySelector(".captcha-item")) {
+                return;
+            }
+            var run = function () {
+                injectRecaptcha();
+            };
+            if (window.requestIdleCallback) {
+                window.requestIdleCallback(run, { timeout: 5000 });
+            } else {
+                setTimeout(run, 3000);
+            }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", scheduleCaptcha);
+        } else {
+            scheduleCaptcha();
+        }
+
+        ["scroll", "mousemove", "touchstart", "keydown"].forEach(function (ev) {
+            document.addEventListener(
+                ev,
+                function once() {
+                    document.removeEventListener(ev, once, true);
+                    if (document.querySelector(".captcha-item")) {
+                        injectRecaptcha();
+                    }
+                },
+                { capture: true, passive: true, once: true }
+            );
         });
-    };
+    })();
 </script>
 </body>
 
