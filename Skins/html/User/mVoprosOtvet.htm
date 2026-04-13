@@ -1,0 +1,211 @@
+
+<!-- Хлебные крошки -->
+<nav class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-6">
+  <a href="/" class="hover:text-gray-700 hover:underline">Главная</a>
+  <span class="mx-1">›</span>
+  <span class="uppercase">Вопрос-Ответ</span>
+</nav>
+
+<style>
+  .faq-answer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s ease-out;
+  }
+  .faq-answer.active {
+      grid-template-rows: 1fr;
+  }
+  .faq-inner {
+      overflow: hidden;
+      min-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+  }
+  .faq-answer.active .faq-inner {
+      opacity: 1;
+      visibility: visible;
+  }
+</style>
+
+<section class="mb-24">
+
+    <div class="mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold mb-8 text-gray-900">Вопрос-Ответ</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- FAQ Section -->
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200" onclick="toggleFaq(this)">
+                        <span class="font-semibold text-gray-900 text-lg sm:text-xl pr-4">Какой срок поставки мебели?</span>
+                        <span class="text-5xl text-blue-600 font-light flex-shrink-0 w-12 h-12 flex items-center justify-center transition-all duration-300" data-icon>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-inner px-6">
+                            <div class="text-gray-600 pb-4 leading-relaxed text-base sm:text-lg">
+                                <p>Срок поставки зависит от конкретной коллекции.</p>
+                                <p>В нашем ассортименте более 100 вариантов кабинетов. Если Вам необходимо быстро (до 3-5 рабочих) дней оборудовать кабинет, то мы предложим кабинеты из наличия. Причем это могут быть кабинеты как из эконом, так и премиум уровня. Если срок 2-4 недели Вам подходит, то вариантов будет больше. Кабинеты европейского производства (Италия, Испания) - сроки 2-4 месяца</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200" onclick="toggleFaq(this)">
+                        <span class="font-semibold text-gray-900 text-lg sm:text-xl pr-4">Цены включают НДС 22%?</span>
+                        <span class="text-5xl text-blue-600 font-light flex-shrink-0 w-12 h-12 flex items-center justify-center transition-all duration-300" data-icon>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-inner px-6">
+                            <div class="text-gray-600 pb-4 leading-relaxed text-base sm:text-lg">
+                                <p>Да, все указанные цены включают НДС 22%. Мы работаем с юридическими лицами и предоставляем полный пакет документов для бухгалтерии.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200" onclick="toggleFaq(this)">
+                        <span class="font-semibold text-gray-900 text-lg sm:text-xl pr-4">Где можно посмотреть мебель вживую?</span>
+                        <span class="text-5xl text-blue-600 font-light flex-shrink-0 w-12 h-12 flex items-center justify-center transition-all duration-300" data-icon>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-inner px-6">
+                            <div class="text-gray-600 pb-4 leading-relaxed text-base sm:text-lg">
+                                <p>Вы можете посетить наш шоурум по адресу: г. Москва, ул. Примерная, д. 123. Также мы организуем выездные показы мебели на вашей территории.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200" onclick="toggleFaq(this)">
+                        <span class="font-semibold text-gray-900 text-lg sm:text-xl pr-4">Входит ли доставка и сборка в стоимость?</span>
+                        <span class="text-5xl text-blue-600 font-light flex-shrink-0 w-12 h-12 flex items-center justify-center transition-all duration-300" data-icon>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-inner px-6">
+                            <div class="text-gray-600 pb-4 leading-relaxed text-base sm:text-lg">
+                                <p>Доставка и сборка рассчитываются отдельно и зависят от объема заказа и удаленности объекта. При заказе от 500 000 руб. доставка по МКАД бесплатная.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200" onclick="toggleFaq(this)">
+                        <span class="font-semibold text-gray-900 text-lg sm:text-xl pr-4">Что входит в услугу "Дизайн проект офиса"</span>
+                        <span class="text-5xl text-blue-600 font-light flex-shrink-0 w-12 h-12 flex items-center justify-center transition-all duration-300" data-icon>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-inner px-6">
+                            <div class="text-gray-600 pb-4 leading-relaxed text-base sm:text-lg">
+                                <p class="py-4">Услуга включает: замер помещения, разработку 3D-визуализации, подбор мебели и материалов, составление сметы. Срок разработки проекта - 3-5 рабочих дней.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8 h-fit sticky top-8">
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900">Задать вопрос</h2>
+
+                <?php if (!empty($pageInf['form_errors']) && is_array($pageInf['form_errors'])) { ?>
+                    <div class="mb-4 text-red-700 text-sm">
+                        <?php foreach ($pageInf['form_errors'] as $err) { ?>
+                            <div><?php echo hsch($err); ?></div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <form id="question-form" class="space-y-4" method="post">
+                    <div>
+                        <input type="text" name="name" value="<?php echo hsch($pageInf['form_values']['name'] ?? ''); ?>" placeholder="Ваше имя*:"
+                            maxlength="100"
+                            msg_maxlen="Имя не должно превышать 100 символов"
+                            required
+                            msg_required="Вы не ввели ваше имя"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    </div>
+
+                    <div style="display:none">
+                        <input type="text" name="last_name" id="last_name" autocomplete="off" maxlength="100">
+                    </div>
+
+                    <div>
+                        <input type="text" name="phone" value="<?php echo hsch($pageInf['form_values']['phone'] ?? ''); ?>" placeholder="Номер телефона*:"
+                            maxlength="20"
+                            msg_maxlen="Номер телефона не должен превышать 20 символов"
+                            required
+                            msg_required="Вы не ввели номер телефона"
+                            class="maskPhone w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    </div>
+
+                    <div>
+                        <input type="email" name="email" value="<?php echo hsch($pageInf['form_values']['email'] ?? ''); ?>" placeholder="Ваш E-mail*:"
+                            maxlength="1000"
+                            msg_maxlen="E-mail не должен превышать 1000 символов"
+                            required
+                            msg_required="Вы не ввели E-mail"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    </div>
+
+                    <div>
+                        <textarea name="text" placeholder="Текст сообщения*:" rows="4"
+                            maxlength="5000"
+                            msg_maxlen="Текст сообщения не должен превышать 5000 символов"
+                            required
+                            msg_required="Вы не ввели текст сообщения"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"><?php echo hsch($pageInf['form_values']['text'] ?? ''); ?></textarea>
+                    </div>
+
+                    <div class="captcha-item mx-auto mt-1" id="captcha_vopros_otvet"></div>
+
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 px-6 rounded-md transition-colors duration-200 shadow-md hover:shadow-lg outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Задать вопрос
+                    </button>
+
+                    <input type="hidden" name="csrf_token" value="<?php echo hsch($pageInf['csrf_token'] ?? ''); ?>">
+                    <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)); ?>">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('[data-icon]');
+            const isActive = answer.classList.contains('active');
+
+            // Закрываем все элементы
+            document.querySelectorAll('.faq-answer').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('[data-icon]').forEach(ic => {
+                ic.textContent = '+';
+            });
+
+            // Открываем кликнутый, если он был закрыт
+            if (!isActive) {
+                answer.classList.add('active');
+                icon.textContent = '−';
+            }
+        }
+
+        // Отправка формы обрабатывается на сервере (POST), поэтому JS-перехват не нужен.
+    </script>
+
+
+
+</section>
+
+
+
