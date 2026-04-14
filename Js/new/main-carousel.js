@@ -54,7 +54,7 @@
             );
             dot.dataset.index = i;
             if (i === 0) {
-                dot.classList.add("bg-blue-600");
+                dot.classList.add("bg-primary");
             } else {
                 dot.classList.add("bg-gray-300");
             }
@@ -75,7 +75,7 @@
 
             // Обновляем активную точку
             for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.toggle("bg-blue-600", i === currentIndex);
+                dots[i].classList.toggle("bg-primary", i === currentIndex);
                 dots[i].classList.toggle("bg-gray-300", i !== currentIndex);
             }
 

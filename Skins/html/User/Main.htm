@@ -64,8 +64,8 @@ function getHomeUrl() {
     foreach ($noindex_pages as $page) {
         if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
             echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
-            break; // если страница найдена, дальше не проверяем
-        }
+    break; // если страница найдена, дальше не проверяем
+    }
     }
 
     // 2. Страницы с ценой (?price)
@@ -368,7 +368,7 @@ function getHomeUrl() {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <!-- Tailwind -->
-    <link rel="stylesheet" href="/dist/output.css">
+    <link rel="stylesheet" href="/pinitk85/dist/output.css">
     <?php echo CssCopmress::load('series') ?>
 
 </head>
@@ -796,7 +796,7 @@ function getHomeUrl() {
             <!-- Кнопка -->
 
             <div
-                class="flex flex-1 h-full items-center gap-2 px-2 sm:px-6 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
+                class="flex flex-1 h-full items-center gap-2 px-2 sm:px-6 md:px-8 py-2 sm:gap-4 bg-primary text-white text-base hover:bg-primary-dark transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
                 <a href="/catalog/" class="catalog-main-link hover:underline" target="_blank">Каталог</a>
                 <div class="catalog-toggle cursor-pointer">
                     <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1560,6 +1560,42 @@ function getHomeUrl() {
         </div>
     </div>
 </div>
+
+<!-- ВИДЖЕТ ЦВЕТОВ -->
+<div class="color-widget" id="colorWidget">
+    <div class="color-widget-label">Цвет</div>
+    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue')" title="Синий"></div>
+    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green')" title="Зелёный"></div>
+    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red')" title="Красный"></div>
+</div>
+
+<script>
+    function setColor(color) {
+        const root = document.documentElement;
+        if (color === 'blue') {
+            root.removeAttribute('data-theme');
+        } else {
+            root.setAttribute('data-theme', color);
+        }
+
+        document.querySelectorAll('.color-swatch').forEach(s => {
+            s.classList.toggle('active', s.dataset.color === color);
+        });
+        localStorage.setItem('themeColor', color);
+    }
+
+    function toggleMobile() {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    (function init() {
+        const savedColor = localStorage.getItem('themeColor');
+        if (savedColor) {
+            setColor(savedColor);
+        }
+    })();
+</script>
+
 <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
 <style>
     .fade-in {
