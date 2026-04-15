@@ -84,10 +84,9 @@
                                 class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                 data-id="<?php echo (int)$seriesInf['id']; ?>"
                             >
-                                <a
-                                    rel="nofollow"
+                                <button
+                                    type="button"
                                     class="add2compare hover:opacity-50"
-                                    href="javascript:void(0)"
                                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                     title="Добавить к сравнению"
                                 >
@@ -103,7 +102,7 @@
                                             fill="#3C3C3A"
                                         />
                                     </svg>
-                                </a>
+                                </button>
                             </div>
 
                             <!-- Кнопка "Убрать из сравнения" -->
@@ -111,10 +110,9 @@
                                 class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                 data-id="<?php echo (int)$seriesInf['id']; ?>"
                             >
-                                <a
-                                    rel="nofollow"
+                                <button
+                                    type="button"
                                     class="add2compare hover:opacity-50"
-                                    href="javascript:void(0)"
                                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                     title="Убрать из сравнения"
                                 >
@@ -142,7 +140,7 @@
                                             />
                                         </g>
                                     </svg>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -198,10 +196,18 @@
                                     <?php if(!$i['on_series_photo']) continue; ?>
 
 
+                                    <?php
+                                    $pointLeft = round(100 * $i['on_series_photo_x'] / Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4);
+                                    $pointTop = round(100 * $i['on_series_photo_y'] / Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4);
+                                    // Страховка от некорректных координат, чтобы точка не выходила за контейнер.
+                                    $pointLeft = max(0, min(100, $pointLeft));
+                                    $pointTop = max(0, min(100, $pointTop));
+                                    ?>
+
                                     <!-- Общая обёртка для позиционирования -->
                                     <div class="absolute" style="
-                      left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
-                      top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
+                      left: <?php echo $pointLeft; ?>%;
+                      top: <?php echo $pointTop; ?>%;
                       width: 28px;
                       height: 28px;
                       transform: translate(-50%, -50%);
@@ -215,9 +221,8 @@
                                             viewBox="0 0 50 50"
                                             class="absolute pointer-events-auto cursor-pointer z-30"
                                             style="
-          left: <?php echo round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4)?>%;
-          top: <?php echo round(100*$i['on_series_photo_y']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_H, 4)?>%;
-          transform: translate(-50%, -50%);
+          left: 0;
+          top: 0;
           filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.3));
         "
                                             onmouseover="showLabel2(<?php echo $i['id']; ?>)"
@@ -236,7 +241,7 @@
       whitespace-normal break-words"
                                             style="
         <?php
-        $leftPosition = round(100*$i['on_series_photo_x']/Catalog_Series_SetItems::SET_IMAGE_DEFAULT_W, 4);
+        $leftPosition = $pointLeft;
         // Если точка близко к правой стороне (более 80%), сдвигаем подсказку левее
         if ($leftPosition > 80) {
             echo 'left: 50%;';
@@ -348,10 +353,9 @@
                                         class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                         data-id="<?php echo (int)$seriesInf['id']; ?>"
                                     >
-                                        <a
-                                            rel="nofollow"
+                                        <button
+                                            type="button"
                                             class="add2compare hover:opacity-50"
-                                            href="javascript:void(0)"
                                             onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                             title="Добавить к сравнению"
                                         >
@@ -367,7 +371,7 @@
                                                     fill="#3C3C3A"
                                                 />
                                             </svg>
-                                        </a>
+                                        </button>
                                     </div>
 
                                     <!-- Кнопка "Убрать из сравнения" -->
@@ -375,10 +379,9 @@
                                         class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                         data-id="<?php echo (int)$seriesInf['id']; ?>"
                                     >
-                                        <a
-                                            rel="nofollow"
+                                        <button
+                                            type="button"
                                             class="add2compare hover:opacity-50"
-                                            href="javascript:void(0)"
                                             onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                             title="Убрать из сравнения"
                                         >
@@ -406,7 +409,7 @@
                                                     />
                                                 </g>
                                             </svg>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
 

@@ -328,10 +328,9 @@
                             class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                             data-id="<?php echo (int)$seriesInf['id']; ?>"
                         >
-                            <a
-                                rel="nofollow"
+                            <button
+                                type="button"
                                 class="add2compare hover:opacity-50"
-                                href="javascript:void(0)"
                                 onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                 title="Добавить к сравнению"
                             >
@@ -347,7 +346,7 @@
                                         fill="#3C3C3A"
                                     />
                                 </svg>
-                            </a>
+                            </button>
                         </div>
 
                         <!-- Кнопка "Убрать из сравнения" -->
@@ -355,10 +354,9 @@
                             class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                             data-id="<?php echo (int)$seriesInf['id']; ?>"
                         >
-                            <a
-                                rel="nofollow"
+                            <button
+                                type="button"
                                 class="add2compare hover:opacity-50"
-                                href="javascript:void(0)"
                                 onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                 title="Убрать из сравнения"
                             >
@@ -386,7 +384,7 @@
                                         />
                                     </g>
                                 </svg>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -508,10 +506,9 @@
                                     class="series-compare-add <?php if (Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                     data-id="<?php echo (int)$seriesInf['id']; ?>"
                                 >
-                                    <a
-                                        rel="nofollow"
+                                    <button
+                                        type="button"
                                         class="add2compare hover:opacity-50"
-                                        href="javascript:void(0)"
                                         onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                         title="Добавить к сравнению"
                                     >
@@ -527,7 +524,7 @@
                                                 fill="#3C3C3A"
                                             />
                                         </svg>
-                                    </a>
+                                    </button>
                                 </div>
 
                                 <!-- Кнопка "Убрать из сравнения" -->
@@ -535,10 +532,9 @@
                                     class="series-compare-remove <?php if (!Catalog_Compare::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                     data-id="<?php echo (int)$seriesInf['id']; ?>"
                                 >
-                                    <a
-                                        rel="nofollow"
+                                    <button
+                                        type="button"
                                         class="add2compare hover:opacity-50"
-                                        href="javascript:void(0)"
                                         onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                         title="Убрать из сравнения"
                                     >
@@ -566,7 +562,7 @@
                                                 />
                                             </g>
                                         </svg>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>

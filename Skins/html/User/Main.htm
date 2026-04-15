@@ -579,7 +579,7 @@ function getHomeUrl() {
                         <!-- Корзина -->
                         <div class="relative inline-block">
                             <a href="<?php echo Url::a('catalog-cart')?>" aria-label="Корзина">
-                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50">
                                     <path
                                         d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
@@ -601,7 +601,7 @@ function getHomeUrl() {
                         <!-- Избранное -->
                         <div class="relative inline-block">
                             <a href="<?php echo Url::a('catalog-favorite')?>" aria-label="Избранное">
-                                <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                <svg width="22" height="21" viewBox="0 0 22 21" aria-label="Избранное" role="img" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
                                         d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
@@ -620,8 +620,8 @@ function getHomeUrl() {
 
                         <!-- Сравнение -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить">
-                                <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить товары">
+                                <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
                                         d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
@@ -690,7 +690,7 @@ function getHomeUrl() {
                     <!-- Иконка -->
                     <a href="/contacts/callback/" class="fancyajax fancybox.ajax recall callback"
                        aria-label="Позвонить или заказать обратный звонок">
-                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Позвонить или заказать обратный звонок" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50 transition-opacity">
                             <path
                                 d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
@@ -708,8 +708,8 @@ function getHomeUrl() {
 
                 <!-- Корзина -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-cart')?>">
-                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <a href="<?php echo Url::a('catalog-cart')?>" aria-label="Корзина">
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
                             <path
                                 d="M4.33854 17.3327V4.33268H2.17188V2.16602H5.42187C6.02019 2.16602 6.50521 2.65105 6.50521 3.24935V16.2493H19.9802L22.1468 7.58268H8.67187V5.41602H23.5344C24.1327 5.41602 24.6177 5.90105 24.6177 6.49935C24.6177 6.58792 24.6069 6.67617 24.5853 6.7621L21.877 17.5954C21.7565 18.0777 21.3232 18.416 20.826 18.416H5.42187C4.82357 18.416 4.33854 17.931 4.33854 17.3327ZM6.50521 24.916C5.30859 24.916 4.33854 23.946 4.33854 22.7493C4.33854 21.5527 5.30859 20.5827 6.50521 20.5827C7.70183 20.5827 8.67187 21.5527 8.67187 22.7493C8.67187 23.946 7.70183 24.916 6.50521 24.916ZM19.5052 24.916C18.3086 24.916 17.3386 23.946 17.3386 22.7493C17.3386 21.5527 18.3086 20.5827 19.5052 20.5827C20.7019 20.5827 21.6719 21.5527 21.6719 22.7493C21.6719 23.946 20.7019 24.916 19.5052 24.916Z"
@@ -730,8 +730,8 @@ function getHomeUrl() {
 
                 <!-- Избранное -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-favorite')?>">
-                        <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <a href="<?php echo Url::a('catalog-favorite')?>" aria-label="Избранное">
+                        <svg width="22" height="21" viewBox="0 0 22 21" fill="none" aria-label="Избранное" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
                                 d="M11.0014 1.90591C13.5462 -0.378333 17.4787 -0.302499 19.9298 2.15381C22.3811 4.61011 22.4652 8.52342 20.1855 11.0758L11.0002 20.2754L1.81515 11.0758C-0.464539 8.52342 -0.379324 4.60393 2.0708 2.15381C4.52369 -0.299087 8.44928 -0.381723 11.0014 1.90591ZM18.3962 3.68428C16.7722 2.05694 14.1502 1.99093 12.4487 3.51828L11.0024 4.81651L9.55527 3.51929C7.84889 1.9898 5.23164 2.05709 3.60286 3.68587C1.98897 5.29975 1.90795 7.88458 3.39525 9.5918L11.0002 17.2088L18.6054 9.5918C20.0933 7.88393 20.0126 5.30402 18.3962 3.68428Z"
@@ -750,8 +750,8 @@ function getHomeUrl() {
 
                 <!-- Сравнение -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-compare')?>">
-                        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить товары">
+                        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
                                 d="M0.25 10.9993H2.41667V20.7493H0.25V10.9993ZM17.5833 6.66602H19.75V20.7493H17.5833V6.66602ZM8.91667 0.166016H11.0833V20.7493H8.91667V0.166016Z"
@@ -1561,40 +1561,40 @@ function getHomeUrl() {
     </div>
 </div>
 
-<!-- ВИДЖЕТ ЦВЕТОВ -->
-<div class="color-widget" id="colorWidget">
-    <div class="color-widget-label">Цвет</div>
-    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue')" title="Синий"></div>
-    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green')" title="Зелёный"></div>
-    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red')" title="Красный"></div>
-</div>
+<!--&lt;!&ndash; ВИДЖЕТ ЦВЕТОВ &ndash;&gt;-->
+<!--<div class="color-widget" id="colorWidget">-->
+<!--    <div class="color-widget-label">Цвет</div>-->
+<!--    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue')" title="Синий"></div>-->
+<!--    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green')" title="Зелёный"></div>-->
+<!--    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red')" title="Красный"></div>-->
+<!--</div>-->
 
-<script>
-    function setColor(color) {
-        const root = document.documentElement;
-        if (color === 'blue') {
-            root.removeAttribute('data-theme');
-        } else {
-            root.setAttribute('data-theme', color);
-        }
+<!--<script>-->
+<!--    function setColor(color) {-->
+<!--        const root = document.documentElement;-->
+<!--        if (color === 'blue') {-->
+<!--            root.removeAttribute('data-theme');-->
+<!--        } else {-->
+<!--            root.setAttribute('data-theme', color);-->
+<!--        }-->
 
-        document.querySelectorAll('.color-swatch').forEach(s => {
-            s.classList.toggle('active', s.dataset.color === color);
-        });
-        localStorage.setItem('themeColor', color);
-    }
+<!--        document.querySelectorAll('.color-swatch').forEach(s => {-->
+<!--            s.classList.toggle('active', s.dataset.color === color);-->
+<!--        });-->
+<!--        localStorage.setItem('themeColor', color);-->
+<!--    }-->
 
-    function toggleMobile() {
-        document.getElementById('mobileMenu').classList.toggle('open');
-    }
+<!--    function toggleMobile() {-->
+<!--        document.getElementById('mobileMenu').classList.toggle('open');-->
+<!--    }-->
 
-    (function init() {
-        const savedColor = localStorage.getItem('themeColor');
-        if (savedColor) {
-            setColor(savedColor);
-        }
-    })();
-</script>
+<!--    (function init() {-->
+<!--        const savedColor = localStorage.getItem('themeColor');-->
+<!--        if (savedColor) {-->
+<!--            setColor(savedColor);-->
+<!--        }-->
+<!--    })();-->
+<!--</script>-->
 
 <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
 <style>
