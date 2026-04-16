@@ -50,9 +50,6 @@ class JsCopmress
 				self::getBasePath() . '/Js/core/all-core.js',
 				self::getBasePath() . '/Js/core/all-core1.min.js',
 			),
-			'core1'	=> array(
-				self::getBasePath() . '/Js/core1/all-core1.min.js'
-			),
 			'index'	=> array(
 				self::getBasePath() . '/Js/index/jssor.core.js',
 				self::getBasePath() . '/Js/index/jssor.utils.js',

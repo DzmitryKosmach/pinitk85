@@ -70,6 +70,7 @@ class mImagesCache
         }
 
         $requestExt = $origExt = mb_strtolower($fileInf['extension']);
+        $isWebpRequest = ($requestExt === 'webp');
 
         // Имя исходного файла
         $origFile = $fileInf['dirname'] . '/' . $request[0] . '.' . $origExt;
@@ -110,7 +111,7 @@ class mImagesCache
             $newW,
             $newH,
             $requestResizeMethod,
-            in_array($origExt, array('png', 'gif')) && in_array($requestExt, array('png', 'gif'))
+            in_array($origExt, array('png', 'gif')) && in_array($requestExt, array('png', 'gif', 'webp'))
         );
 
 
@@ -139,11 +140,70 @@ class mImagesCache
         }
 
         // сохраняем результат
-        $mime = isset(Images::$extToMime[$requestExt]) ? Images::$extToMime[$requestExt] : 'image/jpeg';
-        $oImages->toFile($requestImg, $requestFile, $mime);
+        if ($isWebpRequest) {
+            // WEBP: сохраняем напрямую, не трогая общий стек форматов Images::$extToMime
+            if (Config::$img['lib'] === 'gd' && function_exists('imagewebp')) {
+                @imagewebp($requestImg, $requestFile, 85);
+            } elseif (Config::$img['lib'] === 'imagick' && class_exists('\\Imagick')) {
+                try {
+                    /** @var \Imagick $requestImg */
+                    $imgWebp = clone $requestImg;
+                    $imgWebp->setImageFormat('webp');
+                    if (method_exists($imgWebp, 'setImageCompressionQuality')) {
+                        $imgWebp->setImageCompressionQuality(85);
+                    }
+                    $imgWebp->writeImage($requestFile);
+                    $imgWebp->destroy();
+                } catch (\Throwable $e) {
+                    self::err(5);
+                }
+            } else {
+                self::err(6);
+            }
+        } else {
+            $mime = isset(Images::$extToMime[$requestExt]) ? Images::$extToMime[$requestExt] : 'image/jpeg';
+            $oImages->toFile($requestImg, $requestFile, $mime);
+        }
+
+        // Для jpeg-кропа дополнительно формируем webp-кроп с тем же именем и размерами.
+        if (
+            ($requestExt === 'jpg' || $requestExt === 'jpeg') &&
+            (
+                (Config::$img['lib'] === 'gd' && function_exists('imagewebp')) ||
+                (Config::$img['lib'] === 'imagick' && class_exists('Imagick'))
+            )
+        ) {
+            $webpFile = $fileInf['dirname'] . '/' . $fileInf['filename'] . '.webp';
+            if (Config::$img['lib'] === 'gd') {
+                @imagewebp($requestImg, $webpFile, 85);
+            } else {
+                try {
+                    /** @var Imagick $requestImg */
+                    $imgWebp = clone $requestImg;
+                    $imgWebp->setImageFormat('webp');
+                    if (method_exists($imgWebp, 'setImageCompressionQuality')) {
+                        $imgWebp->setImageCompressionQuality(85);
+                    }
+                    $imgWebp->writeImage($webpFile);
+                    $imgWebp->destroy();
+                } catch (\Throwable $e) {
+                    // игнорируем — webp не критичен для ответа
+                }
+            }
+        }
 
         // выводим результат
-        $oImages->output($requestImg, $mime);
+        if ($isWebpRequest) {
+            header('Content-type: image/webp');
+            if (Config::$img['lib'] === 'gd' && function_exists('imagewebp')) {
+                imagewebp($requestImg);
+            } else {
+                /** @var \Imagick $requestImg */
+                echo $requestImg;
+            }
+        } else {
+            $oImages->output($requestImg, $mime);
+        }
 
         // Удаляем временные данные
         $oImages->destroy($origImg);
