@@ -65,10 +65,27 @@
 	<?php /*if(!$parentId):*/?>
 		Картинка категории <b class="red">*</b>:<br>
 		<?php if(intval($init['id']) && $init['_img_ext']) { ?>
-			<img src="<?=Config::pathRel('images') . Catalog_Categories::$imagePath . $init['id']?>_212x159_0.<?=$init['_img_ext']?>" width="212" height="159" alt="" style="border: 1px solid #CCC">
+			<img
+				id="category-image-preview"
+				src="<?=Config::pathRel('images') . Catalog_Categories::$imagePath . $init['id']?>_212x159_0.<?=$init['_img_ext']?>?v=<?=time()?>"
+				width="212"
+				height="159"
+				alt=""
+				style="border: 1px solid #CCC"
+			>
+			<br>
+		<?php } else { ?>
+			<img
+				id="category-image-preview"
+				src=""
+				width="212"
+				height="159"
+				alt=""
+				style="border: 1px solid #CCC; display: none;"
+			>
 			<br>
 		<?php } ?>
-		<input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
+		<input type="file" id="category-image-input" name="image" accept="image/jpeg,image/png,image/gif,image/*"><br>
 		<b class="small">
 			Форматы: JPG, GIF, PNG.<br>
 			Рекомендуемый размер: 212x159 пикс.<br>
@@ -99,6 +116,22 @@
 		}
 		onLoad(function(){
 			changeHasSubcats();
+
+			var imageInput = $$$('category-image-input');
+			var imagePreview = $$$('category-image-preview');
+
+			if (imageInput && imagePreview) {
+				imageInput.addEventListener('change', function (e) {
+					var file = e.target.files && e.target.files[0];
+					if (!file) return;
+
+					if (!/^image\//.test(file.type)) return;
+
+					var objectUrl = URL.createObjectURL(file);
+					imagePreview.src = objectUrl;
+					imagePreview.style.display = '';
+				});
+			}
 		});
 	</script>
 

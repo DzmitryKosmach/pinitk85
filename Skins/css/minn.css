@@ -139,24 +139,6 @@
     }
 }
 
-/* ===== КОМПОНЕНТЫ ===== */
-.btn-primary { background: var(--color-primary); color: white; }
-.btn-primary:hover { background: var(--color-primary-dark); }
-
-.btn-outline { border: 2px solid var(--color-primary); color: var(--color-primary); }
-.btn-outline:hover { background: var(--color-primary); color: white; }
-
-.btn-light { background: var(--color-primary-50); color: var(--color-primary); }
-.btn-light:hover { background: var(--color-primary); color: white; }
-
-.card { background: var(--surface); border: 1px solid var(--border); }
-.card:hover { border-color: var(--color-primary); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-
-.nav-link { color: var(--text-secondary); }
-.nav-link:hover, .nav-link.active { color: var(--color-primary); }
-
-.mobile-menu { display: none; }
-.mobile-menu.open { display: flex; }
 
 .rr{
     padding: 0!important;

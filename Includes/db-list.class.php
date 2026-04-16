@@ -477,6 +477,63 @@ class DbList
  */
 class ExtDbList extends DbList
 {
+    /**
+     * Создаёт webp-копию JPEG файла (если поддерживается на сервере).
+     */
+    protected function makeWebpFromJpeg(string $sourceFile, string $webpFile): bool
+    {
+        if (!is_file($sourceFile)) {
+            return false;
+        }
+
+        // 1) Imagick (часто стоит на проде и поддерживает webp)
+        if (class_exists('\\Imagick')) {
+            try {
+                $imagickClass = '\\Imagick';
+                $img = new $imagickClass($sourceFile);
+                $img->setImageFormat('webp');
+                if (method_exists($img, 'setImageCompressionQuality')) {
+                    $img->setImageCompressionQuality(85);
+                }
+
+                $tmp = $webpFile . '.tmp';
+                $img->writeImage($tmp);
+                $img->destroy();
+
+                if (@is_file($tmp)) {
+                    @rename($tmp, $webpFile);
+                    return @is_file($webpFile);
+                }
+            } catch (\Throwable $e) {
+                // игнорируем — ниже попробуем GD
+            }
+        }
+
+        // 2) GD (если доступен imagewebp)
+        if (function_exists('imagewebp')) {
+            $data = @file_get_contents($sourceFile);
+            if ($data === false) {
+                return false;
+            }
+
+            $img = @imagecreatefromstring($data);
+            if (!$img) {
+                return false;
+            }
+
+            $tmp = $webpFile . '.tmp';
+            $result = @imagewebp($img, $tmp, 85);
+            imagedestroy($img);
+
+            if ($result && @is_file($tmp)) {
+                @rename($tmp, $webpFile);
+                return @is_file($webpFile);
+            }
+        }
+
+        return false;
+    }
+
     public function __call($methodName, $arguments) {
         if (! property_exists($this, $methodName)) {
             throw new Exception("Bad Method Name Exception: $methodName");
@@ -889,6 +946,14 @@ class ExtDbList extends DbList
             $ext
         );
 
+        // Для SEO/оптимизации дополнительно сохраняем webp рядом с jpg.
+        if ($ext === 'jpg' || $ext === 'jpeg') {
+            $this->makeWebpFromJpeg(
+                Config::path('images') . $path . $id . '.' . $ext,
+                Config::path('images') . $path . $id . '.webp'
+            );
+        }
+
         self::$imageExt = $ext;
 
         return true;
@@ -916,6 +981,11 @@ class ExtDbList extends DbList
         $id = intval($id);
         if (!$id) {
             return false;
+        }
+
+        $webpFile = Config::path('images') . $path . $id . '.webp';
+        if (is_file($webpFile)) {
+            unlink($webpFile);
         }
 
         $ext = $this->imageExt($id);
