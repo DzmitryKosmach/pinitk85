@@ -101,12 +101,12 @@
 
     <div class="pl-0 md:pl-8" >
       <div class="mods" style="margin-top: 0;">
-        <h3 class="title2 !text-main"><?php echo $pageInf['header']; ?></h3>
+        <h3 class="title2"><?php echo $pageInf['header']; ?></h3>
         <br><br>
       </div>
       <div class="item-series-name">
         Этот элемент из коллекции:
-        <a class="font-medium text-[14px] text-black" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
+        <a class="font-medium text-base text-blue-600 hover:underline" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
         <br><br>
       </div>
       <div class="options">
@@ -211,6 +211,26 @@
               <?php } ?>
             </div>
           </div>
+
+          <script>
+            (function () {
+              var root = document.getElementById("catalog-item-full-<?php echo $itemInf['id']; ?>");
+              if (!root) return;
+
+              root.addEventListener("submit", function () {
+                var btn = root.querySelector("button.submit");
+                if (!btn) return;
+                if (btn.disabled) return;
+                if (!btn.classList || !btn.classList.contains("add2basket")) return;
+
+                btn.classList.remove("add2basket", "!bg-blue-600", "hover:!bg-blue-700");
+                btn.classList.add("inbasket", "!bg-green-600", "text-white", "opacity-90");
+                btn.title = "В корзине";
+                btn.innerHTML = '<i class="icon pngicons"></i>В корзине';
+                btn.disabled = true;
+              }, { capture: true });
+            })();
+          </script>
         </div>
         <div class="mt-2" style="clear: both;">
           <?php
