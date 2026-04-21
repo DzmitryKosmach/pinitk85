@@ -53,33 +53,43 @@
   <?php endif; ?>
 
   <!-- Цвета -->
-  <div class="mt-4 mb-3">
-    <div class="favorishare">
-      <?php if (!empty($i['materials'])) { ?>
-      <script>
-        oMaterials.items2mats[<?php echo $i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($i['materials']))?>');
-      </script>
-      <a
-        href="javascript:void(0)"
-        id="item1-<?php echo $i['id']; ?>-materials-preview"
-        class="flex gap-[6px] justify-start items-center materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
-        onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-      >
-        <?php foreach($i['materials'] as $mn => $im) { ?>
-        <?php $m = $materials[$im['material_id']]; ?>
-        <div class="flex gap-[6px] justify-start items-center">
-          <div id="item1-<?php echo $i['id']; ?>-m-<?php echo $m['id']; ?>" <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
-          <?php if($m['image']['ext']) { ?>
-          <img class="rounded" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
-          <?php } ?>
+    <?php if (!empty($i['materials'])): ?>
+    <div class="mt-4 mb-3">
+        <div class="favorishare">
+            <script>
+                oMaterials.items2mats[<?php echo (int)$i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace("'", "\\'", json_encode($i['materials'], JSON_UNESCAPED_UNICODE)); ?>');
+            </script>
+            <a
+                href="javascript:void(0)"
+                id="item1-<?php echo (int)$i['id']; ?>-materials-preview"
+                class="flex flex-wrap gap-[6px] justify-start items-center materials"
+                onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo (int)$i['id']; ?>); return false;"
+            >
+                <?php
+        $totalMaterials = count($i['materials']);
+        $limit = 5;
+        $count = 0;
+        foreach ($i['materials'] as $im) {
+          if ($count >= $limit) break;
+                $m = $materials[$im['material_id']];
+                $activeAttr = ($mActiveTopId == $m['id']) ? ' class="active"' : '';
+                ?>
+                <div id="item1-<?php echo (int)$i['id']; ?>-m-<?php echo (int)$m['id']; ?>"<?php echo $activeAttr; ?>>
+                <?php if (!empty($m['image']['ext'])): ?>
+                <img class="rounded w-5 h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
+                <?php endif; ?>
         </div>
+        <?php
+          $count++;
+        }
+      ?>
+        <?php if ($totalMaterials > $limit): ?>
+        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+        <?php endif; ?>
+        </a>
     </div>
-    <?php } ?>
-    </a>
-    <?php } ?>
-  </div>
-
 </div>
+<?php endif; ?>
 
 <!-- Цена -->
 <div class="flex flex-wrap justify-between items-center mt-auto">
