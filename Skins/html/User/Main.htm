@@ -251,7 +251,7 @@ function getHomeUrl() {
         }
     </style>
 
-    <script src="//yandex.st/share/share.js"></script>
+    <script src="//yandex.st/share/share.js" async defer></script>
 
     <?php echo JsCopmress::load('core'); ?>
     <script>
@@ -363,11 +363,18 @@ function getHomeUrl() {
 
     <?php echo Options::name('head-scripts'); ?>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Tailwind -->
     <link rel="stylesheet" href="/dist/output.css">
-    <?php echo CssCopmress::load('series') ?>
 
 </head>
 
@@ -382,7 +389,7 @@ function getHomeUrl() {
 <!-- Header -->
 <header id="top" class="bg-header/90 backdrop-blur-sm sticky top-0 z-[900] transition-all duration-300">
     <div
-        class="max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-1 flex-col flex sm:flex-row justify-between items-center text-base font-medium">
+        class="max-w-1440 mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 py-1 flex-col flex sm:flex-row justify-between items-center text-base font-medium">
         <!-- Левая часть -->
         <div class="flex sm:inline-block justify-between gap-4 w-full sm:w-auto">
             <div class="flex items-center gap-2">
@@ -493,10 +500,10 @@ function getHomeUrl() {
 
             <!-- Правая часть (мобильная версия) -->
             <div class="block sm:hidden">
-                <div class="flex items-center gap-2">
+                <div>
 
                     <!-- Иконки -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 xs2:gap-2">
                         <!-- Телефон (иконка с дропдауном) -->
                         <div id="mobile-phone-dropdown" class="relative inline-block">
                             <!-- Иконка -->
@@ -576,7 +583,7 @@ function getHomeUrl() {
 
                         <!-- Корзина -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-cart')?>" aria-label="Корзина">
+                            <a href="<?php echo Url::a('catalog-cart')?>" title="Корзина" aria-label="Корзина">
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50">
                                     <path
@@ -590,7 +597,7 @@ function getHomeUrl() {
                               $count = (int)$cart[0]; // количество товаров
                               ?>
                                 <span id="cart-badge-count-mobile"
-                                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
+                                      class="absolute -top-1 -right-1 xs2:-right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($count > 0) ? '' : 'hidden'; ?>">
                                     <?php echo $count; ?>
                                 </span>
                             </a>
@@ -598,7 +605,7 @@ function getHomeUrl() {
 
                         <!-- Избранное -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-favorite')?>" aria-label="Избранное">
+                            <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" aria-label="Избранное">
                                 <svg width="22" height="21" viewBox="0 0 22 21" aria-label="Избранное" role="img" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -610,7 +617,7 @@ function getHomeUrl() {
                                     $favoriteCount = Catalog_Favorites::count();
                                 ?>
                                 <span id="favorite-badge-count-desktop"
-                                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
+                                      class="absolute -top-1 -right-1 xs2:-right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($favoriteCount > 0) ? '' : 'hidden'; ?>">
                                     <?php echo $favoriteCount; ?>
                                 </span>
                             </a>
@@ -618,7 +625,7 @@ function getHomeUrl() {
 
                         <!-- Сравнение -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить товары">
+                            <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" aria-label="Сравнить товары">
                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -631,11 +638,31 @@ function getHomeUrl() {
                                     $compareCount = Catalog_Compare::count();
                                     ?>
                                 <span id="compare-badge-count-desktop"
-                                      class="absolute -top-1 -right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
+                                      class="absolute -top-1 -right-1 xs2:-right-3 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($compareCount > 0) ? '' : 'hidden'; ?>">
                                     <?php echo $compareCount; ?>
                                 </span>
                             </a>
                         </div>
+
+                        <!-- Просмотрено -->
+                        <div class="relative inline-block">
+                            <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" aria-label="Просмотренные товары">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+
+                                <!-- Бейдж с количеством просмотренных товаров -->
+                                <?php
+                                    $recentlyCount = Catalog_Recently::count();
+                                ?>
+                                <span id="compare-badge-count-desktop"
+                                      class="absolute -top-1 -right-1 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($recentlyCount > 0) ? '' : 'hidden'; ?>">
+                                    <?php echo $recentlyCount; ?>
+                                </span>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -673,7 +700,7 @@ function getHomeUrl() {
             </div>
 
             <!-- Иконки -->
-            <div class="hidden sm:flex items-center gap-5 mb:gap-6">
+            <div class="hidden sm:flex items-center gap-3 md:gap-6">
                 <div class="lg:flex hidden items-center space-x-3 cursor-pointer hover:opacity-50" title="г. Москва">
                     <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -706,7 +733,7 @@ function getHomeUrl() {
 
                 <!-- Корзина -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-cart')?>" aria-label="Корзина">
+                    <a href="<?php echo Url::a('catalog-cart')?>" title="Корзина" aria-label="Корзина">
                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
                             <path
@@ -728,7 +755,7 @@ function getHomeUrl() {
 
                 <!-- Избранное -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-favorite')?>" aria-label="Избранное">
+                    <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" aria-label="Избранное">
                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" aria-label="Избранное" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
@@ -748,7 +775,7 @@ function getHomeUrl() {
 
                 <!-- Сравнение -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-compare')?>" aria-label="Сравнить товары">
+                    <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" aria-label="Сравнить товары">
                         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
@@ -766,12 +793,31 @@ function getHomeUrl() {
               </span>
                     </a>
                 </div>
+
+                <!-- Просмотрено -->
+                <div class="relative inline-block">
+                    <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" aria-label="Просмотренные товары">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 hover:opacity-50">
+                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+
+                        <!-- Бейдж с количеством просмотренных товаров -->
+                        <?php
+                            $recentlyCount = Catalog_Recently::count();
+                        ?>
+                        <span id="compare-badge-count-desktop"
+                              class="absolute -top-1 -right-1 bg-red-500 opacity-80 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center <?php echo ($recentlyCount > 0) ? '' : 'hidden'; ?>">
+                            <?php echo $recentlyCount; ?>
+                        </span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Поле поиска (появляется при клике на иконку) -->
-    <div id="search-bar" class="hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 py-2 bg-header border-t">
+    <div id="search-bar" class="hidden max-w-1440 mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 py-2 bg-header border-t">
         <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex w-full">
             <input type="text" name="text" placeholder="Поиск по каталогу"
                    class="flex-1 px-2 py-1 sm:px-4 sm:py-2 bg-gray-50 text-sm md:text-base text-gray-600 focus:outline-none rounded-l-md"
@@ -787,7 +833,7 @@ function getHomeUrl() {
 
 <!-- Menu catalog -->
 <div id="catalog-menu"
-     class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300">
+     class="max-w-1440 text-[12px] xs2:text-sm md:text-base mt-2 mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300">
     <div class="flex w-full max-w-full sm:max-w-[768px] rounded-lg mb-1 bg-white">
         <!-- Внешний group для hover -->
         <div class="relative group catalog-dropdown-container" id="catalog-container">
@@ -1126,7 +1172,7 @@ function getHomeUrl() {
     });
 </script>
 
-<main class="max-w-1440 mx-auto px-4 pt-0 sm:px-6 lg:px-8 py-3">
+<main class="max-w-1440 mx-auto px-2 xs:px-4 pt-0 sm:px-6 lg:px-8 py-3">
     <?php echo $CONTENT?>
 </main>
 
@@ -1146,10 +1192,10 @@ function getHomeUrl() {
     </div>
 
     <!-- Блок основной -->
-    <div class="hidden max-w-1440 px-4 sm:px-6 lg:px-8  mx-auto lg:grid gap-12 lg:grid-cols-5">
+    <div class="hidden max-w-1440 px-2 xs:px-4 sm:px-6 lg:px-8  mx-auto lg:grid gap-12 lg:grid-cols-5">
         <!-- Блок 1: Компания -->
         <div class="lg:col-span-1">
-            <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>"><img src="/images/index/logo-footer.png" alt="Логотип" class="mb-4" /></a>
+            <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>"><img src="/images/index/logo-footer.webp" alt="Логотип" class="mb-4" /></a>
 
             <div class="mt-4 space-y-1">
                 <p class="flex gap-4 font-semibold">
@@ -1227,7 +1273,7 @@ function getHomeUrl() {
     </div>
 
     <!-- Блок основной (lg)-->
-    <div class="lg:hidden max-w-1440 mx-auto px-4 sm:px-6 lg:px-8 grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
+    <div class="lg:hidden max-w-1440 mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 grid gap-4 grid-cols-1 md:grid-cols-[30%_69%]">
         <!-- Блок 1: Компания -->
         <div>
             <h3 class="font-semibold text-base mb-1"><a href="/contacts/" class="hover:underline">КОНТАКТЫ</a></h3>
@@ -1281,14 +1327,14 @@ function getHomeUrl() {
             <?php $size = 'w-7 h-7'; include(Config::path('skins') . '/html/Components/social_icons.htm'); ?>
         </div>
 
-        <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-2 mt-0 md:-mt-[110px] lg:mt-0">
+        <div class="flex flex-wrap flex-row justify-start gap-4 text-sm ml-0 xl:ml-2 mt-0 md:-mt-[110px] lg:mt-0">
             <!-- Блок 3: Товары -->
             <div class="lg:col-span-2">
                 <a href="/catalog/">
                     <h3 class="font-semibold text-base mb-2">ТОВАРЫ</h3>
                 </a>
                 <div class="flex gap-8">
-                    <ul class="columns-2 gap-x-8 space-y-1 leading-6">
+                    <ul class="columns-2 gap-x-8 space-y-1 text-sm md:text-base leading-5 md:leading-6">
                         <?php foreach($catsMenu as $n =>
                         $c) { ?>
                         <li>
@@ -1311,7 +1357,7 @@ function getHomeUrl() {
     </div>
 
     <!-- Нижний подвал -->
-    <div class="max-w-1440 mx-auto mt-8 px-4 sm:px-6 lg:px-8 text-gray-700 text-[10px] leading-3">
+    <div class="max-w-1440 mx-auto mt-8 px-2 xs:px-4 sm:px-6 lg:px-8 text-gray-700 text-[10px] leading-3">
         © 2012-
         <?php echo date('Y'); ?>
         Все права защищены. Информация сайта защищена законом об авторских
@@ -1325,82 +1371,7 @@ function getHomeUrl() {
         RSGoPro_SetCompared();
     </script>
 </div>
-<div id="rs_easycart" class="brown addbodypadding fixed bottom-0 w-full" style="z-index: 991">
-    <div class="rsec rsec_headers !bg-blue-600">
-        <div class="rsec_in max-w-[1240px] mx-auto px-4" style="max-width: 1240px">
-            <div class="rsec_body h-10 flex flex-wrap items-center justify-end gap-2 text-white">
-                <div class="rsec_orlink">
-                    <a class="rsec_viewed rsec_changer !flex items-center px-2 pl-2 sm:pl-6 text-white border-l border-[#3c3c3c]"
-                       href="<?php echo Url::a('catalog-recently'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Недавно просмотренные</span>
-                        <span class="rsec_color rsec_cnt text-[#ff9086] ml-1">
-                <?php echo Catalog_Recently::count(); ?>
-              </span>
-                    </a>
-                </div>
-                <div class="rsec_orlink">
-                    <a class="rsec_compare rsec_changer !flex items-center px-2 pl-2 sm:pl-6 text-white border-l border-[#3c3c3c]"
-                       href="<?php echo Url::a('catalog-compare'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                            <path d="M10 4h4v16h-4zM4 8h4v12H4zM16 12h4v8h-4z" />
-                        </svg>
-                        <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Сравнение товаров</span>
-                        <span class="rsec_color rsec_cnt text-[#ff9086] ml-1" id="series-compare-cnt">
-                <?php echo Catalog_Compare::count(); ?>
-              </span>
-                    </a>
-                </div>
-                <div class="rsec_orlink">
-                    <a class="rsec_favorite rsec_changer !flex items-center px-2 pl-2 sm:pl-6 text-white border-l border-[#3c3c3c]"
-                       href="<?php echo Url::a('catalog-favorite'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                            <path
-                                d="M20.8 4.6c-1.8-1.8-4.7-1.8-6.5 0L12 6.9l-2.3-2.3c-1.8-1.8-4.7-1.8-6.5 0s-1.8 4.7 0 6.5L12 21l8.8-9.9c1.8-1.8 1.8-4.7 0-6.5z" />
-                        </svg>
-                        <span class="rsec_name border-b border-dashed border-white hidden lg:inline">Избранное</span>
-                        <span class="rsec_color rsec_cnt text-[#ff9086] ml-1">
-                <span class="series-favorite-cnt">
-                  <?php echo Catalog_Favorites::count(); ?>
-                </span>
-              </span>
-                    </a>
-                </div>
-                <div class="rsec_orlink">
-                    <a class="rsec_basket rsec_changer <?php echo $class?> !flex items-center px-2 pl-6 text-white border-l border-[#3c3c3c]"
-                       href="<?php echo Url::a('catalog-cart'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
-                            <circle cx="9" cy="21" r="1" />
-                            <circle cx="20" cy="21" r="1" />
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                        </svg>
-                        <span class="rsec_name hidden sm:inline-block">Товаров</span>
-                        <span class="rsec_color text-[#bb645c] ml-1">
-                <span class="rsec_normalCount !text-white" id="basketinfo-amount">
-                  <?php echo $cart[0]; ?>
-                </span>
-              </span>
-                        &nbsp;
-                        <span class="rsec_name hidden md:inline">Сумма</span>
-                        <span class="rsec_color rsec_sum text-[#bb645c] ml-1 hidden md:inline">
-                <span class="rsec_allSum_FORMATED !text-white" id="basketinfo-price">
-                  <?php echo Catalog::priceFormat(round($cart[1])); ?>
-                    руб.
-                </span>
-              </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="xCallback !mt-1 !z-[60] w-[48px] sm:w-[69px]">
     <button onclick="kcall(); return false;"
             class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
@@ -1847,7 +1818,11 @@ function getHomeUrl() {
         var siteKey = "6Ld8RvMUAAAAAJKbvGCPrbr__Jq19dN3u5wFeOaL";
         var loadStarted = false;
 
-        function renderCaptchaWidgets() {
+        function isVisible(el) {
+            return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+        }
+
+        function renderCaptchaWidgets(visibleOnly) {
             if (!window.grecaptcha || !window.grecaptcha.render) {
                 return;
             }
@@ -1857,18 +1832,21 @@ function getHomeUrl() {
                 if (!el.id || el.getAttribute("data-recaptcha-inited") === "1") {
                     continue;
                 }
+                if (visibleOnly && !isVisible(el)) {
+                    continue;
+                }
                 el.setAttribute("data-recaptcha-inited", "1");
                 grecaptcha.render(el.id, { sitekey: siteKey });
             }
         }
 
         window.onloadCaptchaCallback = function () {
-            renderCaptchaWidgets();
+            renderCaptchaWidgets(true);
         };
 
         function injectRecaptcha() {
             if (window.grecaptcha && window.grecaptcha.render) {
-                renderCaptchaWidgets();
+                renderCaptchaWidgets(true);
                 return;
             }
             if (loadStarted) {
@@ -1940,6 +1918,18 @@ function getHomeUrl() {
                 { capture: true, passive: true, once: true }
             );
         });
+
+        // Повторно проверяем видимые капчи после кликов (например, при открытии модалок).
+        document.addEventListener(
+            "click",
+            function () {
+                if (!document.querySelector(".captcha-item")) {
+                    return;
+                }
+                setTimeout(injectRecaptcha, 400);
+            },
+            true
+        );
     })();
 </script>
 </body>

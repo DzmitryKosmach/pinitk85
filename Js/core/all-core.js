@@ -4997,9 +4997,9 @@ function Trash()
 if(window.attachEvent) // IE
 	window.attachEvent("onunload", Trash);
 else if(window.addEventListener) // Gecko / W3C
-	window.addEventListener('unload', Trash, false);
+	window.addEventListener('pagehide', Trash, false);
 else
-	window.onunload = Trash;
+	window.onpagehide = Trash;
 /* \garbage collector */
 
 // set empty ready handler
