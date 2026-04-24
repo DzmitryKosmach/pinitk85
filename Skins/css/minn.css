@@ -37,9 +37,9 @@
     --icon-box: inset 0px 0px 10px 4px rgba(239, 68, 68, 0.20);
 }
 
-*, *::before, *::after {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-}
+/**, *::before, *::after {*/
+/*    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;*/
+/*}*/
 
 /* ===== ВИДЖЕТ переключения цветового оформления (ДЕСКТОП) ===== */
 .color-widget {

@@ -46,21 +46,21 @@
                     <div class="text-[11px] sm3:text-sm lg:text-base mb-4 lg:mb-8">
                         <!-- Контейнер для всех табов (скрытый) -->
                         <div id="allTabsContainer" class="hidden">
-                            <?php 
+                            <?php
                             // Получаем выбранные табы из URL параметров
                             $selectedPagesFromUrl = array();
                             if (isset($_GET['f']) && is_array($_GET['f'])) {
                                 foreach ($_GET['f'] as $groupId => $pageIds) {
-                                    if (is_array($pageIds)) {
-                                        foreach ($pageIds as $pageId) {
-                                            $selectedPagesFromUrl[] = intval($pageId);
-                                        }
-                                    }
-                                }
+                            if (is_array($pageIds)) {
+                            foreach ($pageIds as $pageId) {
+                            $selectedPagesFromUrl[] = intval($pageId);
+                            }
+                            }
+                            }
                             }
                             ?>
                             <?php foreach ($pages as $p): ?>
-                            <?php 
+                            <?php
                             $isActive = ($_SERVER['REQUEST_URI'] === Catalog_Pages::a($p['id']));
                             // Также проверяем, выбран ли таб через фильтры
                             $isSelectedFromFilter = in_array($p['id'], $selectedPagesFromUrl);
@@ -118,7 +118,7 @@
                         // --- Конфигурация ---
                         const MIN_VISIBLE_TABS = 1; // Минимальное количество видимых табов
                         const TAB_GAP = 8; // Приблизительный зазор между табами в px (gap-1 ~ 4px, gap-2 ~ 8px на sm+)
-                        const SHOW_MORE_BTN_WIDTH = 60; // Приблизительная ширина кнопки "Ещё" в px
+                        const SHOW_MORE_BTN_WIDTH = 100; // Если кнопка не влазит в одну строку - увелич значение. Приблизительная ширина кнопки "Ещё" в px
 
                         // --- DOM элементы ---
                         const allTabsContainer = document.getElementById('allTabsContainer');
@@ -131,54 +131,54 @@
                             return;
                         }
 
-            // --- Хранилище данных ---
-            let allTabsData = []; // [{name, href, id, groupId, isSelected, element}, ...]
-            let selectedTabs = new Set(); // Множество ID выбранных табов
-            let isExpanded = localStorage.getItem("tabsExpanded") === "true";
-            let currentVisibleCount = MIN_VISIBLE_TABS; // Начальное значение
-            let filterTimeout = null;
-            const FILTER_DELAY = 300; // Задержка перед отправкой запроса (мс)
+                        // --- Хранилище данных ---
+                        let allTabsData = []; // [{name, href, id, groupId, isSelected, element}, ...]
+                        let selectedTabs = new Set(); // Множество ID выбранных табов
+                        let isExpanded = localStorage.getItem("tabsExpanded") === "true";
+                        let currentVisibleCount = MIN_VISIBLE_TABS; // Начальное значение
+                        let filterTimeout = null;
+                        const FILTER_DELAY = 300; // Задержка перед отправкой запроса (мс)
 
-            // Получаем URL категории
-            const tabsContainer = document.querySelector('[data-category-url]');
-            const categoryUrl = tabsContainer ? tabsContainer.getAttribute('data-category-url') : '';
+                        // Получаем URL категории
+                        const tabsContainer = document.querySelector('[data-category-url]');
+                        const categoryUrl = tabsContainer ? tabsContainer.getAttribute('data-category-url') : '';
 
-            // Восстановление выбранных табов из URL параметров (приоритет) или localStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlFilters = urlParams.getAll('f[]') || [];
-            
-            // Парсим параметры f[group_id][]
-            const filterParamsFromUrl = {};
-            urlParams.forEach((value, key) => {
-              const match = key.match(/^f\[(\d+)\]\[\]$/);
-              if (match) {
-                const groupId = match[1];
-                if (!filterParamsFromUrl[groupId]) {
-                  filterParamsFromUrl[groupId] = [];
-                }
-                filterParamsFromUrl[groupId].push(value);
-              }
-            });
-            
-            // Если есть фильтры в URL, используем их
-            if (Object.keys(filterParamsFromUrl).length > 0) {
-              // Собираем все ID страниц из URL фильтров
-              Object.values(filterParamsFromUrl).forEach(pageIds => {
-                pageIds.forEach(pageId => {
-                  selectedTabs.add(pageId);
-                });
-              });
-            } else {
-              // Иначе восстанавливаем из localStorage
-              const savedSelectedTabs = localStorage.getItem("selectedTabs");
-              if (savedSelectedTabs) {
-                try {
-                  selectedTabs = new Set(JSON.parse(savedSelectedTabs));
-                } catch (e) {
-                  console.error("Ошибка при восстановлении выбранных табов:", e);
-                }
-              }
-            }
+                        // Восстановление выбранных табов из URL параметров (приоритет) или localStorage
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const urlFilters = urlParams.getAll('f[]') || [];
+
+                        // Парсим параметры f[group_id][]
+                        const filterParamsFromUrl = {};
+                        urlParams.forEach((value, key) => {
+                            const match = key.match(/^f\[(\d+)\]\[\]$/);
+                            if (match) {
+                                const groupId = match[1];
+                                if (!filterParamsFromUrl[groupId]) {
+                                    filterParamsFromUrl[groupId] = [];
+                                }
+                                filterParamsFromUrl[groupId].push(value);
+                            }
+                        });
+
+                        // Если есть фильтры в URL, используем их
+                        if (Object.keys(filterParamsFromUrl).length > 0) {
+                            // Собираем все ID страниц из URL фильтров
+                            Object.values(filterParamsFromUrl).forEach(pageIds => {
+                                pageIds.forEach(pageId => {
+                                    selectedTabs.add(pageId);
+                                });
+                            });
+                        } else {
+                            // Иначе восстанавливаем из localStorage
+                            const savedSelectedTabs = localStorage.getItem("selectedTabs");
+                            if (savedSelectedTabs) {
+                                try {
+                                    selectedTabs = new Set(JSON.parse(savedSelectedTabs));
+                                } catch (e) {
+                                    console.error("Ошибка при восстановлении выбранных табов:", e);
+                                }
+                            }
+                        }
 
                         // --- Функции ---
 
@@ -210,32 +210,32 @@
                             return buttonContainer.firstElementChild;
                         }
 
-            // Инициализация данных табов из DOM
-            function initializeTabsData() {
-              const allTabElements = allTabsContainer.querySelectorAll('.all-tab-item');
-              allTabsData = Array.from(allTabElements).map(el => {
-                const tabId = el.getAttribute('data-tab-id');
-                const groupId = el.getAttribute('data-group-id');
-                const wasSelected = el.getAttribute('data-is-selected') === 'true';
-                
-                // Если таб был выбран изначально, добавляем его в selectedTabs
-                if (wasSelected && !selectedTabs.has(tabId)) {
-                  selectedTabs.add(tabId);
-                }
-                
-                return {
-                  name: el.getAttribute('data-tab-name'),
-                  href: el.getAttribute('data-tab-href'),
-                  id: tabId,
-                  groupId: groupId,
-                  isSelected: selectedTabs.has(tabId),
-                  element: el // Сохраняем оригинальный элемент
-                };
-              });
-              
-              // Сохраняем выбранные табы
-              saveSelectedTabs();
-            }
+                        // Инициализация данных табов из DOM
+                        function initializeTabsData() {
+                            const allTabElements = allTabsContainer.querySelectorAll('.all-tab-item');
+                            allTabsData = Array.from(allTabElements).map(el => {
+                                const tabId = el.getAttribute('data-tab-id');
+                                const groupId = el.getAttribute('data-group-id');
+                                const wasSelected = el.getAttribute('data-is-selected') === 'true';
+
+                                // Если таб был выбран изначально, добавляем его в selectedTabs
+                                if (wasSelected && !selectedTabs.has(tabId)) {
+                                    selectedTabs.add(tabId);
+                                }
+
+                                return {
+                                    name: el.getAttribute('data-tab-name'),
+                                    href: el.getAttribute('data-tab-href'),
+                                    id: tabId,
+                                    groupId: groupId,
+                                    isSelected: selectedTabs.has(tabId),
+                                    element: el // Сохраняем оригинальный элемент
+                                };
+                            });
+
+                            // Сохраняем выбранные табы
+                            saveSelectedTabs();
+                        }
 
                         // Сохранение выбранных табов в localStorage
                         function saveSelectedTabs() {
@@ -253,336 +253,336 @@
                             }
                         }
 
-            // Формирование параметров фильтрации из выбранных табов
-            function buildFilterParams() {
-              const filterParams = {};
-              
-              // Группируем выбранные табы по group_id
-              allTabsData.forEach(tab => {
-                if (selectedTabs.has(tab.id)) {
-                  if (!filterParams[tab.groupId]) {
-                    filterParams[tab.groupId] = [];
-                  }
-                  filterParams[tab.groupId].push(tab.id);
-                }
-              });
-              
-              return filterParams;
-            }
+                        // Формирование параметров фильтрации из выбранных табов
+                        function buildFilterParams() {
+                            const filterParams = {};
 
-            // Отправка AJAX запроса для фильтрации
-            function sendFilterRequest() {
-              if (!categoryUrl) {
-                console.warn("URL категории не найден");
-                return;
-              }
+                            // Группируем выбранные табы по group_id
+                            allTabsData.forEach(tab => {
+                                if (selectedTabs.has(tab.id)) {
+                                    if (!filterParams[tab.groupId]) {
+                                        filterParams[tab.groupId] = [];
+                                    }
+                                    filterParams[tab.groupId].push(tab.id);
+                                }
+                            });
 
-              const filterParams = buildFilterParams();
-              
-              // Если нет выбранных табов, отправляем запрос на базовый URL категории
-              if (Object.keys(filterParams).length === 0) {
-                // Сбрасываем фильтры - отправляем запрос без параметров f
-                let url = categoryUrl;
-                const params = [];
-                params.push('AJAX_CALL=Y');
-                params.push('get=catalog');
-                params.push('set_filter=Y');
-                
-                if (url.indexOf('?') < 0) {
-                  url = url + '?' + params.join('&');
-                } else {
-                  url = url + '&' + params.join('&');
-                }
-                
-                sendAjaxRequest(url);
-                return;
-              }
-              
-              // Формируем URL с параметрами фильтрации
-              let url = categoryUrl;
-              const params = [];
-              
-              // Добавляем параметры фильтров f[group_id][]
-              for (const groupId in filterParams) {
-                filterParams[groupId].forEach(pageId => {
-                  params.push(`f[${groupId}][]=${pageId}`);
-                });
-              }
-              
-              // Добавляем параметры AJAX запроса
-              params.push('AJAX_CALL=Y');
-              params.push('get=catalog');
-              params.push('set_filter=Y');
-              
-              if (url.indexOf('?') < 0) {
-                url = url + '?' + params.join('&');
-              } else {
-                url = url + '&' + params.join('&');
-              }
-
-              sendAjaxRequest(url);
-            }
-
-            // Функция отправки AJAX запроса
-            function sendAjaxRequest(url) {
-              // Отправляем AJAX запрос аналогично RSGoPro_FilterAjax
-              if (typeof BX !== 'undefined' && BX.ajax) {
-                // Показываем индикатор загрузки (если функция доступна)
-                if (typeof RSGoPro_Area2Darken === 'function') {
-                  const catalogSection = document.querySelector('section');
-                  if (catalogSection) {
-                    RSGoPro_Area2Darken($(catalogSection), 'animashka');
-                  }
-                }
-                if (typeof RSGoPro_BeforeSend === 'function') {
-                  RSGoPro_BeforeSend('disable');
-                }
-
-                BX.ajax({
-                  url: url,
-                  method: 'GET',
-                  dataType: 'html',
-                  scriptsRunFirst: false,
-                  emulateOnload: false,
-                  start: true,
-                  cache: false,
-                  onsuccess: function(data) {
-                    // Находим контейнер каталога в ответе
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = data;
-                    
-                    // Ищем контейнер с товарами (может быть #catalogContent или .grid)
-                    const catalogContent = document.getElementById('catalogContent');
-                    const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
-                    
-                    if (newContent && catalogContent) {
-                      catalogContent.innerHTML = newContent.innerHTML;
-                    }
-                    
-                    // Обновляем пагинацию
-                    const paginationContainer = document.getElementById('paginationContainer');
-                    const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
-                    
-                    if (newPagination && paginationContainer) {
-                      paginationContainer.innerHTML = newPagination.innerHTML;
-                      
-                      // Добавляем обработчики для новых ссылок пагинации
-                      attachPaginationHandlers();
-                    }
-                    
-                    // Перезапускаем скрипты, если нужно
-                    if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
-                      RSGoPro_FilterOnDocumentReady();
-                    }
-                    if (typeof RSGoPro_Area2Darken === 'function') {
-                      const catalogSection = document.querySelector('section');
-                      if (catalogSection) {
-                        RSGoPro_Area2Darken($(catalogSection));
-                      }
-                    }
-                    if (typeof RSGoPro_BeforeSend === 'function') {
-                      RSGoPro_BeforeSend();
-                    }
-                    
-                    // Перезагружаем скрипты материалов, если они есть
-                    if (typeof oMaterials !== 'undefined' && typeof AJAX !== 'undefined') {
-                      const materialsScript = tempDiv.querySelector('script');
-                      if (materialsScript && materialsScript.textContent.includes('oMaterials.tree')) {
-                        try {
-                          eval(materialsScript.textContent);
-                        } catch (e) {
-                          console.warn('Ошибка при выполнении скрипта материалов:', e);
+                            return filterParams;
                         }
-                      }
-                    }
-                  },
-                  onfailure: function() {
-                    console.warn('FILTER -> ajax load failed');
-                    if (typeof RSGoPro_Area2Darken === 'function') {
-                      const catalogSection = document.querySelector('section');
-                      if (catalogSection) {
-                        RSGoPro_Area2Darken($(catalogSection));
-                      }
-                    }
-                    if (typeof RSGoPro_BeforeSend === 'function') {
-                      RSGoPro_BeforeSend();
-                    }
-                    if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
-                      RSGoPro_FilterOnDocumentReady();
-                    }
-                  }
-                });
-              } else {
-                // Fallback: обычный fetch, если BX.ajax недоступен
-                fetch(url)
-                  .then(response => response.text())
-                  .then(html => {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = html;
-                    const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
-                    const catalogContent = document.getElementById('catalogContent');
-                    if (newContent && catalogContent) {
-                      catalogContent.innerHTML = newContent.innerHTML;
-                    }
-                    
-                    // Обновляем пагинацию
-                    const paginationContainer = document.getElementById('paginationContainer');
-                    const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
-                    if (newPagination && paginationContainer) {
-                      paginationContainer.innerHTML = newPagination.innerHTML;
-                      attachPaginationHandlers();
-                    }
-                  })
-                  .catch(error => {
-                    console.error('Ошибка при загрузке фильтров:', error);
-                  });
-              }
-            }
 
-            // Функция для добавления обработчиков на ссылки пагинации
-            function attachPaginationHandlers() {
-              const paginationContainer = document.getElementById('paginationContainer');
-              if (!paginationContainer) return;
-              
-              // Находим все ссылки пагинации
-              const paginationLinks = paginationContainer.querySelectorAll('a[href*="page"], a[href*="onpage"]');
-              
-              paginationLinks.forEach(link => {
-                // Удаляем старый обработчик, если есть
-                link.removeEventListener('click', handlePaginationClick);
-                // Добавляем новый обработчик
-                link.addEventListener('click', handlePaginationClick);
-              });
-            }
+                        // Отправка AJAX запроса для фильтрации
+                        function sendFilterRequest() {
+                            if (!categoryUrl) {
+                                console.warn("URL категории не найден");
+                                return;
+                            }
 
-            // Обработчик клика по ссылкам пагинации
-            function handlePaginationClick(e) {
-              e.preventDefault();
-              
-              const link = e.currentTarget;
-              let href = link.getAttribute('href');
-              
-              if (!href) return;
-              
-              // Парсим параметры из href
-              let page = null;
-              let onpage = null;
-              
-              // Если ссылка начинается с ?, это query string
-              if (href.startsWith('?')) {
-                const params = new URLSearchParams(href.substring(1));
-                page = params.get('page');
-                onpage = params.get('onpage');
-              } else {
-                // Пробуем распарсить как полный URL или относительный путь
-                try {
-                  const url = new URL(href, window.location.href);
-                  const params = new URLSearchParams(url.search);
-                  page = params.get('page');
-                  onpage = params.get('onpage');
-                  
-                  // Также проверяем путь на наличие /page_X/
-                  const pathMatch = url.pathname.match(/\/page[_-](\d+)\//);
-                  if (pathMatch && !page) {
-                    page = pathMatch[1];
-                  }
-                  
-                  // Проверяем на /page_all/
-                  if (url.pathname.includes('/page_all/') && !onpage) {
-                    onpage = '-1';
-                  }
-                } catch (e) {
-                  // Если не удалось распарсить, пробуем извлечь из строки напрямую
-                  const pageMatch = href.match(/[?&]page=(\d+)/);
-                  const onpageMatch = href.match(/[?&]onpage=(-?\d+)/);
-                  if (pageMatch) page = pageMatch[1];
-                  if (onpageMatch) onpage = onpageMatch[1];
-                }
-              }
-              
-              // Формируем URL с учетом выбранных табов
-              const filterParams = buildFilterParams();
-              let requestUrl = categoryUrl;
-              const requestParams = [];
-              
-              // Добавляем параметры фильтров f[group_id][]
-              for (const groupId in filterParams) {
-                filterParams[groupId].forEach(pageId => {
-                  requestParams.push(`f[${groupId}][]=${pageId}`);
-                });
-              }
-              
-              // Добавляем параметр страницы или onpage
-              if (page) {
-                requestParams.push(`page=${page}`);
-              } else if (onpage) {
-                requestParams.push(`onpage=${onpage}`);
-              }
-              
-              // Добавляем параметры AJAX запроса
-              requestParams.push('AJAX_CALL=Y');
-              requestParams.push('get=catalog');
-              requestParams.push('set_filter=Y');
-              
-              if (requestUrl.indexOf('?') < 0) {
-                requestUrl = requestUrl + '?' + requestParams.join('&');
-              } else {
-                requestUrl = requestUrl + '&' + requestParams.join('&');
-              }
-              
-              // Отправляем AJAX запрос
-              sendAjaxRequest(requestUrl);
-            }
+                            const filterParams = buildFilterParams();
 
-            // Обработчик клика по табу
-            function handleTabClick(tabData, tabElement) {
-              const isCurrentlySelected = selectedTabs.has(tabData.id);
-              
-              if (isCurrentlySelected) {
-                selectedTabs.delete(tabData.id);
-                tabData.isSelected = false;
-              } else {
-                selectedTabs.add(tabData.id);
-                tabData.isSelected = true;
-              }
-              
-              // Обновляем стили
-              updateTabStyles(tabElement, tabData.isSelected);
-              
-              // Сохраняем состояние
-              saveSelectedTabs();
-              
-              // Обновляем все клоны этого таба
-              updateAllTabClones(tabData.id, tabData.isSelected);
+                            // Если нет выбранных табов, отправляем запрос на базовый URL категории
+                            if (Object.keys(filterParams).length === 0) {
+                                // Сбрасываем фильтры - отправляем запрос без параметров f
+                                let url = categoryUrl;
+                                const params = [];
+                                params.push('AJAX_CALL=Y');
+                                params.push('get=catalog');
+                                params.push('set_filter=Y');
 
-              const selectedCount = selectedTabs.size;
+                                if (url.indexOf('?') < 0) {
+                                    url = url + '?' + params.join('&');
+                                } else {
+                                    url = url + '&' + params.join('&');
+                                }
 
-              // Если выбран ровно один таб — открываем его теговую страницу с полной перезагрузкой
-              if (selectedCount === 1) {
-                const singleId = Array.from(selectedTabs)[0];
-                const singleTab = allTabsData.find(t => t.id === singleId);
-                if (singleTab && singleTab.href) {
-                  window.location.href = singleTab.href;
-                  return;
-                }
-              }
+                                sendAjaxRequest(url);
+                                return;
+                            }
 
-              // Если не выбрано ни одного таба — открываем теговую страницу раздела (базовый URL категории)
-              if (selectedCount === 0) {
-                if (categoryUrl) {
-                  window.location.href = categoryUrl;
-                  return;
-                }
-              }
+                            // Формируем URL с параметрами фильтрации
+                            let url = categoryUrl;
+                            const params = [];
 
-              // При нескольких выбранных табах — работаем через AJAX-фильтрацию
-              if (filterTimeout) {
-                clearTimeout(filterTimeout);
-              }
-              filterTimeout = setTimeout(() => {
-                sendFilterRequest();
-              }, FILTER_DELAY);
-            }
+                            // Добавляем параметры фильтров f[group_id][]
+                            for (const groupId in filterParams) {
+                                filterParams[groupId].forEach(pageId => {
+                                    params.push(`f[${groupId}][]=${pageId}`);
+                                });
+                            }
+
+                            // Добавляем параметры AJAX запроса
+                            params.push('AJAX_CALL=Y');
+                            params.push('get=catalog');
+                            params.push('set_filter=Y');
+
+                            if (url.indexOf('?') < 0) {
+                                url = url + '?' + params.join('&');
+                            } else {
+                                url = url + '&' + params.join('&');
+                            }
+
+                            sendAjaxRequest(url);
+                        }
+
+                        // Функция отправки AJAX запроса
+                        function sendAjaxRequest(url) {
+                            // Отправляем AJAX запрос аналогично RSGoPro_FilterAjax
+                            if (typeof BX !== 'undefined' && BX.ajax) {
+                                // Показываем индикатор загрузки (если функция доступна)
+                                if (typeof RSGoPro_Area2Darken === 'function') {
+                                    const catalogSection = document.querySelector('section');
+                                    if (catalogSection) {
+                                        RSGoPro_Area2Darken($(catalogSection), 'animashka');
+                                    }
+                                }
+                                if (typeof RSGoPro_BeforeSend === 'function') {
+                                    RSGoPro_BeforeSend('disable');
+                                }
+
+                                BX.ajax({
+                                    url: url,
+                                    method: 'GET',
+                                    dataType: 'html',
+                                    scriptsRunFirst: false,
+                                    emulateOnload: false,
+                                    start: true,
+                                    cache: false,
+                                    onsuccess: function(data) {
+                                        // Находим контейнер каталога в ответе
+                                        const tempDiv = document.createElement('div');
+                                        tempDiv.innerHTML = data;
+
+                                        // Ищем контейнер с товарами (может быть #catalogContent или .grid)
+                                        const catalogContent = document.getElementById('catalogContent');
+                                        const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
+
+                                        if (newContent && catalogContent) {
+                                            catalogContent.innerHTML = newContent.innerHTML;
+                                        }
+
+                                        // Обновляем пагинацию
+                                        const paginationContainer = document.getElementById('paginationContainer');
+                                        const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
+
+                                        if (newPagination && paginationContainer) {
+                                            paginationContainer.innerHTML = newPagination.innerHTML;
+
+                                            // Добавляем обработчики для новых ссылок пагинации
+                                            attachPaginationHandlers();
+                                        }
+
+                                        // Перезапускаем скрипты, если нужно
+                                        if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
+                                            RSGoPro_FilterOnDocumentReady();
+                                        }
+                                        if (typeof RSGoPro_Area2Darken === 'function') {
+                                            const catalogSection = document.querySelector('section');
+                                            if (catalogSection) {
+                                                RSGoPro_Area2Darken($(catalogSection));
+                                            }
+                                        }
+                                        if (typeof RSGoPro_BeforeSend === 'function') {
+                                            RSGoPro_BeforeSend();
+                                        }
+
+                                        // Перезагружаем скрипты материалов, если они есть
+                                        if (typeof oMaterials !== 'undefined' && typeof AJAX !== 'undefined') {
+                                            const materialsScript = tempDiv.querySelector('script');
+                                            if (materialsScript && materialsScript.textContent.includes('oMaterials.tree')) {
+                                                try {
+                                                    eval(materialsScript.textContent);
+                                                } catch (e) {
+                                                    console.warn('Ошибка при выполнении скрипта материалов:', e);
+                                                }
+                                            }
+                                        }
+                                    },
+                                    onfailure: function() {
+                                        console.warn('FILTER -> ajax load failed');
+                                        if (typeof RSGoPro_Area2Darken === 'function') {
+                                            const catalogSection = document.querySelector('section');
+                                            if (catalogSection) {
+                                                RSGoPro_Area2Darken($(catalogSection));
+                                            }
+                                        }
+                                        if (typeof RSGoPro_BeforeSend === 'function') {
+                                            RSGoPro_BeforeSend();
+                                        }
+                                        if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
+                                            RSGoPro_FilterOnDocumentReady();
+                                        }
+                                    }
+                                });
+                            } else {
+                                // Fallback: обычный fetch, если BX.ajax недоступен
+                                fetch(url)
+                                    .then(response => response.text())
+                                    .then(html => {
+                                        const tempDiv = document.createElement('div');
+                                        tempDiv.innerHTML = html;
+                                        const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
+                                        const catalogContent = document.getElementById('catalogContent');
+                                        if (newContent && catalogContent) {
+                                            catalogContent.innerHTML = newContent.innerHTML;
+                                        }
+
+                                        // Обновляем пагинацию
+                                        const paginationContainer = document.getElementById('paginationContainer');
+                                        const newPagination = tempDiv.querySelector('#paginationContainer') || tempDiv.querySelector('.pagination-wrapper');
+                                        if (newPagination && paginationContainer) {
+                                            paginationContainer.innerHTML = newPagination.innerHTML;
+                                            attachPaginationHandlers();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Ошибка при загрузке фильтров:', error);
+                                    });
+                            }
+                        }
+
+                        // Функция для добавления обработчиков на ссылки пагинации
+                        function attachPaginationHandlers() {
+                            const paginationContainer = document.getElementById('paginationContainer');
+                            if (!paginationContainer) return;
+
+                            // Находим все ссылки пагинации
+                            const paginationLinks = paginationContainer.querySelectorAll('a[href*="page"], a[href*="onpage"]');
+
+                            paginationLinks.forEach(link => {
+                                // Удаляем старый обработчик, если есть
+                                link.removeEventListener('click', handlePaginationClick);
+                                // Добавляем новый обработчик
+                                link.addEventListener('click', handlePaginationClick);
+                            });
+                        }
+
+                        // Обработчик клика по ссылкам пагинации
+                        function handlePaginationClick(e) {
+                            e.preventDefault();
+
+                            const link = e.currentTarget;
+                            let href = link.getAttribute('href');
+
+                            if (!href) return;
+
+                            // Парсим параметры из href
+                            let page = null;
+                            let onpage = null;
+
+                            // Если ссылка начинается с ?, это query string
+                            if (href.startsWith('?')) {
+                                const params = new URLSearchParams(href.substring(1));
+                                page = params.get('page');
+                                onpage = params.get('onpage');
+                            } else {
+                                // Пробуем распарсить как полный URL или относительный путь
+                                try {
+                                    const url = new URL(href, window.location.href);
+                                    const params = new URLSearchParams(url.search);
+                                    page = params.get('page');
+                                    onpage = params.get('onpage');
+
+                                    // Также проверяем путь на наличие /page_X/
+                                    const pathMatch = url.pathname.match(/\/page[_-](\d+)\//);
+                                    if (pathMatch && !page) {
+                                        page = pathMatch[1];
+                                    }
+
+                                    // Проверяем на /page_all/
+                                    if (url.pathname.includes('/page_all/') && !onpage) {
+                                        onpage = '-1';
+                                    }
+                                } catch (e) {
+                                    // Если не удалось распарсить, пробуем извлечь из строки напрямую
+                                    const pageMatch = href.match(/[?&]page=(\d+)/);
+                                    const onpageMatch = href.match(/[?&]onpage=(-?\d+)/);
+                                    if (pageMatch) page = pageMatch[1];
+                                    if (onpageMatch) onpage = onpageMatch[1];
+                                }
+                            }
+
+                            // Формируем URL с учетом выбранных табов
+                            const filterParams = buildFilterParams();
+                            let requestUrl = categoryUrl;
+                            const requestParams = [];
+
+                            // Добавляем параметры фильтров f[group_id][]
+                            for (const groupId in filterParams) {
+                                filterParams[groupId].forEach(pageId => {
+                                    requestParams.push(`f[${groupId}][]=${pageId}`);
+                                });
+                            }
+
+                            // Добавляем параметр страницы или onpage
+                            if (page) {
+                                requestParams.push(`page=${page}`);
+                            } else if (onpage) {
+                                requestParams.push(`onpage=${onpage}`);
+                            }
+
+                            // Добавляем параметры AJAX запроса
+                            requestParams.push('AJAX_CALL=Y');
+                            requestParams.push('get=catalog');
+                            requestParams.push('set_filter=Y');
+
+                            if (requestUrl.indexOf('?') < 0) {
+                                requestUrl = requestUrl + '?' + requestParams.join('&');
+                            } else {
+                                requestUrl = requestUrl + '&' + requestParams.join('&');
+                            }
+
+                            // Отправляем AJAX запрос
+                            sendAjaxRequest(requestUrl);
+                        }
+
+                        // Обработчик клика по табу
+                        function handleTabClick(tabData, tabElement) {
+                            const isCurrentlySelected = selectedTabs.has(tabData.id);
+
+                            if (isCurrentlySelected) {
+                                selectedTabs.delete(tabData.id);
+                                tabData.isSelected = false;
+                            } else {
+                                selectedTabs.add(tabData.id);
+                                tabData.isSelected = true;
+                            }
+
+                            // Обновляем стили
+                            updateTabStyles(tabElement, tabData.isSelected);
+
+                            // Сохраняем состояние
+                            saveSelectedTabs();
+
+                            // Обновляем все клоны этого таба
+                            updateAllTabClones(tabData.id, tabData.isSelected);
+
+                            const selectedCount = selectedTabs.size;
+
+                            // Если выбран ровно один таб — открываем его теговую страницу с полной перезагрузкой
+                            if (selectedCount === 1) {
+                                const singleId = Array.from(selectedTabs)[0];
+                                const singleTab = allTabsData.find(t => t.id === singleId);
+                                if (singleTab && singleTab.href) {
+                                    window.location.href = singleTab.href;
+                                    return;
+                                }
+                            }
+
+                            // Если не выбрано ни одного таба — открываем теговую страницу раздела (базовый URL категории)
+                            if (selectedCount === 0) {
+                                if (categoryUrl) {
+                                    window.location.href = categoryUrl;
+                                    return;
+                                }
+                            }
+
+                            // При нескольких выбранных табах — работаем через AJAX-фильтрацию
+                            if (filterTimeout) {
+                                clearTimeout(filterTimeout);
+                            }
+                            filterTimeout = setTimeout(() => {
+                                sendFilterRequest();
+                            }, FILTER_DELAY);
+                        }
 
                         // Обновление всех клонов таба (в видимом и скрытом контейнерах)
                         function updateAllTabClones(tabId, isSelected) {
@@ -755,7 +755,7 @@
                         }
                         updateTabsDisplay(); // Первичный рендер
                         handleResize(); // Рассчитать начальное количество табов после отображения
-                        
+
                         // Добавляем обработчики для пагинации при инициализации
                         attachPaginationHandlers();
 
@@ -767,7 +767,7 @@
 
                 <?php endif; ?>
 
-                <div id="catalogContent" class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
+                <div id="catalogContent" class="grid grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-6">
                     <?php if($pageWithSeries) { ?>
                     <?php if(count($series)) { ?>
                     <?php foreach($series as $sn =>

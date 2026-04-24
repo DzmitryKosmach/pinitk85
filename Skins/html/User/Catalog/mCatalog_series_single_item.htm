@@ -913,46 +913,9 @@
                         <div class="b mb-2 text-lg">Цветовая гамма:</div>
 
                         <div id="materials-popup">
-                            <!-- Основной контейнер -->
-                            <div class="materials-level1" id="materials-popup-content" data-counts="0">
-                                <?php
-      $allMaterials = $itemInf['materials'];
-      $firstLevelMaterials = [];
-      $hasSubLevels = false;
-
-      // Собираем только материалы первого уровня
-      foreach ($allMaterials as $im) {
-          $material = $materials[$im['material_id']];
-          if (!$material) continue;
-
-          // Если у материала есть подуровни — помечаем
-          if ($material['has_sub'] && !empty($material['sub'])) {
-              $hasSubLevels = true;
-          }
-
-          $firstLevelMaterials[] = $im;
-      }
-
-      // Выводим только первый уровень
-      foreach ($firstLevelMaterials as $im) {
-          $m = $materials[$im['material_id']];
-          if (!$m) continue;
-          ?>
-                                <div class="material-item">
-                                    <!-- Тут можно вывести элемент первого уровня -->
-                                    <span><?php echo htmlspecialchars($m['name']); ?></span>
-                                    <!-- Или изображение, если есть -->
-                                    <?php if($m['image']['ext']): ?>
-                                    <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_50x50_0.<?php echo $m['image']['ext']; ?>" alt="<?php echo htmlspecialchars($m['name']); ?>">
-                                    <?php endif; ?>
-                                </div>
-                                <?php } ?>
-                            </div>
-
-                            <?php if ($hasSubLevels): ?>
+                            <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
                             <a href="javascript:void(0)" class="klink-dashed underline"
                                onclick="oMaterials.openrows(); return false;">Показать все</a>
-                            <?php endif; ?>
                         </div>
                     </div>
 

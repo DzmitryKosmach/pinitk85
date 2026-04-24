@@ -1,33 +1,48 @@
 <!-- Карточка товара -->
 
 <div class="bg-white rounded-lg shadow p-2  sm:p-4 lg:p-6 flex flex-col shadow hover:shadow-lg transition-shadow duration-300">
-  <!-- Изображение -->
-  <?php if (!empty($i['_img_ext'])): ?>
+    <!-- Изображение -->
+    <?php if (!empty($i['_img_ext'])): ?>
 
-  <a class="flex justify-center"
-     href="javascript:void(0)"
-     onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-  >
-    <img
-      src="<?php echo Catalog::photoUrl(
+    <a class="flex justify-center"
+       href="javascript:void(0)"
+       onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+    >
+        <img
+            src="<?php echo Catalog::photoUrl(
                                       Catalog_Items::$imagePath,
                                       $i['id'], 170, 140, 1, $i['_img_ext']
                                   ); ?>"
-      alt="<?php echo hsch($i['name'] . ' ' . $i['art']); ?>"
-      class="max-w-full h-auto object-contain rounded-md mb-4"
-    /></a>
-  <?php else: ?>
-  <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
-    <span class="text-gray-400 text-sm">Нет фото</span>
-  </div>
-  <?php endif; ?>
+            alt="<?php echo hsch($i['name'] . ' ' . $i['art']); ?>"
+            class="max-w-full h-auto object-contain rounded-md mb-4"
+        /></a>
+    <?php else: ?>
+    <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
+        <span class="text-gray-400 text-sm">Нет фото</span>
+    </div>
+    <?php endif; ?>
 
-  <!-- Артикул -->
-  <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($i['art']); ?></p>
+    <!-- Артикул -->
+    <div class="relative mb-1" style="height: 1.25rem;">
+        <p class="text-gray-400 text-sm leading-5
+      line-clamp-1
+      transition-all duration-200
+      absolute top-0 left-0 right-0
+      hover:line-clamp-none
+      hover:z-10
+      hover:bg-white
+      hover:shadow-lg
+      hover:rounded
+      hover:px-2
+      hover:py-1
+      hover:text-gray-600">
+            Арт: <?php echo htmlspecialchars($i['art']); ?>
+        </p>
+    </div>
 
-  <!-- Название -->
-  <div class="relative mb-1" style="height: 2.5em;">
-    <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5
+    <!-- Название -->
+    <div class="relative mb-1" style="height: 2.4em;">
+        <h3 class="font-medium text-sm sm2:text-base lg:text-lg
       line-clamp-2
       transition-all duration-200
       absolute top-0 left-0 right-0
@@ -38,23 +53,23 @@
       hover:rounded
       hover:px-2
       hover:py-1">
-      <a href="javascript:void(0)"
-         onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-         class="text-inherit hover:text-inherit block">
-        <?php echo htmlspecialchars($i['name']); ?>
-      </a>
-    </h3>
-  </div>
+            <a href="javascript:void(0)"
+               onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+               class="text-inherit hover:text-inherit block leading-4 md:leading-5">
+                <?php echo htmlspecialchars($i['name']); ?>
+            </a>
+        </h3>
+    </div>
 
 
-  <!-- Габариты -->
-  <?php if (!empty($i['size'])): ?>
-  <p class="text-gray-400 text-sm mt-4">Ш/В/Д: <?php echo htmlspecialchars($i['size']); ?></p>
-  <?php endif; ?>
+    <!-- Габариты -->
+    <?php if (!empty($i['size'])): ?>
+    <p class="text-gray-400 text-sm mt-2 md:mt-4">Ш/В/Д: <?php echo htmlspecialchars($i['size']); ?></p>
+    <?php endif; ?>
 
-  <!-- Цвета -->
+    <!-- Цвета -->
     <?php if (!empty($i['materials'])): ?>
-    <div class="mt-4 mb-3">
+    <div class="mt-2 mb-2 md:mt-4 md:mb-3">
         <div class="favorishare">
             <script>
                 oMaterials.items2mats[<?php echo (int)$i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace("'", "\\'", json_encode($i['materials'], JSON_UNESCAPED_UNICODE)); ?>');
@@ -62,7 +77,7 @@
             <a
                 href="javascript:void(0)"
                 id="item1-<?php echo (int)$i['id']; ?>-materials-preview"
-                class="flex flex-wrap gap-[6px] justify-start items-center materials"
+                class="flex flex-wrap gap-1 xs2:gap-[6px] justify-start items-center materials"
                 onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo (int)$i['id']; ?>); return false;"
             >
                 <?php
@@ -76,7 +91,7 @@
                 ?>
                 <div id="item1-<?php echo (int)$i['id']; ?>-m-<?php echo (int)$m['id']; ?>"<?php echo $activeAttr; ?>>
                 <?php if (!empty($m['image']['ext'])): ?>
-                <img class="rounded w-5 h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
+                <img class="rounded w-4 h-4 xs:w-5 xs:h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
                 <?php endif; ?>
         </div>
         <?php
@@ -84,7 +99,7 @@
         }
       ?>
         <?php if ($totalMaterials > $limit): ?>
-        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+        <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
         <?php endif; ?>
         </a>
     </div>
@@ -93,36 +108,36 @@
 
 <!-- Цена -->
 <div class="flex flex-wrap justify-between items-center mt-auto">
-  <div>
-    <?php $discount = abs($i['discount'] ?? 0); ?>
-    <?php if ($discount > 0 && $discount != 1): ?>
-    <div class="text-gray-600 text-sm line-through">
-      <?php echo Catalog::priceFormat($i['price_min'] / $discount); ?> ₽
+    <div>
+        <?php $discount = abs($i['discount'] ?? 0); ?>
+        <?php if ($discount > 0 && $discount != 1): ?>
+        <div class="text-gray-600 text-sm line-through">
+            <?php echo Catalog::priceFormat($i['price_min'] / $discount); ?> ₽
+        </div>
+        <?php endif; ?>
+        <div class="font-bold text-lg leading-4 md:leading-5">
+            <?php if ($i['price_min'] > 0): ?>
+            <?php echo Catalog::priceFormat($i['price_min']); ?> ₽
+            <?php else: ?>
+            по запросу
+            <?php endif; ?>
+        </div>
     </div>
-    <?php endif; ?>
-    <div class="font-bold text-lg">
-      <?php if ($i['price_min'] > 0): ?>
-      <?php echo Catalog::priceFormat($i['price_min']); ?> ₽
-      <?php else: ?>
-      по запросу
-      <?php endif; ?>
-    </div>
-  </div>
 
 
 </div>
 
 <!-- Кнопка -->
 <a
-  href="javascript:void(0)"
-  onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-  class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+    href="javascript:void(0)"
+    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+    class="mt-2 md:mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
 >
-  <!--          <a-->
-  <!--            href="<?php echo Catalog_Items::a($seriesInf, $i); ?>"-->
-  <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
-  <!--          >-->
-  Отложить
+    <!--          <a-->
+    <!--            href="<?php echo Catalog_Items::a($seriesInf, $i); ?>"-->
+    <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
+    <!--          >-->
+    Отложить
 </a>
 </div>
 
