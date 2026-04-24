@@ -56,7 +56,7 @@ $menuItems = [
           fill="#020202" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
-    <div class="dropdown-menu absolute top-full <?= $index === 1 ? 'left-[-60px] sm:left-0' : 'left-0' ?> bg-white leading-4 border rounded shadow-md w-64 sm:w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+    <div class="dropdown-menu absolute top-full <?= $index === 1 ? 'left-[-60px] sm:left-0' : 'left-0' ?> bg-white leading-4 border rounded shadow-md w-64 sm:w-72 opacity-0 invisible transition-all duration-200">
       <?php foreach ($menuItem['items'] as $subItem): ?>
       <a href="<?= htmlspecialchars($subItem['url'], ENT_QUOTES, 'UTF-8') ?>"
          class="block px-4 py-2 hover:bg-main_hover_menu border-b border-gray-200 last:border-b-0">
@@ -77,11 +77,26 @@ $menuItems = [
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const dropdowns = document.querySelectorAll('.dropdown');
+    const OPEN_DELAY_MS = 250;
+    const CLOSE_DELAY_MS = 220;
 
     dropdowns.forEach(dropdown => {
       const toggle = dropdown.querySelector('.dropdown-toggle');
       const menu = dropdown.querySelector('.dropdown-menu');
       const arrow = dropdown.querySelector('.dropdown-arrow');
+      let openTimer = null;
+      let closeTimer = null;
+
+      function clearTimers() {
+        if (openTimer) {
+          clearTimeout(openTimer);
+          openTimer = null;
+        }
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+      }
 
       // helper: показать меню (используем inline-стили чтобы перебить group-hover)
       function showMenu() {
@@ -110,9 +125,20 @@ $menuItems = [
         const pinned = dropdown.getAttribute('data-pinned') === 'true';
         const suppressed = dropdown.getAttribute('data-suppress-hover') === 'true';
 
-        if (!pinned && !suppressed) {
-          // показать (через inline-стили или классы — используем inline чтобы быть надёжнее)
-          showMenu();
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+
+        if (!pinned && !suppressed && !openTimer) {
+          openTimer = setTimeout(() => {
+            openTimer = null;
+            const stillPinned = dropdown.getAttribute('data-pinned') === 'true';
+            const stillSuppressed = dropdown.getAttribute('data-suppress-hover') === 'true';
+            if (!stillPinned && !stillSuppressed) {
+              showMenu();
+            }
+          }, OPEN_DELAY_MS);
         }
       });
 
@@ -121,25 +147,33 @@ $menuItems = [
         // при уходе курсора снимаем suppression — теперь последующее наведение будет работать
         dropdown.setAttribute('data-suppress-hover', 'false');
 
-        if (!pinned) {
-          // скрыть и вернуть поведение CSS (удаляем inline-стили чтобы group-hover снова работал)
-          hideMenu();
-          // небольшая задержка перед очисткой inline-стиля чтобы не прервать transition (опционально)
-          window.requestAnimationFrame(() => {
-            // если меню не закреплено и не видно (opacity 0) — очищаем inline, чтобы CSS снова управлял
-            if (dropdown.getAttribute('data-pinned') !== 'true') {
-              clearInlineStyle();
-              // убедимся, что CSS действительно скрывает (если есть классы opacity-0/invisible, они применятся)
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
+        if (openTimer) {
+          clearTimeout(openTimer);
+          openTimer = null;
+        }
+
+        if (!pinned && !closeTimer) {
+          closeTimer = setTimeout(() => {
+            closeTimer = null;
+            if (dropdown.getAttribute('data-pinned') === 'true') {
+              return;
             }
-          });
+            hideMenu();
+            window.requestAnimationFrame(() => {
+              if (dropdown.getAttribute('data-pinned') !== 'true') {
+                clearInlineStyle();
+                menu.classList.add('opacity-0', 'invisible');
+                menu.classList.remove('opacity-100', 'visible');
+              }
+            });
+          }, CLOSE_DELAY_MS);
         }
       });
 
       // --- ПОВЕДЕНИЕ ПРИ КЛИКЕ ---
       toggle.addEventListener('click', function (e) {
         e.stopPropagation();
+        clearTimers();
         const isPinned = dropdown.getAttribute('data-pinned') === 'true';
 
         // Снять pinned и скрыть у всех остальных
@@ -188,24 +222,27 @@ $menuItems = [
     // --- КЛИК ВНЕ МЕНЮ ---
     document.addEventListener('click', () => {
       dropdowns.forEach(d => {
+        const menu = d.querySelector('.dropdown-menu');
+        const arrow = d.querySelector('.dropdown-arrow');
+        if (menu) {
+          menu.style.removeProperty('transition');
+        }
         d.setAttribute('data-pinned', 'false');
         d.setAttribute('data-suppress-hover', 'false');
-        const m = d.querySelector('.dropdown-menu');
-        const a = d.querySelector('.dropdown-arrow');
-        if (m) {
+        if (menu) {
           // Принудительно скрываем
-          m.style.opacity = '0';
-          m.style.visibility = 'hidden';
+          menu.style.opacity = '0';
+          menu.style.visibility = 'hidden';
           // синхронизируем с классами tailwind
-          m.classList.add('opacity-0', 'invisible');
-          m.classList.remove('opacity-100', 'visible');
+          menu.classList.add('opacity-0', 'invisible');
+          menu.classList.remove('opacity-100', 'visible');
           // затем очищаем inline-стили, чтобы CSS hover снова работал при последующем наведении
           window.requestAnimationFrame(() => {
-            m.style.removeProperty('opacity');
-            m.style.removeProperty('visibility');
+            menu.style.removeProperty('opacity');
+            menu.style.removeProperty('visibility');
           });
         }
-        if (a) a.classList.remove('rotate-180');
+        if (arrow) arrow.classList.remove('rotate-180');
       });
     });
   });

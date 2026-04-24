@@ -926,29 +926,46 @@ function getHomeUrl() {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        function isMobile() {
-            return window.innerWidth < 768;
-        }
-
-        // Находим все контейнеры, где лежит кнопка и выпадашка
         const catalogContainers = document.querySelectorAll('.catalog-dropdown-container');
+        const OPEN_DELAY_MS = 250;
+        const CLOSE_DELAY_MS = 220;
 
         catalogContainers.forEach(container => {
-            // Ищем элементы внутри конкретного контейнера
-            const dropdown = container.querySelector('ul'); // само меню
+            const dropdown = container.querySelector('ul');
             const toggleBtn = container.querySelector('.catalog-toggle');
+            if (!dropdown) return;
 
-            let isPinned = false; // Флаг фиксации для текущего меню
+            let isPinned = false;
+            let openTimer = null;
+            let closeTimer = null;
+            let hoverHandlersAttached = false;
+            const parent = container;
+
+            function isMobile() {
+                return window.innerWidth < 768;
+            }
+
+            function clearTimers() {
+                if (openTimer) {
+                    clearTimeout(openTimer);
+                    openTimer = null;
+                }
+                if (closeTimer) {
+                    clearTimeout(closeTimer);
+                    closeTimer = null;
+                }
+            }
 
             function show() {
+                clearTimers();
                 dropdown.classList.add('opacity-100', 'visible');
                 dropdown.classList.remove('opacity-0', 'invisible');
             }
 
             function hide() {
+                clearTimers();
                 dropdown.classList.remove('opacity-100', 'visible');
                 dropdown.classList.add('opacity-0', 'invisible');
-                // Также скрываем все подменю при общем закрытии
                 const allSubmenus = container.querySelectorAll('ul.absolute');
                 allSubmenus.forEach(sub => {
                     sub.classList.remove('opacity-100', 'visible');
@@ -956,37 +973,70 @@ function getHomeUrl() {
                 });
             }
 
-            // --- Проверка мобильного устройства ---
-            function isMobile() {
-                return window.innerWidth < 768; // или любое другое пороговое значение
+            function scheduleShow() {
+                if (isPinned) return;
+                if (closeTimer) {
+                    clearTimeout(closeTimer);
+                    closeTimer = null;
+                }
+                if (openTimer) return;
+                openTimer = setTimeout(function () {
+                    openTimer = null;
+                    if (!isPinned && !isMobile()) {
+                        show();
+                    }
+                }, OPEN_DELAY_MS);
             }
 
-            // --- 1. Логика HOVER (только на десктопе) ---
-            const parent = container;
-
-            if (!isMobile()) {
-                parent.addEventListener('mouseenter', () => {
-                    show();
-                });
-
-                parent.addEventListener('mouseleave', () => {
-                    if (!isPinned) {
+            function scheduleHide() {
+                if (isPinned) return;
+                if (openTimer) {
+                    clearTimeout(openTimer);
+                    openTimer = null;
+                }
+                if (closeTimer) return;
+                closeTimer = setTimeout(function () {
+                    closeTimer = null;
+                    if (!isPinned && !isMobile()) {
                         hide();
                     }
-                });
+                }, CLOSE_DELAY_MS);
             }
 
-            // --- 2. Логика CLICK (Фиксация + мобильные) ---
+            function handleMouseEnter() {
+                scheduleShow();
+            }
+
+            function handleMouseLeave() {
+                scheduleHide();
+            }
+
+            function attachHoverHandlers() {
+                if (hoverHandlersAttached || isMobile()) return;
+                parent.addEventListener('mouseenter', handleMouseEnter);
+                parent.addEventListener('mouseleave', handleMouseLeave);
+                hoverHandlersAttached = true;
+            }
+
+            function detachHoverHandlers() {
+                if (!hoverHandlersAttached) return;
+                parent.removeEventListener('mouseenter', handleMouseEnter);
+                parent.removeEventListener('mouseleave', handleMouseLeave);
+                hoverHandlersAttached = false;
+                clearTimers();
+            }
+
+            attachHoverHandlers();
+
             function handleToggle(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                clearTimers();
 
                 if (isPinned) {
-                    // Если уже закреплено — убираем закрепление и скрываем
                     isPinned = false;
                     hide();
                 } else {
-                    // Если не закреплено — закрепляем и показываем
                     isPinned = true;
                     show();
                 }
@@ -994,7 +1044,6 @@ function getHomeUrl() {
 
             if (toggleBtn) toggleBtn.addEventListener('click', handleToggle);
 
-            // --- 3. Обработка кликов по элементам меню (только для мобильных) ---
             if (isMobile()) {
                 const level1Items = container.querySelectorAll('#catalog-dropdown > li');
 
@@ -1003,18 +1052,15 @@ function getHomeUrl() {
                     const submenu = item.querySelector(':scope > ul');
 
                     if (submenu && link) {
-                        // ❌ запрещаем переход
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             e.stopPropagation();
 
-                            // если основное меню закрыто — открыть
                             if (!isPinned) {
                                 isPinned = true;
                                 show();
                             }
 
-                            // закрываем все остальные подменю 2 уровня
                             level1Items.forEach(otherItem => {
                                 const otherSub = otherItem.querySelector(':scope > ul');
                                 if (otherSub && otherSub !== submenu) {
@@ -1023,7 +1069,6 @@ function getHomeUrl() {
                                 }
                             });
 
-                            // переключаем ТЕКУЩЕЕ подменю
                             submenu.classList.toggle('opacity-100');
                             submenu.classList.toggle('visible');
                             submenu.classList.toggle('opacity-0');
@@ -1032,7 +1077,6 @@ function getHomeUrl() {
                     }
                 });
 
-                // закрытие ТОЛЬКО при клике вне каталога
                 document.addEventListener('click', (e) => {
                     if (!container.contains(e.target)) {
                         isPinned = false;
@@ -1041,8 +1085,6 @@ function getHomeUrl() {
                 });
             }
 
-
-            // --- 4. Закрытие по клавише Esc ---
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     isPinned = false;
@@ -1050,24 +1092,17 @@ function getHomeUrl() {
                 }
             });
 
-            // --- 5. Предотвращаем закрытие при кликах внутри самого выпадающего списка ---
             dropdown.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
 
-            // --- 6. Обработка ресайза ---
             window.addEventListener('resize', () => {
-                if (!isMobile()) {
-                    // Если перешли на десктоп — включаем hover
-                    parent.addEventListener('mouseenter', () => show());
-                    parent.addEventListener('mouseleave', () => {
-                        if (!isPinned) hide();
-                    });
-                } else {
-                    // Если перешли на мобильный — отключаем hover
-                    parent.removeEventListener('mouseenter', show);
-                    parent.removeEventListener('mouseleave', hide);
+                clearTimers();
+                if (isMobile()) {
+                    detachHoverHandlers();
+                    return;
                 }
+                attachHoverHandlers();
             });
         });
     });
