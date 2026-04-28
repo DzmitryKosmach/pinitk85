@@ -29,7 +29,7 @@ $photosUnified[] = [
 ?>
 
 <!-- Галерея миниатюр с кнопками прокрутки -->
-<div class="slider-thumbnails-container">
+<div class="slider-thumbnails-container w-full lg:w-[80px]">
   <!-- Относительный контейнер для позиционирования кнопок -->
   <div class="relative h-full flex justify-center items-center lg:max-w-[80px] overflow-hidden">
 
@@ -42,6 +42,8 @@ $photosUnified[] = [
       <?php foreach ($photosUnified as $index => $p): ?>
 
       <img
+        width="80"
+        height="80"
         src="<?= $p['small'] ?>"
         data-bigimage="<?= $p['big'] ?>"
         data-index="<?= $index ?>"

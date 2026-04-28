@@ -4,8 +4,7 @@
     <!-- Изображение -->
     <?php if (!empty($i['_img_ext'])): ?>
 
-    <a class="flex justify-center"
-       href="javascript:void(0)"
+    <button type="button" class="flex justify-center"
        onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
     >
         <img
@@ -15,7 +14,10 @@
                                   ); ?>"
             alt="<?php echo hsch($i['name'] . ' ' . $i['art']); ?>"
             class="max-w-full h-auto object-contain rounded-md mb-4"
-        /></a>
+            loading="lazy"
+            decoding="async"
+        />
+    </button>
     <?php else: ?>
     <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
         <span class="text-gray-400 text-sm">Нет фото</span>
@@ -53,11 +55,11 @@
       hover:rounded
       hover:px-2
       hover:py-1">
-            <a href="javascript:void(0)"
+            <span
                onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
                class="text-inherit hover:text-inherit block leading-4 md:leading-5">
                 <?php echo htmlspecialchars($i['name']); ?>
-            </a>
+            </span>
         </h3>
     </div>
 
@@ -67,77 +69,40 @@
     <p class="text-gray-400 text-sm mt-2 md:mt-4">Ш/В/Д: <?php echo htmlspecialchars($i['size']); ?></p>
     <?php endif; ?>
 
-    <!-- Цвета -->
-    <?php if (!empty($i['materials'])): ?>
-    <div class="mt-2 mb-2 md:mt-4 md:mb-3">
-        <div class="favorishare">
-            <script>
-                oMaterials.items2mats[<?php echo (int)$i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace("'", "\\'", json_encode($i['materials'], JSON_UNESCAPED_UNICODE)); ?>');
-            </script>
-            <a
-                href="javascript:void(0)"
-                id="item1-<?php echo (int)$i['id']; ?>-materials-preview"
-                class="flex flex-wrap gap-1 xs2:gap-[6px] justify-start items-center materials"
-                onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo (int)$i['id']; ?>); return false;"
-            >
-                <?php
-        $totalMaterials = count($i['materials']);
-        $limit = 5;
-        $count = 0;
-        foreach ($i['materials'] as $im) {
-          if ($count >= $limit) break;
-                $m = $materials[$im['material_id']];
-                $activeAttr = ($mActiveTopId == $m['id']) ? ' class="active"' : '';
-                ?>
-                <div id="item1-<?php echo (int)$i['id']; ?>-m-<?php echo (int)$m['id']; ?>"<?php echo $activeAttr; ?>>
-                <?php if (!empty($m['image']['ext'])): ?>
-                <img class="rounded w-4 h-4 xs:w-5 xs:h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
-                <?php endif; ?>
-        </div>
-        <?php
-          $count++;
-        }
-      ?>
-        <?php if ($totalMaterials > $limit): ?>
-        <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
-        <?php endif; ?>
-        </a>
-    </div>
-</div>
-<?php endif; ?>
+    <?php include(Config::path('skins') . '/html/Components/colors_card.htm'); ?>
 
-<!-- Цена -->
-<div class="flex flex-wrap justify-between items-center mt-auto">
-    <div>
-        <?php $discount = abs($i['discount'] ?? 0); ?>
-        <?php if ($discount > 0 && $discount != 1): ?>
-        <div class="text-gray-600 text-sm line-through">
-            <?php echo Catalog::priceFormat($i['price_min'] / $discount); ?> ₽
-        </div>
-        <?php endif; ?>
-        <div class="font-bold text-lg leading-4 md:leading-5">
-            <?php if ($i['price_min'] > 0): ?>
-            <?php echo Catalog::priceFormat($i['price_min']); ?> ₽
-            <?php else: ?>
-            по запросу
+    <!-- Цена -->
+    <div class="flex flex-wrap justify-between items-center mt-auto">
+        <div>
+            <?php $discount = abs($i['discount'] ?? 0); ?>
+            <?php if ($discount > 0 && $discount != 1): ?>
+            <div class="text-gray-600 text-sm line-through">
+                <?php echo Catalog::priceFormat($i['price_min'] / $discount); ?> ₽
+            </div>
             <?php endif; ?>
+            <div class="font-bold text-lg leading-4 md:leading-5">
+                <?php if ($i['price_min'] > 0): ?>
+                <?php echo Catalog::priceFormat($i['price_min']); ?> ₽
+                <?php else: ?>
+                по запросу
+                <?php endif; ?>
+            </div>
         </div>
+
+
     </div>
 
-
-</div>
-
-<!-- Кнопка -->
-<a
-    href="javascript:void(0)"
-    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
-    class="mt-2 md:mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
->
-    <!--          <a-->
-    <!--            href="<?php echo Catalog_Items::a($seriesInf, $i); ?>"-->
-    <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
-    <!--          >-->
-    Отложить
-</a>
+    <!-- Кнопка -->
+    <button type="button"
+        href="javascript:void(0)"
+        onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return false;"
+        class="mt-2 md:mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+    >
+        <!--          <a-->
+        <!--            href="<?php echo Catalog_Items::a($seriesInf, $i); ?>"-->
+        <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
+        <!--          >-->
+        Отложить
+    </button>
 </div>
 
