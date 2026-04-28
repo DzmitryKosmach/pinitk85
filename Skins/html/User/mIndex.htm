@@ -98,10 +98,10 @@
         <h2 class="text-2xl font-bold ">Почему стоит заказать у нас?</h2>
 
         <a href="/preimuschestva/" target="_blank">
-        <button id="toggle-benefits-btn"
-                class="self-start md:self-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95">
-            Узнать
-        </button>
+            <button id="toggle-benefits-btn"
+                    class="self-start md:self-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95">
+                Узнать
+            </button>
         </a>
     </div>
     <?php include(Config::path('skins') . '/html/Components/benefitsDB.htm'); ?>
@@ -491,106 +491,7 @@
     </div>
 </section>
 
-<section class="mt-12 md:mt-16">
-    <h2 class="text-2xl font-bold mb-8">
-        <a href="/brands/" target="_blank" class="underline cursor-pointer">Бренды и торговые марки</a>
-    </h2>
-
-    <div class="slider-container slider-7 relative w-full px-2 sm:px-24">
-        <!-- Навигация влево -->
-        <button class="slider-prev bg-white absolute left-0 top-1/2 transform -translate-y-1/2 z-20">
-            <div
-                class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10">
-                <img src="/images/index/Arrow_l.png" alt="Влево" />
-            </div>
-        </button>
-
-        <div class="slider overflow-hidden">
-            <div class="slider-track flex w-full transition-transform duration-300 space-x-4">
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (1).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (2).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (3).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (4).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (5).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (6).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (7).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (8).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (9).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (10).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (11).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (12).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (13).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (14).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-                <div class="card flex-none flex flex-col gap-4">
-                    <div>
-                        <img src="/images/brands/brand (15).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                    <div>
-                        <img src="/images/brands/brand (16).webp" alt="Сбер" class="object-contain h-20 mx-auto" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Навигация вправо -->
-        <button class="slider-next bg-white absolute right-0 top-1/2 transform -translate-y-1/2">
-            <div
-                class="flex items-center justify-center w-8 h-8 md:w-18 md:h-18 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.2)] hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] transition-shadow duration-300 z-10">
-                <img src="/images/index/Arrow_r.png" alt="Вправо" />
-            </div>
-        </button>
-    </div>
-
-    <!-- Кнопка смотреть все бренды -->
-    <div class="text-center mt-6">
-        <a href="/brands/" target="_blank"
-           class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
-            Смотреть все бренды
-        </a>
-    </div>
-</section>
+<?php include(Config::path('skins') . '/html/Components/brands_section.htm'); ?>
 
 <div class="max-w-[760px] mx-auto block mt-20 border-[3px] text-[14px] text-center leading-4 sm:text-[15px] md:text-base
      border-blue-600 text-blue-600 font-semibold px-6 sm:px-8 md:px-16 py-3

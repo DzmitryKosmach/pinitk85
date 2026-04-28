@@ -4,9 +4,36 @@
 <?php echo JsCopmress::load('catalog')?>
 <?php echo JsCopmress::load('series')?>
 <script>
-    oCompare.url = '<?php echo Url::a('catalog - compare'); ?>';
+    oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
+    oFavorite.url = '<?php echo Url::a('catalog-favorite'); ?>';
 </script>
 <style>
+    #section-photo.pic {
+        height: auto !important;
+        line-height: normal !important;
+        min-height: 260px;
+        width: 100%;
+        aspect-ratio: 600 / 400;
+    }
+
+    #mainImageContainer {
+        min-height: 260px;
+        width: 100%;
+        aspect-ratio: 600 / 400;
+    }
+
+    @media (min-width: 640px) {
+        #section-photo.pic,
+        #mainImageContainer {
+            min-height: 320px;
+        }
+    }
+
+    #options-block .description1 {
+        min-height: 220px;
+    }
+
+
     #materials-popup {
         display: block;
         position: relative;
@@ -300,7 +327,7 @@
                         <!-- Кнопка "Добавить в избранное" -->
                         <div class="series-favorite-add <?php if (Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                              data-id="<?php echo (int)$seriesInf['id']; ?>">
-                            <button type="button" class="add2favorite hover:opacity-50"
+                            <button type="button" class="add2favorite hover:opacity-50" aria-label="Добавить в избранное"
                                onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
                                 <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
@@ -311,7 +338,7 @@
                         <!-- Кнопка "Убрать из избранного" -->
                         <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                              data-id="<?php echo (int)$seriesInf['id']; ?>">
-                            <button type="button" class="remove-favorite hover:opacity-50"
+                            <button type="button" class="remove-favorite hover:opacity-50" aria-label="Убрать из избранного"
                                onclick="oFavorite.remove(<?php echo$seriesInf['id']; ?>); return false;" title="Убрать из избранного">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 hover:text-gray-500">
@@ -333,6 +360,7 @@
                                 class="add2compare hover:opacity-50"
                                 onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                 title="Добавить к сравнению"
+                                aria-label="Добавить к сравнению"
                             >
                                 <svg
                                     width="26"
@@ -359,6 +387,7 @@
                                 class="add2compare hover:opacity-50"
                                 onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                 title="Убрать из сравнения"
+                                aria-label="Убрать из сравнения"
                             >
                                 <svg
                                     width="26"
@@ -410,16 +439,16 @@
     <link itemprop="url" href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <div>
         <div>
-            <div class="flex flex-col sm2:flex-row gap-12 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
+            <div class="flex flex-col sm2:flex-row xl:gap-12 gap-6 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
                 <?php if(count($photos)) { ?>
                 <div class="pictures sm2:w-1/2 changegenimage">
-                    <div class="flex lg:flex-row flex-col-reverse gap-4">
+                    <div class="flex lg:flex-row flex-col-reverse items-start gap-4">
 
                         <?php include(Config::path('skins') . '/html/Components/slider_thumbnails.htm'); ?>
 
                         <!-- Основное изображение -->
-                        <div id="section-photo" class="pic w-full relative">
-                            <div id="mainImageContainer"  class="relative w-full !flex justify-center aspect-[600/400]">
+                        <div id="section-photo" class="pic w-full relative overflow-hidden" style="aspect-ratio: 600 / 400; min-height: 260px;">
+                            <div id="mainImageContainer"  class="relative w-full !flex justify-center overflow-hidden" style="aspect-ratio: 600 / 400; min-height: 260px;">
                                 <?php if (!empty($seriesInf['out_of_production'])): ?>
                                 <div class="absolute z-20 top-3 left-3 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded shadow-lg uppercase tracking-wide">
                                     Снято с производства
@@ -428,13 +457,19 @@
                                 <?php
                                 $p = $photos[0];
                                 ?>
-                                <img id="main-product-image" class="js_picture_glass object-cover cursor-zoom-in !max-h-[500px] rounded-xl genimage"
+                                <img id="main-product-image" class="js_picture_glass cursor-zoom-in rounded-xl genimage"
                                      src="<?php echo Catalog::photoUrl(
 										 Catalog_Series_Photos::$imagePath,
 										 $p['id'], 0, 0, 0, $p['_img_ext']
 									 )?>"
                                      alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                                      title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
+                                     width="600"
+                                     height="400"
+                                     loading="eager"
+                                     fetchpriority="high"
+                                     decoding="async"
+                                     style="display:block;width:100%;height:100%;object-fit:contain;"
                                      itemprop="image"
                                 >
                                 <?php /*<div class="glass_lupa"></div>*/?>
@@ -478,7 +513,7 @@
                                 <!-- Кнопка "Добавить в избранное" -->
                                 <div class="series-favorite-add <?php if (Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                      data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                    <button type="button" class="add2favorite hover:opacity-50"
+                                    <button type="button" class="add2favorite hover:opacity-50" aria-label="Добавить в избранное"
                                        onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
                                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
@@ -489,7 +524,7 @@
                                 <!-- Кнопка "Убрать из избранного" -->
                                 <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                      data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                    <button type="button" class="remove-favorite hover:opacity-50"
+                                    <button type="button" class="remove-favorite hover:opacity-50" aria-label="Убрать из избранного"
                                        onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 hover:text-gray-500">
@@ -511,6 +546,7 @@
                                         class="add2compare hover:opacity-50"
                                         onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                         title="Добавить к сравнению"
+                                        aria-label="Добавить к сравнению"
                                     >
                                         <svg
                                             width="26"
@@ -537,6 +573,7 @@
                                         class="add2compare hover:opacity-50"
                                         onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                         title="Убрать из сравнения"
+                                        aria-label="Убрать из сравнения"
                                     >
                                         <svg
                                             width="26"
@@ -1017,7 +1054,7 @@
         <div class="description1">
 
             <!-- Характеристики -->
-            <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+            <div class="text options" id="tab-options" style="display: <?php echo count($options) ? 'block' : 'none'; ?>;" itemprop="description">
 
                 <?php
     $processedOptions = [];
@@ -1034,7 +1071,7 @@
                 foreach ($options as $o) {
                 $processedOptions[] = [
                 'name' => htmlspecialchars($o['name']),
-                'value' => htmlspecialchars(rtrim($o['value'], '.'))
+                'value' => htmlspecialchars($o['value'])
                 ];
                 }
 
@@ -1098,6 +1135,7 @@
                     const buttonText = document.getElementById("buttonText");
                     const arrow = document.getElementById("arrow");
                     const block = document.getElementById("tabsScroller1");
+                    if (!button || !details || !buttonText || !arrow || !block) return;
 
                     // Установим большую max-height для анимации (в px)
                     const fullHeight = "810px"; // подберите по количеству пунктов
@@ -1123,7 +1161,7 @@
             </script>
 
             <!-- Доставка и оплата -->
-            <div class="text" id="tab-delivery" style="display: none;">
+            <div class="text" id="tab-delivery" style="display: <?php echo count($options) ? 'none' : 'block'; ?>;">
                 <div id="text-delivery">
                     <?php
             $t = $catInf['series_info'];

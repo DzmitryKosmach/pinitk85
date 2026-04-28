@@ -1,0 +1,69 @@
+<!-- Цвета (универсальный блок для карточек товара/серии) -->
+<?php
+$colorsMode = isset($colorsMode) ? $colorsMode : (isset($s) ? 'series' : 'item');
+$limit = 5;
+?>
+
+<?php if ($colorsMode === 'series' && isset($s) && !empty($s['materials'])): ?>
+<?php
+$totalMaterials = isset($s['materials_total']) ? (int)$s['materials_total'] : count($s['materials']);
+$seriesMaterials = [];
+foreach ($s['materials'] as $m) {
+    if (empty($m['_img_ext'])) continue;
+    $seriesMaterials[] = [
+        'name' => $m['name'],
+        'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext'],
+    ];
+}
+?>
+<div class="flex gap-[6px] justify-start items-center mt-4 sm2:mt-7 mb-3">
+    <?php $count = 0; ?>
+    <?php foreach ($seriesMaterials as $m): ?>
+    <?php if ($count >= $limit) break; ?>
+    <span
+        class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
+        style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
+        title="<?php echo htmlspecialchars($m['name']); ?>"
+    ></span>
+    <?php $count++; ?>
+    <?php endforeach; ?>
+    <?php if ($totalMaterials > $limit): ?>
+    <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+    <?php endif; ?>
+</div>
+<?php elseif (isset($i) && !empty($i['materials'])): ?>
+<div class="mt-2 mb-2 md:mt-4 md:mb-3">
+    <div class="favorishare">
+        <script>
+            oMaterials.items2mats[<?php echo (int)$i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace("'", "\\'", json_encode($i['materials'], JSON_UNESCAPED_UNICODE)); ?>');
+        </script>
+        <a
+            href="javascript:void(0)"
+            id="item1-<?php echo (int)$i['id']; ?>-materials-preview"
+            class="flex flex-wrap gap-1 xs2:gap-[6px] justify-start items-center materials"
+            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo (int)$i['id']; ?>); return false;"
+        >
+            <?php
+    $totalMaterials = count($i['materials']);
+    $count = 0;
+    foreach ($i['materials'] as $im) {
+        if ($count >= $limit) break;
+        $m = $materials[$im['material_id']];
+        $activeAttr = ($mActiveTopId == $m['id']) ? ' class="active"' : '';
+            ?>
+            <div id="item1-<?php echo (int)$i['id']; ?>-m-<?php echo (int)$m['id']; ?>"<?php echo $activeAttr; ?>>
+            <?php if (!empty($m['image']['ext'])): ?>
+            <img loading="lazy" decoding="async" class="rounded w-4 h-4 xs:w-5 xs:h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
+            <?php endif; ?>
+            </div>
+            <?php
+        $count++;
+    }
+    ?>
+            <?php if ($totalMaterials > $limit): ?>
+            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+            <?php endif; ?>
+        </a>
+    </div>
+</div>
+<?php endif; ?>

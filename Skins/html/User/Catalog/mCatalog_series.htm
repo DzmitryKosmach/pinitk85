@@ -13,6 +13,21 @@
     oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
 </script>
 
+<style>
+    #section-photo {
+        min-height: 260px;
+    }
+
+    #mainImageContainer {
+        min-height: 260px;
+    }
+
+    #options-block .description1 {
+        min-height: 220px;
+    }
+
+</style>
+
 
 
 <div itemscope itemtype="http://schema.org/Product" id="content" class="content">
@@ -56,8 +71,8 @@
                             <!-- Кнопка "Добавить в избранное" -->
                             <div class="series-favorite-add <?php if (Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                  data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                <button type="button" class="add2favorite hover:opacity-50"
-                                   onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
+                                <button type="button" class="add2favorite hover:opacity-50" aria-label="Добавить в избранное"
+                                        onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
                                     <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
                                     </svg>
@@ -67,8 +82,8 @@
                             <!-- Кнопка "Убрать из избранного" -->
                             <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                  data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                <button type="button" class="remove-favorite hover:opacity-50"
-                                   onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
+                                <button type="button" class="remove-favorite hover:opacity-50" aria-label="Убрать из избранного"
+                                        onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 hover:text-gray-500">
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -89,6 +104,7 @@
                                     class="add2compare hover:opacity-50"
                                     onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                     title="Добавить к сравнению"
+                                    aria-label="Добавить к сравнению"
                                 >
                                     <svg
                                         width="26"
@@ -115,6 +131,7 @@
                                     class="add2compare hover:opacity-50"
                                     onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                     title="Убрать из сравнения"
+                                    aria-label="Убрать из сравнения"
                                 >
                                     <svg
                                         width="26"
@@ -158,29 +175,38 @@
 
             </div>
 
-            <div class="flex flex-col sm2:flex-row gap-12">
+            <div class="flex flex-col md:flex-row xl:gap-12 gap-6">
                 <?php if(count($photos)) { ?>
-                <div class="sm2:w-1/2">
-                    <div class="flex lg:flex-row flex-col-reverse gap-4">
+                <div class="md:w-1/2">
+                    <div class="flex lg:flex-row flex-col-reverse lg:gap-4 gap-2">
 
                         <?php include(Config::path('skins') . '/html/Components/slider_thumbnails.htm'); ?>
 
                         <!-- Основное изображение -->
                         <div id="section-photo" class="w-full relative">
                             <?php $p = $photos[0]; ?>
-                            <div class="relative w-full" id="mainImageContainer">
+                            <div
+                                class="relative w-full aspect-[578/409]"
+                                id="mainImageContainer"
+                                style="aspect-ratio: 578 / 409; min-height: 260px;"
+                            >
 
                                 <?php if (!empty($seriesInf['out_of_production'])): ?>
-                                    <div class="absolute z-20 top-3 left-3 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded shadow-lg uppercase tracking-wide">
-                                        Снято с производства
-                                    </div>
+                                <div class="absolute z-20 top-3 left-3 bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded shadow-lg uppercase tracking-wide">
+                                    Снято с производства
+                                </div>
                                 <?php endif; ?>
 
                                 <img
                                     src="<?php echo Catalog::photoUrl(Catalog_Series_Photos::$imagePath, $p['id'], 0, 0, 0, $p['_img_ext']); ?>"
                                     alt="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
                                     title="<?php echo hsch($p['alt'] ? $p['alt'] : $catInf['name'] . ' ' . $seriesInf['name']); ?>"
-                                    class="w-full aspect-[578/409] rounded-xl object-contain cursor-zoom-in"
+                                    width="578"
+                                    height="409"
+                                    loading="eager"
+                                    fetchpriority="high"
+                                    decoding="async"
+                                    class="w-full h-full rounded-xl object-contain cursor-zoom-in"
                                     id="main-product-image"
                                     itemprop="image"
                                 />
@@ -314,7 +340,7 @@
 
 
                 <!-- Правая колонка: Описание и цены -->
-                <div class="info sm2:w-1/2">
+                <div class="info md:w-1/2">
                     <!-- Блок с названием и кнопками -->
                     <div class="md:block hidden">
                         <div class="flex items-center justify-between">
@@ -325,8 +351,8 @@
                                     <!-- Кнопка "Добавить в избранное" -->
                                     <div class="series-favorite-add <?php if (Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                          data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                        <button type="button" class="add2favorite hover:opacity-50"
-                                           onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
+                                        <button type="button" class="add2favorite hover:opacity-50" aria-label="Добавить в избранное"
+                                                onclick="oFavorite.add(<?php echo $seriesInf['id']; ?>); return false;" title="Добавить в избранное">
                                             <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M10.8344 1.65591C13.3792 -0.628333 17.3117 -0.552499 19.7628 1.90381C22.2141 4.36011 22.2982 8.27342 20.0185 10.8258L10.8332 20.0254L1.64816 10.8258C-0.631531 8.27342 -0.546316 4.35393 1.9038 1.90381C4.3567 -0.549087 8.28229 -0.631723 10.8344 1.65591ZM18.2292 3.43428C16.6052 1.80694 13.9832 1.74093 12.2817 3.26828L10.8354 4.56651L9.38827 3.26929C7.68189 1.7398 5.06465 1.80709 3.43587 3.43587C1.82198 5.04975 1.74096 7.63458 3.22826 9.3418L10.8332 16.9588L18.4384 9.3418C19.9263 7.63393 19.8456 5.05402 18.2292 3.43428Z" fill="#3C3C3A"/>
                                             </svg>
@@ -336,8 +362,8 @@
                                     <!-- Кнопка "Убрать из избранного" -->
                                     <div class="series-favorite-remove <?php if (!Catalog_Favorites::check($seriesInf['id'])): ?>hidden<?php endif; ?>"
                                          data-id="<?php echo (int)$seriesInf['id']; ?>">
-                                        <button type="button" class="remove-favorite hover:opacity-50"
-                                           onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
+                                        <button type="button" class="remove-favorite hover:opacity-50" aria-label="Убрать из избранного"
+                                                onclick="oFavorite.remove(<?php echo $seriesInf['id']; ?>); return false;" title="Убрать из избранного">
 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 hover:text-gray-500">
                                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -358,6 +384,7 @@
                                             class="add2compare hover:opacity-50"
                                             onclick="oCompare.add(<?php echo $seriesInf['id']; ?>); return false;"
                                             title="Добавить к сравнению"
+                                            aria-label="Добавить к сравнению"
                                         >
                                             <svg
                                                 width="26"
@@ -384,6 +411,7 @@
                                             class="add2compare hover:opacity-50"
                                             onclick="oCompare.remove(<?php echo $seriesInf['id']; ?>); return false;"
                                             title="Убрать из сравнения"
+                                            aria-label="Убрать из сравнения"
                                         >
                                             <svg
                                                 width="26"
@@ -647,8 +675,8 @@
 
 
                                             <div class="flex items-center gap-2">
-                                                <a href="javascript:void(0)" class="px-2 text-xl text-gray-600 no-underline"
-                                                   onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">-</a>
+                                                <button type="button" class="px-2 text-xl text-gray-600 no-underline"
+                                                        onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">-</button>
                                                 <input type="text" name="amount[<?php echo $i['id']; ?>]"
                                                        id="item2-<?php echo $i['id']; ?>-amount"
                                                        value="<?php echo $i['in_series_set_amount']; ?>"
@@ -656,8 +684,8 @@
                                                        onchange="seriesSetPrice()" onkeyup="seriesSetPrice()"
                                                        onclick="seriesSetPrice()">
                                                 <span class="text-sm text-gray-500">шт</span>
-                                                <a href="javascript:void(0)" class="px-2 text-xl text-gray-600 no-underline"
-                                                   onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">+</a>
+                                                <button type="button" class="px-2 text-xl text-gray-600 no-underline"
+                                                        onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">+</button>
 
                                                 <input type="hidden" name="material_id[<?php echo $i['id']; ?>]"
                                                        id="item2-<?php echo $i['id']; ?>-material"
@@ -834,178 +862,178 @@
 
                     <div id="series-materials-wrapper" class="!mt-0">
                         <div id="series-materials-clip" class="overflow-hidden transition-all duration-300">
-                        <div id="series-materials-row" class="series-materials new flex gap-2 flex-nowrap transition-all duration-300">
-                        <?php
+                            <div id="series-materials-row" class="series-materials new flex gap-2 flex-nowrap transition-all duration-300">
+                                <?php
 							function recurseSubMaterials($materials, $prevLevelName){
 								foreach($materials as $m){
 									if($m['has_sub']){
 										print '<div class="series-materials-level2 ">';
-										print '		<div class="cl"></div>';
-										print '			<span class="b">' . $prevLevelName . ' / ' . $m['name'] . '</span>';
-										recurseSubMaterials($m['sub'], $prevLevelName . ' / ' . $m['name']);
-										print '			<div class="cl"></div>';
-										print '</div>';
-									}else{
-										$label = (isset($m['art']) && $m['art'] !== '') ? $m['art'] : $m['name'];
-										print '<div class="series-materials-level3">
-											<div class="image">' .
-											($m['image']['ext'] ? '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' : '') .
-											'</div>
-											<div class="name">' . hsch($label) . '</div>
-										</div>';
-									}
-								}
-							}
-							?>
-                    <?php foreach($materials as $m) { ?>
-                    <?php if(!$m['current-series']) continue; ?>
-                    <?php if($m['has_sub']) { ?>
-                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " href="javascript:void(0)">
-                        <div class="flex gap-3 flex-wrap mb-1">
-                            <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
-                                <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
-                                    <?php if($m['image']['ext']) { ?>
-                                    <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                                         width="70" height="70"
-                                         alt="<?php echo hsch($m['name'])?>"
-                                         class="w-full h-full object-cover"
-                                    >
-                                    <?php } ?>
+                                print '		<div class="cl"></div>';
+                                print '			<span class="b">' . $prevLevelName . ' / ' . $m['name'] . '</span>';
+                                recurseSubMaterials($m['sub'], $prevLevelName . ' / ' . $m['name']);
+                                print '			<div class="cl"></div>';
+                                print '</div>';
+                            }else{
+                            $label = (isset($m['art']) && $m['art'] !== '') ? $m['art'] : $m['name'];
+                            print '<div class="series-materials-level3">
+                            <div class="image">' .
+                                ($m['image']['ext'] ? '<img src="' . Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'] . '_68x60_0.' . $m['image']['ext'] . '" width="68" height="60" alt="' . hsch($m['name']) . '">' : '') .
+                                '</div>
+                            <div class="name">' . hsch($label) . '</div>
+                        </div>';
+                            }
+                            }
+                            }
+                            ?>
+                            <?php foreach($materials as $m) { ?>
+                            <?php if(!$m['current-series']) continue; ?>
+                            <?php if($m['has_sub']) { ?>
+                            <button type="button" class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " >
+                                <div class="flex gap-3 flex-wrap mb-1">
+                                    <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
+                                        <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
+                                            <?php if($m['image']['ext']) { ?>
+                                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
+                                                 width="70" height="70"
+                                                 alt="<?php echo hsch($m['name'])?>"
+                                                 class="w-full h-full object-cover"
+                                            >
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
+                            </button>
+                            <div class="materials-zoom hidden">
+                                <div class="level1-sub materials-popup-content">
+                                    <?php recurseSubMaterials($m['sub'], $m['name']); ?>
+                                    <div class="cl"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
-                    </a>
-                    <div class="materials-zoom hidden">
-                        <div class="level1-sub materials-popup-content">
-                            <?php recurseSubMaterials($m['sub'], $m['name']); ?>
+                            <?php } else { ?>
+                            <?php if($m['image']['ext']) { ?>
+                            <button type="button" class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out ">
+                                <div class="flex gap-3 flex-wrap mb-1">
+                                    <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
+                                        <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
+                                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
+                                                 width="70" height="70" alt="<?php echo hsch($m['name'])?>"
+                                                 class="w-full h-full object-cover"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
+                            </button>
+                            <div class="materials-zoom hidden">
+                                <div class="materials-popup-content">
+                                    <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
+                                </div>
+                            </div>
+                            <?php } else { ?>
+                            <div class="level1">
+                                <div class="image">&nbsp;</div>
+                                <div class="name text-sm hidden"><?php echo $m['name']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                            <?php } ?>
                             <div class="cl"></div>
                         </div>
                     </div>
-                    <?php } else { ?>
-                    <?php if($m['image']['ext']) { ?>
-                    <a class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " href="javascript:void(0)">
-                        <div class="flex gap-3 flex-wrap mb-1">
-                            <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
-                                <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
-                                    <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                                         width="70" height="70" alt="<?php echo hsch($m['name'])?>"
-                                         class="w-full h-full object-cover"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="name text-[12px] leading-3 break-all whitespace-normal"><?php echo $m['name']; ?></div>
-                    </a>
-                    <div class="materials-zoom hidden">
-                        <div class="materials-popup-content">
-                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>.<?php echo $m['image']['ext']; ?>"  alt="<?php echo hsch($m['name'])?>">
-                        </div>
-                    </div>
-                    <?php } else { ?>
-                    <div class="level1">
-                        <div class="image">&nbsp;</div>
-                        <div class="name text-sm hidden"><?php echo $m['name']; ?></div>
-                    </div>
-                    <?php } ?>
-                    <?php } ?>
-                    <?php } ?>
-                    <div class="cl"></div>
-                        </div>
-                        </div>
-                        <button id="series-materials-toggle" type="button" class="hidden mt-2 text-sm text-blue-600 hover:text-blue-700 underline cursor-pointer">
-                            Показать все
-                        </button>
-                    </div>
+                    <button id="series-materials-toggle" type="button" class="hidden mt-2 text-sm text-blue-600 hover:text-blue-700 underline cursor-pointer">
+                        Показать все
+                    </button>
+                </div>
 
-                    <style>
-                        /* Адаптивная ширина попапа "Цветовая гамма" */
+                <style>
+                    /* Адаптивная ширина попапа "Цветовая гамма" */
+                    .materials-popup-content {
+                        width: 100%;
+                        max-width: min(960px, 90vw);
+                    }
+
+                    @media (max-width: 640px) {
                         .materials-popup-content {
-                            width: 100%;
-                            max-width: min(960px, 90vw);
+                            max-width: calc(100vw - 32px);
+                            padding: 12px;
+                        }
+                    }
+
+                    #series-materials-row > a, #series-materials-row > .level1 { flex-shrink: 0; }
+                    /* Отключаем scale при наведении в свернутом состоянии */
+                    #series-materials-row.flex-nowrap a.level1:hover,
+                    #series-materials-row.flex-nowrap .level1:hover { transform: none !important; }
+                </style>
+                <script>
+                    (function() {
+                        var wrapper = document.getElementById('series-materials-wrapper');
+                        var clip = document.getElementById('series-materials-clip');
+                        var row = document.getElementById('series-materials-row');
+                        var toggleBtn = document.getElementById('series-materials-toggle');
+                        if (!wrapper || !clip || !row || !toggleBtn) return;
+
+                        var CARD_WIDTH = 64, GAP = 8;
+                        var isExpanded = false;
+
+                        function countVisibleCards() {
+                            var cards = row.querySelectorAll('a.level1, .level1');
+                            return cards.length;
                         }
 
-                        @media (max-width: 640px) {
-                            .materials-popup-content {
-                                max-width: calc(100vw - 32px);
-                                padding: 12px;
+                        function setClipWidth() {
+                            if (isExpanded) {
+                                clip.style.maxWidth = '';
+                                return;
+                            }
+                            var w = wrapper.clientWidth;
+                            var n = Math.max(1, Math.floor((w + GAP) / (CARD_WIDTH + GAP)));
+                            clip.style.maxWidth = (n * (CARD_WIDTH + GAP) - GAP) + 'px';
+                        }
+
+                        function updateToggleVisibility() {
+                            if (isExpanded) {
+                                toggleBtn.classList.remove('hidden');
+                                toggleBtn.textContent = 'Свернуть';
+                                return;
+                            }
+                            setClipWidth();
+                            var hasOverflow = row.scrollWidth > clip.clientWidth;
+                            if (hasOverflow) {
+                                toggleBtn.classList.remove('hidden');
+                                toggleBtn.textContent = 'Показать все';
+                            } else {
+                                toggleBtn.classList.add('hidden');
                             }
                         }
 
-                        #series-materials-row > a, #series-materials-row > .level1 { flex-shrink: 0; }
-                        /* Отключаем scale при наведении в свернутом состоянии */
-                        #series-materials-row.flex-nowrap a.level1:hover,
-                        #series-materials-row.flex-nowrap .level1:hover { transform: none !important; }
-                    </style>
-                    <script>
-                        (function() {
-                            var wrapper = document.getElementById('series-materials-wrapper');
-                            var clip = document.getElementById('series-materials-clip');
-                            var row = document.getElementById('series-materials-row');
-                            var toggleBtn = document.getElementById('series-materials-toggle');
-                            if (!wrapper || !clip || !row || !toggleBtn) return;
-
-                            var CARD_WIDTH = 64, GAP = 8;
-                            var isExpanded = false;
-
-                            function countVisibleCards() {
-                                var cards = row.querySelectorAll('a.level1, .level1');
-                                return cards.length;
-                            }
-
-                            function setClipWidth() {
-                                if (isExpanded) {
-                                    clip.style.maxWidth = '';
-                                    return;
-                                }
-                                var w = wrapper.clientWidth;
-                                var n = Math.max(1, Math.floor((w + GAP) / (CARD_WIDTH + GAP)));
-                                clip.style.maxWidth = (n * (CARD_WIDTH + GAP) - GAP) + 'px';
-                            }
-
-                            function updateToggleVisibility() {
-                                if (isExpanded) {
-                                    toggleBtn.classList.remove('hidden');
-                                    toggleBtn.textContent = 'Свернуть';
-                                    return;
-                                }
+                        toggleBtn.addEventListener('click', function() {
+                            isExpanded = !isExpanded;
+                            if (isExpanded) {
+                                row.classList.remove('flex-nowrap');
+                                row.classList.add('flex-wrap');
+                                clip.style.maxWidth = '';
+                                toggleBtn.textContent = 'Свернуть';
+                            } else {
+                                row.classList.add('flex-nowrap');
+                                row.classList.remove('flex-wrap');
                                 setClipWidth();
-                                var hasOverflow = row.scrollWidth > clip.clientWidth;
-                                if (hasOverflow) {
-                                    toggleBtn.classList.remove('hidden');
-                                    toggleBtn.textContent = 'Показать все';
-                                } else {
-                                    toggleBtn.classList.add('hidden');
+                                toggleBtn.textContent = 'Показать все';
+                                var heading = document.getElementById('series-materials-heading');
+                                if (heading) {
+                                    heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                 }
                             }
+                            updateToggleVisibility();
+                        });
 
-                            toggleBtn.addEventListener('click', function() {
-                                isExpanded = !isExpanded;
-                                if (isExpanded) {
-                                    row.classList.remove('flex-nowrap');
-                                    row.classList.add('flex-wrap');
-                                    clip.style.maxWidth = '';
-                                    toggleBtn.textContent = 'Свернуть';
-                                } else {
-                                    row.classList.add('flex-nowrap');
-                                    row.classList.remove('flex-wrap');
-                                    setClipWidth();
-                                    toggleBtn.textContent = 'Показать все';
-                                    var heading = document.getElementById('series-materials-heading');
-                                    if (heading) {
-                                        heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    }
-                                }
-                                updateToggleVisibility();
-                            });
-
-                            if (typeof window.ResizeObserver !== 'undefined') {
-                                new ResizeObserver(updateToggleVisibility).observe(wrapper);
-                            }
-                            setTimeout(updateToggleVisibility, 150);
-                            window.addEventListener('resize', updateToggleVisibility);
-                        })();
-                    </script>
+                        if (typeof window.ResizeObserver !== 'undefined') {
+                            new ResizeObserver(updateToggleVisibility).observe(wrapper);
+                        }
+                        setTimeout(updateToggleVisibility, 150);
+                        window.addEventListener('resize', updateToggleVisibility);
+                    })();
+                </script>
                 <?php } ?>
             </div>
         </div>
@@ -1075,7 +1103,7 @@
     <div class="description1">
 
         <!-- Характеристики -->
-        <div class="text options" id="tab-options" style="display: none;" itemprop="description">
+        <div class="text options" id="tab-options" style="display: <?php echo count($options) ? 'block' : 'none'; ?>;" itemprop="description">
 
             <?php
     $processedOptions = [];
@@ -1092,7 +1120,7 @@
             foreach ($options as $o) {
             $processedOptions[] = [
             'name' => htmlspecialchars($o['name']),
-            'value' => htmlspecialchars(rtrim($o['value'], '.'))
+            'value' => htmlspecialchars($o['value'])
             ];
             }
 
@@ -1156,6 +1184,7 @@
                 const buttonText = document.getElementById("buttonText");
                 const arrow = document.getElementById("arrow");
                 const block = document.getElementById("tabsScroller1");
+                if (!button || !details || !buttonText || !arrow || !block) return;
 
                 // Установим большую max-height для анимации (в px)
                 const fullHeight = "810px"; // подберите по количеству пунктов
@@ -1181,7 +1210,7 @@
         </script>
 
         <!-- Доставка и оплата -->
-        <div class="text" id="tab-delivery" style="display: none;">
+        <div class="text" id="tab-delivery" style="display: <?php echo count($options) ? 'none' : 'block'; ?>;">
             <div id="text-delivery">
                 <?php
         $t = $catInf['series_info'];
@@ -1369,7 +1398,7 @@
             $seriesName = isset($seriesOrig['name']) ? $seriesOrig['name'] : ($seriesInf['name'] ?? '');
             if (trim($seriesName) !== ''):
             ?>
-                <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesName); ?></span>
+            <span class="text-gray-500 font-normal"><?php echo htmlspecialchars($seriesName); ?></span>
             <?php endif; ?>
         </h2>
 
@@ -1651,7 +1680,7 @@
             <?php } ?>
 
             <!-- Сетка карточек -->
-            <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6" id="group-grid-<?php echo $groupId; ?>">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6" id="group-grid-<?php echo $groupId; ?>">
                 <?php foreach ($g['items'] as $item) { ?>
                 <?php
             $seriesInf = ($item['series_id'] == $seriesOrig['id'])
@@ -1663,9 +1692,8 @@
                     <!-- Изображение -->
                     <?php if (!empty($item['_img_ext'])): ?>
 
-                    <a class="flex justify-center"
-                       href="javascript:void(0)"
-                       onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                    <button type="button" class="flex justify-center"
+                            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
                     >
                         <img
                             src="<?php echo Catalog::photoUrl(
@@ -1674,7 +1702,9 @@
                                         ); ?>"
                             alt="<?php echo hsch($item['name'] . ' ' . $item['art']); ?>"
                             class="max-w-full h-auto object-contain rounded-md mb-4"
-                        /></a>
+                            loading="lazy"
+                            decoding="async"
+                        /></button>
                     <?php else: ?>
                     <div class="w-full h-28 lg:h-48 bg-gray-100 mb-4 flex items-center justify-center">
                         <span class="text-gray-400 text-sm">Нет фото</span>
@@ -1682,26 +1712,41 @@
                     <?php endif; ?>
 
                     <!-- Артикул -->
-                    <p class="text-gray-400 text-sm">Арт: <?php echo htmlspecialchars($item['art']); ?></p>
+                    <div class="relative mb-1" style="height: 1.25rem;">
+                        <p class="text-gray-400 text-sm leading-5
+      line-clamp-1
+      transition-all duration-200
+      absolute top-0 left-0 right-0
+      hover:line-clamp-none
+      hover:z-10
+      hover:bg-white
+      hover:shadow-lg
+      hover:rounded
+      hover:px-2
+      hover:py-1
+      hover:text-gray-600">
+                            Арт: <?php echo htmlspecialchars($i['art']); ?>
+                        </p>
+                    </div>
 
                     <!-- Название -->
                     <div class="relative mb-1" style="height: 2.5em;">
-                        <h3 class="font-medium text-sm sm2:text-base lg:text-lg leading-5
-            line-clamp-2
-            transition-all duration-200
-            absolute top-0 left-0 right-0
-            hover:line-clamp-none
-            hover:z-10
-            hover:bg-white
-            hover:shadow-lg
-            hover:rounded
-            hover:px-2
-            hover:py-1">
-                            <a href="javascript:void(0)"
-                               onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-                               class="text-inherit hover:text-inherit block">
+                        <h3 class="font-medium text-sm md:text-base lg:text-lg leading-5
+                            line-clamp-2
+                            transition-all duration-200
+                            absolute top-0 left-0 right-0
+                            hover:line-clamp-none
+                            hover:z-10
+                            hover:bg-white
+                            hover:shadow-lg
+                            hover:rounded
+                            hover:px-2
+                            hover:py-1">
+                            <span
+                                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                                    class="text-inherit hover:text-inherit block">
                                 <?php echo htmlspecialchars($item['name']); ?>
-                            </a>
+                            </span>
                         </h3>
                     </div>
 
@@ -1717,26 +1762,30 @@
                             <script>
                                 oMaterials.items2mats[<?php echo $item['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($item['materials']))?>');
                             </script>
-                            <a
-                                href="javascript:void(0)"
-                                class="flex gap-[2px] sm:gap-[6px] justify-start items-center materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
-                                onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                            <button type="button"
+                                    class="flex gap-[2px] sm:gap-[6px] justify-start items-center materials<?php /* pos-<?php echo ceil($mActiveN/7)*/?>"
+                                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
                             >
                                 <?php
+                                $totalMaterials = count($item['materials']);
+                                $limit = 5;
                                 $materialsShown = 0;
                                 foreach($item['materials'] as $mn => $im) {
-                                    if ($materialsShown >= 9) break;
-                                    $materialsShown++;
+                                if ($materialsShown >= $limit) break;
+                                $materialsShown++;
                                 ?>
                                 <?php $m = $materials[$im['material_id']]; ?>
                                 <div class="flex gap-[6px] justify-start items-center">
                                     <div id="item1-<?php echo $item['id']; ?>-m-<?php echo $m['id']; ?>" <?php if($mActiveTopId == $m['id']) { ?>class="active"<?php } ?>>
                                     <?php if($m['image']['ext']) { ?>
-                                    <img class="rounded" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
+                                    <img loading="lazy" decoding="async" class="rounded" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" width="20" height="20" alt="">
                                     <?php } ?>
                                 </div>
-                                </div>
-                                <?php } ?>
+                        </div>
+                        <?php } ?>
+                        <?php if ($totalMaterials > $limit) { ?>
+                        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+                        <?php } ?>
                         </a>
                         <?php } ?>
                     </div>
@@ -1765,17 +1814,16 @@
                 </div>
 
                 <!-- Кнопка -->
-                <a
-                    href="javascript:void(0)"
-                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-                    class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+                <button type="button"
+                        onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                        class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
                 >
                     <!--          <a-->
                     <!--            href="<?php echo Catalog_Items::a($seriesInf, $item); ?>"-->
                     <!--            class="mt-6 text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"-->
                     <!--          >-->
                     Отложить
-                </a>
+                </button>
             </div>
             <?php } ?>
         </div>
@@ -1795,7 +1843,7 @@
     <div class="name" style="color: <?php echo $l['color_name']; ?>!important"><?php echo $l['name']; ?></div>
 </div>
 <div  class="ajaxpages_main">
-    <div class="relative grid grid-cols-1 sm:grid-cols-2 sm2:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
         <?php foreach($l['series'] as $s) { ?>
         <?php include(Config::path('skins') . '/html/Components/series_card.htm'); ?>
         <?php } ?>

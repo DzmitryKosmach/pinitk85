@@ -1,380 +1,391 @@
-// Добавляем стили для скрытия скроллбара
-(function hideScrollbarAndHideTrack() {
-  const style = document.createElement("style");
-  style.textContent = `
+/**
+ * Оптимизированный слайдер миниатюр
+ * - Производительность: RAF-троттлинг, кэширование, passive listeners, батчинг стилей
+ * - Функционал: вертикаль/горизонталь, свайп, snap, синхронизация высоты, клик по краям
+ */
+(function initThumbnailSlider() {
+    'use strict';
+
+    // 🔥 Инъекция стилей (один раз, без layout thrashing)
+    const STYLES = `
     .slider-track::-webkit-scrollbar { display: none; }
     .slider-track {
       scrollbar-width: none;
       -ms-overflow-style: none;
       opacity: 0;
       transition: opacity 0.2s ease;
+      will-change: scroll-position;
+      scroll-snap-type: y mandatory;
     }
-    .slider-track.visible {
-      opacity: 1;
-    }
+    .slider-track.visible { opacity: 1; }
+    .slider-track.smooth { scroll-behavior: smooth; }
+    .slider-track.auto { scroll-behavior: auto; }
   `;
-  document.head.appendChild(style);
-})();
+    document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLES }));
 
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(
-    ".slider-thumbnails-container > .relative"
-  );
-  if (!container) return;
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.slider-thumbnails-container > .relative');
+        if (!container) return;
 
-  const track = container.querySelector(".slider-track");
-  const btnPrev = container.querySelector(".slider-prev");
-  const btnNext = container.querySelector(".slider-next");
-  const mainImage = document.getElementById("main-product-image");
+        const track = container.querySelector('.slider-track');
+        const btnPrev = container.querySelector('.slider-prev');
+        const btnNext = container.querySelector('.slider-next');
+        const mainImage = document.getElementById('main-product-image');
+        if (!track || !btnPrev || !btnNext) return;
 
-  if (!track || !btnPrev || !btnNext) return;
+        // 🎯 Кэш для минимизации DOM-чтений
+        const cache = {
+            slides: [],
+            slideSize: 0,
+            gap: 8,
+            direction: null,
+            isDesktop: window.innerWidth >= 1024,
+            containerSize: 0,
+            visibleIndices: [],
+            scrollLocked: false,
+            // 🔥 Кэш для getComputedStyle
+            computedStyle: null
+        };
 
-  let isSwiping = false;
-  let touchStart = { x: 0, y: 0 };
+        // ─── Вспомогательные функции (с кэшированием) ───
+        const getComputedStyle = () => {
+            if (!cache.computedStyle) cache.computedStyle = window.getComputedStyle(track);
+            return cache.computedStyle;
+        };
 
-  function updateThumbnailSliderHeight() {
-    if (!container || !mainImage || window.innerWidth < 1024) return;
-    const imageHeight = mainImage.getBoundingClientRect().height;
-    if (imageHeight <= 0) return;
+        const getDirection = () => {
+            if (cache.direction) return cache.direction;
+            cache.direction = getComputedStyle().flexDirection.includes('column') ? 'vertical' : 'horizontal';
+            return cache.direction;
+        };
 
-    container.style.height = imageHeight + "px";
-    container.style.maxHeight = imageHeight + "px";
-    container.style.width = "80px";
-    container.style.minWidth = "80px";
-    container.style.maxWidth = "80px";
-  }
+        const invalidateDirectionCache = () => {
+            cache.direction = null;
+            cache.computedStyle = null;
+        };
 
-  function getScrollDirection() {
-    const computed = window.getComputedStyle(track);
-    return computed.flexDirection.includes("column")
-      ? "vertical"
-      : "horizontal";
-  }
+        const getSlideSize = () => {
+            if (cache.slideSize > 0) return cache.slideSize;
+            const first = track.querySelector('img');
+            if (!first) return 0;
+            cache.slideSize = getDirection() === 'vertical' ? first.offsetHeight : first.offsetWidth;
+            return cache.slideSize;
+        };
 
-  // ✅ Только размер слайда (без gap)
-  function getSlideSize() {
-    const firstCard = track.querySelector("img");
-    if (!firstCard) return 0;
-    return getScrollDirection() === "vertical"
-      ? firstCard.offsetHeight
-      : firstCard.offsetWidth;
-  }
+        const getGap = () => {
+            const dir = getDirection();
+            const styles = getComputedStyle();
+            return parseInt(styles[dir === 'vertical' ? 'rowGap' : 'columnGap'], 10) || 8;
+        };
 
-  // ✅ Только gap
-  function getGap() {
-    const direction = getScrollDirection();
-    const styles = window.getComputedStyle(track);
-    return (
-      parseInt(styles[direction === "vertical" ? "rowGap" : "columnGap"]) || 8
-    );
-  }
+        const getCurrentScroll = () => getDirection() === 'vertical' ? track.scrollTop : track.scrollLeft;
 
-  // Обновлённая функция под новые вспомогательные
-  function fitToFullSlides() {
-    const direction = getScrollDirection();
-    const slideSize = getSlideSize();
-    const gap = getGap();
+        const getMaxScroll = () => {
+            const dir = getDirection();
+            return dir === 'vertical'
+                ? track.scrollHeight - track.clientHeight
+                : track.scrollWidth - track.clientWidth;
+        };
 
-    if (!slideSize || slideSize <= 0) return false;
+        const setScroll = (v) => {
+            if (getDirection() === 'vertical') track.scrollTop = v;
+            else track.scrollLeft = v;
+        };
 
-    // ✅ Используем РЕАЛЬНЫЙ размер контейнера слайдера
-    const containerSize =
-      direction === "vertical" ? container.clientHeight : container.clientWidth;
+        // ─── Кэширование видимых индексов ───
+        function updateVisibleIndicesCache() {
+            const dir = getDirection();
+            cache.containerSize = dir === 'vertical' ? track.clientHeight : track.clientWidth;
 
-    if (containerSize <= 0) return false;
+            if (!cache.slides.length) { cache.visibleIndices = []; return; }
 
-    // Считаем максимальное количество целых слайдов
-    let visibleCount = 1;
-    while (
-      visibleCount * slideSize + (visibleCount - 1) * gap <=
-      containerSize
-      ) {
-      visibleCount++;
-    }
-    visibleCount = Math.max(1, visibleCount - 1);
+            const scrollPos = getCurrentScroll();
+            const cSize = cache.containerSize;
+            const sSize = getSlideSize();
 
-    if (visibleCount >= track.children.length) {
-      track.style.overflow = "hidden";
-      return false;
-    }
+            if (sSize <= 0) { cache.visibleIndices = []; return; }
 
-    // Устанавливаем точный размер под N слайдов
-    const newSize = visibleCount * slideSize + (visibleCount - 1) * gap;
-    if (direction === "vertical") {
-      track.style.height = `${newSize}px`;
-      track.style.maxHeight = `${newSize}px`;
-    } else {
-      void track.offsetWidth;
-      track.style.width = `${newSize}px`;
-      track.style.maxWidth = `${newSize}px`;
-    }
-    track.style.overflow = "";
-    return true;
-  }
+            cache.visibleIndices = [];
+            // 🔥 Один цикл вместо нескольких проходов
+            for (let i = 0; i < cache.slides.length; i++) {
+                const s = cache.slides[i];
+                const start = dir === 'vertical' ? s.offsetTop : s.offsetLeft;
+                if (start < scrollPos + cSize && start + sSize > scrollPos) {
+                    cache.visibleIndices.push(i);
+                }
+            }
+        }
 
-  // ✅ Вспомогательная: выравнивание до ближайшего слайда
-  function snapToNearestSlide() {
-    const direction = getScrollDirection();
-    const slides = Array.from(track.querySelectorAll("img"));
-    if (slides.length === 0) return;
+        // ─── Обновление кнопок (RAF-троттлинг) ───
+        let buttonsUpdatePending = false;
+        function updateButtons() {
+            if (buttonsUpdatePending) return;
+            buttonsUpdatePending = true;
 
-    const slideSize = getSlideSize();
-    const gap = getGap();
+            requestAnimationFrame(() => {
+                const max = getMaxScroll();
+                const current = getCurrentScroll();
+                const atStart = current <= 1;
+                const atEnd = current >= max - 1;
 
-    // Текущая позиция прокрутки
-    const currentScroll =
-      direction === "vertical" ? track.scrollTop : track.scrollLeft;
+                // 🔥 Батчим изменения атрибутов и классов
+                btnPrev.disabled = atStart;
+                btnNext.disabled = atEnd;
+                btnPrev.classList.toggle('opacity-50', atStart);
+                btnNext.classList.toggle('opacity-50', atEnd);
 
-    // Вычисляем, какой слайд ближе всего к началу видимой области
-    // Позиция начала i-го слайда = i * (slideSize + gap)
-    let bestIndex = 0;
-    let minDiff = Infinity;
+                updateVisibleIndicesCache();
+                buttonsUpdatePending = false;
+            });
+        }
 
-    for (let i = 0; i < slides.length; i++) {
-      const slideStart = i * (slideSize + gap);
-      const diff = Math.abs(slideStart - currentScroll);
-      if (diff < minDiff) {
-        minDiff = diff;
-        bestIndex = i;
-      }
-    }
+        // ─── Логика клика по миниатюре ───
+        function isClickedSlideEdge(slide) {
+            const idx = cache.slides.indexOf(slide);
+            if (idx === -1) return false;
+            if (cache.visibleIndices.length >= cache.slides.length) return false;
+            if (cache.visibleIndices.length < 3) return false;
+            if (!cache.visibleIndices.includes(idx)) return false;
 
-    // Точная позиция прокрутки для этого слайда
-    const targetScroll = bestIndex * (slideSize + gap);
+            const edgeCount = 2;
+            const visible = cache.visibleIndices;
+            // 🔥 Прямая проверка вместо slice + includes
+            for (let i = 0; i < edgeCount; i++) {
+                if (visible[i] === idx || visible[visible.length - 1 - i] === idx) return true;
+            }
+            return false;
+        }
 
-    // Применяем
-    if (direction === "vertical") {
-      track.scrollTop = targetScroll;
-    } else {
-      track.scrollLeft = targetScroll;
-    }
-  }
+        function handleSlideClick(e, slide) {
+            e.stopPropagation();
 
-  // ✅ Обновлённые функции прокрутки
-  function scrollPrev() {
-    const slideSize = getSlideSize();
-    const gap = getGap();
-    const direction = getScrollDirection();
-    const scrollAmount = slideSize + gap;
+            if (isClickedSlideEdge(slide)) {
+                e.preventDefault();
+                if (cache.containerSize > 0) {
+                    const slidePos = getDirection() === 'vertical' ? slide.offsetTop : slide.offsetLeft;
+                    const center = getCurrentScroll() + cache.containerSize / 2;
+                    scrollBySlide(slidePos < center ? 'prev' : 'next');
+                } else {
+                    scrollBySlide('next');
+                }
+                return;
+            }
 
-    if (direction === "vertical") {
-      track.scrollTop = Math.max(0, track.scrollTop - scrollAmount);
-    } else {
-      track.scrollLeft = Math.max(0, track.scrollLeft - scrollAmount);
-    }
+            if (typeof window.changeMainImage === 'function') {
+                window.changeMainImage(slide);
+            }
+        }
 
-    setTimeout(snapToNearestSlide, 500);
-  }
+        // ─── Прокрутка и Snap (оптимизировано) ───
+        function snapToNearestSlide() {
+            const step = getSlideSize() + getGap();
+            if (step <= 0) return;
 
-  function scrollNext() {
-    const slideSize = getSlideSize();
-    const gap = getGap();
-    const direction = getScrollDirection();
-    const scrollAmount = slideSize + gap;
+            const current = getCurrentScroll();
+            const target = Math.max(0, Math.min(Math.round(current / step) * step, getMaxScroll()));
 
-    if (direction === "vertical") {
-      track.scrollTop += scrollAmount;
-    } else {
-      track.scrollLeft += scrollAmount;
-    }
+            // 🔥 Меняем классы вместо inline-стилей
+            track.classList.remove('auto');
+            track.classList.add('smooth');
+            setScroll(target);
 
-    setTimeout(snapToNearestSlide, 500);
-  }
+            // 🔥 RAF вместо setTimeout для синхронизации с рендером
+            requestAnimationFrame(() => {
+                setTimeout(updateButtons, 250); // небольшая задержка после анимации
+            });
+        }
 
-  function updateButtons() {
-    const direction = getScrollDirection();
-    const max =
-      direction === "vertical"
-        ? track.scrollHeight - track.clientHeight
-        : track.scrollWidth - track.clientWidth;
-    const current =
-      direction === "vertical" ? track.scrollTop : track.scrollLeft;
+        function scrollBySlide(direction) {
+            if (cache.scrollLocked) return;
+            cache.scrollLocked = true;
 
-    const atStart = current <= 1;
-    const atEnd = current >= max - 1;
+            const step = getSlideSize() + getGap();
+            const current = getCurrentScroll();
+            const max = getMaxScroll();
+            const target = direction === 'prev'
+                ? Math.max(0, current - step)
+                : Math.min(max, current + step);
 
-    btnPrev.disabled = atStart;
-    btnNext.disabled = atEnd;
-    btnPrev.classList.toggle("opacity-50", atStart);
-    btnNext.classList.toggle("opacity-50", atEnd);
-  }
+            track.classList.remove('auto');
+            track.classList.add('smooth');
+            setScroll(target);
 
-  function isSlideAtStart(slide) {
-    const direction = getScrollDirection();
-    if (direction === "vertical") {
-      return slide.offsetTop <= track.scrollTop + 1;
-    } else {
-      return slide.offsetLeft <= track.scrollLeft + 1;
-    }
-  }
+            // 🔥 Разблокировка после завершения анимации
+            setTimeout(() => {
+                cache.scrollLocked = false;
+                updateButtons();
+            }, 300);
+        }
 
-  function isSlideAtEnd(slide) {
-    const direction = getScrollDirection();
-    if (direction === "vertical") {
-      return (
-        slide.offsetTop + slide.offsetHeight >=
-        track.scrollTop + track.clientHeight - 1
-      );
-    } else {
-      return (
-        slide.offsetLeft + slide.offsetWidth >=
-        track.scrollLeft + track.clientWidth - 1
-      );
-    }
-  }
+        // ─── Клик по пустой зоне трека ───
+        function handleTrackClick(e) {
+            if (e.target.tagName === 'IMG') return;
 
-  function handleSlideClick(e) {
-    // Получаем позицию клика ОТНОСИТЕЛЬНО ВИДИМОЙ ОБЛАСТИ ТРЕКА
-    const trackRect = track.getBoundingClientRect();
-    const clickInTrack = e.clientX - trackRect.left;
+            const rect = track.getBoundingClientRect();
+            const clickPos = getDirection() === 'vertical'
+                ? e.clientY - rect.top
+                : e.clientX - rect.left;
+            const trackSize = getDirection() === 'vertical' ? rect.height : rect.width;
+            const edgeZone = trackSize * 0.3;
+            const current = getCurrentScroll();
+            const max = getMaxScroll();
 
-    const direction = getScrollDirection();
-    if (direction === "vertical") {
-      // Вертикальный режим — пока не трогаем
-      const clickY = e.clientY - trackRect.top;
-      const atTop = clickY < track.clientHeight * 0.3;
-      const atBottom = clickY > track.clientHeight * 0.7;
+            if (clickPos < edgeZone && current > 1) scrollBySlide('prev');
+            else if (clickPos > trackSize - edgeZone && current < max - 1) scrollBySlide('next');
+        }
 
-      if (atTop && track.scrollTop > 1) {
-        scrollPrev();
-      } else if (
-        atBottom &&
-        track.scrollTop < track.scrollHeight - track.clientHeight - 1
-      ) {
-        scrollNext();
-      }
-      return;
-    }
+        // ─── Синхронизация высоты (Desktop) ───
+        function syncHeightWithMainImage() {
+            if (!cache.isDesktop || !mainImage) return;
+            const h = mainImage.getBoundingClientRect().height;
+            if (h <= 0) return;
+            // 🔥 Один cssText вместо 5 отдельных присваиваний
+            container.style.cssText = `height:${h}px;max-height:${h}px;width:80px;min-width:80px;max-width:80px;`;
+        }
 
-    // Горизонтальный режим
-    const atLeftEdge = clickInTrack < track.clientWidth * 0.3;
-    const atRightEdge = clickInTrack > track.clientWidth * 0.7;
+        // ─── Подгонка размера трека ───
+        function fitTrackToSlides() {
+            if (!cache.slides.length) return false;
+            const dir = getDirection();
+            const sSize = getSlideSize();
+            const gap = getGap();
+            if (!sSize) return false;
 
-    if (atLeftEdge && track.scrollLeft > 1) {
-      scrollPrev();
-    } else if (
-      atRightEdge &&
-      track.scrollLeft < track.scrollWidth - track.clientWidth - 1
-    ) {
-      scrollNext();
-    }
-  }
+            cache.containerSize = dir === 'vertical' ? container.clientHeight : container.clientWidth;
+            if (cache.containerSize <= 0) return false;
 
-  function init() {
-    // Сразу скрываем трек, если ещё не скрыт
-    track.classList.remove("visible");
+            // 🔥 Оптимизированный расчёт количества слайдов
+            const step = sSize + gap;
+            const count = Math.max(1, Math.floor((cache.containerSize + gap) / step));
 
-    const slides = track.querySelectorAll("img");
-    if (slides.length === 0) {
-      track.classList.add("visible");
-      return;
-    }
+            if (count >= cache.slides.length) {
+                track.style.overflow = 'hidden';
+                return false;
+            }
 
-    let loadedCount = 0;
-    const total = slides.length;
+            const newSize = count * sSize + (count - 1) * gap;
+            // 🔥 Батчим изменения стилей
+            Object.assign(track.style, dir === 'vertical'
+                ? { height: `${newSize}px`, maxHeight: `${newSize}px` }
+                : { width: `${newSize}px`, maxWidth: `${newSize}px` });
+            track.style.overflow = '';
+            return true;
+        }
 
-    const finalize = () => {
-      requestAnimationFrame(() => {
-        // Принудительный reflow
-        void track.offsetWidth;
+        // ─── Сброс при смене режима ───
+        function resetDimensions() {
+            // 🔥 Один цикл для сброса стилей
+            const props = ['width','maxWidth','height','maxHeight','overflow'];
+            for (const p of props) {
+                track.style[p] = '';
+                container.style[p] = '';
+            }
+            container.style.cssText = '';
 
-        // Устанавливаем точный размер под N слайдов
-        const success = fitToFullSlides();
+            if (cache.isDesktop) syncHeightWithMainImage();
+            else setScroll(0);
+
+            // 🔥 Сброс кэша
+            cache.slideSize = 0;
+            cache.containerSize = 0;
+            invalidateDirectionCache();
+            cache.visibleIndices = [];
+        }
+
+        // ─── Resize (RAF-дебаунс) ───
+        let resizeRaf = null;
+        function onResize() {
+            if (resizeRaf) return;
+            resizeRaf = requestAnimationFrame(() => {
+                const newDesktop = window.innerWidth >= 1024;
+                if (newDesktop !== cache.isDesktop) {
+                    cache.isDesktop = newDesktop;
+                    invalidateDirectionCache();
+                    resetDimensions();
+                } else if (cache.isDesktop) {
+                    syncHeightWithMainImage();
+                }
+                cache.slideSize = 0;
+                fitTrackToSlides();
+                updateButtons();
+                resizeRaf = null;
+            });
+        }
+
+        // ─── Инициализация слайдов ───
+        function init() {
+            cache.slides = Array.from(track.querySelectorAll('img'));
+
+            if (!cache.slides.length) {
+                track.classList.add('visible');
+                return;
+            }
+
+            let loaded = 0;
+            const total = cache.slides.length;
+
+            const finalize = () => {
+                requestAnimationFrame(() => {
+                    // 🔥 Двойной reflow для гарантии актуальных размеров
+                    void track.offsetWidth;
+                    cache.slideSize = 0;
+                    fitTrackToSlides();
+
+                    void track.offsetHeight;
+                    updateVisibleIndicesCache();
+                    updateButtons();
+
+                    track.classList.add('visible');
+                });
+            };
+
+            const onReady = () => {
+                if (++loaded >= total) finalize();
+            };
+
+            for (const slide of cache.slides) {
+                slide.style.cursor = 'pointer';
+                slide.addEventListener('click', e => handleSlideClick(e, slide));
+
+                // 🔥 Надёжная проверка загрузки
+                if (slide.complete && slide.naturalWidth > 0 && slide.naturalHeight > 0) {
+                    onReady();
+                } else {
+                    slide.addEventListener('load', onReady, { once: true });
+                    slide.addEventListener('error', onReady, { once: true });
+                }
+            }
+        }
+
+        // ─── Привязка событий ───
+        btnPrev.addEventListener('click', e => { e.preventDefault(); scrollBySlide('prev'); });
+        btnNext.addEventListener('click', e => { e.preventDefault(); scrollBySlide('next'); });
+        track.addEventListener('click', handleTrackClick);
+        track.addEventListener('scroll', updateButtons, { passive: true });
+
+        track.addEventListener('touchstart', () => {
+            track.classList.remove('smooth');
+            track.classList.add('auto');
+        }, { passive: true });
+
+        track.addEventListener('touchend', () => {
+            track.classList.remove('auto');
+            track.classList.add('smooth');
+            snapToNearestSlide();
+        }, { passive: true });
+
+        window.addEventListener('resize', onResize, { passive: true });
+        window.addEventListener('load', () => {
+            cache.slideSize = 0;
+            fitTrackToSlides();
+            updateButtons();
+        });
+
+        // Стартовая настройка
+        if (cache.isDesktop) syncHeightWithMainImage();
+        else resetDimensions();
+
+        init();
         updateButtons();
-
-        // Показываем трек
-        track.classList.add("visible");
-      });
-    };
-
-    const checkAllLoaded = () => {
-      loadedCount++;
-      if (loadedCount >= total) {
-        finalize();
-      }
-    };
-
-    slides.forEach((slide) => {
-      slide.style.cursor = "pointer";
-      slide.addEventListener("click", handleSlideClick);
-
-      if (slide.complete && slide.naturalHeight !== 0) {
-        checkAllLoaded();
-      } else {
-        slide.addEventListener("load", checkAllLoaded);
-        slide.addEventListener("error", checkAllLoaded);
-      }
     });
-  }
-
-  btnPrev.addEventListener("click", (e) => {
-    e.preventDefault();
-    scrollPrev();
-  });
-
-  btnNext.addEventListener("click", (e) => {
-    e.preventDefault();
-    scrollNext();
-  });
-
-  // Свайп
-  track.addEventListener("touchstart", (e) => {
-    isSwiping = true;
-    touchStart.x = e.touches[0].clientX;
-    touchStart.y = e.touches[0].clientY;
-    track.style.scrollBehavior = "auto";
-  });
-
-  track.addEventListener("touchmove", (e) => {
-    if (!isSwiping) return;
-    const touch = e.touches[0];
-    const dx = touchStart.x - touch.clientX;
-    const dy = touchStart.y - touch.clientY;
-
-    if (getScrollDirection() === "vertical") {
-      track.scrollTop += dy;
-    } else {
-      track.scrollLeft += dx;
-    }
-
-    touchStart.x = touch.clientX;
-    touchStart.y = touch.clientY;
-  });
-
-  track.addEventListener("touchend", () => {
-    isSwiping = false;
-    setTimeout(() => {
-      track.style.scrollBehavior = "smooth";
-      snapToNearestSlide(); // выравниваем после свайпа
-    }, 50);
-  });
-
-  track.addEventListener("scroll", updateButtons);
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      // 👇 Обновляем ВЫСОТУ КОНТЕЙНЕРА под новую высоту главного изображения
-      if (window.innerWidth >= 1024) {
-        updateThumbnailSliderHeight(); // ← это сбросит container.style.height
-      }
-
-      // Принудительный reflow
-      void container.offsetWidth;
-
-      // Теперь пересчитываем слайды
-      fitToFullSlides();
-      updateButtons();
-    }, 100);
-  });
-
-  window.addEventListener("load", () => {
-    fitToFullSlides();
-    updateButtons();
-  });
-
-  if (window.innerWidth >= 1024) {
-    updateThumbnailSliderHeight();
-  }
-  init();
-});
+})();

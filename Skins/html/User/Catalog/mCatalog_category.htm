@@ -233,6 +233,18 @@
                                 };
                             });
 
+                            // В selectedTabs могут быть старые id из localStorage (другая категория/страница).
+                            // Оставляем только id табов, которые реально существуют на текущей странице.
+                            const validTabIds = new Set(allTabsData.map(tab => String(tab.id)));
+                            selectedTabs = new Set(
+                                Array.from(selectedTabs).filter(id => validTabIds.has(String(id)))
+                            );
+
+                            // Пересчитываем флаг выбора после очистки selectedTabs.
+                            allTabsData.forEach(tab => {
+                                tab.isSelected = selectedTabs.has(tab.id);
+                            });
+
                             // Сохраняем выбранные табы
                             saveSelectedTabs();
                         }

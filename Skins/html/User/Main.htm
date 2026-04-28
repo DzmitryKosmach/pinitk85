@@ -332,6 +332,7 @@ function getHomeUrl() {
 
     <script>
         oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
+        oFavorite.url = '<?php echo Url::a('catalog-favorite'); ?>';
         oCart.url = '<?php echo Url::a('catalog-cart'); ?>';
         oCart.urlBuyOneClick = '<?php echo Url::a('catalog-cart-buyoneclick'); ?>';
         oSearch.url = '<?php echo Url::a('catalog-search'); ?>?quick=';
@@ -583,7 +584,7 @@ function getHomeUrl() {
 
                         <!-- Корзина -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-cart')?>" title="Корзина" aria-label="Корзина">
+                            <a href="<?php echo Url::a('catalog-cart')?>" target="_blank" title="Корзина" aria-label="Корзина">
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50">
                                     <path
@@ -605,7 +606,7 @@ function getHomeUrl() {
 
                         <!-- Избранное -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" aria-label="Избранное">
+                            <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" target="_blank" aria-label="Избранное">
                                 <svg width="22" height="21" viewBox="0 0 22 21" aria-label="Избранное" role="img" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -625,7 +626,7 @@ function getHomeUrl() {
 
                         <!-- Сравнение -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" aria-label="Сравнить товары">
+                            <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" target="_blank" aria-label="Сравнить товары">
                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                                      class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                                     <path
@@ -646,7 +647,7 @@ function getHomeUrl() {
 
                         <!-- Просмотрено -->
                         <div class="relative inline-block">
-                            <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" aria-label="Просмотренные товары">
+                            <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" target="_blank" aria-label="Просмотренные товары">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
                                     <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
@@ -733,7 +734,7 @@ function getHomeUrl() {
 
                 <!-- Корзина -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-cart')?>" title="Корзина" aria-label="Корзина">
+                    <a href="<?php echo Url::a('catalog-cart')?>" title="Корзина" target="_blank" aria-label="Корзина">
                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Корзина" role="img"  xmlns="http://www.w3.org/2000/svg"
                              class="w-[24px] h-[24px] lg:w-[26px] lg:h-[26px] cursor-pointer hover:opacity-50">
                             <path
@@ -755,7 +756,7 @@ function getHomeUrl() {
 
                 <!-- Избранное -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" aria-label="Избранное">
+                    <a href="<?php echo Url::a('catalog-favorite')?>" title="Избранное" target="_blank" aria-label="Избранное">
                         <svg width="22" height="21" viewBox="0 0 22 21" fill="none" aria-label="Избранное" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[20px] h-[19px] lg:w-[22px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
@@ -775,7 +776,7 @@ function getHomeUrl() {
 
                 <!-- Сравнение -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" aria-label="Сравнить товары">
+                    <a href="<?php echo Url::a('catalog-compare')?>" title="Сравнение" target="_blank" aria-label="Сравнить товары">
                         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" aria-label="Сравнить товары" role="img" xmlns="http://www.w3.org/2000/svg"
                              class="w-[19px] h-[20px] lg:w-[20px] lg:h-[21px] cursor-pointer hover:opacity-50">
                             <path
@@ -796,7 +797,7 @@ function getHomeUrl() {
 
                 <!-- Просмотрено -->
                 <div class="relative inline-block">
-                    <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" aria-label="Просмотренные товары">
+                    <a href="<?php echo Url::a('catalog-recently'); ?>" title="Просмотрено" target="_blank" aria-label="Просмотренные товары">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 hover:opacity-50">
                             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
@@ -915,9 +916,9 @@ function getHomeUrl() {
         </div>
 
         <!-- Поле поиска -->
-        <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex">
+        <form action="<?php echo Url::a('catalog-search'); ?>" method="get" class="flex-1 flex min-h-[48px]">
             <input type="text" name="text" placeholder="Поиск"
-                   class="w-full min-w-0 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 rounded-r-lg focus:outline-none"
+                   class="w-full min-w-0 h-12 px-6 py-3 md:py-4 bg-[#F1F1F1] text-sm md:text-base text-gray-600 rounded-r-lg focus:outline-none"
                    value="<?php echo isset($_GET['text']) ? htmlspecialchars(trim(hsch($_GET['text']))) : ''; ?>"
                    autocomplete="off" />
         </form>
@@ -1921,38 +1922,18 @@ function getHomeUrl() {
             step();
         };
 
-        function scheduleCaptcha() {
+        function warmupRecaptchaAfterLoad() {
             if (!document.querySelector(".captcha-item")) {
                 return;
             }
-            var run = function () {
-                injectRecaptcha();
-            };
-            if (window.requestIdleCallback) {
-                window.requestIdleCallback(run, { timeout: 5000 });
-            } else {
-                setTimeout(run, 3000);
-            }
+            injectRecaptcha();
         }
 
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", scheduleCaptcha);
+        if (document.readyState === "complete") {
+            warmupRecaptchaAfterLoad();
         } else {
-            scheduleCaptcha();
+            window.addEventListener("load", warmupRecaptchaAfterLoad, { once: true });
         }
-
-        ["scroll", "mousemove", "touchstart", "keydown"].forEach(function (ev) {
-            document.addEventListener(
-                ev,
-                function once() {
-                    document.removeEventListener(ev, once, true);
-                    if (document.querySelector(".captcha-item")) {
-                        injectRecaptcha();
-                    }
-                },
-                { capture: true, passive: true, once: true }
-            );
-        });
 
         // Повторно проверяем видимые капчи после кликов (например, при открытии модалок).
         document.addEventListener(
