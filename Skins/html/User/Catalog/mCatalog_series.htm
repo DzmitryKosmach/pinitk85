@@ -675,17 +675,32 @@
 
 
                                             <div class="flex items-center gap-2">
+                                                <!-- Кнопка "-" -->
                                                 <button type="button" class="px-2 text-xl text-gray-600 no-underline"
-                                                        onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">-</button>
-                                                <input type="text" name="amount[<?php echo $i['id']; ?>]"
+                                                        aria-label="Уменьшить количество"
+                                                        onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">
+                                                    -
+                                                </button>
+
+                                                <!-- Поле ввода количества -->
+                                                <input type="text"
+                                                       name="amount[<?php echo $i['id']; ?>]"
                                                        id="item2-<?php echo $i['id']; ?>-amount"
                                                        value="<?php echo $i['in_series_set_amount']; ?>"
                                                        class="w-12 text-center border rounded"
-                                                       onchange="seriesSetPrice()" onkeyup="seriesSetPrice()"
+                                                       aria-label="Количество"
+                                                       onchange="seriesSetPrice()"
+                                                       onkeyup="seriesSetPrice()"
                                                        onclick="seriesSetPrice()">
+
                                                 <span class="text-sm text-gray-500">шт</span>
+
+                                                <!-- Кнопка "+" -->
                                                 <button type="button" class="px-2 text-xl text-gray-600 no-underline"
-                                                        onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">+</button>
+                                                        aria-label="Увеличить количество"
+                                                        onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">
+                                                    +
+                                                </button>
 
                                                 <input type="hidden" name="material_id[<?php echo $i['id']; ?>]"
                                                        id="item2-<?php echo $i['id']; ?>-material"
@@ -830,7 +845,7 @@
                         <!-- Условия доставки -->
                         <div class="text-sm space-y-1">
                             <p>
-                                <img class="inline-block w-4 h-3" src="/images/product/truck.png" />
+                                <img class="inline-block w-4 h-3" src="/images/product/truck.png" alt="truck" />
                                 <span class="underline">Срок доставки:</span>
                                 <span class="underline font-bold">2–4 дня</span>
                             </p>
@@ -895,7 +910,7 @@
                                             <?php if($m['image']['ext']) { ?>
                                             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
                                                  width="70" height="70"
-                                                 alt="<?php echo hsch($m['name'])?>"
+                                                 alt="<?php echo hsch(getMaterialAlt($m['name']))?>"
                                                  class="w-full h-full object-cover"
                                             >
                                             <?php } ?>
@@ -917,7 +932,7 @@
                                     <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
                                         <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
                                             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
-                                                 width="70" height="70" alt="<?php echo hsch($m['name'])?>"
+                                                 width="70" height="70" alt="<?php echo hsch(getMaterialAlt($m['name']))?>"
                                                  class="w-full h-full object-cover"
                                             >
                                         </div>
@@ -1743,8 +1758,8 @@
                             hover:px-2
                             hover:py-1">
                             <span
-                                    onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-                                    class="text-inherit hover:text-inherit block">
+                                onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
+                                class="text-inherit hover:text-inherit block">
                                 <?php echo htmlspecialchars($item['name']); ?>
                             </span>
                         </h3>

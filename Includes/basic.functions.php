@@ -591,3 +591,12 @@ function mtime($id)
     }
     return 0;
 }
+
+// ф-ция для выделения alt для изображения из имени материала
+function getMaterialAlt($name) {
+    $words = explode(' ', hsch($name));
+    if (mb_strlen($words[0]) < 4 && count($words) > 1) {
+        return $words[0] . ' ' . $words[1];
+    }
+    return $words[0];
+}
