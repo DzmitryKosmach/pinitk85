@@ -1054,10 +1054,39 @@ $photosUnified[] = [
       }
 
       // === Десктопный режим (>=1024px) ===
+      const mainBox = document.getElementById('mainImageContainer');
       const mainImageEl = document.querySelector('#mainImageContainer > img');
-      if (!mainImageEl) return;
+      if (!mainBox || !mainImageEl) return;
 
-      const imageHeight = mainImageEl.getBoundingClientRect().height;
+      // Высота колонки миниатюр должна совпасть с блоком фото с первого кадра, иначе .slider-track
+      // растягивается на всю высоту всех превью → flex-линия огромная → при первом refresh CLS у #section-photo.
+      function aspectHeightFromComputed(el, width) {
+        if (!el || width <= 0) return 0;
+        const ar = getComputedStyle(el).aspectRatio;
+        if (!ar || ar === 'auto') return 0;
+        const parts = ar.trim().split(/\s*\/\s*/);
+        if (parts.length === 2) {
+          const aw = parseFloat(parts[0]);
+          const ah = parseFloat(parts[1]);
+          if (aw > 0 && ah > 0) return width * (ah / aw);
+        }
+        const num = parseFloat(ar);
+        if (!isNaN(num) && num > 0) return width / num;
+        return 0;
+      }
+
+      let imageHeight = mainBox.getBoundingClientRect().height;
+      if (imageHeight <= 0) {
+        imageHeight = mainImageEl.getBoundingClientRect().height;
+      }
+      if (imageHeight <= 0) {
+        const w = mainBox.getBoundingClientRect().width;
+        imageHeight = aspectHeightFromComputed(mainBox, w);
+      }
+      if (imageHeight <= 0) {
+        const w2 = mainImageEl.getBoundingClientRect().width;
+        imageHeight = aspectHeightFromComputed(mainImageEl, w2);
+      }
       if (imageHeight <= 0) return;
 
       const btnHeight = 20; // высота кнопок "вверх/вниз"
@@ -1073,6 +1102,9 @@ $photosUnified[] = [
     function refreshSlider() {
       updateThumbnailSliderHeight();
     }
+
+    refreshSlider();
+    requestAnimationFrame(refreshSlider);
 
     // === Обработка ресайза окна ===
     function handleResize() {
