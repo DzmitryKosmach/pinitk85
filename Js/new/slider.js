@@ -57,6 +57,36 @@ function initSliders() {
       return;
     }
 
+    const gap = 16;
+    let currentSlide = originalCards.length; // Начинаем с оригинальных карточек
+    let visibleCards = 0;
+    let cardWidth = 0;
+    let isAnimating = false;
+    let allCards = [];
+
+    // Вычисляем общую ширину всех карточек
+    function calculateTotalWidth() {
+      return allCards.length * (cardWidth + gap) - gap;
+    }
+
+    function applyCardWidths() {
+      allCards.forEach((card) => {
+        card.style.width = `${cardWidth}px`;
+      });
+    }
+
+    function measureAndSetCardWidth() {
+      visibleCards = calculateVisibleCards(container);
+      const sliderWidth = slider.offsetWidth;
+      cardWidth = (sliderWidth - (visibleCards - 1) * gap) / visibleCards;
+    }
+
+    // До клонирования задаём ширину оригинальным карточкам — меньше скачков при первом layout
+    measureAndSetCardWidth();
+    originalCards.forEach((card) => {
+      card.style.width = `${cardWidth}px`;
+    });
+
     // Клонируем карточки для бесконечного эффекта
     const firstCloneSet = originalCards.map(card => card.cloneNode(true));
     const lastCloneSet = originalCards.map(card => card.cloneNode(true));
@@ -73,31 +103,17 @@ function initSliders() {
     });
 
     // Получаем все карточки после клонирования
-    const allCards = Array.from(track.querySelectorAll(".card"));
-    const gap = 16;
-    let currentSlide = originalCards.length; // Начинаем с оригинальных карточек
-    let visibleCards = 0;
-    let cardWidth = 0;
-    let isAnimating = false;
+    allCards = Array.from(track.querySelectorAll(".card"));
+    measureAndSetCardWidth();
+    applyCardWidths();
 
-    // Вычисляем общую ширину всех карточек
-    function calculateTotalWidth() {
-      return allCards.length * (cardWidth + gap) - gap;
-    }
+    // Устанавливаем ширину трека до первого сдвига
+    track.style.width = `${calculateTotalWidth()}px`;
 
     function updateLayout() {
-      visibleCards = calculateVisibleCards(container);
-      const sliderWidth = slider.offsetWidth;
-      cardWidth = (sliderWidth - (visibleCards - 1) * gap) / visibleCards;
-
-      allCards.forEach((card) => {
-        card.style.width = `${cardWidth}px`;
-      });
-
-      // Устанавливаем ширину трека
+      measureAndSetCardWidth();
+      applyCardWidths();
       track.style.width = `${calculateTotalWidth()}px`;
-
-      // Перемещаемся к начальной позиции (первым оригинальным карточкам)
       slideTo(currentSlide, false);
     }
 
