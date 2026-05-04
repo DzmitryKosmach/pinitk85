@@ -5,15 +5,24 @@
 <?php echo CssCopmress::load('category')?>
 <?php echo JsCopmress::load('category')?>
 
+<?php echo JsCopmress::load('series')?>
+
 <script>
     oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
 </script>
+
+<!-- Предзагрузка критических ресурсов -->
+<link rel="preload" as="image" href="/images/category/sofa.png" fetchpriority="high">
+<link rel="preload" as="image" href="/images/category/ruler.png">
+<link rel="preload" as="image" href="/images/category/shelves.png">
+<link rel="preload" as="image" href="/images/category/time.png">
 
 <div>
     <div>
         <!-- Хлебные крошки -->
         <nav
-            class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-4 "
+            class="text-sm text-gray-500 flex flex-wrap items-center gap-1 mb-4 min-h-[24px]"
+            aria-label="Breadcrumb"
         >
             <?php if(count($breadcrumbs)) { ?>
             <?php $bcLast = array_pop($breadcrumbs); ?>
@@ -33,7 +42,7 @@
 
         <section class="">
             <div>
-                <h1 class="text-xl md:text-2xl font-bold mb-2 ">
+                <h1 class="text-xl md:text-2xl font-bold mb-2 min-h-[40px]">
                     <?php echo $pageInf['header']; ?>
                 </h1>
 
@@ -81,7 +90,7 @@
                         </div>
 
                         <!-- Основной ряд: видимые табы + кнопка "Ещё/Свернуть" -->
-                        <div id="visibleTabsRow" class="flex flex-wrap items-center gap-1 sm:gap-2">
+                        <div id="visibleTabsRow" class="flex flex-wrap items-center gap-1 sm:gap-2 min-h-[40px]">
                             <!-- Табы и кнопка "Ещё/Свернуть" будут вставлены сюда JS -->
                         </div>
 
@@ -111,6 +120,12 @@
                     .attention {
                         animation: pulseAttention 1.5s infinite;
                     }
+
+                    /* Предотвращение сдвигов макета */
+                    #catalogContent {
+                        min-height: 400px;
+                    }
+
                 </style>
 
                 <script>
@@ -125,6 +140,7 @@
                         const visibleTabsRow = document.getElementById('visibleTabsRow');
                         const hiddenTabsContainer = document.getElementById('hiddenTabsContainer');
                         const hiddenWrapper = document.getElementById("hiddenWrapper");
+                        const catalogContent = document.getElementById('catalogContent');
 
                         if (!allTabsContainer || !visibleTabsRow || !hiddenTabsContainer || !hiddenWrapper) {
                             console.error("Не найдены необходимые DOM элементы для управления табами.");
@@ -337,6 +353,11 @@
 
                         // Функция отправки AJAX запроса
                         function sendAjaxRequest(url) {
+                            // Показываем skeleton loader перед загрузкой
+                            if (catalogContent) {
+                                catalogContent.style.opacity = '0.6';
+                            }
+
                             // Отправляем AJAX запрос аналогично RSGoPro_FilterAjax
                             if (typeof BX !== 'undefined' && BX.ajax) {
                                 // Показываем индикатор загрузки (если функция доступна)
@@ -368,7 +389,14 @@
                                         const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
 
                                         if (newContent && catalogContent) {
+                                            // Сохраняем высоту перед заменой контента
+                                            const oldHeight = catalogContent.offsetHeight;
                                             catalogContent.innerHTML = newContent.innerHTML;
+                                            // Восстанавливаем высоту для предотвращения сдвига
+                                            catalogContent.style.minHeight = oldHeight + 'px';
+                                            setTimeout(() => {
+                                                catalogContent.style.minHeight = '';
+                                            }, 300);
                                         }
 
                                         // Обновляем пагинацию
@@ -407,6 +435,11 @@
                                                 }
                                             }
                                         }
+
+                                        // Восстанавливаем прозрачность
+                                        if (catalogContent) {
+                                            catalogContent.style.opacity = '1';
+                                        }
                                     },
                                     onfailure: function() {
                                         console.warn('FILTER -> ajax load failed');
@@ -422,6 +455,9 @@
                                         if (typeof RSGoPro_FilterOnDocumentReady === 'function') {
                                             RSGoPro_FilterOnDocumentReady();
                                         }
+                                        if (catalogContent) {
+                                            catalogContent.style.opacity = '1';
+                                        }
                                     }
                                 });
                             } else {
@@ -434,7 +470,12 @@
                                         const newContent = tempDiv.querySelector('#catalogContent') || tempDiv.querySelector('.grid.grid-cols-2');
                                         const catalogContent = document.getElementById('catalogContent');
                                         if (newContent && catalogContent) {
+                                            const oldHeight = catalogContent.offsetHeight;
                                             catalogContent.innerHTML = newContent.innerHTML;
+                                            catalogContent.style.minHeight = oldHeight + 'px';
+                                            setTimeout(() => {
+                                                catalogContent.style.minHeight = '';
+                                            }, 300);
                                         }
 
                                         // Обновляем пагинацию
@@ -444,9 +485,16 @@
                                             paginationContainer.innerHTML = newPagination.innerHTML;
                                             attachPaginationHandlers();
                                         }
+
+                                        if (catalogContent) {
+                                            catalogContent.style.opacity = '1';
+                                        }
                                     })
                                     .catch(error => {
                                         console.error('Ошибка при загрузке фильтров:', error);
+                                        if (catalogContent) {
+                                            catalogContent.style.opacity = '1';
+                                        }
                                     });
                             }
                         }
@@ -792,7 +840,6 @@
                     <?php } else { ?>
                     <?php if(count($items)) { ?>
                     <?php echo CssCopmress::load('series')?>
-                    <?php echo JsCopmress::load('series')?>
 
                     <script>
                         oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials)) ?> ');
@@ -813,7 +860,7 @@
                     <?php } ?>
                 </div>
 
-                <div id="paginationContainer" class="flex w-full justify-center items-center flex-col mt-8">
+                <div id="paginationContainer" class="flex w-full justify-center items-center flex-col mt-8 min-h-[60px]">
                     <?php echo $toggle; ?>
                 </div>
             </div>
@@ -821,7 +868,7 @@
 
         <section>
             <!-- Наши преимущества -->
-            <h2 class="text-xl xl:text-2xl font-bold mt-16 mb-8">
+            <h2 class="text-xl xl:text-2xl font-bold mt-16 mb-8 min-h-[36px]">
                 Наши преимущества
             </h2>
 
@@ -834,8 +881,12 @@
                     >
                         <img
                             src="/images/category/sofa.png"
-                            class="w-3 h-4 lg:w-5 lg:h-6 md:w-4 md:h-5"
+                            class="advantage-icon"
+                            width="26"
+                            height="26"
                             alt=""
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <p class="text-base xl:text-lg font-medium">
@@ -854,8 +905,12 @@
                     >
                         <img
                             src="/images/category/ruler.png"
-                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            class="advantage-icon"
+                            width="26"
+                            height="26"
                             alt=""
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <p class="text-base xl:text-lg font-medium">
@@ -873,12 +928,16 @@
                     >
                         <img
                             src="/images/category/shelves.png"
-                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            class="advantage-icon"
+                            width="26"
+                            height="26"
                             alt=""
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <p class="text-base xl:text-lg font-medium">
-                        Мобильные и модульные системы: 
+                        Мобильные и модульные системы:
                         <span class="block text-sm xl:text-lg font-normal"
                         >Модульные стеллажи, перегородки и мобильные секции обеспечивают
               гибкость в создании уникального офисного пространства.</span
@@ -891,8 +950,12 @@
                     >
                         <img
                             src="/images/category/time.png"
-                            class="w-4 h-4 lg:w-6 lg:h-6 md:w-5 md:h-5"
+                            class="advantage-icon"
+                            width="26"
+                            height="26"
                             alt=""
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <p class="text-base xl:text-lg font-medium">

@@ -25,39 +25,21 @@
 
         <div class="slider overflow-hidden">
             <div class="slider-track flex w-full transition-transform duration-300 space-x-4 py-6">
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter2.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
-
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter1.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter2.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
-
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter1.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter2.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
-
-                <a class="card flex-none" href="#">
-                    <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
-                        <img src="/images/reputation/letter1.jpg" alt="Отзыв" class="w-full aspect-[340/464] object-cover" />
-                    </div>
-                </a>
+                <?php if (!empty($letters)) { ?>
+                    <?php foreach (array_slice($letters, 0, 8) as $letter) { ?>
+                        <a class="card flex-none">
+                            <div class="h-full overflow-hidden shadow hover:shadow-lg transition">
+                                <img
+                                    src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>_340x464_0.<?php echo $letter['_img_ext']; ?>"
+                                    alt="Письмо"
+                                    width="340"
+                                    height="464"
+                                    class="w-full aspect-[340/464] object-cover"
+                                />
+                            </div>
+                        </a>
+                    <?php } ?>
+                <?php } ?>
             </div>
         </div>
 
