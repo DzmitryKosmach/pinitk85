@@ -1,7 +1,7 @@
 <style>
     .color-widget {
         position: fixed;
-        right: 8px;
+        right: 4px;
         top: 24%;
         transform: translateY(-50%);
         z-index: 105;
@@ -123,23 +123,12 @@
     .swatch-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
     .swatch-red.active { border-color: #fca5a5; box-shadow: 0 0 0 3px rgba(239,68,68,0.3); }
 
-    /* Прячем лейбл, пока не раскроем */
-    .color-widget-label {
-        font-size: 10px;
-        font-weight: bold;
-        text-transform: uppercase;
-        color: var(--text-secondary, #666);
-        opacity: 0;
-        transition: opacity 0.3s;
-        display: none; /* Можно убрать, если не нужен в свернутом виде */
-    }
-    .color-widget:hover .color-widget-label { opacity: 1; display: block; }
 </style>
 
 <div class="color-widget" id="colorWidget" onclick="toggleWidget(event)">
-    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue', event)" title="Синий"></div>
-    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green', event)" title="Зелёный"></div>
     <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red', event)" title="Красный"></div>
+    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green', event)" title="Зелёный"></div>
+    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue', event)" title="Синий"></div>
 </div>
 
 <script>
