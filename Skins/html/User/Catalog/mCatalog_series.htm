@@ -784,49 +784,44 @@
             $inCart = Catalog_Cart::isSetInCart($seriesSetItemsIds);
           ?>
 
-                    <div class="flex flex-col flex-wrap lg:flex-nowrap sm:flex-row gap-2">
+                    <div class="flex flex-col flex-wrap lg:flex-nowrap sm:flex-row gap-2 items-stretch">
 
-
-                        <!-- Форма для добавления в корзину -->
+                        <!-- Форма для добавления в корзину (Синяя кнопка) -->
                         <form method="post" action="<?php echo Url::a('catalog-cart')?>"
                               onsubmit="updateCartButton(this); oCart.add(this, true); return false;"
-                              style="display: inline;">
+                              class="flex flex-col justify-center"> <!-- Добавил flex для формы, чтобы кнопка внутри вела себя корректно -->
+
                             <?php foreach($seriesSet as $i) { ?>
                             <input type="hidden" name="add[]" value="<?php echo $i['id']; ?>">
-                            <input type="hidden" name="amount[<?php echo $i['id']; ?>]"
-                                   value="<?php echo $i['in_series_set_amount']; ?>">
-                            <input type="hidden" name="material_id[<?php echo $i['id']; ?>]"
-                                   value="<?php
-                   $mActive = false;
-                   if(count($i['materials'])) {
-                       $mActive = $materials[$i['price_min_material_id']];
-                   }
-                   echo ($mActive ? $mActive['id'] : 0);
-                   ?>">
+                            <input type="hidden" name="amount[<?php echo $i['id']; ?>]" value="<?php echo $i['in_series_set_amount']; ?>">
+                            <input type="hidden" name="material_id[<?php echo $i['id']; ?>]" value="<?php
+                                    $mActive = false;
+                                    if(count($i['materials'])) {
+                                        $mActive = $materials[$i['price_min_material_id']];
+                                    }
+                                    echo ($mActive ? $mActive['id'] : 0);
+                                ?>">
                             <?php } ?>
 
                             <?php $btnDisabled = !empty($seriesInf['out_of_production']) && !$inCart; ?>
                             <button
                                 type="<?= $inCart ? 'button' : 'submit' ?>"
-                                class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                                class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg border-2 border-transparent inline-flex items-center justify-center"
                                 title="<?= $inCart ? 'Перейти в корзину' : ($btnDisabled ? 'Товар снят с производства' : 'Отложить в 1 клик со СКИДКОЙ') ?>"
                             <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
                             <?= $btnDisabled ? 'disabled' : '' ?>>
                             <?= $inCart ? '✓ В корзину' : 'Отложить в 1 клик со СКИДКОЙ' ?>
                             </button>
-
                         </form>
 
 
-                        <!-- Кнопка "Нашли дешевле?" -->
-                        <button class="border-2 border-blue-600 text-blue-600 py-2 px-6 rounded text-center hover:bg-blue-50 transition-colors">
-                            <a rel="nofollow"
-                               class="cheaper detail fancyajax fancybox.ajax"
-                               href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER?>"
-                               title="Нашли дешевле?">
-                                Нашли дешевле?
-                            </a>
-                        </button>
+                        <!-- Кнопка "Нашли дешевле?" (Белая кнопка) -->
+                        <a rel="nofollow"
+                           class="cheaper detail fancyajax fancybox.ajax border-2 border-blue-600 text-blue-600 text-center hover:bg-blue-50 transition-colors rounded font-semibold inline-flex items-center justify-center min-h-[48px] w-full sm:w-fit py-2 px-6"
+                           href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER?>"
+                           title="Нашли дешевле?">
+                            Нашли дешевле?
+                        </a>
                     </div>
 
                     <script>
@@ -1734,7 +1729,7 @@
 
                     <!-- Артикул -->
                     <div class="relative mb-1" style="height: 1.25rem;">
-                        <p class="text-gray-400 text-sm leading-5
+                        <p class="text-gray-500 text-sm leading-5
       line-clamp-1
       transition-all duration-200
       absolute top-0 left-0 right-0
@@ -1773,7 +1768,7 @@
 
                     <!-- Габариты -->
                     <?php if (!empty($item['size'])): ?>
-                    <p class="text-gray-400 text-sm mt-2 md:mt-4">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
+                    <p class="text-gray-500 text-sm mt-2 md:mt-4">Ш/В/Д: <?php echo htmlspecialchars($item['size']); ?></p>
                     <?php endif; ?>
 
                     <!-- Цвета -->
@@ -1805,7 +1800,7 @@
                         </div>
                         <?php } ?>
                         <?php if ($totalMaterials > $limit) { ?>
-                        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+                        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
                         <?php } ?>
                         </a>
                         <?php } ?>

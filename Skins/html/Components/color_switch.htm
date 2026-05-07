@@ -1,0 +1,180 @@
+<style>
+    .color-widget {
+        position: fixed;
+        right: 8px;
+        top: 24%;
+        transform: translateY(-50%);
+        z-index: 105;
+        display: flex;
+        /* Реверс позволяет активному элементу оставаться наверху */
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: flex-end; /* Контент прижат к началу (верх в реверсе) */
+
+        gap: 0;
+        padding: 10px;
+        width: 58px;
+        height: 58px;
+
+        border-radius: 16px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .color-widget:hover,
+    .color-widget.open {
+        height: 160px;
+        gap: 12px;
+        border-color: var(--border, #ccc);
+        background: var(--surface, rgba(255,255,255,0.8)); /* Упростил для наглядности */
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .color-swatch {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 3px solid transparent;
+        cursor: pointer;
+        position: relative;
+        flex-shrink: 0;
+        transition: opacity 0.3s ease, transform 0.2s;
+
+        /* Скрываем неактивные элементы */
+        display: none;
+        opacity: 0;
+    }
+
+    /* Активный цвет или все цвета при ховере — показываем */
+    .color-swatch.active,
+    .color-widget:hover .color-swatch,
+    .color-widget.open .color-swatch {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Дополнительная плавная анимация появления для не-активных */
+    .color-widget:hover .color-swatch:not(.active) {
+        animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+
+    .color-swatch {
+        width: 38px;
+        height: 0; /* Схлопнуты по умолчанию */
+        opacity: 0;
+        border-radius: 10px;
+        border: 3px solid transparent;
+        cursor: pointer;
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.3s ease, transform 0.2s;
+        pointer-events: none;
+    }
+
+    /* Активный цвет виден всегда */
+    .color-swatch.active {
+        height: 38px;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Показываем все при активации виджета */
+    .color-widget:hover .color-swatch,
+    .color-widget.open .color-swatch {
+        height: 38px;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .color-swatch:hover { transform: scale(1.1); }
+
+    /* Иконка галочки */
+    .color-swatch.active::after {
+        content: '✓';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Градиенты */
+    .swatch-blue { background: linear-gradient(135deg, #2563EB, #1D4ED8); }
+    .swatch-blue.active { border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59,130,246,0.3); }
+
+    .swatch-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .swatch-green.active { border-color: #86efac; box-shadow: 0 0 0 3px rgba(34,197,94,0.3); }
+
+    .swatch-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .swatch-red.active { border-color: #fca5a5; box-shadow: 0 0 0 3px rgba(239,68,68,0.3); }
+
+    /* Прячем лейбл, пока не раскроем */
+    .color-widget-label {
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: var(--text-secondary, #666);
+        opacity: 0;
+        transition: opacity 0.3s;
+        display: none; /* Можно убрать, если не нужен в свернутом виде */
+    }
+    .color-widget:hover .color-widget-label { opacity: 1; display: block; }
+</style>
+
+<div class="color-widget" id="colorWidget" onclick="toggleWidget(event)">
+    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue', event)" title="Синий"></div>
+    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green', event)" title="Зелёный"></div>
+    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red', event)" title="Красный"></div>
+</div>
+
+<script>
+    function setColor(color, event) {
+        event.stopPropagation(); // Важно для мобилок
+
+        const root = document.documentElement;
+        if (color === 'blue') {
+            root.removeAttribute('data-theme');
+        } else {
+            root.setAttribute('data-theme', color);
+        }
+
+        document.querySelectorAll('.color-swatch').forEach(s => {
+            s.classList.toggle('active', s.dataset.color === color);
+        });
+        localStorage.setItem('themeColor', color);
+
+        // Закрываем виджет на мобилках после клика
+        document.getElementById('colorWidget').classList.remove('open');
+    }
+
+    function toggleWidget(e) {
+        // Условие только для тач-устройств
+        if (window.matchMedia("(hover: none)").matches) {
+            const widget = document.getElementById('colorWidget');
+            widget.classList.toggle('open');
+        }
+    }
+
+    (function init() {
+        const savedColor = localStorage.getItem('themeColor');
+        if (savedColor) {
+            // Инициализация без лишних эффектов
+            setColor(savedColor, { stopPropagation: () => {} });
+        }
+    })();
+</script>

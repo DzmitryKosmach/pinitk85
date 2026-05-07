@@ -1566,40 +1566,8 @@ function getHomeUrl() {
     </div>
 </div>
 
-<!--&lt;!&ndash; ВИДЖЕТ ЦВЕТОВ &ndash;&gt;-->
-<!--<div class="color-widget" id="colorWidget">-->
-<!--    <div class="color-widget-label">Цвет</div>-->
-<!--    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue')" title="Синий"></div>-->
-<!--    <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green')" title="Зелёный"></div>-->
-<!--    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red')" title="Красный"></div>-->
-<!--</div>-->
-
-<!--<script>-->
-<!--    function setColor(color) {-->
-<!--        const root = document.documentElement;-->
-<!--        if (color === 'blue') {-->
-<!--            root.removeAttribute('data-theme');-->
-<!--        } else {-->
-<!--            root.setAttribute('data-theme', color);-->
-<!--        }-->
-
-<!--        document.querySelectorAll('.color-swatch').forEach(s => {-->
-<!--            s.classList.toggle('active', s.dataset.color === color);-->
-<!--        });-->
-<!--        localStorage.setItem('themeColor', color);-->
-<!--    }-->
-
-<!--    function toggleMobile() {-->
-<!--        document.getElementById('mobileMenu').classList.toggle('open');-->
-<!--    }-->
-
-<!--    (function init() {-->
-<!--        const savedColor = localStorage.getItem('themeColor');-->
-<!--        if (savedColor) {-->
-<!--            setColor(savedColor);-->
-<!--        }-->
-<!--    })();-->
-<!--</script>-->
+<!-- Виджет переключения цветовых схем -->
+<?php include(Config::path('skins') . '/html/Components/color_switch.htm'); ?>
 
 <link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
 <style>
