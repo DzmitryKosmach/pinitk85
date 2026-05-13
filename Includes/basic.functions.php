@@ -600,3 +600,27 @@ function getMaterialAlt($name) {
     }
     return $words[0];
 }
+
+
+/**
+ * Преобразует первый символ строки в заглавный, но с исключениями для единиц измерения
+ *
+ * @param string $value Исходная строка
+ * @return string Преобразованная строка
+ */
+function formatFirstCharUpper($value)
+{
+    // Исключения (в нижнем регистре для сравнения)
+    $exceptions = ['мм', 'см', 'мм.', 'см.'];
+
+    // Приводим к строке на всякий случай
+    $value = (string)$value;
+
+    // Проверяем, входит ли значение целиком в список исключений
+    if (in_array(mb_strtolower($value), $exceptions)) {
+        return mb_strtolower($value);
+    }
+
+    // Иначе делаем первую букву заглавной, остальные оставляем как есть
+    return mb_strtoupper(mb_substr($value, 0, 1)) . mb_substr($value, 1);
+}

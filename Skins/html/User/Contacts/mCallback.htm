@@ -139,13 +139,6 @@
 	</div>
 <?php } ?>
 
-
-
-
-
-
-
-
 <style>
     /* Убираем горизонтальный скролл из-за фиксированной ширины формы .someform form */
     .content .someform form {
@@ -153,90 +146,4 @@
         max-width: 400px;
     }
 
-.cookie_notice {
-	display: none;
-	position: fixed;
-	z-index: 9999999;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	text-align: center;
-	font-size: 15px;
-	font-family: Verdana, sans-serif;
-	color: #FFF;
-	background: #337AB7;
-	padding: 10px 20px;
-	border-top: 4px solid #BFE2FF;
-}
-/* Оформление кнопок */
-.cookie_btn {
-	display: inline-block;
-	margin: 10px 6px 4px 6px;
-	text-decoration: none;
-	position: relative;
-	font-size: 13px;
-	padding: 4px 12px;
-	color: #FFF;
-	font-weight: bold;
-	text-transform: uppercase;
-	background: #337AB7;
-	border: 2px solid #BFE2FF;
-}
-.cookie_btn:hover {
-	color: #FFF;
-}
-.cookie_btn:after,
-.cookie_btn:before {
-	position: absolute;
-	height: 2px;
-	left: 50%;
-	background: #FFF;
-	bottom: -6px;
-	content: "";
-	transition: all 280ms ease-in-out;
-	width: 0;
-}
-.cookie_btn:before {
-	top: -6px;
-}
-.cookie_btn:hover:after,
-.cookie_btn:hover:before {
-	width: 100%;
-	left: 0;
-}
 </style>
-
-<div class="cookie_notice fixed bottom-0 left-0 right-0 text-center text-white bg-blue-600 px-4 py-3 border-t-4 border-[#BFE2FF] text-sm">
-    Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей (данные об IP-адресе, местоположении и др.) для обеспечения работоспособности и улучшения качества обслуживания. Продолжая использовать наш сайт, вы автоматически соглашаетесь с использованием данных технологий.
-    <div>
-        <a class="cookie_btn inline-block px-3 py-1.5 uppercase font-bold border-2 border-[#BFE2FF]" id="cookie_close" href="#close">Ок</a>
-
-    </div>
-</div>
-
-
-
-<script>
-// функция возвращает cookie с именем name, если есть, если нет, то undefined
-function getCookie(name) {
-	let matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-	));
-	return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-let cookiecook = getCookie("cookiecook"),
-cookiewin = document.getElementsByClassName('cookie_notice')[0];
-// проверяем, есть ли у нас cookie, с которой мы не показываем окно и если нет, запускаем показ
-if (cookiecook != "no") {
-	// показываем
-	cookiewin.style.display="block";
-	// закрываем по клику
-	document.getElementById("cookie_close").addEventListener("click", function(){
-		cookiewin.style.display="none";
-		// записываем cookie на 1 день, с которой мы не показываем окно
-		let date = new Date;
-		date.setDate(date.getDate() + 1);
-		document.cookie = "cookiecook=no; path=/; expires=" + date.toUTCString();
-	});
-}
-</script>

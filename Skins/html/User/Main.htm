@@ -226,11 +226,6 @@ function getHomeUrl() {
             margin-top: 8px;
         }
 
-        ::selection {
-            background-color: #329f2d;
-            color: #fff;
-        }
-
         /* Переопределяем центрирование для Tailwind */
         body {
             text-align: left !important;
@@ -241,7 +236,7 @@ function getHomeUrl() {
             text-align: inherit;
         }
         .phone-faded, .phone-show-link {
-            color: #9ca3af;
+            color: #454545;
             font-weight: normal;
         }
         .phone-show-link {
@@ -1238,7 +1233,7 @@ function getHomeUrl() {
                     <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
                     <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
                 </p>
-                <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
+                <p class="ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
             </div>
 
             <div class="mt-4 flex flex-col gap-2">
@@ -1410,9 +1405,13 @@ function getHomeUrl() {
 
 <div class="xCallback !mt-1 !z-[60] w-[48px] sm:w-[69px]">
     <button onclick="kcall(); return false;"
+            title="Заказать обратный звонок"
+            aria-label="Заказать обратный звонок"
+            aria-description="Нажмите для заказа обратного звонка. Наш менеджер свяжется с вами в ближайшее время."
+            role="button"
             class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
         <!-- Иконка -->
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8" aria-hidden="true">
             <!-- Телефон -->
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M2.25 6.75c0-1.24 1.01-2.25 2.25-2.25h2.25A2.25 2.25 0 019 6.75v2.25a2.25 2.25 0 01-.66 1.59l-1.09 1.09a11.25 11.25 0 005.68 5.68l1.09-1.09a2.25 2.25 0 011.59-.66H18a2.25 2.25 0 012.25 2.25V19.5A2.25 2.25 0 0118 21.75h-1.5C9.27 21.75 2.25 14.73 2.25 6.75z" />
