@@ -28,7 +28,7 @@ foreach ($s['materials'] as $m) {
     <?php $count++; ?>
     <?php endforeach; ?>
     <?php if ($totalMaterials > $limit): ?>
-    <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+    <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $totalMaterials - $limit; ?></span>
     <?php endif; ?>
 </div>
 <?php elseif (isset($i) && !empty($i['materials'])): ?>
@@ -61,7 +61,7 @@ foreach ($s['materials'] as $m) {
     }
     ?>
             <?php if ($totalMaterials > $limit): ?>
-            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-400 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $totalMaterials - $limit; ?></span>
+            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $totalMaterials - $limit; ?></span>
             <?php endif; ?>
         </a>
     </div>

@@ -30,7 +30,7 @@
     }
 
     #options-block .description1 {
-        min-height: 220px;
+        min-height: 120px;
     }
 
 
@@ -1090,11 +1090,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
                     <?php foreach ($mainOptions as $o): ?>
                     <div
-                        class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+                        class="font-medium text-gray-600 text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
                         <?= $o['name'] ?>:
                     </div>
                     <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
-                        <?= $o['value'] ?>
+                        <?= formatFirstCharUpper($o['value']) ?>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -1106,11 +1106,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
                         <?php foreach ($additionalOptions as $o): ?>
                         <div
-                            class="font-medium text-[#7D838A] text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
+                            class="font-medium text-gray-600 text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
                             <?= $o['name'] ?>:
                         </div>
                         <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
-                            <?= $o['value'] ?>
+                            <?= formatFirstCharUpper($o['value']) ?>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -1118,7 +1118,7 @@
 
                 <!-- Кнопка -->
                 <button id="toggleButton"
-                        class="mt-4 px-4 py-2 rounded-full bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300 flex items-center">
+                        class="mt-4 px-4 py-2 rounded-full bg-white text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-300 flex items-center">
                     <div id="buttonText">Смотреть все характеристики</div>
                     <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
                          class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
