@@ -536,7 +536,7 @@ class ExtDbList extends DbList
 
     /**
      * Создаёт webp рядом с каждым JPEG производного размера ({id}_ширинаxвысота_….jpg).
-     * Вызывается после того, как наследники (например Clients_Letters) дописали превью на диск.
+     * Вызывать после того, как все производные jpg записаны на диск (см. Clients_Letters::imageSave).
      */
     protected function makeWebpForDerivativeJpegs(string $imagesBasePath, int $id): void
     {
@@ -982,19 +982,13 @@ class ExtDbList extends DbList
             $ext
         );
 
-        // Для SEO/оптимизации дополняем webp: основной файл и производные размеры ({id}_….jpg).
+        // Для SEO/оптимизации сохраняем webp рядом с основным jpg/jpeg.
         if ($ext === 'jpg' || $ext === 'jpeg') {
             $dir = Config::path('images') . $path;
             $this->makeWebpFromJpeg(
                 $dir . $id . '.' . $ext,
                 $dir . $id . '.webp'
             );
-            // Превью доп. размеров часто пишутся в imageSave() наследника после parent::imageSave().
-            $self = $this;
-            $syncId = $id;
-            register_shutdown_function(function () use ($self, $dir, $syncId) {
-                $self->makeWebpForDerivativeJpegs($dir, $syncId);
-            });
         }
 
         self::$imageExt = $ext;
