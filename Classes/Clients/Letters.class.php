@@ -102,6 +102,11 @@ class Clients_Letters extends ExtDbList {
             $images->ctrl->destroy($img);
         }
 
+        // Webp для производных размеров (после записи файлов на диск; не через shutdown — стабильнее на хостинге).
+        if ($ext === 'jpg' || $ext === 'jpeg') {
+            $this->makeWebpForDerivativeJpegs(Config::path('images') . $path, $id);
+        }
+
         return true;
     }
 }
