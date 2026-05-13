@@ -534,6 +534,42 @@ class ExtDbList extends DbList
         return false;
     }
 
+    /**
+     * Создаёт webp рядом с каждым JPEG производного размера ({id}_ширинаxвысота_….jpg).
+     * Вызывается после того, как наследники (например Clients_Letters) дописали превью на диск.
+     */
+    protected function makeWebpForDerivativeJpegs(string $imagesBasePath, int $id): void
+    {
+        if ($id < 1) {
+            return;
+        }
+
+        $patterns = array(
+            $imagesBasePath . $id . '_*.jpg',
+            $imagesBasePath . $id . '_*.jpeg',
+            $imagesBasePath . $id . '_*.JPG',
+            $imagesBasePath . $id . '_*.JPEG',
+        );
+
+        foreach ($patterns as $pattern) {
+            $list = glob($pattern);
+            if (!$list) {
+                continue;
+            }
+            foreach ($list as $jpegFile) {
+                if (!is_file($jpegFile)) {
+                    continue;
+                }
+                $pi = pathinfo($jpegFile);
+                if (!isset($pi['filename'])) {
+                    continue;
+                }
+                $webpFile = $pi['dirname'] . '/' . $pi['filename'] . '.webp';
+                $this->makeWebpFromJpeg($jpegFile, $webpFile);
+            }
+        }
+    }
+
     public function __call($methodName, $arguments) {
         if (! property_exists($this, $methodName)) {
             throw new Exception("Bad Method Name Exception: $methodName");
@@ -946,12 +982,19 @@ class ExtDbList extends DbList
             $ext
         );
 
-        // Для SEO/оптимизации дополнительно сохраняем webp рядом с jpg.
+        // Для SEO/оптимизации дополняем webp: основной файл и производные размеры ({id}_….jpg).
         if ($ext === 'jpg' || $ext === 'jpeg') {
+            $dir = Config::path('images') . $path;
             $this->makeWebpFromJpeg(
-                Config::path('images') . $path . $id . '.' . $ext,
-                Config::path('images') . $path . $id . '.webp'
+                $dir . $id . '.' . $ext,
+                $dir . $id . '.webp'
             );
+            // Превью доп. размеров часто пишутся в imageSave() наследника после parent::imageSave().
+            $self = $this;
+            $syncId = $id;
+            register_shutdown_function(function () use ($self, $dir, $syncId) {
+                $self->makeWebpForDerivativeJpegs($dir, $syncId);
+            });
         }
 
         self::$imageExt = $ext;
