@@ -421,17 +421,13 @@
                     <?php foreach ($letters as $letter) { ?>
                     <span class="ratio-[220/312]">
                                 <img
-                                    src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>_220x312_0.<?php echo $letter['_img_ext']; ?>"
+                                    src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>_220x312_0.webp"
                                     alt="Письмо"
                                     class="max-w-[220px] h-full object-cover rounded shadow"
                                 />
                             </span>
                     <?php } ?>
                     <?php } ?>
-                    <!-- <span class="ratio-[220/304]"><img src="images/index/doc1.webp" alt="Письмо 1"
-                                             class="max-w-[220px] h-full object-cover rounded shadow" /></span>
-                    <span class="ratio-[220/304]"><img src="images/index/doc2.webp" alt="Письмо 2"
-                                                       class="max-w-[220px] h-full object-cover rounded shadow" /><span> -->
                 </div>
                 <div class="text-center mt-12">
                     <a href="/letters/" target="_blank"

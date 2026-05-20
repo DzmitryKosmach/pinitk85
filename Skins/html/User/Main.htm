@@ -499,11 +499,11 @@ function getHomeUrl() {
                 <div>
 
                     <!-- Иконки -->
-                    <div class="flex items-center gap-1 xs2:gap-2">
+                    <div class="flex items-center gap-2">
                         <!-- Телефон (иконка с дропдауном) -->
                         <div id="mobile-phone-dropdown" class="relative inline-block">
                             <!-- Иконка -->
-                            <a id="mobile-phone-trigger"
+                            <button type="button" id="mobile-phone-trigger"
                                href="javascript:void(0)"
                                class="block"
                                aria-label="Позвонить">
@@ -513,7 +513,7 @@ function getHomeUrl() {
                                         d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"
                                         fill="#020202" />
                                 </svg>
-                            </a>
+                            </button>
 
                             <!-- Выпадающий список -->
                             <div id="mobile-phone-menu"
@@ -1428,12 +1428,12 @@ function getHomeUrl() {
 <div
     class="modal scale-90 xs2:scale-100 modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
     id="kmodal" style="display:none; left: 50%;">
-    <a href="javascript:void(0);"
+    <button type="button" href="javascript:void(0);"
        class="modal-order-call__close absolute top-2 right-2 w-10 h-10 flex items-center justify-center text-3xl text-gray-600 hover:text-black z-[25] rounded-full hover:bg-red-400 transition-colors"
        onclick="kclose(); return false;"
        aria-label="Закрыть">
         ×
-    </a>
+    </button>
 
     <div id="vibiliunasnasaite" style="display: none">
         <p class="mb-4 text-gray-700" style="margin-bottom: 10px">
@@ -1558,7 +1558,7 @@ function getHomeUrl() {
                 <p>00</p>
             </div>
             <div class="modal-order-call-form__end clear">
-                <a id="xop555" href="javascript:void(0);" onclick="neuspeli(); return false;">мне не перезвонили!</a>
+                <button type="button" id="xop555" href="javascript:void(0);" onclick="neuspeli(); return false;">мне не перезвонили!</button>
                 <span id="superjalobal" style="display: none">Менеджер свяжется с Вами в ближайшее время!</span>
             </div>
         </div>
