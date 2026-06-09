@@ -19,12 +19,14 @@
   <a href="<?php echo htmlspecialchars(Catalog_Series::a($s ?? '#')); ?>" target="_blank"
      rel="noopener noreferrer">
     <img
-      src="<?php echo isset($s['1st_photo']) ? Catalog::photoUrl(
+      src="<?php echo !empty($s['1st_photo']) ? Catalog::photoUrl(
           Catalog_Series_Photos::$imagePath,
           $s['1st_photo']['id'], 170, 170, $s['1st_photo']['rm'], $s['1st_photo']['_img_ext']
       ) : '/images/index/chair1.jpg'; ?>"
       alt="<?php echo htmlspecialchars($s['name'] ?? 'Товар'); ?>"
-      class="w-full h-32 md:h-48 object-contain mb-4"
+      width="170"
+      height="170"
+      class="block w-full h-32 md:h-48 object-contain mb-4"
       loading="lazy"
       decoding="async"
     />

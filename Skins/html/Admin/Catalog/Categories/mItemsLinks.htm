@@ -351,7 +351,7 @@
 								'onchange="selectAll(this, \'select-items\'); highlightGroup(this)"' +
 							'>' +
 							'<label class="items" for="item-' + it.id + '">' +
-								(it._img_ext ? '<img src="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath?>' + it.id + '_20x15_1.' + it._img_ext + '" width="20" height="15">' : '') +
+								('webp' ? '<img src="<?php echo Config::pathRel('images') . Catalog_Items::$imagePath?>' + it.id + '_20x15_1.' + 'webp' + '" width="20" height="15">' : '') +
 								it.name + ' ' + it.art +
 							'</label><br>';
 					}

@@ -54,6 +54,17 @@ class mImagesCache
         // Получаем инфу о файле
         $fileInf = pathinfo($requestFile);
 
+        if (is_file($requestFile)) {
+            $ext = mb_strtolower($fileInf['extension'] ?? '');
+            if ($ext === 'webp') {
+                header('Content-type: image/webp');
+            } else {
+                header('Content-type: ' . (Images::$extToMime[$ext] ?? 'image/jpeg'));
+            }
+            readfile($requestFile);
+            exit;
+        }
+
         // Определяем характеристики запроса (размер, ресайз-метод)
         $request = explode('_', mb_strtolower($fileInf['filename']));
         if (count($request) != 3 && count($request) != 4) {
@@ -87,6 +98,18 @@ class mImagesCache
                 if (is_file($origFile)) {
                     $origFileNotFound = false;
                     break;
+                }
+            }
+            if ($origFileNotFound) {
+                $derivativeFiles = glob($fileInf['dirname'] . '/' . $request[0] . '_*') ?: [];
+                foreach ($derivativeFiles as $candidate) {
+                    $candidateExt = strtolower(pathinfo($candidate, PATHINFO_EXTENSION));
+                    if ($candidateExt === 'webp' || isset(Images::$extToMime[$candidateExt])) {
+                        $origFile = $candidate;
+                        $origExt = $candidateExt;
+                        $origFileNotFound = false;
+                        break;
+                    }
                 }
             }
             if ($origFileNotFound) {
@@ -150,7 +173,7 @@ class mImagesCache
                     $imgWebp = clone $requestImg;
                     $imgWebp->setImageFormat('webp');
                     if (method_exists($imgWebp, 'setImageCompressionQuality')) {
-                        $imgWebp->setImageCompressionQuality(85);
+                        $imgWebp->setImageCompressionQuality(70);
                     }
                     $imgWebp->writeImage($requestFile);
                     $imgWebp->destroy();
@@ -182,7 +205,7 @@ class mImagesCache
                     $imgWebp = clone $requestImg;
                     $imgWebp->setImageFormat('webp');
                     if (method_exists($imgWebp, 'setImageCompressionQuality')) {
-                        $imgWebp->setImageCompressionQuality(85);
+                        $imgWebp->setImageCompressionQuality(70);
                     }
                     $imgWebp->writeImage($webpFile);
                     $imgWebp->destroy();

@@ -38,21 +38,25 @@ function seriesSetPrice() {
     totalOld += oldPrice * amount;
   });
 
-  // Обновляем итоговую цену
   const totalEl = document.getElementById('series-set-price');
   if (totalEl) {
-    totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
-    totalEl.className = 'text-3xl font-bold text-black';
+    if (total > 0) {
+      totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+      totalEl.className = 'text-3xl font-bold text-black';
+    } else {
+      totalEl.textContent = 'Цена по запросу';
+      totalEl.className = 'text-3xl font-bold text-black price-by-request';
+    }
   }
 
-  // Обновляем зачёркнутую цену
   const totalOldEl = document.getElementById('series-set-price-old');
   if (totalOldEl) {
-    if (totalOld > total) {
-      totalOldEl.style.display = '';
+    if (total > 0 && totalOld > total) {
       totalOldEl.textContent = totalOld.toLocaleString('ru-RU') + ' ₽';
+      totalOldEl.classList.remove('hidden');
     } else {
-      totalOldEl.style.display = 'none';
+      totalOldEl.textContent = '';
+      totalOldEl.classList.add('hidden');
     }
   }
 }

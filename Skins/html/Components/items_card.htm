@@ -10,10 +10,12 @@
         <img
             src="<?php echo Catalog::photoUrl(
                                       Catalog_Items::$imagePath,
-                                      $i['id'], 170, 140, 1, $i['_img_ext']
+                                      $i['id'], 170, 140, 1, 'webp'
                                   ); ?>"
             alt="<?php echo hsch($i['name'] . ' ' . $i['art']); ?>"
-            class="max-w-full h-auto object-contain rounded-md mb-4"
+            width="170"
+            height="140"
+            class="block max-w-full h-auto object-contain rounded-md mb-4"
             loading="lazy"
             decoding="async"
         />
