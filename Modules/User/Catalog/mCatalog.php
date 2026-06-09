@@ -22,7 +22,7 @@ class mCatalog
     /**
      *
      */
-    const SERIES_ON_PAGE_DEFAULT = 30;
+    const SERIES_ON_PAGE_DEFAULT = 16;
 
     /**
      * @var array

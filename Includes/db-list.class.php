@@ -493,7 +493,7 @@ class ExtDbList extends DbList
                 $img = new $imagickClass($sourceFile);
                 $img->setImageFormat('webp');
                 if (method_exists($img, 'setImageCompressionQuality')) {
-                    $img->setImageCompressionQuality(85);
+                    $img->setImageCompressionQuality(70);
                 }
 
                 $tmp = $webpFile . '.tmp';
@@ -932,10 +932,20 @@ class ExtDbList extends DbList
             return false;
         }
 
-        foreach (Images::$extToMime as $ext => $mime) {
-            $file = Config::path('images') . $path . $id . '.' . $ext;
+        $baseDir = Config::path('images') . $path;
 
-            if (is_file($file)) {
+        foreach (Images::$extToMime as $ext => $mime) {
+            if (is_file($baseDir . $id . '.' . $ext)) {
+                return $ext;
+            }
+        }
+
+        // После пакетной конвертации иногда остаются только производные ({id}_WxH_rm.ext)
+        $knownExts = array_keys(Images::$extToMime);
+        $derivativeFiles = glob($baseDir . $id . '_*') ?: [];
+        foreach ($derivativeFiles as $file) {
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            if (in_array($ext, $knownExts, true)) {
                 return $ext;
             }
         }

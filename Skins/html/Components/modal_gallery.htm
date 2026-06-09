@@ -974,12 +974,34 @@ $photosUnified[] = [
     // === Смена основного изображения (миниатюры) ===
     const infoDots = document.getElementById('infoDots');
 
+    function imagePathMatches(src, target) {
+      if (!src || !target) return false;
+      try {
+        const a = new URL(src, window.location.href).pathname;
+        const b = new URL(target, window.location.href).pathname;
+        return a === b;
+      } catch (e) {
+        return src.indexOf(target) !== -1;
+      }
+    }
+
     function changeMainImage(thumb) {
       const bigImage = thumb.dataset.bigimage;
       const alt = thumb.alt;
       const index = parseInt(thumb.dataset.index, 10);
 
       if (!mainImage || !bigImage || isNaN(index)) return;
+
+      const currentSrc = mainImage.currentSrc || mainImage.src || '';
+      if (imagePathMatches(currentSrc, bigImage)) {
+        document.querySelectorAll('.slider-track img').forEach(img => {
+          img.style.borderColor = '';
+        });
+        thumb.style.setProperty('border-color', '#2563eb', 'important');
+        currentMainIndex = index;
+        if (infoDots) infoDots.classList.toggle('hidden', index !== 0);
+        return;
+      }
 
       // Обновляем подсветку
       document.querySelectorAll('.slider-track img').forEach(img => {
@@ -1017,9 +1039,9 @@ $photosUnified[] = [
     if (firstThumb) {
       currentMainIndex = parseInt(firstThumb.dataset.index, 10) || 0;
       const firstBigImage = firstThumb.dataset.bigimage || '';
-      const currentSrc = mainImage && mainImage.src ? mainImage.src : '';
+      const currentSrc = mainImage ? (mainImage.currentSrc || mainImage.src || '') : '';
 
-      if (mainImage && firstBigImage && currentSrc.indexOf(firstBigImage) !== -1) {
+      if (mainImage && firstBigImage && imagePathMatches(currentSrc, firstBigImage)) {
         firstThumb.style.setProperty('border-color', '#2563eb', 'important');
         requestAnimationFrame(refreshSlider);
       } else {
@@ -1075,28 +1097,29 @@ $photosUnified[] = [
         return 0;
       }
 
-      let imageHeight = mainBox.getBoundingClientRect().height;
+      const w = mainBox.getBoundingClientRect().width;
+      let imageHeight = aspectHeightFromComputed(mainBox, w);
+      if (imageHeight <= 0) {
+        imageHeight = mainBox.getBoundingClientRect().height;
+      }
       if (imageHeight <= 0) {
         imageHeight = mainImageEl.getBoundingClientRect().height;
       }
       if (imageHeight <= 0) {
-        const w = mainBox.getBoundingClientRect().width;
-        imageHeight = aspectHeightFromComputed(mainBox, w);
+        imageHeight = aspectHeightFromComputed(mainImageEl, mainImageEl.getBoundingClientRect().width);
       }
       if (imageHeight <= 0) {
-        const w2 = mainImageEl.getBoundingClientRect().width;
-        imageHeight = aspectHeightFromComputed(mainImageEl, w2);
+        imageHeight = 260;
       }
-      if (imageHeight <= 0) return;
 
-      const btnHeight = 20; // высота кнопок "вверх/вниз"
-      const gap = 16;       // суммарный gap между кнопками и треком
-      const desiredTrackHeight = imageHeight - btnHeight * 2 - gap;
-      const finalTrackHeight = desiredTrackHeight > 100 ? desiredTrackHeight : 400;
+      const targetHeight = Math.round(imageHeight);
+      const currentHeight = Math.round(container.getBoundingClientRect().height);
+      if (Math.abs(currentHeight - targetHeight) < 2) {
+        return;
+      }
 
-      // --- Устанавливаем стили для КОНТЕЙНЕРА (обёртка с кнопками) ---
-      container.style.height = imageHeight + 'px';
-      container.style.maxHeight = imageHeight + 'px';
+      container.style.height = targetHeight + 'px';
+      container.style.maxHeight = targetHeight + 'px';
     }
 
     function refreshSlider() {

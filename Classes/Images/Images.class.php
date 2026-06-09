@@ -14,6 +14,7 @@ define('IMG_RESIZE_AUTO', 2);
 class Images
 {
     static $extToMime = array(
+        'webp' => 'image/webp',
         'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
         'png' => 'image/png',

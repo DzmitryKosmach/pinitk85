@@ -64,10 +64,10 @@
 
 	<?php /*if(!$parentId):*/?>
 		Картинка категории <b class="red">*</b>:<br>
-		<?php if(intval($init['id']) && $init['_img_ext']) { ?>
+		<?php if(intval($init['id']) && 'webp') { ?>
 			<img
 				id="category-image-preview"
-				src="<?=Config::pathRel('images') . Catalog_Categories::$imagePath . $init['id']?>_212x159_0.<?=$init['_img_ext']?>?v=<?=time()?>"
+				src="<?=Config::pathRel('images') . Catalog_Categories::$imagePath . $init['id']?>_212x159_0.<?='webp'?>?v=<?=time()?>"
 				width="212"
 				height="159"
 				alt=""

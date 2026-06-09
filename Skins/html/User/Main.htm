@@ -359,14 +359,9 @@ function getHomeUrl() {
 
     <?php echo Options::name('head-scripts'); ?>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/Skins/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="/Skins/css/fonts.css" rel="stylesheet">
     </noscript>
 
     <!-- Tailwind -->
@@ -391,8 +386,21 @@ function getHomeUrl() {
             <div class="flex items-center gap-2">
                 <!-- Логотип (обычное состояние) -->
                 <a href="<?php echo getHomeUrl(); ?>" id="logo-main" class="transition-all duration-300">
-                    <img src="<?php echo getImagePath('/images/index/logo.webp'); ?>" alt="Логотип"
-                         class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]" />
+                    <picture>
+                        <!-- Мобильная версия (до 1023px) -->
+                        <source media="(max-width: 1023px)" srcset="/images/index/logo_mob.webp">
+                        
+                        <!-- Десктопная версия -->
+                        <source media="(min-width: 1024px)" srcset="/images/index/logo.webp">
+                                                
+                        <!-- Фоллбек для старых браузеров -->
+                        <img src="/images/index/logo.webp" 
+                             alt="Логотип" 
+                             width="280" 
+                             height="49" 
+                             class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]"
+                             style="height: auto;">
+                    </picture>                    
                 </a>
 
                 <!-- Иконки каталога и поиска (при прокрутке) -->
@@ -836,7 +844,7 @@ function getHomeUrl() {
             <!-- Кнопка -->
 
             <div
-                class="flex flex-1 h-full items-center gap-2 px-2 sm:px-6 md:px-8 py-2 sm:gap-4 bg-primary text-white text-base hover:bg-primary-dark transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
+                class="flex flex-1 h-full items-center gap-2 px-2 sm:px-6 md:px-8 py-2 sm:gap-4 bg-blue-600 text-white text-base hover:bg-blue-700 transition duration-200 w-fit rounded-tl-lg rounded-bl-lg">
                 <a href="/catalog/" class="catalog-main-link hover:underline" target="_blank">Каталог</a>
                 <div class="catalog-toggle cursor-pointer">
                     <svg width="26" height="14" viewBox="0 0 26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1427,7 +1435,7 @@ function getHomeUrl() {
 
 <div
     class="modal scale-90 xs2:scale-100 modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
-    id="kmodal" style="display:none; left: 50%;">
+    id="kmodal" style="display:none; min-width: 316px; left: 50%;">
     <button type="button" href="javascript:void(0);"
        class="modal-order-call__close absolute top-2 right-2 w-10 h-10 flex items-center justify-center text-3xl text-gray-600 hover:text-black z-[25] rounded-full hover:bg-red-400 transition-colors"
        onclick="kclose(); return false;"

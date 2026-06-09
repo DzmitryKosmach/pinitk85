@@ -12,12 +12,10 @@
     .slider-track {
       scrollbar-width: none;
       -ms-overflow-style: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      opacity: 1;
       will-change: scroll-position;
       scroll-snap-type: y mandatory;
     }
-    .slider-track.visible { opacity: 1; }
     .slider-track.smooth { scroll-behavior: smooth; }
     .slider-track.auto { scroll-behavior: auto; }
   `;
@@ -237,9 +235,24 @@
         // ─── Синхронизация высоты (Desktop) ───
         function syncHeightWithMainImage() {
             if (!cache.isDesktop || !mainImage) return;
-            const h = mainImage.getBoundingClientRect().height;
-            if (h <= 0) return;
-            // 🔥 Один cssText вместо 5 отдельных присваиваний
+            const mainBox = document.getElementById('mainImageContainer');
+            const boxW = mainBox ? mainBox.getBoundingClientRect().width : 0;
+            let h = 0;
+            if (mainBox && boxW > 0) {
+                const ar = getComputedStyle(mainBox).aspectRatio;
+                if (ar && ar !== 'auto') {
+                    const parts = ar.trim().split(/\s*\/\s*/);
+                    if (parts.length === 2) {
+                        const aw = parseFloat(parts[0]);
+                        const ah = parseFloat(parts[1]);
+                        if (aw > 0 && ah > 0) h = boxW * (ah / aw);
+                    }
+                }
+            }
+            if (h <= 0) h = mainImage.getBoundingClientRect().height;
+            if (h <= 0) h = 260;
+            const cur = container.getBoundingClientRect().height;
+            if (Math.abs(cur - h) < 2) return;
             container.style.cssText = `height:${h}px;max-height:${h}px;width:80px;min-width:80px;max-width:80px;`;
         }
 

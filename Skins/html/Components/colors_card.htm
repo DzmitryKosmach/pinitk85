@@ -1,69 +1,76 @@
-<!-- Цвета (универсальный блок для карточек товара/серии) -->
 <?php
-$colorsMode = isset($colorsMode) ? $colorsMode : (isset($s) ? 'series' : 'item');
-$limit = 5;
+// Изолируем переменные компонента, чтобы не сломать основной шаблон
+$_c_colorsMode = isset($colorsMode) ? $colorsMode : (isset($s) ? 'series' : 'item');
+$_c_limit = 5;
 ?>
 
-<?php if ($colorsMode === 'series' && isset($s) && !empty($s['materials'])): ?>
-<?php
-$totalMaterials = isset($s['materials_total']) ? (int)$s['materials_total'] : count($s['materials']);
-$seriesMaterials = [];
-foreach ($s['materials'] as $m) {
-    if (empty($m['_img_ext'])) continue;
-    $seriesMaterials[] = [
-        'name' => $m['name'],
-        'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $m['id'] . '_20x20_0.' . $m['_img_ext'],
-    ];
-}
-?>
-<div class="flex gap-[6px] justify-start items-center mt-4 sm2:mt-7 mb-3">
-    <?php $count = 0; ?>
-    <?php foreach ($seriesMaterials as $m): ?>
-    <?php if ($count >= $limit) break; ?>
-    <span
-        class="w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded inline-block"
-        style="background-image: url('<?php echo htmlspecialchars($m['img']); ?>'); background-size: cover;"
-        title="<?php echo htmlspecialchars($m['name']); ?>"
-    ></span>
-    <?php $count++; ?>
-    <?php endforeach; ?>
-    <?php if ($totalMaterials > $limit): ?>
-    <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $totalMaterials - $limit; ?></span>
-    <?php endif; ?>
-</div>
-<?php elseif (isset($i) && !empty($i['materials'])): ?>
-<div class="mt-2 mb-2 md:mt-4 md:mb-3">
-    <div class="favorishare">
-        <script>
-            oMaterials.items2mats[<?php echo (int)$i['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace("'", "\\'", json_encode($i['materials'], JSON_UNESCAPED_UNICODE)); ?>');
-        </script>
-        <a
-            href="javascript:void(0)"
-            id="item1-<?php echo (int)$i['id']; ?>-materials-preview"
-            class="flex flex-wrap gap-1 xs2:gap-[6px] justify-start items-center materials"
-            onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $i); ?>', <?php echo (int)$i['id']; ?>); return false;"
-        >
-            <?php
-    $totalMaterials = count($i['materials']);
-    $count = 0;
-    foreach ($i['materials'] as $im) {
-        if ($count >= $limit) break;
-        $m = $materials[$im['material_id']];
-        $activeAttr = ($mActiveTopId == $m['id']) ? ' class="active"' : '';
-            ?>
-            <div id="item1-<?php echo (int)$i['id']; ?>-m-<?php echo (int)$m['id']; ?>"<?php echo $activeAttr; ?>>
-            <?php if (!empty($m['image']['ext'])): ?>
-            <img loading="lazy" decoding="async" class="rounded w-4 h-4 xs:w-5 xs:h-5 object-cover" src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_20x20_0.<?php echo $m['image']['ext']; ?>" alt="">
-            <?php endif; ?>
-            </div>
-            <?php
-        $count++;
+<?php if ($_c_colorsMode === 'series' && isset($s) && !empty($s['materials'])): ?>
+    <?php
+    $_c_totalMaterials = isset($s['materials_total']) ? (int)$s['materials_total'] : count($s['materials']);
+    $_c_seriesMaterials = [];
+    foreach ($s['materials'] as $_c_m) {
+        if (empty($_c_m['_img_ext'])) continue;
+        $_c_seriesMaterials[] = [
+            'name' => $_c_m['name'],
+            'img' => Config::pathRel('images') . Catalog_Materials::$imagePath . $_c_m['id'] . '_20x20_0.' . $_c_m['_img_ext'],
+        ];
     }
     ?>
-            <?php if ($totalMaterials > $limit): ?>
-            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $totalMaterials - $limit; ?></span>
-            <?php endif; ?>
-        </a>
+    <div class="flex gap-[6px] justify-start items-center mt-4 sm2:mt-7 mb-3 min-h-[22px]">
+        <?php $_c_count = 0; ?>
+        <?php foreach ($_c_seriesMaterials as $_c_m): ?>
+            <?php if ($_c_count >= $_c_limit) break; ?>
+            <img
+                src="<?php echo htmlspecialchars($_c_m['img']); ?>"
+                alt="<?php echo htmlspecialchars($_c_m['name']); ?>"
+                title="<?php echo htmlspecialchars($_c_m['name']); ?>"
+                width="20"
+                height="20"
+                loading="lazy"
+                decoding="async"
+                class="block w-[14px] h-[14px] sm2:w-[18px] sm2:h-[18px] lg:w-[22px] lg:h-[22px] rounded object-cover flex-shrink-0"
+            >
+            <?php $_c_count++; ?>
+        <?php endforeach; ?>
+        <?php if ($_c_totalMaterials > $_c_limit): ?>
+            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $_c_totalMaterials - $_c_limit; ?></span>
+        <?php endif; ?>
     </div>
-</div>
+
+<?php elseif (isset($item) && !empty($item['materials'])): ?>
+    <script>
+        oMaterials.items2mats[<?php echo (int)$item['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($item['materials']))?>');
+    </script>
+
+    <div class="flex gap-[2px] sm:gap-[6px] justify-start items-center materials">
+        <?php
+        $_c_totalMaterials = count($item['materials']);
+        $_c_materialsShown = 0;
+        foreach($item['materials'] as $_c_mn => $_c_im) {
+            if ($_c_materialsShown >= $_c_limit) break;
+            $_c_materialsShown++;
+            $_c_m = $materials[$_c_im['material_id']];
+        ?>
+            <div class="flex gap-[6px] justify-start items-center">
+                <div id="item1-<?php echo (int)$item['id']; ?>-m-<?php echo (int)$_c_m['id']; ?>" <?php if(isset($mActiveTopId) && $mActiveTopId == $_c_m['id']) { ?>class="active"<?php } ?>>
+                    <?php if(!empty($_c_m['image']['ext'])) { ?>
+                        <img 
+                            loading="lazy" 
+                            decoding="async" 
+                            class="rounded" 
+                            src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $_c_m['image']['id']; ?>_20x20_0.<?php echo $_c_m['image']['ext']; ?>" 
+                            width="20" 
+                            height="20" 
+                            alt="<?php echo htmlspecialchars($_c_m['name'] ?? ''); ?>"
+                            title="<?php echo htmlspecialchars($_c_m['name'] ?? ''); ?>"
+                        >
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+
+        <?php if ($_c_totalMaterials > $_c_limit) { ?>
+            <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Показать все цвета">+<?php echo $_c_totalMaterials - $_c_limit; ?></span>
+        <?php } ?>
+    </div>
 <?php endif; ?>

@@ -85,10 +85,10 @@ function DragSort(table){
         this.dragON = false;
 
         AJAX.lookup(
-            dragTableUrl +
-                (dragTableUrl.indexOf('?') !== -1 ? '&' : '?') +
-                'order=' + encodeURIComponent(this.getIDS()) +
-                '&direct=' + dragTableDirect +
+            dragTableUrl,
+            null,
+            'order=' + encodeURIComponent(this.getIDS()) +
+                '&direct=' + encodeURIComponent(dragTableDirect) +
                 '&act=dragsort'
         );
     };

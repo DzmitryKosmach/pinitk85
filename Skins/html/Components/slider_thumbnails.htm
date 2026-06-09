@@ -29,12 +29,12 @@ $photosUnified[] = [
 ?>
 
 <!-- Галерея миниатюр с кнопками прокрутки -->
-<div class="slider-thumbnails-container w-full lg:w-[80px]">
+<div class="slider-thumbnails-container order-2 lg:order-1 w-full lg:w-[80px]">
   <!-- Относительный контейнер для позиционирования кнопок -->
   <div class="relative h-full flex justify-center items-center lg:max-w-[80px] overflow-hidden">
 
     <!-- Слайдер миниатюр (основной контент) -->
-    <div class="slider-track flex flex-row lg:flex-col gap-2
+    <div class="slider-track visible flex flex-row lg:flex-col gap-2
                 overflow-x-auto lg:overflow-y-auto
                 scroll-smooth scrollbar-none"
          style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
@@ -48,7 +48,9 @@ $photosUnified[] = [
         data-bigimage="<?= $p['big'] ?>"
         data-index="<?= $index ?>"
         alt="<?= $p['alt'] ?>"
-        class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 transition-transform hover:scale-105 cursor-zoom-in"
+        decoding="async"
+        loading="lazy"
+        class="block w-20 h-20 object-cover rounded border-2 flex-shrink-0 transition-transform hover:scale-105 cursor-zoom-in"
         onclick="changeMainImage(this)"
       />
 
@@ -84,4 +86,4 @@ $photosUnified[] = [
   </div>
 </div>
 
-<?php echo JsCopmress::load('slider-vertical'); ?>
+<?php echo JsCopmress::load('slider-vertical', false, true); ?>

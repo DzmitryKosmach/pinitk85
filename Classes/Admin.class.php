@@ -90,9 +90,14 @@ abstract class Admin
             $this->switchOpt($_GET['itemid'], $_GET['opt'], trim($_GET['msg']));
         }
 
-        // Сортировка записей
-        if (trim($_GET['act']) == 'dragsort') {
-            $this->dragSort($_GET['order'], $_GET['direct']);
+        // Сортировка записей (POST — список id может быть очень длинным)
+        if (trim($_REQUEST['act'] ?? '') == 'dragsort') {
+            $order = $_REQUEST['order'] ?? '';
+            if (method_exists($this, 'dragSortSave')) {
+                $this->dragSortSave($order);
+            } else {
+                $this->dragSort($order);
+            }
         }
     }
 
@@ -135,7 +140,7 @@ abstract class Admin
     final function dragSort($order)
     {
         $order = trim($order);
-        $dir = strtoupper(trim($_GET['direct']));
+        $dir = strtoupper(trim($_REQUEST['direct'] ?? 'ASC'));
         if (!in_array($dir, array('ASC', 'DESC'))) {
             $dir = 'ASC';
         }
@@ -151,32 +156,29 @@ abstract class Admin
             exit('Requires at least two objects');
         }
 
-        // Получаем записи с нужными ID и их ORDER'ы
         $o = new $this->mainClass();
-        $oldIds2Order = $o->getHash('id, order', '`id` IN (' . implode(',', $newIds) . ')', 'order');
+        $existingIds = $o->getCol('id', '`id` IN (' . implode(',', $newIds) . ')', '`order` ASC');
 
-        // Проверяем, чтобы все ID из нового порядка были выбраны из БД (иначе удаляем ID из нового порядка)
         $newIds1 = array();
         foreach ($newIds as $id) {
-            if (isset($oldIds2Order[$id])) {
+            if (in_array($id, $existingIds, true)) {
                 $newIds1[] = $id;
             }
         }
         $newIds = $newIds1;
 
-        // Разворачиваем список, если элементы должны выводиться в обратном порядке
+        if (count($newIds) < 2) {
+            exit('Requires at least two objects');
+        }
+
         if ($dir == 'DESC') {
             $newIds = array_reverse($newIds);
         }
 
-        // Сортируем элементы
-        $newN = 0;
-        foreach ($oldIds2Order as $oldId => $ord) {
-            $newId = $newIds[$newN];
-            if ($newId != $oldId) {
-                $o->upd($newId, array('order' => $ord));
-            }
-            $newN++;
+        $ord = 1;
+        foreach ($newIds as $newId) {
+            $o->upd($newId, array('order' => $ord));
+            $ord++;
         }
 
         exit;

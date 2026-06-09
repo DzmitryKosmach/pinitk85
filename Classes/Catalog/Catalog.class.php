@@ -431,7 +431,9 @@ class Catalog
             $photoNameParts[$n] = $p;
         }
 
-        $ext = is_null($ext) ? 'jpg' : $ext;
+        if (!$ext) {
+            $ext = 'webp';
+        }
 
         $name = implode('-', $photoNameParts);
         if ($name !== '') {
