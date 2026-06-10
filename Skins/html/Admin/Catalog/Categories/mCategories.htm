@@ -57,8 +57,8 @@
 			<td class="dragSort-id"><?php echo $c['id']; ?></td>
 			<?php /*if(!$parentCat):*/?>
 				<td style="text-align: center">
-					<a href="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>.<?php echo 'webp'; ?>" target="_blank" onclick="return hs.expand(this)">
-						<img src="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>_42x32_0.<?php echo 'webp'; ?>" alt="" style="border: 1px solid #CCC">
+					<a href="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>.<?php echo $c['_img_ext']; ?>" target="_blank" onclick="return hs.expand(this)">
+						<img src="<?php echo Config::pathRel('images') . Catalog_Categories::$imagePath . $c['id']; ?>_42x32_0.<?php echo $c['_img_ext']; ?>" alt="" style="border: 1px solid #CCC">
 					</a>
 				</td>
 			<?php /*endif*/?>
