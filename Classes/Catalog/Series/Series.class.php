@@ -24,7 +24,7 @@ class Catalog_Series extends ExtDbList
     /**
      * Сколько маленьких квадратиков с материалами для каждой серии отображается в списке серий
      */
-    const MATERIALS_PREVIEW_CNT = 4;
+    const MATERIALS_PREVIEW_CNT = 5;
 
     /**
      * У серий есть параметр extra_charge - общая наценка на товары серии.
@@ -542,7 +542,9 @@ class Catalog_Series extends ExtDbList
                 $mIdsByS[$ms['series_id']][] = $ms['material_id'];
             }
             $mIds = array();
-            foreach ($mIdsByS as &$m) {
+            $materialsTotalByS = array();
+            foreach ($mIdsByS as $seriesId => &$m) {
+                $materialsTotalByS[$seriesId] = count($m);
                 if (count($m) > self::MATERIALS_PREVIEW_CNT) {
                     $m = array_slice($m, 0, self::MATERIALS_PREVIEW_CNT);
                 }
@@ -562,6 +564,7 @@ class Catalog_Series extends ExtDbList
             }
             foreach ($series as &$s) {
                 $s['materials'] = array();
+                $s['materials_total'] = isset($materialsTotalByS[$s['id']]) ? $materialsTotalByS[$s['id']] : 0;
                 if (isset($mIdsByS[$s['id']])) {
                     foreach ($mIdsByS[$s['id']] as $mId) {
                         if (isset($materials[$mId])) {

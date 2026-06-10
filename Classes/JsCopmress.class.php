@@ -67,9 +67,6 @@ class JsCopmress
 				self::getBasePath() . '/Js/catalog/series/jquery.jscrollpane.ext.js'
 
 			),
-			'catalog-series'	=> array(
-				self::getBasePath() . '/Js/catalog/catalog.section.js',
-			),
 			'category'	=> array(
 				self::getBasePath() . '/Js/catalog/category/catalog.smart.filter.js',
 				self::getBasePath() . '/Js/catalog/category/catalog.smart.filter.slider.color.js',
@@ -149,32 +146,23 @@ class JsCopmress
 	 * @static
 	 * @param	string	$module
 	 * @param	bool	$async
-	 * @param	bool	$defer
 	 * @return	string
 	 */
-	static function load($module, $async = false, $defer = false)
+	static function load($module, $async = false)
 	{
 		$modules = self::getModules();
 		if (!isset($modules[$module]) || !count($modules[$module])) {
 			return '';
 		}
 
-		$attrs = '';
-		if ($async) {
-			$attrs .= ' async';
-		}
-		if ($defer) {
-			$attrs .= ' defer';
-		}
-
 		if (Config::$debug) {
 			$html = '';
 			foreach ($modules[$module] as $file) {
-				$html .= '<script' . $attrs . ' src="' . $file . self::V . '"></script>';
+				$html .= '<script ' . ($async ? 'async' : '') . ' src="' . $file . self::V . '"></script>';
 			}
 		} else {
 			$minFile = self::minFileName($module);
-			$html = '<script' . $attrs . ' src="' . $minFile . self::V . '"></script>';
+			$html = '<script ' . ($async ? 'async' : '') . ' src="' . $minFile . self::V . '"></script>';
 
 			if (!is_file(_ROOT . $minFile)) {
 				self::makeMin($module);
