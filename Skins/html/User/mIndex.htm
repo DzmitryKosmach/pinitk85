@@ -29,17 +29,34 @@
         <div class="md:flex-1 flex-[0_0_56%] ml-[-32px] mr-[-16px] sm:ml-0 sm:mr-0">
             <div class="relative rounded-none sm:rounded-lg overflow-hidden">
                 <!-- Слайды -->
-                <div id="carousel" class="flex shadow transition-transform duration-500 ease-in-out">
-                    <img src="/images/index/main1.webp" alt="Слайд 1" class="min-w-full h-auto object-cover" />
-                    <img src="/images/index/main2.webp" alt="Слайд 2" class="min-w-full h-auto object-cover" />
-                    <img src="/images/index/main3.webp" alt="Слайд 3" class="min-w-full h-auto object-cover" />
+                <div id="carousel" class="flex shadow transition-transform duration-500 ease-in-out"
+                     role="region" aria-roledescription="carousel" aria-label="Галерея изображений">
+                    <!-- Убрано: data-initialized="true" и style="transform: translateX(-200%)" -->
+
+                    <picture class="min-w-full">
+                        <source media="(max-width: 414px)" srcset="/images/index/main1_414.webp">
+                        <img class="min-w-full h-auto object-cover" src="/images/index/main1.webp"
+                             width="640" height="408" alt="Слайд 1" fetchpriority="high">
+                    </picture>
+
+                    <picture class="min-w-full">
+                        <source media="(max-width: 414px)" srcset="/images/index/main2_414.webp">
+                        <img class="min-w-full h-auto object-cover" src="/images/index/main2.webp"
+                             width="640" height="408" alt="Слайд 2">
+                    </picture>
+
+                    <picture class="min-w-full">
+                        <source media="(max-width: 414px)" srcset="/images/index/main3_414.webp">
+                        <img class="min-w-full h-auto object-cover" src="/images/index/main3.webp"
+                             width="640" height="408" alt="Слайд 3">
+                    </picture>
                 </div>
             </div>
 
-            <!-- Пагинация -->
-            <div id="pagination" class="flex justify-center mt-6 space-x-2">
-                <!-- Точки будут добавлены через JS -->
-            </div>
+                <!-- Пагинация (пустая, JavaScript сам создаст точки) -->
+                <div id="pagination" class="flex justify-center mt-4 space-x-2"
+                     role="tablist" aria-label="Навигация по слайдам">
+                </div>
 
         </div>
     </div>
@@ -112,7 +129,7 @@
     <div>
         <h2 class="text-2xl font-bold mb-8">Лучшие товары</h2>
 
-        <div class="grid grid-cols-2 sm2:grid-cols-4 gap-2 lg:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-6">
             <?php if(count($seriesPromo)) { ?>
             <?php $seriesPromoLimited = array_slice($seriesPromo, 0, 8); ?>
             <?php foreach($seriesPromoLimited as $sn => $s) { ?>
@@ -139,139 +156,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <div>
-                <h2 class="text-2xl font-bold mb-4">
-                    Офисная мебель в ассортименте
-                </h2>
-                <p class="mb-4">
-                    Рабочие помещения должны быть обустроены не только модно и красиво, но и удобно для
-                    сотрудников, посетителей. Собираясь купить офисную мебель в Москве от производителя,
-                    руководители маленьких и крупных компаний ставят перед собой примерно одинаковые задачи.
-                    Первая и самая главная – создать атмосферу, располагающую к работе, не отвлекающую от важных
-                    вопросов. Дополнительно нужно предусмотреть возможность периодического отдыха, чтобы
-                    избежать переутомления.</p>
-                <p class="mb-4">Офисная мебель должна настраивать на рабочий лад и повышать
-                    продуктивность персонала. Важно создать помещение, куда сотрудники будут приходить с
-                    удовольствием, где на протяжении всего дня не станут испытывать дискомфорт. Количество
-                    единиц в комплекте и их назначение отличаются в зависимости от концепции самой фирмы,
-                    размеров офиса, числа работников.Какие есть разновидности</p>
-                <p>Офисные гарнитуры бывают
-                    стандартные и специализированные. Первые присутствуют всегда, независимо от вида
-                    деятельности организации и прочих моментов. Так, для каждого рабочего помещения необходимы:
-                <ul class="list-disc pl-6">
-                    <li>столы. Обычно покупаются отдельно для работников: если площадь позволяет, тогда каждому,
-                        если нет, то один длинный на всех. Также необходимы столы в кабинет руководителя и в
-                        приемную;
-                    </li>
-                    <li>кресла, стулья. При их выборе берутся во внимание особенности места, где они
-                        располагаются.
-                        Закупаются для директора, персонала, клиентов, посетителей;
-                    </li>
-                    <li>диваны. Их покупают не всегда. Все зависит от особенностей работы компании, от того,
-                        проводит ли она личные встречи с клиентами, от площади самого офиса;
-                    </li>
-                    <li>
-                        тумбочки, шкафы, стеллажи. Они обязательны для хранения документации, отдельных частей
-                        оргтехники, личных вещей сотрудников.
-                    </li>
-                </ul>
-                <p>Офисная мебель должна сочетаться между собой, то есть, могут покупаться разные части
-                    гарнитура, но обязательно выполненные в едином стиле. Важно, чтобы в итоге создалась
-                    гармоничная и красивая обстановка, способствующая эффективности, продуктивности
-                    и развитию рабочего процесса
-                </p>
-            </div>
+            <?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
+                <?php echo $pageInf['text'];?>
+            <?php } ?>
 
-            <!-- Для персонала -->
-            <div>
-                <h2 class="text-2xl font-bold mb-3">Для персонала</h2>
-                <p class="mb-3">
-                    Всем, кому нужна офисная мебель от производителя, интернет-магазин ООО «Дары мебели»
-                    предлагает разнообразные варианты, отличающиеся по стилю, исполнению, цене. В любой
-                    организации важно создать простое и лаконичное рабочее пространство, где не будет места
-                    ненужным, отвлекающим предметам, вещам. Смелые эксперименты не всегда допустимы, ведь
-                    человек должен не только чувствовать себя хорошо, но и быть сосредоточенным на рабочих
-                    обязанностях.</p>
-                <p class="mb-3">Некоторые руководители в стремлении выделиться делают ошибку, отдавая
-                    предпочтение слишком эксклюзивным предложениям от креативных дизайнеров. Они действительно
-                    смотрятся привлекательно и украшают помещение, но в то же время отвлекают от главного. Такая
-                    обстановка допустима только там, где работа предполагает творческий процесс. Но и в таком
-                    случае не стоит слишком увлекаться экспериментами.
-                </p>
-                <p class="mb-3">Интернет-магазин ООО «Дары мебели» в
-                    Москве позволит подобрать и аксессуары для создания цельной, согласованной обстановки. Для
-                    этого можно использовать картины с абстракциями, фотографии в рамочках, статуэтки.
-                    Разбавляют строгость обстановки и дополнительно повышают количество кислорода в помещении
-                    комнатные растения. Поэтому они должны присутствовать обязательно.
-                </p>
-                <p>При выборе есть несколько
-                    нюансов:</p>
-                <ul class="list-disc pl-6 mb-4">
-                    <li>кресла и стулья должны способствовать правильному формированию осанки, особенно при
-                        сидячей
-                        работе. Иначе уже через несколько часов человек будет страдать от боли в спине и плечах;
-                    </li>
-                    <li>стол желательно компьютерный, со всеми выемками и приспособлениями под мышку с
-                        клавиатурой,
-                        системный блок, колонки;
-                    </li>
-                    <li>шкафы и стеллажи нужно разместить так, чтобы каждому было удобно ими пользоваться, и они
-                        не
-                        загромождали пространство.
-                    </li>
-                </ul>
-                Высота полок подбирается в зависимости от размеров папок.
-                </p>
-            </div>
-
-            <!-- Для руководителя -->
-            <div>
-                <h2 class="text-2xl font-bold mb-3">Для руководителя</h2>
-                <p class="mb-3">
-                    В кабинете директора дизайнерская дорогая мебель будет вполне уместна. Это ключевое место в
-                    компании, ведь там ведутся переговоры, принимаются важные решения, проводятся встречи с
-                    партнерами. Гарнитур у руководителя должен подчеркивать его высокий статус, выглядеть
-                    солидно и дорого.</p>
-                <p>Прежде чем купить мебель в офис для кабинета директора, нужно учесть
-                    несколько моментов:</p>
-                <ul class="list-disc pl-6 mb-4">
-                    <li>удобное, регулируемое по высоте кресло с подлокотниками и высокой спинкой;</li>
-                    <li>стол массивный, но в меру, чтобы человек за ним не смотрелся нелепо, не казался
-                        маленьким.
-                        Лучше выбирать модели из натурального массива дерева;
-                    </li>
-                    <li>мебель должна быть такой, чтобы во время переговоров руководитель казался ближе к
-                        собеседнику. Не допускается слишком большое разделение.
-                    </li>
-                </ul>
-                <p>Цены на офисную мебель в Москве разные, но гарнитур для кабинета руководителя обычно самый
-                    дорогой, потому что он должен смотреться статусно, иметь отличное качество.
-                </p>
-            </div>
-
-
-            <!-- Для посетителей -->
-            <div>
-                <h2 class="text-2xl font-bold mb-3">Для посетителей</h2>
-                <p class="mb-3">
-                    Люди, которые приходят в офис для встреч с директором или сотрудниками, обычно имеют к ним
-                    важные вопросы, поэтому волнуются. Особенно если это соискатели, пришедшие на собеседование.
-                    Потому мебель в приемной, где находятся посетители, должна производить приятное впечатление,
-                    успокаивать и расслаблять.</p>
-
-                <p>Всегда следует заботиться о комфорте гостя, чтобы ему было
-                    удобно сидеть. Избегайте в приемной ставить жесткие стулья. Лучше обустроить ее мягкими и
-                    удобными креслами или диванчиками со спинками.Продажа мебели с доставкой и сборкойПокупка
-                    офисной мебели в ООО «Дары мебели»Цена в магазине офисной мебели ООО «Дары мебели» может
-                    включать доставку с установкой. Стоимость зависит от региона, общего веса и размеров заказа.
-                    Если масса не превышает 20 кг, а минимальная цена покупки составит 500 руб., мы привезем вам
-                    мебель бесплатно.Для веса 20–900 кг оплата по стандартному тарифу. Когда нужно доставить
-                    более габаритные и тяжелые вещи, цена рассчитывается индивидуально. По Москве и области
-                    грузы доставляются с понедельника по пятницу. Заказ привозим прямо к подъезду. Если ваша
-                    территория охраняемая, тогда нужно заранее обеспечить доступ нашим специалистам. Сообщите
-                    предварительно, если нужно поднять мебель на этаж, собрать и расставить.</p>
-                </p>
-            </div>
         </div>
     </div>
 </section>
@@ -304,91 +192,91 @@
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8  bg-white border rounded-md">
                                     <img src="/images/clients/client (1).webp" alt="Кванториум"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (2).webp" alt="ЦТО Ремторгборудование"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (3).webp" alt="РЭУ им. Г.В. Плеханова"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (4).webp" alt="РЖД"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (5).webp" alt="Rikki-Tikki"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (6).webp" alt="РИД"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (7).webp" alt="Рос Евро Сити Девелопмент"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (8).webp" alt="Роснефть"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (9).webp" alt="Транснефть Сибирь"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (10).webp" alt="РТК-Лизинг"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (11).webp" alt="Университет"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (12).webp" alt="A&O Столичный центр аудита и оценки"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (13).webp" alt="Shiseido"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (14).webp" alt="Янта Группа Предприятий"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (15).webp" alt="Пец Техника"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (16).webp" alt="Строительный Трест Недвижимость"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                             <div class="card flex-none flex flex-col gap-4">
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (17).webp" alt="Sumitomo Corporation"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                                 <div class="px-2 py-2 lg:py-8 bg-white border rounded-md">
                                     <img src="/images/clients/client (18).webp" alt="JTI"
-                                         class="object-contain h-20 mx-auto" />
+                                         width="196" height="80" loading="lazy" decoding="async" class="object-contain h-20 mx-auto" />
                                 </div>
                             </div>
                         </div>
@@ -423,7 +311,8 @@
                                 <img
                                     src="<?php echo Config::pathRel('images') . Clients_Letters::$imagePath . $letter['id']; ?>_220x312_0.webp"
                                     alt="Письмо"
-                                    class="max-w-[220px] h-full object-cover rounded shadow"
+                                    width="220" height="305" loading="lazy" decoding="async"
+                                    class="max-w-[220px]  h-full object-cover rounded shadow"
                                 />
                             </span>
                     <?php } ?>

@@ -33,7 +33,7 @@ $_c_limit = 5;
             <?php $_c_count++; ?>
         <?php endforeach; ?>
         <?php if ($_c_totalMaterials > $_c_limit): ?>
-            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs font-medium text-gray-500 bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $_c_totalMaterials - $_c_limit; ?></span>
+            <span class="inline-flex items-center justify-center w-4 h-4 xs:w-5 xs:h-5 text-xs p-3 font-medium text-black bg-gray-100 rounded hover:bg-gray-200 transition" title="Ещё">+<?php echo $_c_totalMaterials - $_c_limit; ?></span>
         <?php endif; ?>
     </div>
 
@@ -54,13 +54,13 @@ $_c_limit = 5;
             <div class="flex gap-[6px] justify-start items-center">
                 <div id="item1-<?php echo (int)$item['id']; ?>-m-<?php echo (int)$_c_m['id']; ?>" <?php if(isset($mActiveTopId) && $mActiveTopId == $_c_m['id']) { ?>class="active"<?php } ?>>
                     <?php if(!empty($_c_m['image']['ext'])) { ?>
-                        <img 
-                            loading="lazy" 
-                            decoding="async" 
-                            class="rounded" 
-                            src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $_c_m['image']['id']; ?>_20x20_0.<?php echo $_c_m['image']['ext']; ?>" 
-                            width="20" 
-                            height="20" 
+                        <img
+                            loading="lazy"
+                            decoding="async"
+                            class="rounded"
+                            src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $_c_m['image']['id']; ?>_20x20_0.<?php echo $_c_m['image']['ext']; ?>"
+                            width="20"
+                            height="20"
                             alt="<?php echo htmlspecialchars($_c_m['name'] ?? ''); ?>"
                             title="<?php echo htmlspecialchars($_c_m['name'] ?? ''); ?>"
                         >
