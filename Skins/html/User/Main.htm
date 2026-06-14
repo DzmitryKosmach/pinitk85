@@ -389,18 +389,18 @@ function getHomeUrl() {
                     <picture>
                         <!-- Мобильная версия (до 1023px) -->
                         <source media="(max-width: 1023px)" srcset="/images/index/logo_mob.webp">
-                        
+
                         <!-- Десктопная версия -->
                         <source media="(min-width: 1024px)" srcset="/images/index/logo.webp">
-                                                
+
                         <!-- Фоллбек для старых браузеров -->
-                        <img src="/images/index/logo.webp" 
-                             alt="Логотип" 
-                             width="280" 
-                             height="49" 
+                        <img src="/images/index/logo.webp"
+                             alt="Логотип"
+                             width="280"
+                             height="49"
                              class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]"
                              style="height: auto;">
-                    </picture>                    
+                    </picture>
                 </a>
 
                 <!-- Иконки каталога и поиска (при прокрутке) -->
@@ -1218,11 +1218,6 @@ function getHomeUrl() {
 <script>
     RSGoPro_SetSet();
 </script>
-<?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
-<div style="text-align: left; padding: 3% 12%">
-    <?php echo $pageInf['text'];?>
-</div>
-<?php } ?>
 
 <footer class="bg-footer text-black text-sm pt-8 pb-4 mt-6">
     <div class="md:hidden block w-full text-center">
