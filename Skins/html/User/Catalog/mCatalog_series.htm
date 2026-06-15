@@ -714,7 +714,7 @@
                                                 <?php $d = abs($i['discount']); ?>
                                                 <?php if($d != 1 && $d !== 0) { ?>
                                                 <p id="item2-<?php echo $i['id']; ?>-price-old"
-                                                   class="text-xs text-gray-400 line-through">
+                                                   class="text-xs text-gray-500 line-through">
                                                     <?php echo Catalog::priceFormat($i['price_min'] / $d)?> ₽
                                                 </p>
                                                 <?php } ?>
@@ -731,7 +731,7 @@
 
                                             <div class="flex items-center gap-2">
                                                 <!-- Кнопка "-" -->
-                                                <button type="button" class="px-2 text-xl text-gray-600 no-underline"
+                                                <button type="button" class="px-2 text-xl text-gray-800 no-underline transition-transform duration-200 hover:scale-125"
                                                         aria-label="Уменьшить количество"
                                                         onclick="oCart.amountMinus(this, true); seriesSetPrice(); return false;">
                                                     -
@@ -742,7 +742,7 @@
                                                        name="amount[<?php echo $i['id']; ?>]"
                                                        id="item2-<?php echo $i['id']; ?>-amount"
                                                        value="<?php echo $i['in_series_set_amount']; ?>"
-                                                       class="w-12 text-center border rounded"
+                                                       class="w-12 text-center text-gray-800 border rounded"
                                                        aria-label="Количество"
                                                        onchange="seriesSetPrice()"
                                                        onkeyup="seriesSetPrice()"
@@ -751,7 +751,7 @@
                                                 <span class="text-sm text-gray-500">шт</span>
 
                                                 <!-- Кнопка "+" -->
-                                                <button type="button" class="px-2 text-xl text-gray-600 no-underline"
+                                                <button type="button" class="px-2 text-xl text-gray-800 no-underline transition-transform duration-200 hover:scale-125"
                                                         aria-label="Увеличить количество"
                                                         onclick="oCart.amountPlus(this); seriesSetPrice(); return false;">
                                                     +
@@ -1735,7 +1735,7 @@
                 transform: translateY(15px) scale(0.97);
                 max-height: 0;
                 overflow: hidden;
-                margin: 0;                
+                margin: 0;
                 pointer-events: none;
                 transition:
                     opacity .45s ease,
