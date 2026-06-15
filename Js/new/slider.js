@@ -53,7 +53,6 @@ function initSliders() {
     const originalCards = track ? Array.from(track.querySelectorAll(".card")) : [];
 
     if (!prev || !next || !slider || !track || originalCards.length === 0) {
-      console.warn("Пропущен слайдер: не хватает элементов", container);
       return;
     }
 

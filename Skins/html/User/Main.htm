@@ -122,6 +122,16 @@ function getHomeUrl() {
     <?php if($pageInf['canonical']) { ?>
     <link rel="canonical" href="<?php echo $pageInf['canonical'];?>" />
     <?php } ?>
+
+    <link rel="preload" href="/dist/output.css" as="style">
+    <link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <?php
+    $homePath = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+    if ($homePath === '/' || preg_match('#^/[^/]+/?$#', $homePath)) { ?>
+    <link rel="preload" href="/images/index/main1_414.webp" as="image" media="(max-width: 414px)" fetchpriority="high">
+    <link rel="preload" href="/images/index/main1.webp" as="image" media="(min-width: 415px)" fetchpriority="high">
+    <?php } ?>
+
     <?php echo CssCopmress::load('core') ?>
     <script>
         if (!window.BX)
@@ -246,8 +256,6 @@ function getHomeUrl() {
         }
     </style>
 
-    <script src="//yandex.st/share/share.js" async defer></script>
-
     <?php echo JsCopmress::load('core'); ?>
     <script>
         var RSDevFunc_BasketEndWord_end1 = "";
@@ -304,21 +312,6 @@ function getHomeUrl() {
             cls = cls.replace('js-phone-masked', '').trim();
             wrap.outerHTML = '<a href="tel:' + tel + '" class="' + cls + ' hover:underline">' + display + '</a>';
         }
-        document.addEventListener('click', function(e) {
-            var t = e.target.closest('.phone-show-link');
-            if (!t) return;
-            e.preventDefault();
-            e.stopPropagation();
-            var wrap = t.closest('.js-phone-masked');
-            if (wrap) revealPhone(wrap);
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.closest('.phone-show-link')) {
-                e.preventDefault();
-                var wrap = e.target.closest('.js-phone-masked');
-                if (wrap) revealPhone(wrap);
-            }
-        });
 
 
     </script>

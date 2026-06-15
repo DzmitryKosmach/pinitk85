@@ -17,7 +17,7 @@ class JsCopmress
 	/**
 	 *
 	 */
-	const V = '?7';
+	const V = '?8';
 
     /** Базовый путь для локальной разработки */
     static function getBasePath()
@@ -45,10 +45,13 @@ class JsCopmress
 	 */
 	static function getModules()
 	{
+		$coreFile = Config::$debug
+			? self::getBasePath() . '/Js/core/all-core.js'
+			: self::getBasePath() . '/Js/core/all-core1.min.js';
+
 		return array(
 			'core'	=> array(
-				self::getBasePath() . '/Js/core/all-core.js',
-				self::getBasePath() . '/Js/core/all-core1.min.js',
+				$coreFile,
 			),
 			'index'	=> array(
 				self::getBasePath() . '/Js/index/jssor.core.js',
@@ -148,28 +151,47 @@ class JsCopmress
 	 * @param	bool	$async
 	 * @return	string
 	 */
-	static function load($module, $async = false)
+	static function load($module, $async = false, $defer = false)
 	{
 		$modules = self::getModules();
 		if (!isset($modules[$module]) || !count($modules[$module])) {
 			return '';
 		}
 
+		$attrs = self::scriptAttrs($async, $defer);
+
 		if (Config::$debug) {
 			$html = '';
 			foreach ($modules[$module] as $file) {
-				$html .= '<script ' . ($async ? 'async' : '') . ' src="' . $file . self::V . '"></script>';
+				$html .= '<script' . $attrs . ' src="' . $file . self::V . '"></script>';
 			}
 		} else {
 			$minFile = self::minFileName($module);
-			$html = '<script ' . ($async ? 'async' : '') . ' src="' . $minFile . self::V . '"></script>';
+			$html = '<script' . $attrs . ' src="' . $minFile . self::V . '"></script>';
 
-			if (!is_file(_ROOT . $minFile)) {
+			if (!is_file(_ROOT . $minFile) || filesize(_ROOT . $minFile) < 100) {
 				self::makeMin($module);
 			}
 		}
 
 		return $html;
+	}
+
+	/**
+	 * @param bool $async
+	 * @param bool $defer
+	 * @return string
+	 */
+	protected static function scriptAttrs($async, $defer)
+	{
+		$attrs = '';
+		if ($async) {
+			$attrs .= ' async';
+		}
+		if ($defer) {
+			$attrs .= ' defer';
+		}
+		return $attrs;
 	}
 
 
@@ -218,7 +240,12 @@ class JsCopmress
 			)
 		);
 		$minCode = curl_exec($ch);
+		$curlErr = curl_error($ch);
 		curl_close($ch);
+
+		if (!is_string($minCode) || strlen($minCode) < 100) {
+			$minCode = $moduleJS;
+		}
 
 		file_put_contents(
 			_ROOT . self::minFileName($module),
