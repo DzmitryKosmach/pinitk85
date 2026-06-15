@@ -36,19 +36,19 @@
                     <picture class="min-w-full">
                         <source media="(max-width: 414px)" srcset="/images/index/main1_414.webp">
                         <img class="min-w-full h-auto object-cover" src="/images/index/main1.webp"
-                             width="640" height="408" alt="Слайд 1" fetchpriority="high">
+                             width="640" height="408" alt="Слайд 1" fetchpriority="high" decoding="async">
                     </picture>
 
                     <picture class="min-w-full">
                         <source media="(max-width: 414px)" srcset="/images/index/main2_414.webp">
                         <img class="min-w-full h-auto object-cover" src="/images/index/main2.webp"
-                             width="640" height="408" alt="Слайд 2">
+                             width="640" height="408" alt="Слайд 2" loading="lazy" decoding="async">
                     </picture>
 
                     <picture class="min-w-full">
                         <source media="(max-width: 414px)" srcset="/images/index/main3_414.webp">
                         <img class="min-w-full h-auto object-cover" src="/images/index/main3.webp"
-                             width="640" height="408" alt="Слайд 3">
+                             width="640" height="408" alt="Слайд 3" loading="lazy" decoding="async">
                     </picture>
                 </div>
             </div>
@@ -385,5 +385,5 @@
     благотворительность.
 </div>
 
-<?php echo JsCopmress::load('carousel'); ?>
-<?php echo JsCopmress::load('slider'); ?>
+<?php echo JsCopmress::load('carousel', false, true); ?>
+<?php echo JsCopmress::load('slider', false, true); ?>

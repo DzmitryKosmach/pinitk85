@@ -175,7 +175,6 @@
         carousel.dataset.initialized = "true";
         window.carouselInitialized = true;
 
-        console.log("Карусель инициализирована успешно!");
         return true;
     }
 
