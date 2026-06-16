@@ -18,7 +18,7 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 	function autoFillForm($categoryId, $priceGrouping, $priceGroupingCnt){
 		$categoryId = intval($categoryId);
 		$priceGrouping = (bool)$priceGrouping;
-		$priceGroupingCnt = abs(intval($priceGroupingCnt)); if($priceGroupingCnt < 1) $priceStep = 1;
+		$priceGroupingCnt = abs(intval($priceGroupingCnt)); if($priceGroupingCnt < 1) $priceGroupingCnt = 1;
 
 		$oSeries = new Catalog_Series();
 		$urls = array();
@@ -46,12 +46,18 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 				foreach($group as $s){
 					$prices[] = $s['price'];
 				}
+				if(!count($prices)){
+					continue;
+				}
 				$pMin = round(min($prices));
 				$pMax = round(max($prices));
 
 				$urls[] = '------ Группа ' . ($gn+1) . ': от ' . Catalog::priceFormat($pMin) . ' до ' . Catalog::priceFormat($pMax) . ' руб. ------';
 				foreach($group as $s){
-					$urls[] = 'http://' . _HOST . Catalog_Series::a($s);
+					$seriesUrl = Catalog_Series::a($s);
+					if($seriesUrl){
+						$urls[] = 'http://' . _HOST . $seriesUrl;
+					}
 				}
 				//$urls[] = '';
 			}
@@ -64,7 +70,10 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 				'order'
 			);
 			foreach($series as $s){
-				$urls[] = 'http://' . _HOST . Catalog_Series::a($s);
+				$seriesUrl = Catalog_Series::a($s);
+				if($seriesUrl){
+					$urls[] = 'http://' . _HOST . $seriesUrl;
+				}
 			}
 		}
 		return implode("\r\n", $urls);
@@ -143,6 +152,9 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 			unset($u);
 
 			$g = array_values(array_unique($urls));
+			if(!count($g)){
+				unset($groups[$gn]);
+			}
 		}
 		unset($g);
 
@@ -193,7 +205,21 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 			}else{
 				// Выбираем акцепторов случайным образом
 				while(count($aIds) < $maxSeriesCnt){
-					$aId = $this->findRandomKeyWithMinValue($acceptorsIds, $dId);
+					$pool = $acceptorsIds;
+					if(isset($pool[$dId])){
+						unset($pool[$dId]);
+					}
+					foreach($aIds as $pickedId){
+						unset($pool[$pickedId]);
+					}
+					if(!count($pool)){
+						break;
+					}
+
+					$aId = $this->findRandomKeyWithMinValue($pool);
+					if($aId === false){
+						break;
+					}
 					$acceptorsIds[$aId]++;	// Отмечаем, что акцептор был использован
 					$aIds[] = $aId;
 				}
@@ -229,6 +255,9 @@ class Catalog_Series_Linkage_Auto extends Catalog_Series_Linkage_2Series {
 			if($v !== $minVal || $k === $exceptKey){
 				unset($array[$k]);
 			}
+		}
+		if(!count($array)){
+			return false;
 		}
 		return array_rand($array);
 	}

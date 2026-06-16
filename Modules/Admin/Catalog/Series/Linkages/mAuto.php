@@ -29,12 +29,12 @@ class mAuto extends Admin {
 		$o = new self();
 		$o->checkRights();
 
-		if(intval($_GET['category-id'])){
+		if(intval($_GET['category-id'] ?? 0)){
 			// Запрос на генерацию списка URL'ов по заданным параметрам для автозаполнения списка доноров и акцепторов
 			return self::autoFill(
 				intval($_GET['category-id']),
-				intval($_GET['price-grouping']),
-				intval($_GET['price-cnt'])
+				intval($_GET['price-grouping'] ?? 0),
+				intval($_GET['price-cnt'] ?? 0)
 			);
 		}
 
@@ -90,8 +90,13 @@ class mAuto extends Admin {
 	 */
 	static function autoFill($categoryId, $priceGrouping, $priceGroupingCnt){
 		self::$output = OUTPUT_FRAME;
-		$oLinkageAuto = new Catalog_Series_Linkage_Auto();
-		return $oLinkageAuto->autoFillForm($categoryId, $priceGrouping, $priceGroupingCnt);
+		try {
+			$oLinkageAuto = new Catalog_Series_Linkage_Auto();
+			return $oLinkageAuto->autoFillForm($categoryId, $priceGrouping, $priceGroupingCnt);
+		} catch (Throwable $e) {
+			trigger_error('Автозаполнение перелинковки: ' . $e->getMessage(), E_USER_WARNING);
+			return '';
+		}
 	}
 
 
@@ -107,13 +112,22 @@ class mAuto extends Admin {
 			$_SESSION['linkage-auto-form-values']['acceptors']
 		);
 
-		$oLinkageAuto = new Catalog_Series_Linkage_Auto();
-		$linksCnt = $oLinkageAuto->generate(
-			intval($newData['linkage_id']),
-			intval($newData['max_series']),
-			trim($newData['donors']),
-			trim($newData['acceptors'])
-		);
+		try {
+			$oLinkageAuto = new Catalog_Series_Linkage_Auto();
+			$linksCnt = $oLinkageAuto->generate(
+				intval($newData['linkage_id'] ?? 0),
+				intval($newData['max_series'] ?? 0),
+				trim($newData['donors'] ?? ''),
+				trim($newData['acceptors'] ?? '')
+			);
+		} catch (Throwable $e) {
+			Pages::flash(
+				'Ошибка перелинковки: ' . $e->getMessage(),
+				true,
+				Url::buildUrl(0)
+			);
+			return;
+		}
 
 		Pages::flash(
 			'Перелинковка серий выполнена. Всего создано связей: ' . $linksCnt,
