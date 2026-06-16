@@ -124,7 +124,7 @@ class mAuto extends Admin {
 			Pages::flash(
 				'Ошибка перелинковки: ' . $e->getMessage(),
 				true,
-				Url::buildUrl(0)
+				Url::a('admin-catalog-series-linkages-auto')
 			);
 			return;
 		}
@@ -132,7 +132,7 @@ class mAuto extends Admin {
 		Pages::flash(
 			'Перелинковка серий выполнена. Всего создано связей: ' . $linksCnt,
 			false,
-			Url::buildUrl(0)
+			Url::a('admin-catalog-series-linkages-auto')
 		);
 	}
 }
