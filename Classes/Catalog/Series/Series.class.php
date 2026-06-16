@@ -207,7 +207,7 @@ class Catalog_Series extends ExtDbList
             $cache[$seriesId] = $catUrl . $seriesInf['url'] . '/';
         }
 
-        return $cache[$seriesId];
+        return $cache[$seriesId] ?? false;
     }
 
 
