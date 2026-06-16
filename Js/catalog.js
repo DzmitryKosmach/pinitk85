@@ -125,7 +125,7 @@ function seriesSetPrice(){
 
 /* Зум картинок материалов серии */
 onLoad(function(){
-	$(document).on('click', '.series-materials a.level1', function(){
+	$(document).on('click', '.series-materials a.level1, .series-materials button.level1', function(){
 		var viewportWidth = $(window).width();
 		var $zoom = $(this).next('.materials-zoom');
 		var $img = $zoom.find('img').first();

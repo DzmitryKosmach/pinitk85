@@ -17,7 +17,7 @@ class JsCopmress
 	/**
 	 *
 	 */
-	const V = '?8';
+	const V = '?9';
 
     /** Базовый путь для локальной разработки */
     static function getBasePath()
@@ -45,14 +45,18 @@ class JsCopmress
 	 */
 	static function getModules()
 	{
-		$coreFile = Config::$debug
-			? self::getBasePath() . '/Js/core/all-core.js'
-			: self::getBasePath() . '/Js/core/all-core1.min.js';
+		// all-core.js — Bitrix/BX; all-core1.min.js — jQuery, Fancybox, +/- количества, RSGoPro
+		$coreFiles = Config::$debug
+			? array(
+				self::getBasePath() . '/Js/core/all-core.js',
+				self::getBasePath() . '/Js/core/all-core1.min.js',
+			)
+			: array(
+				self::getBasePath() . '/Js/core/all-core1.min.js',
+			);
 
 		return array(
-			'core'	=> array(
-				$coreFile,
-			),
+			'core'	=> $coreFiles,
 			'index'	=> array(
 				self::getBasePath() . '/Js/index/jssor.core.js',
 				self::getBasePath() . '/Js/index/jssor.utils.js',
