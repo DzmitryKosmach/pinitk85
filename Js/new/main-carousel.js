@@ -13,13 +13,29 @@
             return false;
         }
 
-        // ✅ Получаем <picture> элементы как слайды
-        const slides = carousel.querySelectorAll("picture");
-        const totalSlides = slides.length;
+        // Получаем <picture> элементы
+        const pictures = carousel.querySelectorAll("picture");
+        const totalSlides = pictures.length;
 
         if (totalSlides === 0) {
             return false;
         }
+
+        // ✅ Оборачиваем каждый <picture> в <div role="tabpanel">
+        const slides = [];
+        pictures.forEach((picture, index) => {
+            const slideWrapper = document.createElement("div");
+            slideWrapper.setAttribute("role", "tabpanel");
+            slideWrapper.setAttribute("aria-roledescription", "slide");
+            slideWrapper.setAttribute("aria-label", `Слайд ${index + 1} из ${totalSlides}`);
+            slideWrapper.classList.add("min-w-full");
+
+            // Перемещаем <picture> внутрь обёртки
+            picture.parentNode.insertBefore(slideWrapper, picture);
+            slideWrapper.appendChild(picture);
+
+            slides.push(slideWrapper);
+        });
 
         // Добавляем ARIA-атрибуты для доступности
         carousel.setAttribute("role", "region");
@@ -54,13 +70,6 @@
 
             pagination.appendChild(dot);
         }
-
-        // ✅ Добавляем ARIA к <picture> элементам
-        slides.forEach((slide, index) => {
-            slide.setAttribute("role", "tabpanel");
-            slide.setAttribute("aria-roledescription", "slide");
-            slide.setAttribute("aria-label", `Слайд ${index + 1} из ${totalSlides}`);
-        });
 
         let currentIndex = 0;
         const dots = pagination.children;
@@ -122,10 +131,8 @@
 
             if (Math.abs(diff) > swipeThreshold) {
                 if (diff > 0) {
-                    // Свайп влево - следующий слайд
                     goToSlide((currentIndex + 1) % totalSlides);
                 } else {
-                    // Свайп вправо - предыдущий слайд
                     goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
                 }
             }
@@ -147,10 +154,10 @@
             }
         });
 
-        // ✅ Предзагрузка следующего изображения из <picture>
+        // Предзагрузка следующего изображения
         function preloadNextImage() {
             const nextIndex = (currentIndex + 1) % totalSlides;
-            const nextPicture = slides[nextIndex];
+            const nextPicture = pictures[nextIndex];
             const nextImg = nextPicture.querySelector("img");
 
             if (nextImg && !nextImg.complete) {
@@ -168,7 +175,6 @@
             preloadNextImage();
         };
 
-        // Инициализация предзагрузки первого следующего изображения
         preloadNextImage();
 
         // Помечаем как инициализированную
@@ -184,7 +190,6 @@
             setTimeout(initCarousel, 100);
         });
 
-        // Более эффективный MutationObserver
         if (typeof MutationObserver !== 'undefined') {
             const observer = new MutationObserver((mutations, obs) => {
                 if (document.getElementById("carousel") && document.getElementById("pagination")) {
