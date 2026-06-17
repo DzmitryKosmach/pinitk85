@@ -262,9 +262,8 @@ function getHomeUrl() {
         var RSDevFunc_BasketEndWord_end2 = "";
         var RSDevFunc_BasketEndWord_end3 = "";
     </script>
-    <?php #echo JsCopmress::load('core'); ?>
-
     <?php echo JsCopmress::load('main'); ?>
+
     <script>
         function seoHideDecode() {
             var shift = 15;
@@ -357,8 +356,15 @@ function getHomeUrl() {
         <link href="/Skins/css/fonts.css" rel="stylesheet">
     </noscript>
 
-    <!-- Tailwind -->
-    <link rel="stylesheet" href="/dist/output.css">
+    <!-- Tailwind (инлайн) -->
+    <style>
+        <?php
+            $cssFile = _ROOT . '/dist/output.css';
+                if (file_exists($cssFile)) {
+                    echo file_get_contents($cssFile);
+                }
+        ?>
+    </style>
 
 </head>
 
@@ -1822,7 +1828,7 @@ function getHomeUrl() {
             return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
         }
 
-        function renderCaptchaWidgets(visibleOnly) {
+        function renderCaptchaWidgets() {
             if (!window.grecaptcha || !window.grecaptcha.render) {
                 return;
             }
@@ -1832,7 +1838,7 @@ function getHomeUrl() {
                 if (!el.id || el.getAttribute("data-recaptcha-inited") === "1") {
                     continue;
                 }
-                if (visibleOnly && !isVisible(el)) {
+                if (!isVisible(el)) {
                     continue;
                 }
                 el.setAttribute("data-recaptcha-inited", "1");
@@ -1841,12 +1847,12 @@ function getHomeUrl() {
         }
 
         window.onloadCaptchaCallback = function () {
-            renderCaptchaWidgets(true);
+            renderCaptchaWidgets();
         };
 
         function injectRecaptcha() {
             if (window.grecaptcha && window.grecaptcha.render) {
-                renderCaptchaWidgets(true);
+                renderCaptchaWidgets();
                 return;
             }
             if (loadStarted) {
@@ -1886,30 +1892,37 @@ function getHomeUrl() {
             step();
         };
 
-        function warmupRecaptchaAfterLoad() {
-            if (!document.querySelector(".captcha-item")) {
-                return;
-            }
-            injectRecaptcha();
-        }
+        // Ленивая загрузка: только при взаимодействии с формой
+        function attachLazyLoadHandlers() {
+            var forms = document.querySelectorAll("form");
+            forms.forEach(function(form) {
+                var captchaItem = form.querySelector(".captcha-item");
+                if (!captchaItem) return;
 
-        if (document.readyState === "complete") {
-            warmupRecaptchaAfterLoad();
-        } else {
-            window.addEventListener("load", warmupRecaptchaAfterLoad, { once: true });
-        }
+                // Загружаем при фокусе на любое поле формы
+                var inputs = form.querySelectorAll("input, textarea, select");
+                inputs.forEach(function(input) {
+                    input.addEventListener("focus", function() {
+                        injectRecaptcha();
+                    }, { once: true });
+                });
 
-        // Повторно проверяем видимые капчи после кликов (например, при открытии модалок).
-        document.addEventListener(
-            "click",
-            function () {
-                if (!document.querySelector(".captcha-item")) {
-                    return;
+                // Загружаем при клике на кнопку отправки
+                var submitBtn = form.querySelector("button[type='submit'], input[type='submit']");
+                if (submitBtn) {
+                    submitBtn.addEventListener("click", function() {
+                        injectRecaptcha();
+                    }, { once: true });
                 }
-                setTimeout(injectRecaptcha, 400);
-            },
-            true
-        );
+            });
+        }
+
+        // Инициализация после загрузки DOM
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", attachLazyLoadHandlers);
+        } else {
+            attachLazyLoadHandlers();
+        }
     })();
 </script>
 </body>

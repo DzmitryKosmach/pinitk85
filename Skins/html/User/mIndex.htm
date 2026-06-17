@@ -31,25 +31,33 @@
                 <!-- Слайды -->
                 <div id="carousel" class="flex shadow transition-transform duration-500 ease-in-out"
                      role="region" aria-roledescription="carousel" aria-label="Галерея изображений">
-                    <!-- Убрано: data-initialized="true" и style="transform: translateX(-200%)" -->
 
-                    <picture class="min-w-full">
-                        <source media="(max-width: 414px)" srcset="/images/index/main1_414.webp">
-                        <img class="min-w-full h-auto object-cover" src="/images/index/main1.webp"
-                             width="640" height="408" alt="Слайд 1" fetchpriority="high" decoding="async">
-                    </picture>
+                    <!-- Слайд 1 -->
+                    <div role="tabpanel" aria-label="Слайд 1 из 3" class="min-w-full flex-shrink-0 w-full">
+                        <picture class="min-w-full">
+                            <source media="(max-width: 414px)" srcset="/images/index/main1_414.webp">
+                            <img class="min-w-full h-auto object-cover" src="/images/index/main1.webp"
+                                 width="640" height="408" alt="" fetchpriority="high" decoding="async">
+                        </picture>
+                    </div>
 
-                    <picture class="min-w-full">
-                        <source media="(max-width: 414px)" srcset="/images/index/main2_414.webp">
-                        <img class="min-w-full h-auto object-cover" src="/images/index/main2.webp"
-                             width="640" height="408" alt="Слайд 2" loading="lazy" decoding="async">
-                    </picture>
+                    <!-- Слайд 2 -->
+                    <div role="tabpanel" aria-label="Слайд 2 из 3" class="min-w-full flex-shrink-0 w-full">
+                        <picture class="min-w-full">
+                            <source media="(max-width: 414px)" srcset="/images/index/main2_414.webp">
+                            <img class="min-w-full h-auto object-cover" src="/images/index/main2.webp"
+                                 width="640" height="408" alt="" loading="lazy" decoding="async">
+                        </picture>
+                    </div>
 
-                    <picture class="min-w-full">
-                        <source media="(max-width: 414px)" srcset="/images/index/main3_414.webp">
-                        <img class="min-w-full h-auto object-cover" src="/images/index/main3.webp"
-                             width="640" height="408" alt="Слайд 3" loading="lazy" decoding="async">
-                    </picture>
+                    <!-- Слайд 3 -->
+                    <div role="tabpanel" aria-label="Слайд 3 из 3" class="min-w-full flex-shrink-0 w-full">
+                        <picture class="min-w-full">
+                            <source media="(max-width: 414px)" srcset="/images/index/main3_414.webp">
+                            <img class="min-w-full h-auto object-cover" src="/images/index/main3.webp"
+                                 width="640" height="408" alt="" loading="lazy" decoding="async">
+                        </picture>
+                    </div>
                 </div>
             </div>
 
