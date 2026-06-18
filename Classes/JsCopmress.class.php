@@ -17,7 +17,7 @@ class JsCopmress
 	/**
 	 *
 	 */
-	const V = '?10';
+	const V = '?13';
 
     /** Базовый путь для локальной разработки */
     static function getBasePath()
