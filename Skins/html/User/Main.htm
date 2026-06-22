@@ -360,9 +360,9 @@ function getHomeUrl() {
     <style>
         <?php
             $cssFile = _ROOT . '/dist/output.css';
-                if (file_exists($cssFile)) {
-                    echo file_get_contents($cssFile);
-                }
+        if (file_exists($cssFile)) {
+            echo file_get_contents($cssFile);
+        }
         ?>
     </style>
 
@@ -381,25 +381,24 @@ function getHomeUrl() {
     <div
         class="max-w-1440 mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 py-1 flex-col flex sm:flex-row justify-between items-center text-base font-medium">
         <!-- Левая часть -->
-        <div class="flex sm:inline-block justify-between gap-4 w-full sm:w-auto">
+        <div class="flex sm:inline-block justify-between gap-2 w-full sm:w-auto">
             <div class="flex items-center gap-2">
                 <!-- Логотип (обычное состояние) -->
                 <a href="<?php echo getHomeUrl(); ?>" id="logo-main" class="transition-all duration-300">
-                    <picture>
-                        <!-- Мобильная версия (до 1023px) -->
-                        <source media="(max-width: 1023px)" srcset="/images/index/logo_mob.webp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 120"
+                         class="inline-block w-[132px] lg:w-[280px] h-auto"
+                         role="img"
+                         aria-label="Логотип ООО Дары Мебели">
+                        <!-- Верхняя строка -->
+                        <text x="380" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#000000" letter-spacing="2">
+                            МУЛЬТИМАРКЕТ ДЛЯ ОФИСА
+                        </text>
 
-                        <!-- Десктопная версия -->
-                        <source media="(min-width: 1024px)" srcset="/images/index/logo.webp">
-
-                        <!-- Фоллбек для старых браузеров -->
-                        <img src="/images/index/logo.webp"
-                             alt="Логотип"
-                             width="280"
-                             height="49"
-                             class="inline-block w-[132px] lg:w-[280px] aspect-[680/120]"
-                             style="height: auto;">
-                    </picture>
+                        <!-- Нижняя строка -->
+                        <text x="380" y="84" text-anchor="middle" font-family="Georgia, serif" font-size="65" font-weight="bold" transform="scale(1, 1.2)">
+                            <tspan fill="#000000">ООО "</tspan><tspan fill="#228B22">Д</tspan><tspan fill="#000000">ар</tspan><tspan fill="#228B22">ы</tspan><tspan fill="#228B22"> М</tspan><tspan fill="#000000">ебел</tspan><tspan fill="#228B22">и</tspan><tspan fill="#000000">".</tspan>
+                        </text>
+                    </svg>
                 </a>
 
                 <!-- Иконки каталога и поиска (при прокрутке) -->
@@ -511,9 +510,9 @@ function getHomeUrl() {
                         <div id="mobile-phone-dropdown" class="relative inline-block">
                             <!-- Иконка -->
                             <button type="button" id="mobile-phone-trigger"
-                               href="javascript:void(0)"
-                               class="block"
-                               aria-label="Позвонить">
+                                    href="javascript:void(0)"
+                                    class="block"
+                                    aria-label="Позвонить">
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
                                      class="w-6 h-6 cursor-pointer hover:opacity-50 transition-opacity">
                                     <path
@@ -1220,15 +1219,43 @@ function getHomeUrl() {
 
 <footer class="bg-footer text-black text-sm pt-8 pb-4 mt-6">
     <div class="md:hidden block w-full text-center">
-        <a class="inline-block mx-auto" href="<?php echo getHomeUrl(); ?>"><img
-            src="<?php echo getImagePath('/images/index/logo-footer.webp'); ?>" alt="Логотип" class="mb-4" /></a>
+        <a class="block mx-auto max-w-64 mb-4" href="<?php echo getHomeUrl(); ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 120"
+                 class="w-full h-auto"
+                 role="img"
+                 aria-label="Логотип ООО Дары Мебели">
+                <!-- Верхняя строка -->
+                <text x="380" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#000000" letter-spacing="2">
+                    МУЛЬТИМАРКЕТ ДЛЯ ОФИСА
+                </text>
+
+                <!-- Нижняя строка -->
+                <text x="380" y="84" text-anchor="middle" font-family="Georgia, serif" font-size="65" font-weight="bold" transform="scale(1, 1.2)">
+                    <tspan fill="#000000">ООО "</tspan><tspan fill="#228B22">Д</tspan><tspan fill="#000000">ар</tspan><tspan fill="#228B22">ы</tspan><tspan fill="#228B22"> М</tspan><tspan fill="#000000">ебел</tspan><tspan fill="#228B22">и</tspan><tspan fill="#000000">".</tspan>
+                </text>
+            </svg>
+        </a>
     </div>
 
     <!-- Блок основной -->
     <div class="hidden max-w-1440 px-2 xs:px-4 sm:px-6 lg:px-8  mx-auto lg:grid gap-12 lg:grid-cols-5">
         <!-- Блок 1: Компания -->
         <div class="lg:col-span-1">
-            <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>"><img src="/images/index/logo-footer.webp" alt="Логотип" class="mb-4" /></a>
+            <a class="hidden md:block" href="<?php echo getHomeUrl(); ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 120"
+                     role="img"
+                     aria-label="Логотип ООО Дары Мебели">
+                    <!-- Верхняя строка -->
+                    <text x="380" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#000000" letter-spacing="2">
+                        МУЛЬТИМАРКЕТ ДЛЯ ОФИСА
+                    </text>
+
+                    <!-- Нижняя строка -->
+                    <text x="380" y="84" text-anchor="middle" font-family="Georgia, serif" font-size="65" font-weight="bold" transform="scale(1, 1.2)">
+                        <tspan fill="#000000">ООО "</tspan><tspan fill="#228B22">Д</tspan><tspan fill="#000000">ар</tspan><tspan fill="#228B22">ы</tspan><tspan fill="#228B22"> М</tspan><tspan fill="#000000">ебел</tspan><tspan fill="#228B22">и</tspan><tspan fill="#000000">".</tspan>
+                    </text>
+                </svg>
+            </a>
 
             <div class="mt-4 space-y-1">
                 <p class="flex gap-4 font-semibold">
@@ -1315,7 +1342,7 @@ function getHomeUrl() {
                     <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
                     <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
                 </p>
-                <p class="text-gray-500 ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
+                <p class="ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
             </div>
 
             <div class="mt-4 flex flex-col gap-2">
@@ -1431,9 +1458,9 @@ function getHomeUrl() {
     class="modal scale-90 xs2:scale-100 modal--order-call !p-0 rounded-lg shadow-xl !w-fit  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 !m-0"
     id="kmodal" style="display:none; min-width: 316px; left: 50%;">
     <button type="button" href="javascript:void(0);"
-       class="modal-order-call__close absolute top-2 right-2 w-10 h-10 flex items-center justify-center text-3xl text-gray-600 hover:text-black z-[25] rounded-full hover:bg-red-400 transition-colors"
-       onclick="kclose(); return false;"
-       aria-label="Закрыть">
+            class="modal-order-call__close absolute top-2 right-2 w-10 h-10 flex items-center justify-center text-3xl text-gray-600 hover:text-black z-[25] rounded-full hover:bg-red-400 transition-colors"
+            onclick="kclose(); return false;"
+            aria-label="Закрыть">
         ×
     </button>
 
