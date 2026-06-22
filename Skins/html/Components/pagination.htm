@@ -11,9 +11,75 @@ function addOrReplaceQueryParam($key, $value) {
     $query = http_build_query($params);
     return $query ? '?' . $query : '';
 }
+
+// Функция для получения полного URL страницы
+function getCurrentPageUrl($page = null) {
+    $params = $_GET;
+    unset($params['p0']);
+    unset($params['p1']);
+
+    if ($page !== null) {
+        $params['page'] = $page;
+    }
+
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
+    $query = http_build_query($params);
+
+    return $baseUrl . ($query ? '?' . $query : '');
+}
 ?>
 
-<div class="pagination-wrapper flex w-full justify-center items-center flex-col mt-4">
+<!-- ============================================ -->
+<!-- SEO: Ссылки rel="next" / rel="prev" для head -->
+<!-- Вставьте этот блок в <head> вашего шаблона   -->
+<!-- ============================================ -->
+<?php if($totalPages > 1) { ?>
+<!--
+<link rel="canonical" href="<?php echo getCurrentPageUrl($currentPage); ?>" />
+<?php if ($currentPage > 1) { ?>
+<link rel="prev" href="<?php echo getCurrentPageUrl($currentPage - 1); ?>" />
+<?php } ?>
+<?php if ($currentPage < $totalPages) { ?>
+<link rel="next" href="<?php echo getCurrentPageUrl($currentPage + 1); ?>" />
+<?php } ?>
+-->
+<?php } ?>
+
+<!-- ============================================ -->
+<!-- SEO: JSON-LD микроразметка CollectionPage    -->
+<!-- ============================================ -->
+<?php if($totalPages > 1) { ?>
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": "<?php echo getCurrentPageUrl($currentPage); ?>",
+        "url": "<?php echo getCurrentPageUrl($currentPage); ?>",
+        "name": "<?php echo htmlspecialchars($pageTitle ?? 'Каталог'); ?> — страница <?php echo $currentPage; ?>",
+        "description": "<?php echo htmlspecialchars($pageDescription ?? 'Каталог товаров, страница ' . $currentPage . ' из ' . $totalPages); ?>",
+        "numberOfItems": <?php echo (int)$totalItems; ?>,
+        <?php if ($currentPage > 1) { ?>
+    "previousItem": "<?php echo getCurrentPageUrl($currentPage - 1); ?>",
+    <?php } ?>
+    <?php if ($currentPage < $totalPages) { ?>
+    "nextItem": "<?php echo getCurrentPageUrl($currentPage + 1); ?>",
+    <?php } ?>
+    "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": <?php echo (int)$totalItems; ?>,
+    "itemListOrder": "https://schema.org/ItemListOrderAscending"
+    }
+    }
+</script>
+<?php } ?>
+
+<!-- ============================================ -->
+<!-- HTML блок пагинации                          -->
+<!-- ============================================ -->
+<div class="pagination-wrapper flex w-full justify-center items-center flex-col mt-4"
+     role="navigation"
+     aria-label="Пагинация каталога">
     <?php if($totalPages > 1) { ?>
 
     <!-- Кнопка "Загрузить еще" -->
@@ -22,6 +88,8 @@ function addOrReplaceQueryParam($key, $value) {
         <a
             href="<?php echo addOrReplaceQueryParam('page', $currentPage + 1); ?>"
             class="btn-load-more w-full bg-blue-600 text-white text-lg text-center font-medium py-4 px-4 rounded block hover:bg-blue-700 transition"
+            rel="next"
+            aria-label="Загрузить следующую страницу (<?php echo $currentPage + 1; ?> из <?php echo $totalPages; ?>)"
         >
             Загрузить еще
         </a>
@@ -29,12 +97,17 @@ function addOrReplaceQueryParam($key, $value) {
     <?php endif; ?>
 
     <!-- Пагинация для десктопа -->
-    <div class="pagination-controls flex flex-wrap justify-center items-center mb-4 font-medium">
+    <nav class="pagination-controls flex flex-wrap justify-center items-center mb-4 font-medium"
+         aria-label="Навигация по страницам">
+
         <!-- Кнопка "Назад" -->
         <?php if($currentPage > 1) { ?>
         <a
             href="<?php echo addOrReplaceQueryParam('page', $currentPage-1); ?>"
             class="btn-prev px-3 sm:px-4 py-2 hover:bg-gray-200 rounded transition"
+            rel="prev"
+            aria-label="Предыдущая страница <?php echo $currentPage - 1; ?>"
+            title="Страница <?php echo $currentPage - 1; ?>"
         >
             <svg
                 width="9"
@@ -42,6 +115,7 @@ function addOrReplaceQueryParam($key, $value) {
                 viewBox="0 0 9 16"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
             >
                 <path
                     d="M0.292793 7.29289C-0.0977311 7.68342 -0.0977311 8.31658 0.292793 8.70711L6.65675 15.0711C7.04728 15.4616 7.68044 15.4616 8.07097 15.0711C8.46149 14.6805 8.46149 14.0474 8.07097 13.6569L2.41411 8L8.07097 2.34315C8.46149 1.95262 8.46149 1.31946 8.07097 0.928932C7.68044 0.538408 7.04728 0.538408 6.65675 0.928932L0.292793 7.29289ZM1 8L1 7H0.9999L0.9999 8L0.9999 9H1L1 8Z"
@@ -50,20 +124,22 @@ function addOrReplaceQueryParam($key, $value) {
             </svg>
         </a>
         <?php } else { ?>
-        <span class="btn-prev-disabled px-3 sm:px-4 py-2 rounded opacity-50 cursor-default">
-      <svg
-          width="9"
-          height="16"
-          viewBox="0 0 9 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-            d="M0.292793 7.29289C-0.0977311 7.68342 -0.0977311 8.31658 0.292793 8.70711L6.65675 15.0711C7.04728 15.4616 7.68044 15.4616 8.07097 15.0711C8.46149 14.6805 8.46149 14.0474 8.07097 13.6569L2.41411 8L8.07097 2.34315C8.46149 1.95262 8.46149 1.31946 8.07097 0.928932C7.68044 0.538408 7.04728 0.538408 6.65675 0.928932L0.292793 7.29289ZM1 8L1 7H0.9999L0.9999 8L0.9999 9H1L1 8Z"
-            fill="#020202"
-        />
-      </svg>
-    </span>
+        <span class="btn-prev-disabled px-3 sm:px-4 py-2 rounded opacity-50 cursor-default"
+              aria-hidden="true">
+            <svg
+                width="9"
+                height="16"
+                viewBox="0 0 9 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <path
+                    d="M0.292793 7.29289C-0.0977311 7.68342 -0.0977311 8.31658 0.292793 8.70711L6.65675 15.0711C7.04728 15.4616 7.68044 15.4616 8.07097 15.0711C8.46149 14.6805 8.46149 14.0474 8.07097 13.6569L2.41411 8L8.07097 2.34315C8.46149 1.95262 8.46149 1.31946 8.07097 0.928932C7.68044 0.538408 7.04728 0.538408 6.65675 0.928932L0.292793 7.29289ZM1 8L1 7H0.9999L0.9999 8L0.9999 9H1L1 8Z"
+                    fill="#020202"
+                />
+            </svg>
+        </span>
         <?php } ?>
 
         <!-- Номера страниц (максимум 8) -->
@@ -86,9 +162,15 @@ function addOrReplaceQueryParam($key, $value) {
         }
         for($i = $start; $i <= $end; $i++) {
         if($i == $currentPage) {
-        echo '<span class="page-item active px-2 sm:px-4 py-2 border rounded-md bg-blue-600 text-white font-bold">' . $i . '</span>';
+        echo '<span class="page-item active px-2 sm:px-4 py-2 border rounded-md bg-blue-600 text-white font-bold" '
+        . 'aria-current="page">'
+        . $i . '</span>';
         } else {
-        echo '<a href="' . addOrReplaceQueryParam('page', $i) . '" class="page-item px-2 sm:px-4 py-2 hover:bg-gray-200 rounded transition">' . $i . '</a>';
+        echo '<a href="' . addOrReplaceQueryParam('page', $i) . '" '
+        . 'class="page-item px-2 sm:px-4 py-2 hover:bg-gray-200 rounded transition" '
+        . 'aria-label="Страница ' . $i . '" '
+        . 'title="Страница ' . $i . '">'
+        . $i . '</a>';
         }
         }
         ?>
@@ -98,6 +180,9 @@ function addOrReplaceQueryParam($key, $value) {
         <a
             href="<?php echo addOrReplaceQueryParam('page', $currentPage+1); ?>"
             class="btn-next px-3 sm:px-4 py-2 hover:bg-gray-200 rounded transition"
+            rel="next"
+            aria-label="Следующая страница <?php echo $currentPage + 1; ?>"
+            title="Страница <?php echo $currentPage + 1; ?>"
         >
             <svg
                 width="9"
@@ -105,6 +190,7 @@ function addOrReplaceQueryParam($key, $value) {
                 viewBox="0 0 9 16"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
             >
                 <path
                     d="M8.70721 8.70711C9.09773 8.31658 9.09773 7.68342 8.70721 7.29289L2.34325 0.928932C1.95272 0.538408 1.31956 0.538408 0.929032 0.928932C0.538508 1.31946 0.538508 1.95262 0.929032 2.34315L6.58589 8L0.929032 13.6569C0.538508 14.0474 0.538508 14.6805 0.929032 15.0711C1.31956 15.4616 1.95272 15.4616 2.34325 15.0711L8.70721 8.70711ZM8 8V9H8.0001V8V7H8V8Z"
@@ -113,28 +199,31 @@ function addOrReplaceQueryParam($key, $value) {
             </svg>
         </a>
         <?php } else { ?>
-        <span class="btn-next-disabled px-4 py-2 rounded opacity-50 cursor-default">
-      <svg
-          width="9"
-          height="16"
-          viewBox="0 0 9 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-            d="M8.70721 8.70711C9.09773 8.31658 9.09773 7.68342 8.70721 7.29289L2.34325 0.928932C1.95272 0.538408 1.31956 0.538408 0.929032 0.928932C0.538508 1.31946 0.538508 1.95262 0.929032 2.34315L6.58589 8L0.929032 13.6569C0.538508 14.0474 0.538508 14.6805 0.929032 15.0711C1.31956 15.4616 1.95272 15.4616 2.34325 15.0711L8.70721 8.70711ZM8 8V9H8.0001V8V7H8V8Z"
-            fill="#020202"
-        />
-      </svg>
-    </span>
+        <span class="btn-next-disabled px-4 py-2 rounded opacity-50 cursor-default"
+              aria-hidden="true">
+            <svg
+                width="9"
+                height="16"
+                viewBox="0 0 9 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <path
+                    d="M8.70721 8.70711C9.09773 8.31658 9.09773 7.68342 8.70721 7.29289L2.34325 0.928932C1.95272 0.538408 1.31956 0.538408 0.929032 0.928932C0.538508 1.31946 0.538508 1.95262 0.929032 2.34315L6.58589 8L0.929032 13.6569C0.538508 14.0474 0.538508 14.6805 0.929032 15.0711C1.31956 15.4616 1.95272 15.4616 2.34325 15.0711L8.70721 8.70711ZM8 8V9H8.0001V8V7H8V8Z"
+                    fill="#020202"
+                />
+            </svg>
+        </span>
         <?php } ?>
-    </div>
+    </nav>
 
     <!-- Кнопка "Все товары" -->
     <div class="pagination-show-all-wrapper max-w-[300px] w-full">
         <a
             href="<?php echo addOrReplaceQueryParam('onpage', -1); ?>"
             class="btn-show-all w-full border-2 border-blue-600 text-blue-600 font-medium text-lg text-center py-4 px-4 rounded block hover:bg-blue-50 transition"
+            aria-label="Показать все товары на одной странице"
         >
             Все товары
         </a>
@@ -144,34 +233,36 @@ function addOrReplaceQueryParam($key, $value) {
 
 <script>
     // Плавный скролл к верху страницы при смене страницы пагинации
+    // Используем делегирование событий для работы с динамическим контентом
     document.addEventListener('DOMContentLoaded', function () {
-        var wrapper = document.querySelector('.pagination-wrapper');
-        if (!wrapper) return;
+        // Используем делегирование - вешаем обработчик на document
+        document.addEventListener('click', function (e) {
+            // Ищем ближайшую ссылку пагинации
+            var link = e.target.closest('.pagination-wrapper a');
 
-        var links = wrapper.querySelectorAll('a');
-        links.forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                // Ловим только обычный левый клик без модификаторов
-                if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-                    return;
-                }
+            if (!link) return;
 
-                var href = link.getAttribute('href');
-                if (!href) return;
+            // Проверяем, что это обычный левый клик без модификаторов
+            if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+                return;
+            }
 
-                e.preventDefault();
+            var href = link.getAttribute('href');
+            if (!href || href === '#') return;
 
-                // Плавно скроллим вверх
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            // Предотвращаем стандартный переход
+            e.preventDefault();
 
-                // После короткой задержки переходим на нужную страницу
-                setTimeout(function () {
-                    window.location.href = href;
-                }, 350);
+            // Плавно скроллим вверх
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
+
+            // После короткой задержки переходим на нужную страницу
+            setTimeout(function () {
+                window.location.href = href;
+            }, 350);
         });
     });
 </script>
