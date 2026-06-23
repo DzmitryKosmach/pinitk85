@@ -88,6 +88,13 @@ class mItems extends Admin {
 	}
 
 
+    function dragSortSave($order)
+    {
+        $seriesId = intval($_REQUEST['s'] ?? $_GET['s'] ?? 0);
+        $this->dragSortSaveScoped($order, '`series_id` = ' . $seriesId);
+    }
+
+
     /** Удаление
      * @param $iId
      */

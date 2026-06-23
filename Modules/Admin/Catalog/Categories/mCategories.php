@@ -177,6 +177,13 @@ class mCategories extends Admin {
     }
 
 
+    function dragSortSave($order)
+    {
+        $parentId = intval($_REQUEST['p'] ?? 0);
+        $this->dragSortSaveScoped($order, '`parent_id` = ' . $parentId);
+    }
+
+
     /** Удаление
      * @param $iId
      */

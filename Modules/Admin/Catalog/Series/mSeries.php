@@ -350,4 +350,123 @@ class mSeries extends Admin
             'materials' => $materials
         );
     }
+
+
+    /**
+     * @return array{0: string, 1: int, 2: int}
+     */
+    static function dragSortContextFromRequest()
+    {
+        if (isset($_REQUEST['supplier_id'])) {
+            $_REQUEST['supplier_id'] = $_REQUEST['supplier_id'] !== '' ? (int)$_REQUEST['supplier_id'] : '';
+        } else {
+            $_REQUEST['supplier_id'] = '';
+        }
+
+        if (isset($_REQUEST['material_id'])) {
+            $_REQUEST['material_id'] = $_REQUEST['material_id'] !== '' ? (int)$_REQUEST['material_id'] : '';
+        } else {
+            $_REQUEST['material_id'] = '';
+        }
+
+        $onPage = intval($_REQUEST['on_page'] ?? self::ON_PAGE_DEFAULT);
+        if (!$onPage) {
+            $onPage = self::ON_PAGE_DEFAULT;
+        }
+
+        $page = max(1, intval($_REQUEST['page'] ?? 1));
+        $search = self::buildSearchConditions($_REQUEST);
+
+        return array(
+            implode(' AND ', $search) ?: '1',
+            $onPage,
+            $page,
+        );
+    }
+
+
+    /**
+     * @param array $request
+     * @return array
+     */
+    static function buildSearchConditions(array $request)
+    {
+        $search = array();
+
+        if (isset($request['id'])) {
+            $sId = trim($request['id']);
+            $str = mb_strtolower($request['id']);
+
+            if (substr($str, 0, 3) == 'id:' && intval(substr($str, 3, strlen($str)))) {
+                $search[] = '`id` = ' . intval(str_replace('id:', '', $sId));
+            } else {
+                $search[] = '(LOWER(`name`) LIKE \'%' . MYSQL::mres($sId) . '%\' OR LOWER(`url`) LIKE \'%' . MYSQL::mres($sId) . '%\')';
+            }
+        }
+
+        if ($catId = intval($request['category_id'] ?? 0)) {
+            $search[] = '`category_id` = ' . $catId;
+        }
+
+        if (trim($request['supplier_id'] ?? '') !== '') {
+            $search[] = '`supplier_id` = ' . intval($request['supplier_id']);
+        }
+
+        if ($matId = intval($request['material_id'] ?? 0)) {
+            $oSeries2Materials = new Catalog_Series_2Materials();
+            $sIds = $oSeries2Materials->getCol(
+                'series_id',
+                '`material_id` = ' . $matId
+            );
+            $sIds = array_unique($sIds);
+            $sIds[] = 0;
+            $search[] = '`id` IN (' . implode(',', $sIds) . ')';
+        }
+
+        if (!isset($request['out_of_production']) || trim($request['out_of_production']) === '0') {
+            $search[] = '`out_of_production` = 0';
+        } elseif (trim($request['out_of_production']) === '1') {
+            $search[] = '`out_of_production` = 1';
+        }
+
+        if (!empty($request['have_comments'])) {
+            $search[] = "`admin_comment` <> ''";
+        }
+
+        return $search;
+    }
+
+
+    /**
+     * Базовая область сортировки серий (поле order общее для всего каталога).
+     *
+     * @param array $request
+     * @return string
+     */
+    static function buildBaseScopeFromRequest(array $request)
+    {
+        $search = array();
+
+        if (!isset($request['out_of_production']) || trim($request['out_of_production']) === '0') {
+            $search[] = '`out_of_production` = 0';
+        } elseif (trim($request['out_of_production']) === '1') {
+            $search[] = '`out_of_production` = 1';
+        }
+
+        return implode(' AND ', $search) ?: '1';
+    }
+
+
+    function dragSortSave($order)
+    {
+        list($filterWhere, $onPage, $page) = self::dragSortContextFromRequest();
+        $baseScope = self::buildBaseScopeFromRequest($_REQUEST);
+
+        $oSeries = new Catalog_Series();
+        $filteredIds = $oSeries->getCol('id', $filterWhere, '`order` ASC');
+        $offset = ($page - 1) * $onPage;
+        $visibleIds = array_slice($filteredIds, $offset, $onPage);
+
+        $this->dragSortSaveScoped($order, $baseScope, $visibleIds);
+    }
 }

@@ -84,6 +84,13 @@ class mGroups extends Admin {
     }
 
 
+    function dragSortSave($order)
+    {
+        $categoryId = intval($_REQUEST['c'] ?? $_GET['c'] ?? 0);
+        $this->dragSortSaveScoped($order, '`category_id` = ' . $categoryId);
+    }
+
+
     /** Удаление
      * @param $iId
      */
