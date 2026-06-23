@@ -3,7 +3,20 @@ function dragSortPostData(order){
         '&direct=' + encodeURIComponent(dragTableDirect) +
         '&act=dragsort';
 
-    if(window.location.search && window.location.search.length > 1){
+    var searchForm = document.querySelector('form.search');
+    if(searchForm){
+        var inputs = searchForm.querySelectorAll('input, select, textarea');
+        for(var i = 0, l = inputs.length; i < l; i++){
+            var input = inputs[i];
+            if(!input.name || input.disabled){
+                continue;
+            }
+            if((input.type === 'checkbox' || input.type === 'radio') && !input.checked){
+                continue;
+            }
+            data += '&' + encodeURIComponent(input.name) + '=' + encodeURIComponent(input.value);
+        }
+    } else if(window.location.search && window.location.search.length > 1){
         data += '&' + window.location.search.substring(1);
     }
 
@@ -123,7 +136,15 @@ function DragSort(table){
     this.getIDS = function(){
         var ids = [];
         var cells = byTag('TD', table);
-        for(var i = 0, l = cells.length; i < l; i++) if(dragSortHasClass(cells[i], 'dragSort-id')) ids.push(Math.abs(cells[i].innerHTML));
+        for(var i = 0, l = cells.length; i < l; i++) {
+            if(!dragSortHasClass(cells[i], 'dragSort-id')) {
+                continue;
+            }
+            var id = parseInt(String(cells[i].innerHTML).replace(/\s/g, ''), 10);
+            if(id){
+                ids.push(id);
+            }
+        }
         return ids;
     };
 

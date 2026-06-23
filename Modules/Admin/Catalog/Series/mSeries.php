@@ -29,6 +29,8 @@ class mSeries extends Admin
      */
     const ON_PAGE_DEFAULT = 50;
 
+    const SORT_ORDER = '`order` ASC, `id` ASC';
+
 
     /**
      * @static
@@ -124,7 +126,7 @@ class mSeries extends Admin
             $onPage,
             '*',
             implode(' AND ', $search),
-            'order'
+            self::SORT_ORDER
         );
 
         $series = $oSeries->details($series);
@@ -460,13 +462,83 @@ class mSeries extends Admin
     function dragSortSave($order)
     {
         list($filterWhere, $onPage, $page) = self::dragSortContextFromRequest();
-        $baseScope = self::buildBaseScopeFromRequest($_REQUEST);
+
+        $newIds = array();
+        foreach (explode(',', trim($order)) as $id) {
+            if (intval($id)) {
+                $newIds[] = intval($id);
+            }
+        }
+        if (count($newIds) < 2) {
+            exit('Requires at least two objects');
+        }
+
+        $dir = strtoupper(trim($_REQUEST['direct'] ?? 'ASC'));
+        if ($dir === 'DESC') {
+            $newIds = array_reverse($newIds);
+        }
 
         $oSeries = new Catalog_Series();
-        $filteredIds = $oSeries->getCol('id', $filterWhere, '`order` ASC');
+        $filteredIds = $oSeries->getCol('id', $filterWhere, self::SORT_ORDER);
+        if (count($filteredIds) < 2) {
+            exit('Requires at least two objects');
+        }
+
         $offset = ($page - 1) * $onPage;
         $visibleIds = array_slice($filteredIds, $offset, $onPage);
+        if (count($visibleIds) < 2) {
+            exit('Requires at least two objects');
+        }
 
-        $this->dragSortSaveScoped($order, $baseScope, $visibleIds);
+        $visibleSet = array_flip($visibleIds);
+        $newIdsFiltered = array();
+        foreach ($newIds as $id) {
+            if (isset($visibleSet[$id])) {
+                $newIdsFiltered[] = $id;
+            }
+        }
+        if (count($newIdsFiltered) < 2) {
+            exit('Requires at least two objects');
+        }
+
+        // Переставляем только текущую страницу внутри отфильтрованного списка
+        $reorderedFiltered = array_merge(
+            array_slice($filteredIds, 0, $offset),
+            $newIdsFiltered,
+            array_slice($filteredIds, $offset + count($visibleIds))
+        );
+
+        $baseScope = self::buildBaseScopeFromRequest($_REQUEST);
+        if ($filterWhere === $baseScope) {
+            $finalIds = $reorderedFiltered;
+        } else {
+            $globalIds = $oSeries->getCol('id', $baseScope, self::SORT_ORDER);
+            $filteredLookup = array_flip($filteredIds);
+            $before = array();
+            $after = array();
+            $seenFiltered = false;
+
+            foreach ($globalIds as $id) {
+                if (isset($filteredLookup[$id])) {
+                    $seenFiltered = true;
+                    continue;
+                }
+                if (!$seenFiltered) {
+                    $before[] = $id;
+                } else {
+                    $after[] = $id;
+                }
+            }
+
+            $finalIds = array_merge($before, $reorderedFiltered, $after);
+        }
+
+        $ord = 1;
+        foreach ($finalIds as $id) {
+            $oSeries->upd($id, array('order' => $ord));
+            $ord++;
+        }
+
+        exit;
     }
 }
