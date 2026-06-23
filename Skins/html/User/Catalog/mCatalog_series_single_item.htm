@@ -497,7 +497,9 @@
 
                 <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
-                <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
+                <div class="mt-10">
+                    <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
+                </div>
 
             </div>
 
@@ -1007,6 +1009,14 @@
                 <!-- Область табов -->
                 <div id="tabsScroller1"
                      class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
+                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                    <button
+                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        data-tab="description">
+                        Описание
+                    </button>
+                    <?php } ?>
+
                     <?php if (count($options)) { ?>
                     <button
                         id="section-specs"
@@ -1058,8 +1068,15 @@
         <!-- Контент вкладок -->
         <div class="description1">
 
+            <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+            <!-- Описание серии -->
+            <div class="text" id="tab-description" style="display: block;">
+                <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
+            </div>
+            <?php } ?>
+
             <!-- Характеристики -->
-            <div class="text options" id="tab-options" style="display: <?php echo count($options) ? 'block' : 'none'; ?>;" itemprop="description">
+            <div class="text options" id="tab-options" style="display: <?php echo empty(trim($seriesInf['text'] ?? '')) && count($options) ? 'block' : 'none'; ?>;" itemprop="description">
 
                 <?php
     $processedOptions = [];
@@ -1166,7 +1183,7 @@
             </script>
 
             <!-- Доставка и оплата -->
-            <div class="text" id="tab-delivery" style="display: <?php echo count($options) ? 'none' : 'block'; ?>;">
+            <div class="text" id="tab-delivery" style="display: <?php echo empty(trim($seriesInf['text'] ?? '')) && !count($options) ? 'block' : 'none'; ?>;">
                 <div id="text-delivery">
                     <?php
             $t = $catInf['series_info'];
@@ -1314,11 +1331,13 @@
                 });
             });
 
-            <?php if (count($options)) { ?>
+            <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                showTab('description');
+            <?php } elseif (count($options)) { ?>
                 showTab('options');
-                <?php } else { ?>
+            <?php } else { ?>
                 showTab('delivery');
-                <?php } ?>
+            <?php } ?>
 
             setTimeout(updateFade, 100);
             const tabsScroller = document.getElementById('tabsScroller1');
@@ -1342,8 +1361,6 @@
     </script>
 
     <hr class="mb-6 border-gray-300 mt-12" />
-
-    <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
 
     <?php if(count($linkages)) { ?>
     <?php foreach($linkages as $ln => $l) { ?>
