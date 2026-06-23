@@ -55,7 +55,7 @@ class mItemsGroups extends Admin {
 		$groups = $oItemsGroups->get(
 			'*',
 			'`category_id` = ' . $categoryId,
-			'order'
+			'`order` ASC, `id` ASC'
 		);
 
 		// К-во товаров в каждой группе
@@ -89,7 +89,7 @@ class mItemsGroups extends Admin {
 
     function dragSortSave($order)
     {
-        $categoryId = intval($_REQUEST['c'] ?? 0);
+        $categoryId = intval($_REQUEST['c'] ?? $_GET['c'] ?? 0);
         $this->dragSortSaveScoped($order, '`category_id` = ' . $categoryId);
     }
 

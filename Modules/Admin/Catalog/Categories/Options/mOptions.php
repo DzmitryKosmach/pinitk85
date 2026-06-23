@@ -61,7 +61,7 @@ class mOptions extends Admin
         $options = $oOpts4Series->get(
             '*',
             '`category_id` = ' . $categoryId,
-            'order'
+            '`order` ASC, `id` ASC'
         );
 
         // Выводим страницу
@@ -75,7 +75,7 @@ class mOptions extends Admin
 
     function dragSortSave($order)
     {
-        $categoryId = intval($_REQUEST['c'] ?? 0);
+        $categoryId = intval($_REQUEST['c'] ?? $_GET['c'] ?? 0);
         $this->dragSortSaveScoped($order, '`category_id` = ' . $categoryId);
     }
 
