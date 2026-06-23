@@ -32,9 +32,6 @@ function dragSortHasClass(el, className){
 }
 
 function dragSortResolveUrl(){
-    if(typeof dragTableUrl === 'string' && dragTableUrl){
-        return dragTableUrl;
-    }
     return window.location.pathname + window.location.search;
 }
 
