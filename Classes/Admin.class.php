@@ -183,4 +183,88 @@ abstract class Admin
 
         exit;
     }
+
+
+    /**
+     * Сохранение порядка с учётом области (parent_id, category_id, series_id…) и опционального подмножества (фильтр, страница).
+     *
+     * @param string      $order
+     * @param string      $scopeWhere SQL-условие области сортировки
+     * @param array|null  $visibleIds ID записей на текущей странице/в текущем фильтре
+     * @param string|null $visibleWhere SQL для получения visibleIds (альтернатива $visibleIds)
+     */
+    final protected function dragSortSaveScoped($order, $scopeWhere, $visibleIds = null, $visibleWhere = null)
+    {
+        $order = trim($order);
+        $dir = strtoupper(trim($_REQUEST['direct'] ?? 'ASC'));
+        if (!in_array($dir, array('ASC', 'DESC'), true)) {
+            $dir = 'ASC';
+        }
+
+        $newIds = array();
+        foreach (explode(',', $order) as $id) {
+            if (intval($id)) {
+                $newIds[] = intval($id);
+            }
+        }
+        if (count($newIds) < 2) {
+            exit('Requires at least two objects');
+        }
+
+        $o = new $this->mainClass();
+        $scopeCond = $scopeWhere ? '(' . $scopeWhere . ')' : '1';
+
+        $existingIds = $o->getCol(
+            'id',
+            '`id` IN (' . implode(',', $newIds) . ') AND ' . $scopeCond,
+            '`order` ASC'
+        );
+        $newIds = array_values(array_intersect($newIds, $existingIds));
+        if (count($newIds) < 2) {
+            exit('Requires at least two objects');
+        }
+
+        if ($dir === 'DESC') {
+            $newIds = array_reverse($newIds);
+        }
+
+        $allSiblingIds = $o->getCol('id', $scopeCond, '`order` ASC');
+
+        if ($visibleIds === null && $visibleWhere !== null) {
+            $visibleIds = $o->getCol('id', $visibleWhere, '`order` ASC');
+        }
+
+        $hasSubset = is_array($visibleIds) && count($visibleIds) > 0
+            && count($visibleIds) < count($allSiblingIds);
+        $visibleSet = $hasSubset ? array_flip($visibleIds) : array();
+
+        $before = array();
+        $after = array();
+        $passedVisible = false;
+
+        foreach ($allSiblingIds as $id) {
+            if (in_array($id, $newIds, true)) {
+                $passedVisible = true;
+                continue;
+            }
+            if ($hasSubset && isset($visibleSet[$id])) {
+                continue;
+            }
+            if (!$passedVisible) {
+                $before[] = $id;
+            } else {
+                $after[] = $id;
+            }
+        }
+
+        $finalIds = array_merge($before, $newIds, $after);
+
+        $ord = 1;
+        foreach ($finalIds as $id) {
+            $o->upd($id, array('order' => $ord));
+            $ord++;
+        }
+
+        exit;
+    }
 }

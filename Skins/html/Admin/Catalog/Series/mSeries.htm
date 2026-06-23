@@ -154,7 +154,7 @@
 <?php echo $toggle; ?>
 
 <script>
-	dragTableUrl = '<?php echo Url::buildUrl(0); ?>';
+	dragTableUrl = '<?php echo Url::buildUrl(0, $_GET); ?>';
 	dragTableDirect = 'ASC';
 </script>
 <table class="admin_table" id="dragTable">

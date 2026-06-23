@@ -1,3 +1,30 @@
+function dragSortPostData(order){
+    var data = 'order=' + encodeURIComponent(order) +
+        '&direct=' + encodeURIComponent(dragTableDirect) +
+        '&act=dragsort';
+
+    if(window.location.search && window.location.search.length > 1){
+        data += '&' + window.location.search.substring(1);
+    }
+
+    return data;
+}
+
+function dragSortHasClass(el, className){
+    if(!el || !el.className) return false;
+    if(el.classList && el.classList.contains){
+        return el.classList.contains(className);
+    }
+    return (' ' + el.className + ' ').indexOf(' ' + className + ' ') !== -1;
+}
+
+function dragSortResolveUrl(){
+    if(typeof dragTableUrl === 'string' && dragTableUrl){
+        return dragTableUrl;
+    }
+    return window.location.pathname + window.location.search;
+}
+
 function DragSort(table){
 
     this.dragON = false;
@@ -20,7 +47,7 @@ function DragSort(table){
         // Находим строки таблицы
         var cells = byTag('TD', table);
         for(var i = 0, l = cells.length; i < l; i++)
-            if(cells[i].className == 'dragSort-id'){
+            if(dragSortHasClass(cells[i], 'dragSort-id')){
                 var rowE = cells[i].parentNode;
                 while(rowE.tagName != 'TR' && rowE.tagName != 'BODY') rowE = rowE.parentNode;
                 if(rowE.tagName != 'TR') return;
@@ -85,11 +112,9 @@ function DragSort(table){
         this.dragON = false;
 
         AJAX.lookup(
-            dragTableUrl,
+            dragSortResolveUrl(),
             null,
-            'order=' + encodeURIComponent(this.getIDS()) +
-                '&direct=' + encodeURIComponent(dragTableDirect) +
-                '&act=dragsort'
+            dragSortPostData(this.getIDS())
         );
     };
 
@@ -98,7 +123,7 @@ function DragSort(table){
     this.getIDS = function(){
         var ids = [];
         var cells = byTag('TD', table);
-        for(var i = 0, l = cells.length; i < l; i++) if(cells[i].className == 'dragSort-id') ids.push(Math.abs(cells[i].innerHTML));
+        for(var i = 0, l = cells.length; i < l; i++) if(dragSortHasClass(cells[i], 'dragSort-id')) ids.push(Math.abs(cells[i].innerHTML));
         return ids;
     };
 
@@ -202,7 +227,7 @@ function DragSortRowO(rowEelement, num, table){
     // Область, за которую нужно хвататься
     var cells = byTag('TD', rowEelement);
     for(var i = 0, l = cells.length; i < l; i++){
-	    if(cells[i].className == 'dragSort-pull') cells[i].onmousedown = function(){
+	    if(dragSortHasClass(cells[i], 'dragSort-pull')) cells[i].onmousedown = function(){
 		    table.dragStart(rowEelement)
 	    }
     }
@@ -212,7 +237,8 @@ var dragTable;
 var dragTableUrl = '';
 var dragTableDirect = 'ASC';
 onLoad(function(){
-    if($$$('dragTable') && dragTableUrl){
+    if($$$('dragTable')){
+        dragTableUrl = dragSortResolveUrl();
         dragTable = new DragSort($$$('dragTable'));
         dragTable.init();
     }
