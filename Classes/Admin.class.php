@@ -219,7 +219,14 @@ abstract class Admin
             '`id` IN (' . implode(',', $newIds) . ') AND ' . $scopeCond,
             '`order` ASC'
         );
-        $newIds = array_values(array_intersect($newIds, $existingIds));
+        $existingSet = array_flip($existingIds);
+        $newIdsFiltered = array();
+        foreach ($newIds as $id) {
+            if (isset($existingSet[$id])) {
+                $newIdsFiltered[] = $id;
+            }
+        }
+        $newIds = $newIdsFiltered;
         if (count($newIds) < 2) {
             exit('Requires at least two objects');
         }

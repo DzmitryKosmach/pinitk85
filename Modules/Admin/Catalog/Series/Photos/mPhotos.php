@@ -54,7 +54,7 @@ class mPhotos extends Admin
             $oPhotos->get(
                 '*',
                 '`series_id` = ' . self::$seriesId,
-                'order'
+                '`order` ASC, `id` ASC'
             )
         );
 
@@ -177,6 +177,13 @@ class mPhotos extends Admin
         //dd($id, $_GET, $_POST);
 
         Pages::flash( count($files) == 1 ? 'Фотография успешно сохранена.' : 'Фотографии успешно сохранены.');
+    }
+
+
+    function dragSortSave($order)
+    {
+        $seriesId = intval($_REQUEST['s'] ?? $_GET['s'] ?? 0);
+        $this->dragSortSaveScoped($order, '`series_id` = ' . $seriesId);
     }
 
 
