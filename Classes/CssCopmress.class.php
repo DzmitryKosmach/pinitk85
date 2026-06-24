@@ -16,7 +16,7 @@ class CssCopmress {
 	/**
 	 *
 	 */
-	const V = '?6';
+	const V = '?8';
 
 	/** CSS-группы файлов
 	 * @var array
@@ -96,6 +96,30 @@ class CssCopmress {
 		}
 
 		return $html;
+	}
+
+	/** Неблокирующая загрузка CSS-группы (preload + onload) */
+	static function loadAsync($module){
+		if(!isset(self::$modules[$module]) || !count(self::$modules[$module])){
+			return '';
+		}
+
+		if(Config::$debug){
+			$html = '';
+			foreach(self::$modules[$module] as $file){
+				$html .= '<link rel="preload" href="' . $file . self::V . '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
+				$html .= '<noscript><link href="' . $file . self::V . '" rel="stylesheet"></noscript>';
+			}
+			return $html;
+		}
+
+		$minFile = self::minFileName($module);
+		if(!is_file(_ROOT . $minFile)){
+			self::makeMin($module);
+		}
+
+		return '<link rel="preload" href="' . $minFile . self::V . '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">'
+			. '<noscript><link href="' . $minFile . self::V . '" rel="stylesheet"></noscript>';
 	}
 
 
