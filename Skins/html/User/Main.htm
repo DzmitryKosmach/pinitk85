@@ -125,12 +125,16 @@ function getHomeUrl() {
 
     <link rel="preload" href="/dist/output.css" as="style">
     <link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-500.woff2" as="font" type="font/woff2" crossorigin>
     <?php
     $homePath = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
     if ($homePath === '/' || preg_match('#^/[^/]+/?$#', $homePath)) { ?>
     <link rel="preload" href="/images/index/main1_414.webp" as="image" media="(max-width: 414px)" fetchpriority="high">
     <link rel="preload" href="/images/index/main1.webp" as="image" media="(min-width: 415px)" fetchpriority="high">
     <?php } ?>
+    <?php if (!empty($pageInf['perf_layout']) && $pageInf['perf_layout'] === 'catalog_series') {
+        include(Config::path('skins') . '/html/Components/head_catalog_series.htm');
+    } ?>
 
     <?php echo CssCopmress::load('core') ?>
     <script>
@@ -1597,7 +1601,8 @@ function getHomeUrl() {
 <!-- Виджет переключения цветовых схем -->
 <?php include(Config::path('skins') . '/html/Components/color_switch.htm'); ?>
 
-<link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" type="text/css" />
+<link rel="preload" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="<?php echo getImagePath('/Skins/css/minn.css'); ?>"></noscript>
 <style>
     .fade-in {
         opacity: 1;

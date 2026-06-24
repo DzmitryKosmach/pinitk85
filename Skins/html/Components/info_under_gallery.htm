@@ -1,165 +1,268 @@
 <?php if (!empty(trim($seriesInf['text'] ?? ''))): ?>
+
 <!-- Описание под галереей -->
+
 <div class="bg-white py-4 px-6 rounded-lg shadow-md" id="series-block">
+
   <div class="relative">
-    <!-- ✅ Контейнер для текста с overflow и position -->
+
     <div id="series-text-container" class="relative overflow-hidden">
+
       <div
+
         id="series-text"
+
         class="!text-base !leading-6 transition-all duration-300"
+
       >
+
         <?php echo $seriesInf['text']; ?>
+
       </div>
 
-      <!-- Градиент поверх текста -->
+
+
       <div
+
         id="fade-gradient"
+
         class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none hidden"
+
       ></div>
+
     </div>
 
+
+
     <a
+
       id="read-more-btn"
+
       class="inline-block !text-gray-600 mt-2 cursor-pointer hidden relative z-10"
+
     >
+
       Читать все
+
     </a>
+
   </div>
+
 </div>
 
+
+
 <style>
-  /* Стили только для контента внутри #series-block */
+
   #series-block h2,
+
   #series-block h3 {
-    font-size: 1.125rem; /* text-lg */
-    font-weight: 600; /* font-semibold */
-    margin-top: 1rem; /* mt-4 */
-    margin-bottom: 0.5rem; /* mb-2 */
+
+    font-size: 1.125rem;
+
+    font-weight: 600;
+
+    margin-top: 1rem;
+
+    margin-bottom: 0.5rem;
+
     line-height: 1.25;
+
   }
+
+
 
   #series-block p {
-    font-size: 1rem; /* text-base */
-    line-height: 1.5; /* leading-6 */
-    margin-bottom: 0.75rem; /* mb-3 */
+
+    font-size: 1rem;
+
+    line-height: 1.5;
+
+    margin-bottom: 0.75rem;
+
     margin-top: 0;
+
   }
+
+
 
   #series-block ul,
+
   #series-block ol {
+
     list-style-type: disc;
-    padding-left: 1.25rem; /* pl-5 */
-    margin-bottom: 0.75rem; /* mb-3 */
+
+    padding-left: 1.25rem;
+
+    margin-bottom: 0.75rem;
+
     margin-top: 0;
+
   }
+
+
 
   #series-block ul ul,
+
   #series-block ol ol {
+
     list-style-type: circle;
-    padding-left: 1rem; /* pl-4 */
+
+    padding-left: 1rem;
+
     margin-bottom: 0.5rem;
+
   }
+
+
 
   #series-block li {
+
     font-size: 1rem;
-    margin-bottom: 0.5rem; /* space-y-1 */
+
+    margin-bottom: 0.5rem;
+
   }
+
+
 
   #series-block a {
+
     color: #2563bb;
+
     text-decoration: underline;
+
   }
+
+
 
   #series-block a:hover {
-    color: #1e40af; /* text-blue-800 */
+
+    color: #1e40af;
+
   }
+
+
 
   #series-block strong,
+
   #series-block b {
-    font-weight: 700; /* font-bold */
+
+    font-weight: 700;
+
   }
+
+
 
   #series-block em,
+
   #series-block i {
+
     font-style: italic;
+
   }
 
-  /* Убираем лишние отступы у первого и последнего элемента */
+
+
   #series-text-container > p > *:first-child,
+
   #series-text-container > p > :first-child {
+
     margin-top: 0 !important;
+
   }
+
+
 
   #series-text-container > p > *:last-child,
+
   #series-text-container > p > :last-child {
+
     margin-bottom: 0 !important;
+
   }
+
+
+
+  /* Сворачивание через line-clamp — без JS-измерений на загрузке (меньше CLS) */
+
+  #series-text-container:not(.expanded) #series-text {
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+
+    -webkit-line-clamp: 4;
+
+    overflow: hidden;
+
+  }
+
 </style>
 
+
+
 <script>
-  // Читать все
+
   document.addEventListener("DOMContentLoaded", () => {
-    const textEl = document.getElementById("series-text"); // <p>
-    const container = document.getElementById("series-text-container"); // обёртка
+
+    const textEl = document.getElementById("series-text");
+
+    const container = document.getElementById("series-text-container");
+
     const btn = document.getElementById("read-more-btn");
+
     const gradient = document.getElementById("fade-gradient");
+
     const block = document.getElementById("series-block");
 
-    if (!textEl || !container) return;
 
-    const maxLines = 4;
-    let maxHeight = 0;
 
-    const updateHeights = () => {
-      const computed = window.getComputedStyle(textEl);
-      let lineHeight = parseFloat(computed.lineHeight);
+    if (!textEl || !container || !btn) return;
 
-      if (isNaN(lineHeight)) {
-        const tempSpan = document.createElement("span");
-        tempSpan.style.visibility = "hidden";
-        tempSpan.style.font = computed.font;
-        tempSpan.textContent = "Hg";
-        document.body.appendChild(tempSpan);
-        lineHeight = tempSpan.getBoundingClientRect().height;
-        document.body.removeChild(tempSpan);
-      }
 
-      maxHeight = lineHeight * maxLines;
-      return maxHeight;
-    };
 
-    const checkTruncation = () => {
-      updateHeights();
-      // Используем requestAnimationFrame для точного измерения после рендера
-      requestAnimationFrame(() => {
-        const realHeight = textEl.scrollHeight;
-        if (realHeight > maxHeight) {
-          container.style.maxHeight = maxHeight + "px";
-          btn.classList.remove("hidden");
-          gradient.classList.remove("hidden");
-        }
-      });
-    };
+    if (textEl.scrollHeight > textEl.clientHeight + 1) {
 
-    checkTruncation();
+      btn.classList.remove("hidden");
+
+      gradient.classList.remove("hidden");
+
+    }
+
+
 
     btn.addEventListener("click", () => {
-      if (container.style.maxHeight && container.style.maxHeight !== "none") {
-        // Разворачиваем
-        container.style.maxHeight = "none";
+
+      if (!container.classList.contains("expanded")) {
+
+        container.classList.add("expanded");
+
         btn.textContent = "Свернуть";
+
         gradient.classList.add("hidden");
+
       } else {
-        // Сворачиваем
-        container.style.maxHeight = maxHeight + "px";
+
+        container.classList.remove("expanded");
+
         btn.textContent = "Читать все";
+
         gradient.classList.remove("hidden");
 
-        // Плавная прокрутка к блоку
+
+
         const top = block.getBoundingClientRect().top + window.scrollY - 80;
+
         window.scrollTo({ top, behavior: "smooth" });
+
       }
+
     });
+
   });
+
 </script>
+
 <?php endif; ?>
+

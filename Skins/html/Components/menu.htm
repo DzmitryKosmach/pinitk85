@@ -41,7 +41,7 @@ $menuItems = [
 ?>
 
 
-<nav id="main-nav" class="flex flex-wrap justify-center mt-2 sm3:mt-0 lg:justify-start gap-5 lg:gap-8 text-sm sm:text-base lg:text-lg font-semibold sm:font-medium relative z-50 transition-all duration-300">
+<nav id="main-nav" class="flex flex-wrap justify-center mt-2 sm3:mt-0 lg:justify-start gap-5 lg:gap-8 text-sm sm:text-base lg:text-lg font-semibold sm:font-medium relative z-50 transition-[color,background-color] duration-300 min-h-[2.5rem]">
     <?php foreach ($menuItems as $index => $menuItem): ?>
     <?php if ($menuItem['is_dropdown'] && !empty($menuItem['items'])): ?>
     <!-- Dropdown menu item -->
