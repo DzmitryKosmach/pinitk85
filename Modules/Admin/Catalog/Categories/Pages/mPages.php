@@ -60,7 +60,7 @@ class mPages extends Admin {
         $pages = $oPages->get(
 			'*',
 			'`group_id` = ' . $groupId,
-            'order'
+            '`order` ASC, `id` ASC'
         );
 
 		// Получаем для каждой категории к-во подкатегорий и серий
@@ -100,6 +100,13 @@ class mPages extends Admin {
 			'categoryInf'	=> $categoryInf,
 			'pages'		=> $pages
         ));
+    }
+
+
+    function dragSortSave($order)
+    {
+        $groupId = intval($_REQUEST['g'] ?? $_GET['g'] ?? 0);
+        $this->dragSortSaveScoped($order, '`group_id` = ' . $groupId);
     }
 
 
