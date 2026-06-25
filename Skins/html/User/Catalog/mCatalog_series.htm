@@ -2,22 +2,10 @@
 $_c_lcp_w = 578;
 $_c_lcp_h = 409;
 
-$_processedOptsCount = count($options);
-if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
-    $_processedOptsCount++;
-}
-$_seriesOptsMain = min(2, $_processedOptsCount);
-$_seriesOptsExtra = max(0, $_processedOptsCount - 2);
-$_visibleSetItems = min(2, count($seriesSet));
-$_galleryMinH = count($photos) ? 340 : 0;
-$_infoMinH = 220 + $_visibleSetItems * 104 + (!empty($materials) ? 100 : 0) + 128;
-$_productRowMinH = max($_galleryMinH, $_infoMinH);
-if (count($options)) {
-    $_optsContentMinH = 56 + $_seriesOptsMain * 44 + ($_seriesOptsExtra > 0 ? 64 : 0);
-} else {
-    $_optsContentMinH = 280;
-}
-$_optsBlockMinH = 76 + 44 + 24 + $_optsContentMinH;
+$_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
+$_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
+$_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
+$_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 ?>
 
 <style>
@@ -44,7 +32,8 @@ $_optsBlockMinH = 76 + 44 + 24 + $_optsContentMinH;
         --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
     }
 
-    #options-block.elementdetail .description1 {
+    #options-block.elementdetail .description1,
+    #options-block .description1 {
         margin: 0 !important;
     }
 
@@ -286,7 +275,7 @@ $_optsBlockMinH = 76 + 44 + 24 + $_optsContentMinH;
 
             </div>
 
-            <div class="flex flex-col md:flex-row xl:gap-12 gap-6" style="min-height: <?php echo (int)$_productRowMinH; ?>px">
+            <div class="series-product-row flex flex-col md:flex-row xl:gap-12 gap-6" style="min-height: <?php echo (int)$_productRowMinH; ?>px">
                 <?php if(count($photos)) { ?>
                 <div class="md:w-1/2">
                     <div class="series-gallery-row flex lg:flex-row flex-col-reverse lg:gap-4 gap-2 lg:items-stretch">
@@ -451,7 +440,7 @@ $_optsBlockMinH = 76 + 44 + 24 + $_optsContentMinH;
 
 
                 <!-- Правая колонка: Описание и цены -->
-                <div class="info md:w-1/2" style="min-height: <?php echo (int)$_infoMinH; ?>px">
+                <div class="info series-info-col md:w-1/2" style="min-height: <?php echo (int)$_infoMinH; ?>px">
                     <!-- Блок с названием и кнопками -->
                     <div class="md:block hidden">
                         <div class="flex items-center justify-between">
@@ -1175,7 +1164,7 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
         : $base . 'border-transparent bg-white text-gray-900';
 };
 ?>
-<div class="elementdetail" id="options-block" style="min-height: <?php echo (int)$_optsBlockMinH; ?>px; --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
+<div id="options-block" style="min-height: <?php echo (int)$_optsBlockMinH; ?>px; --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
     <!-- Кнопки-вкладки -->
     <div class="options-tabs-shell relative">
         <div id="tabsWrapper1" class="relative overflow-hidden">
@@ -1957,7 +1946,7 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                         Ещё <?php echo htmlspecialchars(mb_strtolower($groupName)); ?>
-                        <span class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 text-xs font-semibold bg-white/20 rounded-full">
+                        <span class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 text-xs font-semibold rounded-full">
                             +<?php echo $hiddenCount; ?>
                         </span>
                     </button>

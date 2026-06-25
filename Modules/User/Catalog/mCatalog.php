@@ -1013,6 +1013,39 @@ class mCatalog
 
             $comments = self::getSeriesComments(self::$seriesId);
 
+            $processedOptsCount = count($options);
+            if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
+                $processedOptsCount++;
+            }
+            $visibleSetItems = min(2, count($seriesSet));
+            $galleryMinH = count($photos) ? 340 : 0;
+            $seriesBlockMinH = !empty(trim($seriesInf['text'] ?? '')) ? 168 : 0;
+            $leftColMinH = $galleryMinH + $seriesBlockMinH + ($galleryMinH && $seriesBlockMinH ? 16 : 0);
+            $infoMinH = 220 + $visibleSetItems * 104 + (!empty($materials) ? 120 : 0) + 140;
+            if (count($options)) {
+                $optsMain = min(2, $processedOptsCount);
+                $optsExtra = max(0, $processedOptsCount - 2);
+                $optsContentMinH = 56 + $optsMain * 44 + ($optsExtra > 0 ? 64 : 0);
+            } else {
+                $optsContentMinH = 280;
+            }
+
+            $pageInf['perf_layout'] = 'catalog_series';
+            $pageInf['perf_product_row_min_h'] = max($leftColMinH, $infoMinH);
+            $pageInf['perf_info_min_h'] = $infoMinH;
+            $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
+            $pageInf['perf_opts_block_min_h'] = 144 + $optsContentMinH;
+            if (!empty($photos[0])) {
+                $pageInf['perf_lcp'] = Catalog::photoUrl(
+                    Catalog_Series_Photos::$imagePath,
+                    (int)$photos[0]['id'],
+                    578,
+                    409,
+                    0,
+                    $photos[0]['_img_ext'] ?? null
+                );
+            }
+
             self::$pageInf = $pageInf;
 
             $tpl = Pages::tplFile($pageInf, 'series');

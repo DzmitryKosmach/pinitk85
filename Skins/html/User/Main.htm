@@ -355,10 +355,12 @@ function getHomeUrl() {
 
     <?php echo Options::name('head-scripts'); ?>
 
+    <?php if (empty($pageInf['perf_layout']) || $pageInf['perf_layout'] !== 'catalog_series') { ?>
     <link rel="preload" href="/Skins/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link href="/Skins/css/fonts.css" rel="stylesheet">
     </noscript>
+    <?php } ?>
 
     <!-- Tailwind (инлайн) -->
     <style>
