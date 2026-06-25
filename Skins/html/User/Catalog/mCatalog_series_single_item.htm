@@ -635,12 +635,23 @@
                 <!-- Табы -->
                 <div class="flex gap-2 text-sm mb-8">
 
+                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
                     <button class="tab-btn1
                             px-4 py-2 rounded-lg break-all bg-white border border-gray-200
                             shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
                             hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
                             active:translate-y-[-1px]
-                            transition-all duration-200 ease-in-out" data-target="section-specs">
+                            transition-all duration-200 ease-in-out" data-tab="description">
+                        Описание
+                    </button>
+                    <?php } ?>
+
+                    <button class="tab-btn1
+                            px-4 py-2 rounded-lg break-all bg-white border border-gray-200
+                            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
+                            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
+                            active:translate-y-[-1px]
+                            transition-all duration-200 ease-in-out" data-tab="options">
                         Характеристики
                     </button>
 
@@ -649,27 +660,25 @@
                 <script>
                     document.querySelectorAll('.tab-btn1').forEach(button => {
                         button.addEventListener('click', function () {
-                            // Убираем активный класс со всех
                             document.querySelectorAll('.tab-btn1').forEach(btn => {
                                 btn.classList.remove('active', 'bg-blue-600', 'text-white');
                                 btn.classList.add('bg-white', 'text-gray-700');
                             });
 
-                            // Добавляем активный класс к нажатой
                             this.classList.add('active', 'bg-blue-600', 'text-white');
                             this.classList.remove('bg-white', 'text-gray-700');
 
-                            // Получаем целевой блок
-                            const targetId = this.getAttribute('data-target');
-                            const targetElement = document.getElementById(targetId);
+                            const tabName = this.getAttribute('data-tab');
+                            if (tabName && typeof showTab === 'function') {
+                                showTab(tabName);
+                            }
 
+                            const targetElement = document.getElementById('options-block');
                             if (targetElement) {
-                                // Получаем позицию элемента
                                 const elementTop = targetElement.getBoundingClientRect().top;
                                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                                const finalScrollPosition = scrollTop + elementTop - 76; // смещение на 76px вверх
+                                const finalScrollPosition = scrollTop + elementTop - 76;
 
-                                // Плавная прокрутка
                                 window.scrollTo({
                                     top: finalScrollPosition,
                                     behavior: 'smooth'
