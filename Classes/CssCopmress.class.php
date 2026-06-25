@@ -16,7 +16,7 @@ class CssCopmress {
 	/**
 	 *
 	 */
-	const V = '?8';
+	const V = '?9';
 
 	/** CSS-группы файлов
 	 * @var array
