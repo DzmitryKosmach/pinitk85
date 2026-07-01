@@ -43,6 +43,7 @@
 
     #materials-popup-content {
         width: 360px;
+        min-height: 135px; /* высота одного ряда .materials-row */
     }
 
     #materials-level1-content,
@@ -122,11 +123,15 @@
         display: block;
         position: relative;
         width: 76px;
-        /* height: 61px; */
+        height: 61px;
         margin-bottom: 2px;
         border: 3px solid #ffffff;
         border-radius: 8px;
         box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .elementdetail {
+        min-height: 225px;
     }
 
     .item-current-material img {
@@ -976,19 +981,7 @@
 
 
                 <script>
-                    <?php
-                        // FIX: исправление некорректной сортировки элементов в pageInf.
-                        /*
-                        $materialsOrder = [];
-                        foreach ($materials as $id => $im) {
-                            foreach ($itemInf['materials'] as $ii => $inf) {
-                                if ((int)$id === (int)$inf['material_id']) {
-                                    $materialsOrder[] = $inf;
-                                }
-                            }
-                        }
-                        */
-                        ?>
+
                     oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
                     onLoad(function () {
                         //oMaterials.setRowSize(1, 4);
