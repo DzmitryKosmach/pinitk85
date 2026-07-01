@@ -154,7 +154,9 @@ var oMaterials = new (function () {
     for (i = 0, l = this.items2mats[openedItemId].length; i < l; i++) {
       mIds.push(this.items2mats[openedItemId][i].material_id);
     }
-    elPopupContent.innerHTML = materialsHtml(mIds, 1);
+    if (!elPopupContent.querySelector(".materials-row")) {
+      elPopupContent.innerHTML = materialsHtml(mIds, 1);
+    }
 
     this.onChangePageSize(false);
   };
