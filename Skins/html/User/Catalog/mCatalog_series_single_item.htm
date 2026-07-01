@@ -1,3 +1,16 @@
+<?php
+$_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
+$_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
+$_materialsMinH = (int)($pageInf['perf_materials_min_h'] ?? 220);
+$_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
+$_singleDefaultTab = !empty(trim($seriesInf['text'] ?? '')) ? 'description' : (count($options) ? 'options' : 'delivery');
+$_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
+    $base = 'tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg hover:bg-gray-50 text-center whitespace-nowrap border-2 ';
+    return $tab === $_singleDefaultTab
+        ? $base . 'border-blue-600 text-blue-600'
+        : $base . 'border-transparent bg-white text-gray-900';
+};
+?>
 <?php echo CssCopmress::load('catalog')?>
 <?php echo CssCopmress::load('series')?>
 
@@ -29,10 +42,42 @@
         }
     }
 
-    #options-block .description1 {
-        min-height: 120px;
+    #options-block {
+        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
+        --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
     }
 
+    #options-block .description1 {
+        min-height: var(--options-panel-min-h);
+    }
+
+    #options-block .description1 > .text:not([hidden]) {
+        display: block !important;
+    }
+
+    #options-block .description1 > .text[hidden] {
+        display: none !important;
+    }
+
+    #options-block .options-tabs-shell {
+        min-height: 4.75rem;
+        padding-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #options-block #tabsScroller1 {
+        height: 2.75rem;
+        align-items: center;
+    }
+
+    #options-block .tab-btn {
+        box-sizing: border-box;
+        min-height: 2.75rem;
+    }
+
+    #material-selected {
+        min-height: <?php echo (int)$_materialsMinH; ?>px;
+    }
 
     #materials-popup {
         display: block;
@@ -43,7 +88,7 @@
 
     #materials-popup-content {
         width: 360px;
-        min-height: 135px; /* высота одного ряда .materials-row */
+        min-height: <?php echo (int)$_materialsRowMinH; ?>px;
     }
 
     #materials-level1-content,
@@ -949,6 +994,128 @@
                     $mActiveName[] = $mActive['name'];
                 }
             }
+
+            $_matsInRow = 3;
+            $_topMatIds = [];
+            foreach ($itemInf['materials'] as $_im) {
+                if (isset($materials[$_im['material_id']])) {
+                    $_topMatIds[] = (int)$_im['material_id'];
+                }
+            }
+
+            $_mat2parent = [];
+            $_fillMat2parent = function (array $mats, int $parentId) use (&$_fillMat2parent, &$_mat2parent): void {
+                foreach ($mats as $_id => $_m) {
+                    $_id = (int)$_id;
+                    $_mat2parent[$_id] = $parentId;
+                    if (!empty($_m['has_sub']) && !empty($_m['sub'])) {
+                        $_fillMat2parent($_m['sub'], $_id);
+                    }
+                }
+            };
+            $_fillMat2parent($materials, 0);
+
+            $_selectedMatId = ($mActive && !empty($mActive['id'])) ? (int)$mActive['id'] : 0;
+            $_itemActiveMats = [];
+            if ($_selectedMatId) {
+                $_m = $_selectedMatId;
+                $_itemActiveMats[] = $_m;
+                while (!empty($_mat2parent[$_m])) {
+                    $_m = (int)$_mat2parent[$_m];
+                    $_itemActiveMats[] = $_m;
+                }
+            }
+
+            $_itemMatPrice = function (int $topMatId) use ($itemInf): float {
+                foreach ($itemInf['materials'] as $_im) {
+                    if ((int)$_im['material_id'] === $topMatId) {
+                        return (float)$_im['price'];
+                    }
+                }
+                return 0.0;
+            };
+
+            $_renderMaterialCard = function (int $mId) use ($materials, $_itemActiveMats, $_itemMatPrice): string {
+                if (empty($materials[$mId])) {
+                    return '';
+                }
+                $m = $materials[$mId];
+                $active = in_array($mId, $_itemActiveMats, true);
+                $className = 'material';
+                if (!empty($m['has_sub'])) {
+                    $className .= ' has-sub';
+                    $onclick = 'oMaterials.openLevel2(' . $mId . ')';
+                } else {
+                    $onclick = 'oMaterials.selectMaterial(' . $mId . ')';
+                }
+                if ($active) {
+                    $className .= ' active';
+                }
+
+                $image = '';
+                $imageBig = '';
+                if (!empty($m['image']['ext'])) {
+                    $imgBase = Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'];
+                    $ext = hsch($m['image']['ext']);
+                    $image = '<img src="' . $imgBase . '_76x61_0.' . $ext . '" width="76" height="61" alt="">';
+                    $imageBig = '<img src="' . $imgBase . '_164x132_0.' . $ext . '" width="164" height="132" alt="">';
+                }
+
+                $price = $_itemMatPrice($mId);
+                $priceStr = abs($price) > 0 ? Catalog::priceFormat($price) . ' ₽' : 'по запросу';
+                $imageClasses = 'image block relative w-[76px] h-[61px] mb-[2px] border-2 shadow';
+                $imageClasses .= $active ? ' border-[#ffa800]' : ' border-white';
+                $nameClasses = 'name table-cell align-middle h-[26px] leading-[13px] text-[11px] text-[#0075c2] underline';
+                if ($active) {
+                    $nameClasses .= ' font-semibold';
+                }
+
+                $html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
+                $html .= '<div class="material-in box-border w-[95px] h-full">';
+                $html .= '<div class="' . $imageClasses . '">' . $image;
+                if ($imageBig) {
+                    $html .= '<div class="image-big absolute z-[800] w-[164px] h-[132px] left-[-32px] top-[-65px] bg-white border-2 border-white shadow" style="display:none;">' . $imageBig . '</div>';
+                }
+                $html .= '</div>';
+                $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
+                $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
+                $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
+                $html .= '</div></div></a>';
+                return $html;
+            };
+
+            $_materialsPopupHtml = '';
+            if (!empty($_topMatIds)) {
+                $rowHtml = '';
+                $rowIndex = 0;
+                foreach ($_topMatIds as $i => $mId) {
+                    if ($i > 0 && $i % $_matsInRow === 0) {
+                        $rowClass = $rowIndex > 0 ? ' dis' : '';
+                        $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+                        $rowHtml = '';
+                        $rowIndex++;
+                    }
+                    $rowHtml .= $_renderMaterialCard($mId);
+                }
+                if ($rowHtml !== '') {
+                    $rowClass = $rowIndex > 0 ? ' dis' : '';
+                    $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+                }
+                $_materialsPopupHtml .= '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2">'
+                    . '<div class="level-tail" id="materials-level2-tail"></div>'
+                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>'
+                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
+                    . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
+                    . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
+                    . '</div>';
+                $_materialsPopupHtml .= '<div class="materials-level3 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3">'
+                    . '<div class="level-tail" id="materials-level3-tail"></div>'
+                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>'
+                    . '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>'
+                    . '</div>';
+            }
+            $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
         }
         ?>
 
@@ -971,8 +1138,8 @@
                         <div class="b mb-2 text-lg">Цветовая гамма:</div>
 
                         <div id="materials-popup">
-                            <div class="materials-level1" id="materials-popup-content" data-counts="0"></div>
-                            <a href="javascript:void(0)" class="klink-dashed underline"
+                            <div class="materials-level1" id="materials-popup-content" data-counts="<?php echo count($_topMatIds); ?>" data-ssr="1"><?php echo $_materialsPopupHtml; ?></div>
+                            <a href="javascript:void(0)" class="klink-dashed underline<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
                                onclick="oMaterials.openrows(); return false;">Показать все</a>
                         </div>
                     </div>
@@ -1001,9 +1168,9 @@
     </div>
 
     <!-- Верхние вкладки -->
-    <div class="elementdetail" id="options-block">
+    <div id="options-block" style="min-height: <?php echo (int)$_optsBlockMinH; ?>px; --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
         <!-- Кнопки-вкладки -->
-        <div class="relative mt-10 mb-6">
+        <div class="options-tabs-shell relative">
             <div id="tabsWrapper" class="relative overflow-hidden">
                 <!-- Fade справа -->
                 <div id="fadeRight1" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
@@ -1013,7 +1180,7 @@
                      class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
                     <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('description'); ?>"
                         data-tab="description">
                         Описание
                     </button>
@@ -1022,44 +1189,44 @@
                     <?php if (count($options)) { ?>
                     <button
                         id="section-specs"
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('options'); ?>"
                         data-tab="options">
                         Характеристики
                     </button>
                     <?php } ?>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('delivery'); ?>"
                         data-tab="delivery">
                         Доставка и оплата
                     </button>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('commercial'); ?>"
                         data-tab="commercial">
                         Ком. Пред
                     </button>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('sets'); ?>"
                         data-tab="sets">
                         Комплекты
                     </button>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('download'); ?>"
                         data-tab="download">
                         Скачать
                     </button>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('questions'); ?>"
                         data-tab="questions">
                         Вопросы
                     </button>
 
                     <button
-                        class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg bg-white hover:bg-gray-50 text-center whitespace-nowrap"
+                        class="<?php echo $_singleTabBtnClass('reviews'); ?>"
                         data-tab="reviews">
                         Отзывы
                     </button>
@@ -1072,13 +1239,13 @@
 
             <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
             <!-- Описание серии -->
-            <div class="text" id="tab-description" style="display: block;">
+            <div class="text" id="tab-description"<?php if ($_singleDefaultTab !== 'description') { ?> hidden<?php } ?>>
                 <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
             </div>
             <?php } ?>
 
             <!-- Характеристики -->
-            <div class="text options" id="tab-options" style="display: <?php echo empty(trim($seriesInf['text'] ?? '')) && count($options) ? 'block' : 'none'; ?>;" itemprop="description">
+            <div class="text options" id="tab-options"<?php if ($_singleDefaultTab !== 'options') { ?> hidden<?php } ?> itemprop="description">
 
                 <?php
     $processedOptions = [];
@@ -1185,7 +1352,7 @@
             </script>
 
             <!-- Доставка и оплата -->
-            <div class="text" id="tab-delivery" style="display: <?php echo empty(trim($seriesInf['text'] ?? '')) && !count($options) ? 'block' : 'none'; ?>;">
+            <div class="text" id="tab-delivery"<?php if ($_singleDefaultTab !== 'delivery') { ?> hidden<?php } ?>>
                 <div id="text-delivery">
                     <?php
             $t = $catInf['series_info'];
@@ -1203,29 +1370,29 @@
             </div>
 
             <!-- Ком. Пред (пример пустого контента) -->
-            <div class="text" id="tab-commercial" style="display: none;">
+            <div class="text" id="tab-commercial" hidden>
                 Здесь будет коммерческое предложение.
             </div>
 
             <!-- Комплекты -->
-            <div class="text" id="tab-sets" style="display: none;">
+            <div class="text" id="tab-sets" hidden>
                 Подробная информация о комплектах.
             </div>
 
             <!-- Скачать -->
-            <div class="text" id="tab-download" style="display: none;">
+            <div class="text" id="tab-download" hidden>
                 Файлы для скачивания: паспорт, сертификаты, чертежи.
             </div>
 
             <!-- Вопросы -->
-            <div class="text" id="tab-questions" style="display: none;">
+            <div class="text" id="tab-questions" hidden>
                 <a name="review"></a>
                 <h3>Задать вопрос</h3>
                 <p>Форма для отправки вопроса по товару.</p>
             </div>
 
             <!-- Отзывы -->
-            <div class="text" id="tab-reviews" style="display: none;">
+            <div class="text" id="tab-reviews" hidden>
                 <h3>Отзывы покупателей</h3>
                 <p>Отзывы и рейтинги пользователей.</p>
             </div>
@@ -1234,29 +1401,20 @@
 
     <script>
         function showTab(tabName) {
-            // Скрыть все вкладки контента
             document.querySelectorAll('.description1 .text').forEach(div => {
-                div.style.display = 'none';
+                div.hidden = (div.id !== 'tab-' + tabName);
             });
 
-            // Показать выбранную вкладку контента
-            const contentTab = document.getElementById('tab-' + tabName);
-            if (contentTab) {
-                contentTab.style.display = 'block';
-            }
-
-            // Обновить стили кнопок
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-2', 'border-blue-600', 'text-blue-600');
-                btn.classList.add('bg-white', 'text-gray-900');
+                btn.classList.remove('border-blue-600', 'text-blue-600', 'border-transparent', 'bg-white', 'text-gray-900');
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('border-blue-600', 'text-blue-600');
+                } else {
+                    btn.classList.add('border-transparent', 'bg-white', 'text-gray-900');
+                }
             });
 
-            // Найти активную кнопку
             const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-            if (activeButton) {
-                activeButton.classList.add('border-2', 'border-blue-600', 'text-blue-600');
-                activeButton.classList.remove('bg-white');
-            }
 
             // Если выбрана вкладка "reviews", выполнить плавный скролл к отзывам
             if (tabName === 'reviews') {
@@ -1272,12 +1430,13 @@
                         behavior: 'smooth'
                     });
                 }
-            } else {
+            } else if (activeButton) {
                 positionTabSmart(activeButton);
             }
         }
 
         function positionTabSmart(tab) {
+            if (!tab) return;
             const tabsScroller = document.getElementById('tabsScroller1');
             if (!tabsScroller) return;
 
@@ -1332,14 +1491,6 @@
                     showTab(btn.dataset.tab);
                 });
             });
-
-            <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-                showTab('description');
-            <?php } elseif (count($options)) { ?>
-                showTab('options');
-            <?php } else { ?>
-                showTab('delivery');
-            <?php } ?>
 
             setTimeout(updateFade, 100);
             const tabsScroller = document.getElementById('tabsScroller1');
