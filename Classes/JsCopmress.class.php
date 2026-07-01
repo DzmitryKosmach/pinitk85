@@ -19,7 +19,7 @@ class JsCopmress
 	 */
 	const V = '?14';
 
-    /** Базовый путь для локальной разработки */
+    /** Базовый URL-префикс для локальной разработки (подпапка в htdocs) */
     static function getBasePath()
     {
         // Определяем базовый путь автоматически
@@ -38,6 +38,17 @@ class JsCopmress
 
         // По умолчанию - корневой путь
         return '';
+    }
+
+    /** Преобразует web-путь (/pinitk85/Js/...) в путь на диске (_ROOT/Js/...) */
+    static function fsPath($webPath)
+    {
+        $base = self::getBasePath();
+        if ($base !== '' && strncmp($webPath, $base, strlen($base)) === 0) {
+            return _ROOT . substr($webPath, strlen($base));
+        }
+
+        return _ROOT . $webPath;
     }
 
 	/** JS-модули и файлы, в них входящие
@@ -169,7 +180,7 @@ class JsCopmress
 			$minFile = self::minFileName($module);
 			$html = '<script' . $attrs . ' src="' . $minFile . self::V . '"></script>';
 
-			if (!is_file(_ROOT . $minFile) || filesize(_ROOT . $minFile) < 100) {
+			if (!is_file(self::fsPath($minFile)) || filesize(self::fsPath($minFile)) < 100) {
 				self::makeMin($module);
 			}
 		}
@@ -221,7 +232,7 @@ class JsCopmress
 
 		$moduleJS = '';
 		foreach ($modules[$module] as $file) {
-			$moduleJS .= fgc(_ROOT . $file) . "\n\n";
+			$moduleJS .= fgc(self::fsPath($file)) . "\n\n";
 		}
 
 		$ch = curl_init();
@@ -248,7 +259,7 @@ class JsCopmress
 		}
 
 		file_put_contents(
-			_ROOT . self::minFileName($module),
+			self::fsPath(self::minFileName($module)),
 			$minCode
 		);
 	}
