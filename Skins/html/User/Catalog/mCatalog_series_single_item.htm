@@ -1,7 +1,6 @@
 <?php
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
-$_materialsMinH = (int)($pageInf['perf_materials_min_h'] ?? 220);
 $_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
 $_singleDefaultTab = !empty(trim($seriesInf['text'] ?? '')) ? 'description' : (count($options) ? 'options' : 'delivery');
 $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
@@ -10,6 +9,163 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         ? $base . 'border-blue-600 text-blue-600'
         : $base . 'border-transparent bg-white text-gray-900';
 };
+
+$_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
+$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+$_materialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
+$_materialsMinHMobile = (int)($pageInf['perf_materials_min_h'] ?? 404);
+
+$mActive = false;
+$mActiveName = [];
+$_materialsPopupHtml = '';
+$_showAllMatsLink = false;
+$_topMatIds = [];
+
+if (!empty($itemInf['materials'])) {
+    foreach ($itemInf['materials'] as $n => $im) {
+        if (!isset($materials[$im['material_id']])) {
+            unset($itemInf['materials'][$n]);
+        }
+    }
+    $itemInf['materials'] = array_values($itemInf['materials']);
+}
+
+if (count($itemInf['materials'])) {
+    $materialId = $itemInf['price_min_material_id'];
+    if (isset($materials[$materialId])) {
+        $mActive = $materials[$materialId];
+        $mActiveName = [$mActive['name']];
+        while ($mActive['has_sub'] && !empty($mActive['sub'])) {
+            $keys = array_keys($mActive['sub']);
+            $nextKey = array_shift($keys);
+            if (!isset($mActive['sub'][$nextKey])) {
+                break;
+            }
+            $mActive = $mActive['sub'][$nextKey];
+            $mActiveName[] = $mActive['name'];
+        }
+    }
+
+    $_matsInRow = 3;
+    foreach ($itemInf['materials'] as $_im) {
+        if (isset($materials[$_im['material_id']])) {
+            $_topMatIds[] = (int)$_im['material_id'];
+        }
+    }
+
+    $_mat2parent = [];
+    $_fillMat2parent = function (array $mats, int $parentId) use (&$_fillMat2parent, &$_mat2parent): void {
+        foreach ($mats as $_id => $_m) {
+            $_id = (int)$_id;
+            $_mat2parent[$_id] = $parentId;
+            if (!empty($_m['has_sub']) && !empty($_m['sub'])) {
+                $_fillMat2parent($_m['sub'], $_id);
+            }
+        }
+    };
+    $_fillMat2parent($materials, 0);
+
+    $_selectedMatId = ($mActive && !empty($mActive['id'])) ? (int)$mActive['id'] : 0;
+    $_itemActiveMats = [];
+    if ($_selectedMatId) {
+        $_m = $_selectedMatId;
+        $_itemActiveMats[] = $_m;
+        while (!empty($_mat2parent[$_m])) {
+            $_m = (int)$_mat2parent[$_m];
+            $_itemActiveMats[] = $_m;
+        }
+    }
+
+    $_itemMatPrice = function (int $topMatId) use ($itemInf): float {
+        foreach ($itemInf['materials'] as $_im) {
+            if ((int)$_im['material_id'] === $topMatId) {
+                return (float)$_im['price'];
+            }
+        }
+        return 0.0;
+    };
+
+    $_renderMaterialCard = function (int $mId) use ($materials, $_itemActiveMats, $_itemMatPrice): string {
+        if (empty($materials[$mId])) {
+            return '';
+        }
+        $m = $materials[$mId];
+        $active = in_array($mId, $_itemActiveMats, true);
+        $className = 'material';
+        if (!empty($m['has_sub'])) {
+            $className .= ' has-sub';
+            $onclick = 'oMaterials.openLevel2(' . $mId . ')';
+        } else {
+            $onclick = 'oMaterials.selectMaterial(' . $mId . ')';
+        }
+        if ($active) {
+            $className .= ' active';
+        }
+
+        $image = '';
+        $imageBig = '';
+        if (!empty($m['image']['ext'])) {
+            $imgBase = Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'];
+            $ext = hsch($m['image']['ext']);
+            $image = '<img src="' . $imgBase . '_76x61_0.' . $ext . '" width="76" height="61" alt="" decoding="async">';
+            $imageBig = '<img src="' . $imgBase . '_164x132_0.' . $ext . '" width="164" height="132" alt="" loading="lazy" decoding="async">';
+        }
+
+        $price = $_itemMatPrice($mId);
+        $priceStr = abs($price) > 0 ? Catalog::priceFormat($price) . ' ₽' : 'по запросу';
+        $imageClasses = 'image block relative w-[76px] h-[61px] mb-[2px] border-2 shadow';
+        $imageClasses .= $active ? ' border-[#ffa800]' : ' border-white';
+        $nameClasses = 'name table-cell align-middle h-[26px] leading-[13px] text-[11px] text-[#0075c2] underline';
+        if ($active) {
+            $nameClasses .= ' font-semibold';
+        }
+
+        $html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
+        $html .= '<div class="material-in box-border w-[95px] h-full">';
+        $html .= '<div class="' . $imageClasses . '">' . $image;
+        if ($imageBig) {
+            $html .= '<div class="image-big absolute z-[800] w-[164px] h-[132px] left-[-32px] top-[-65px] bg-white border-2 border-white shadow" style="display:none;">' . $imageBig . '</div>';
+        }
+        $html .= '</div>';
+        $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
+        $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
+        $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
+        $html .= '</div></div></a>';
+        return $html;
+    };
+
+    if (!empty($_topMatIds)) {
+        $rowHtml = '';
+        $rowIndex = 0;
+        foreach ($_topMatIds as $i => $mId) {
+            if ($i > 0 && $i % $_matsInRow === 0) {
+                $rowClass = $rowIndex > 0 ? ' dis' : '';
+                $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+                $rowHtml = '';
+                $rowIndex++;
+            }
+            $rowHtml .= $_renderMaterialCard($mId);
+        }
+        if ($rowHtml !== '') {
+            $rowClass = $rowIndex > 0 ? ' dis' : '';
+            $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+        }
+        $_materialsPopupHtml .= '<div class="materials-level2 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2" style="display:none">'
+            . '<div class="level-tail" id="materials-level2-tail"></div>'
+            . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>'
+            . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
+            . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
+            . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
+            . '</div>';
+        $_materialsPopupHtml .= '<div class="materials-level3 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3" style="display:none">'
+            . '<div class="level-tail" id="materials-level3-tail"></div>'
+            . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+            . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>'
+            . '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>'
+            . '</div>';
+    }
+    $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
+}
 ?>
 <?php echo CssCopmress::load('catalog')?>
 <?php echo CssCopmress::load('series')?>
@@ -44,11 +200,46 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
     #options-block {
         min-height: <?php echo (int)$_optsBlockMinH; ?>px;
+        /*height: <?php echo (int)$_optsBlockMinH; ?>px;*/
         --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
     }
 
     #options-block .description1 {
         min-height: var(--options-panel-min-h);
+        /*height: var(--options-panel-min-h);*/
+        /*overflow: hidden;*/
+    }
+
+    .single-item-info {
+        min-height: <?php echo (int)$_infoMinH; ?>px;
+    }
+
+    .single-item-benefits-slot {
+        min-height: <?php echo (int)$_benefitsMinH; ?>px;
+    }
+
+    .material-nojs {
+        display: none !important;
+    }
+
+    #material-selected {
+        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+        overflow: visible;
+    }
+
+    #material-selected.is-materials-expanded {
+        height: auto;
+        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+    }
+
+    @media (min-width: 1280px) {
+        #material-selected {
+            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
+        }
+
+        #material-selected.is-materials-expanded {
+            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
+        }
     }
 
     #options-block .description1 > .text:not([hidden]) {
@@ -73,10 +264,6 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
     #options-block .tab-btn {
         box-sizing: border-box;
         min-height: 2.75rem;
-    }
-
-    #material-selected {
-        min-height: <?php echo (int)$_materialsMinH; ?>px;
     }
 
     #materials-popup {
@@ -271,10 +458,10 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
     #materials-popup .materials-level2,
     #materials-popup .materials-level3 {
-        display: inline-block;
+        display: none;
         position: relative;
         top: -20px;
-        z-index: 50;
+        z-index: 200;
         margin: 0;
         background: #fff;
         border: 1px solid #7a8a93;
@@ -340,6 +527,12 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 </style>
 <script>
     oMaterials.tree = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($materials))?>');
+    <?php if (count($itemInf['materials'])) { ?>
+    oMaterials.items2mats[<?php echo (int)$itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?>');
+    <?php } ?>
+    if (typeof oMaterials.rebuildMat2parent === 'function') {
+        oMaterials.rebuildMat2parent();
+    }
 </script>
 
 <div id="title" class="title">
@@ -547,7 +740,7 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
                 <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
-                <div class="mt-10">
+                <div class="mt-10 single-item-benefits-slot">
                     <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
                 </div>
 
@@ -555,7 +748,7 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
             <?php } ?>
 
-            <div class="info sm2:w-1/2">
+            <div class="info sm2:w-1/2 single-item-info">
                 <!-- Блок с названием и кнопками -->
                 <div class="md:block hidden">
                     <div class="flex items-center justify-between">
@@ -846,36 +1039,9 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
                             </div>
                         </div>
 
-                        <!-- Селект материалов -->
-                        <div class="material-nojs hidden">
-                            <select name="material_id" id="item-<?= $itemId ?>-material" style="max-width:240px;">
-                                <?php foreach ($itemInf['materials'] as $im):
-            $m1 = $materials[$im['material_id']];
-            if (!empty($m1['has_sub'])):
-              foreach ($m1['sub'] as $m2):
-                if (!empty($m2['has_sub'])):
-                  foreach ($m2['sub'] as $m3): ?>
-                                <option value="<?= $m3['id'] ?>" <?= $m3['id'] == $mActive['id'] ? 'selected' : '' ?>>
-                                <?= "{$m1['name']} / {$m2['name']} / {$m3['name']}" ?>
-                                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
-                                </option>
-                                <?php endforeach;
-                else: ?>
-                                <option value="<?= $m2['id'] ?>" <?= $m2['id'] == $mActive['id'] ? 'selected' : '' ?>>
-                                <?= "{$m1['name']} / {$m2['name']}" ?>
-                                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
-                                </option>
-                                <?php endif;
-              endforeach;
-            else: ?>
-                                <option value="<?= $m1['id'] ?>" <?= $m1['id'] == $mActive['id'] ? 'selected' : '' ?>>
-                                <?= $m1['name'] ?>
-                                (<?= abs($im['price']) ? "{$im['price']} р." : 'по запросу' ?>)
-                                </option>
-                                <?php endif;
-          endforeach; ?>
-                            </select>
-                        </div>
+                        <?php if (count($itemInf['materials'])) { ?>
+                        <input type="hidden" name="material_id" id="item-<?= $itemId ?>-material" value="<?= (int)($mActive['id'] ?? 0) ?>">
+                        <?php } ?>
 
                     </form>
 
@@ -933,203 +1099,17 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
                     </div>
                 </div>
 
-                <!-- Форма выбора материала (для JS/не-JS) -->
-                <div class="material-nojs mt-8">
-                    <select name="material_id" id="item-<?php echo $itemInf['id']; ?>-material"
-                            style="max-width: 240px;" class="block w-full p-2 border rounded">
-                        <?php foreach($itemInf['materials'] as $im): ?>
-                        <?php $m = $materials[$im['material_id']]; ?>
-                        <?php if(!$m) continue; ?>
-                        <option value="<?php echo $im['material_id']; ?>" <?php if($mActive &&
-                                $m['id']==$mActive['id']) echo 'selected' ; ?>>
-                        <?php echo $m['name']; ?>
-                        <?php if($m['has_sub'] && !empty($m['sub'])): ?>
-                        <?php $firstSub = array_values($m['sub'])[0]; ?>
-                        <?php if($firstSub['has_sub'] && !empty($firstSub['sub'])): ?>
-                        <?php $secondSub = array_values($firstSub['sub'])[0]; ?>
-                        /
-                        <?php echo $firstSub['name']; ?> /
-                        <?php echo $secondSub['name']; ?>
-                        <?php else: ?>
-                        /
-                        <?php echo $firstSub['name']; ?>
-                        <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if(abs($im['price'])): ?>
-                        (
-                        <?php echo Catalog::priceFormat($im['price']); ?> р.)
-                        <?php else: ?>
-                        (по запросу)
-                        <?php endif; ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-
-                <?php
-        foreach($itemInf['materials'] as $n => $im){
-                if(!isset($materials[$im['material_id']])){
-                unset($itemInf['materials'][$n]);
-                }
-                }
-                $itemInf['materials'] = array_values($itemInf['materials']);
-                ?>
-
-                <?php
-        // Инициализируем переменные по умолчанию — это защитит от ошибки
-        $mActive = false;
-        $mActiveName = [];
-
-        if(count($itemInf['materials'])) {
-            $materialId = $itemInf['price_min_material_id'];
-            if(isset($materials[$materialId])) {
-                $mActive = $materials[$materialId];
-                $mActiveName = [$mActive['name']]; // начинаем с первого уровня
-                while($mActive['has_sub'] && !empty($mActive['sub'])) {
-                    $keys = array_keys($mActive['sub']);
-                    $nextKey = array_shift($keys);
-                    if (!isset($mActive['sub'][$nextKey])) break;
-                    $mActive = $mActive['sub'][$nextKey];
-                    $mActiveName[] = $mActive['name'];
-                }
-            }
-
-            $_matsInRow = 3;
-            $_topMatIds = [];
-            foreach ($itemInf['materials'] as $_im) {
-                if (isset($materials[$_im['material_id']])) {
-                    $_topMatIds[] = (int)$_im['material_id'];
-                }
-            }
-
-            $_mat2parent = [];
-            $_fillMat2parent = function (array $mats, int $parentId) use (&$_fillMat2parent, &$_mat2parent): void {
-                foreach ($mats as $_id => $_m) {
-                    $_id = (int)$_id;
-                    $_mat2parent[$_id] = $parentId;
-                    if (!empty($_m['has_sub']) && !empty($_m['sub'])) {
-                        $_fillMat2parent($_m['sub'], $_id);
-                    }
-                }
-            };
-            $_fillMat2parent($materials, 0);
-
-            $_selectedMatId = ($mActive && !empty($mActive['id'])) ? (int)$mActive['id'] : 0;
-            $_itemActiveMats = [];
-            if ($_selectedMatId) {
-                $_m = $_selectedMatId;
-                $_itemActiveMats[] = $_m;
-                while (!empty($_mat2parent[$_m])) {
-                    $_m = (int)$_mat2parent[$_m];
-                    $_itemActiveMats[] = $_m;
-                }
-            }
-
-            $_itemMatPrice = function (int $topMatId) use ($itemInf): float {
-                foreach ($itemInf['materials'] as $_im) {
-                    if ((int)$_im['material_id'] === $topMatId) {
-                        return (float)$_im['price'];
-                    }
-                }
-                return 0.0;
-            };
-
-            $_renderMaterialCard = function (int $mId) use ($materials, $_itemActiveMats, $_itemMatPrice): string {
-                if (empty($materials[$mId])) {
-                    return '';
-                }
-                $m = $materials[$mId];
-                $active = in_array($mId, $_itemActiveMats, true);
-                $className = 'material';
-                if (!empty($m['has_sub'])) {
-                    $className .= ' has-sub';
-                    $onclick = 'oMaterials.openLevel2(' . $mId . ')';
-                } else {
-                    $onclick = 'oMaterials.selectMaterial(' . $mId . ')';
-                }
-                if ($active) {
-                    $className .= ' active';
-                }
-
-                $image = '';
-                $imageBig = '';
-                if (!empty($m['image']['ext'])) {
-                    $imgBase = Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'];
-                    $ext = hsch($m['image']['ext']);
-                    $image = '<img src="' . $imgBase . '_76x61_0.' . $ext . '" width="76" height="61" alt="">';
-                    $imageBig = '<img src="' . $imgBase . '_164x132_0.' . $ext . '" width="164" height="132" alt="">';
-                }
-
-                $price = $_itemMatPrice($mId);
-                $priceStr = abs($price) > 0 ? Catalog::priceFormat($price) . ' ₽' : 'по запросу';
-                $imageClasses = 'image block relative w-[76px] h-[61px] mb-[2px] border-2 shadow';
-                $imageClasses .= $active ? ' border-[#ffa800]' : ' border-white';
-                $nameClasses = 'name table-cell align-middle h-[26px] leading-[13px] text-[11px] text-[#0075c2] underline';
-                if ($active) {
-                    $nameClasses .= ' font-semibold';
-                }
-
-                $html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
-                $html .= '<div class="material-in box-border w-[95px] h-full">';
-                $html .= '<div class="' . $imageClasses . '">' . $image;
-                if ($imageBig) {
-                    $html .= '<div class="image-big absolute z-[800] w-[164px] h-[132px] left-[-32px] top-[-65px] bg-white border-2 border-white shadow" style="display:none;">' . $imageBig . '</div>';
-                }
-                $html .= '</div>';
-                $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
-                $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
-                $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
-                $html .= '</div></div></a>';
-                return $html;
-            };
-
-            $_materialsPopupHtml = '';
-            if (!empty($_topMatIds)) {
-                $rowHtml = '';
-                $rowIndex = 0;
-                foreach ($_topMatIds as $i => $mId) {
-                    if ($i > 0 && $i % $_matsInRow === 0) {
-                        $rowClass = $rowIndex > 0 ? ' dis' : '';
-                        $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
-                        $rowHtml = '';
-                        $rowIndex++;
-                    }
-                    $rowHtml .= $_renderMaterialCard($mId);
-                }
-                if ($rowHtml !== '') {
-                    $rowClass = $rowIndex > 0 ? ' dis' : '';
-                    $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
-                }
-                $_materialsPopupHtml .= '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2">'
-                    . '<div class="level-tail" id="materials-level2-tail"></div>'
-                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>'
-                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
-                    . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
-                    . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
-                    . '</div>';
-                $_materialsPopupHtml .= '<div class="materials-level3 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3">'
-                    . '<div class="level-tail" id="materials-level3-tail"></div>'
-                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
-                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>'
-                    . '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>'
-                    . '</div>';
-            }
-            $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
-        }
-        ?>
-
                 <?php if(count($itemInf['materials'])) { ?>
-                <div id="material-selected" class="flex flex-col xl:flex-row gap-0 xl:gap-20 ">
+                <div id="material-selected" class="flex flex-col xl:flex-row gap-0 xl:gap-20">
                     <div class="item-current-material max-w-[140px] mt-8" style="float: none">
                         <span class="b2">Выбран:</span>
-                        <div class="image border-2 mb-1 w-[76px] shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
+                        <div class="image border-2 mb-1 w-[76px] h-[61px] shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
                             <?php if($mActive && $mActive['image']['ext']) { ?>
-                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_107x87_0.<?php echo $mActive['image']['ext']; ?>"
-                                 width="107" height="87" alt="">
+                            <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_76x61_0.<?php echo $mActive['image']['ext']; ?>"
+                                 width="76" height="61" alt="" decoding="async">
                             <?php } ?>
                         </div>
-                        <div class="name test text-[11px]" id="item-<?php echo $itemInf['id']; ?>-name">
+                        <div class="name test text-[11px] min-h-[26px]" id="item-<?php echo $itemInf['id']; ?>-name">
                             <?php echo implode(' / ', $mActiveName); ?>
                         </div>
                     </div>
@@ -1139,7 +1119,7 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
                         <div id="materials-popup">
                             <div class="materials-level1" id="materials-popup-content" data-counts="<?php echo count($_topMatIds); ?>" data-ssr="1"><?php echo $_materialsPopupHtml; ?></div>
-                            <a href="javascript:void(0)" class="klink-dashed underline<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
+                            <a href="javascript:void(0)" class="klink-dashed underline min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
                                onclick="oMaterials.openrows(); return false;">Показать все</a>
                         </div>
                     </div>
@@ -1148,11 +1128,12 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
 
                 <script>
-
-                    oMaterials.items2mats[<?php echo $itemInf['id']; ?>] = AJAX.jsonDecode('<?php echo str_replace('\'', '\\\'', toJson($itemInf['materials'])); ?> ');
                     onLoad(function () {
-                        //oMaterials.setRowSize(1, 4);
-                        oMaterials.open(<?php echo $itemInf['id']; ?>);
+                        if (typeof oMaterials.initFromSsr === 'function') {
+                            oMaterials.initFromSsr(<?php echo (int)$itemInf['id']; ?>);
+                        } else if (typeof oMaterials.open === 'function') {
+                            oMaterials.open(<?php echo (int)$itemInf['id']; ?>);
+                        }
                     });
                 </script>
                 <?php } else { ?>
@@ -1328,22 +1309,20 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
                     const block = document.getElementById("tabsScroller1");
                     if (!button || !details || !buttonText || !arrow || !block) return;
 
-                    // Установим большую max-height для анимации (в px)
-                    const fullHeight = "810px"; // подберите по количеству пунктов
-
                     button.addEventListener("click", () => {
-                        if (details.style.maxHeight) {
+                        const isExpanded = details.style.maxHeight && details.style.maxHeight !== "0px";
+
+                        if (isExpanded) {
                             // Скрытие
                             details.style.maxHeight = null;
                             buttonText.textContent = "Смотреть все характеристики";
                             arrow.classList.remove("rotate-180");
 
-                            // Плавная прокрутка к блоку
                             const top = block.getBoundingClientRect().top + window.scrollY - 60;
                             window.scrollTo({ top, behavior: "smooth" });
                         } else {
-                            // Раскрытие
-                            details.style.maxHeight = fullHeight;
+                            // Раскрытие — берём реальную высоту содержимого
+                            details.style.maxHeight = details.scrollHeight + "px";
                             buttonText.textContent = "Скрыть характеристики";
                             arrow.classList.add("rotate-180");
                         }

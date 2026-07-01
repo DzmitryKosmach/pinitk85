@@ -1109,11 +1109,22 @@ class mCatalog
                 $optsContentMinH = 280;
             }
 
+            $matCount = count($itemInf['materials']);
+            $materialsRowMinH = 135;
+            $materialsMinHDesktop = $matCount ? 228 : 0;
+            $materialsMinHMobile = $matCount ? 404 : 0;
+            $galleryMinH = count($photos) ? 400 : 260;
+            $infoMinH = 120 + 180 + 120 + $materialsMinHMobile;
+
             $pageInf['perf_layout'] = 'catalog_series';
             $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
             $pageInf['perf_opts_block_min_h'] = 144 + $optsContentMinH;
-            $pageInf['perf_materials_min_h'] = count($itemInf['materials']) ? 220 : 0;
-            $pageInf['perf_materials_row_min_h'] = 135;
+            $pageInf['perf_materials_min_h'] = $materialsMinHMobile;
+            $pageInf['perf_materials_min_h_desktop'] = $materialsMinHDesktop;
+            $pageInf['perf_materials_row_min_h'] = $materialsRowMinH;
+            $pageInf['perf_info_min_h'] = $infoMinH;
+            $pageInf['perf_product_row_min_h'] = max($galleryMinH, $infoMinH);
+            $pageInf['perf_benefits_min_h'] = 88;
             if (!empty($photos[0])) {
                 $pageInf['perf_lcp'] = Catalog::photoUrl(
                     Catalog_Series_Photos::$imagePath,

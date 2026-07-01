@@ -156,20 +156,83 @@ var oMaterials = new (function () {
     }
     if (!elPopupContent.querySelector(".materials-row")) {
       elPopupContent.innerHTML = materialsHtml(mIds, 1);
+    } else if (!elPopupContent.querySelector("#materials-level2")) {
+      elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
     }
 
     this.onChangePageSize(false);
   };
 
   /**
+   * Инициализация SSR-блока материалов без перерисовки DOM
+   * @param {int} itemId
+   */
+  this.initFromSsr = function (itemId) {
+    if (typeof this.items2mats[itemId] == "undefined") return;
+    openedItemId = itemId;
+    if (!elPopup) {
+      init();
+      if (!elPopup) {
+        return;
+      }
+    }
+
+    elPopup.style.display = "block";
+
+    var matInput = $$$("item-" + openedItemId + "-material");
+    selectedMatId = matInput ? parseInt(matInput.value, 10) || 0 : 0;
+
+    itemActiveMats = [selectedMatId];
+    var m = selectedMatId;
+    while (mat2parent[m] != 0) {
+      m = mat2parent[m];
+      itemActiveMats.push(m);
+    }
+
+    var mIds = [];
+    for (var i = 0, l = this.items2mats[openedItemId].length; i < l; i++) {
+      mIds.push(this.items2mats[openedItemId][i].material_id);
+    }
+    if (!elPopupContent.querySelector(".materials-row")) {
+      elPopupContent.innerHTML = materialsHtml(mIds, 1);
+    } else if (!elPopupContent.querySelector("#materials-level2")) {
+      elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
+    }
+
+    this.onChangePageSize(false);
+  };
+
+  function ensureLevelPanels() {
+    if (!elPopupContent) return;
+    if (!elPopupContent.querySelector("#materials-level2")) {
+      elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
+    }
+  }
+
+  function setMaterialsExpanded(expanded) {
+    var block = document.getElementById("material-selected");
+    if (!block) return;
+    if (expanded) {
+      block.classList.add("is-materials-expanded");
+    } else {
+      block.classList.remove("is-materials-expanded");
+    }
+  }
+
+  /**
    * Открываем список подматериалов 2-го уровня
    * @param	{int}	mId
    */
   this.openLevel2 = function (mId) {
+    if (!elPopup) {
+      init();
+    }
+    ensureLevelPanels();
     // Отображаем плашку для 2-го уровня материалов
     var elLevel2 = $$$("materials-level2");
     if (!elLevel2) return;
-    elLevel2.style.display = "";
+    elLevel2.style.display = "inline-block";
+    setMaterialsExpanded(true);
 
     // Перемещаем плашку так, чтобы она шла сразу под текущим рядом материалов (рядом, в кот. нах-ся кликнутый материал)
     var elMaterial = $$$("material-" + mId);
@@ -209,6 +272,10 @@ var oMaterials = new (function () {
     var elLevel2 = $$$("materials-level2");
     if (!elLevel2) return;
     elLevel2.style.display = "none";
+    var elLevel3 = $$$("materials-level3");
+    if (!elLevel3 || elLevel3.style.display === "none") {
+      setMaterialsExpanded(false);
+    }
 
     this.onChangePageSize(false);
   };
@@ -218,10 +285,15 @@ var oMaterials = new (function () {
    * @param	{int}	mId
    */
   this.openLevel3 = function (mId) {
+    if (!elPopup) {
+      init();
+    }
+    ensureLevelPanels();
     // Отображаем плашку для 3-го уровня материалов
     var elLevel3 = $$$("materials-level3");
     if (!elLevel3) return;
-    elLevel3.style.display = "";
+    elLevel3.style.display = "inline-block";
+    setMaterialsExpanded(true);
 
     // Перемещаем плашку так, чтобы она шла сразу под текущим рядом материалов (рядом, в кот. нах-ся кликнутый материал)
     var elMaterial = $$$("material-" + mId);
@@ -259,6 +331,10 @@ var oMaterials = new (function () {
     var elLevel3 = $$$("materials-level3");
     if (!elLevel3) return;
     elLevel3.style.display = "none";
+    var elLevel2 = $$$("materials-level2");
+    if (!elLevel2 || elLevel2.style.display === "none") {
+      setMaterialsExpanded(false);
+    }
 
     this.onChangePageSize(true);
   };
@@ -695,7 +771,7 @@ var oMaterials = new (function () {
     // добавляем уровень
     if (level === 1) {
       html +=
-        '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2">' +
+        '<div class="materials-level2 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2" style="display:none">' +
         '<div class="level-tail" id="materials-level2-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>' +
         '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>' +
@@ -704,7 +780,7 @@ var oMaterials = new (function () {
         "</div>";
     } else {
       html +=
-        '<div class="materials-level3 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3">' +
+        '<div class="materials-level3 hidden relative -top-5 z-50 p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3" style="display:none">' +
         '<div class="level-tail" id="materials-level3-tail"></div>' +
         '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>' +
         '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>' +

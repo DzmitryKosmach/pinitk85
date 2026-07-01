@@ -1599,21 +1599,33 @@ var oMaterials = new (function () {
         oMaterials.onChangePageSize(false);
     }
 
-    onLoad(function () {
-        init();
+    /**
+     * Строит mat2parent из oMaterials.tree (можно вызывать сразу после задания tree в шаблоне)
+     */
+    this.rebuildMat2parent = function () {
+        mat2parent = {};
 
-        /**
-         * Для всех материалов в дереве находим их родительский материал и собираем хеш (id материала => id родителя)
-         */
         function p(parentMatId, materials) {
+            if (!materials || typeof materials !== "object") {
+                return;
+            }
             for (var matId in materials) {
+                if (!Object.prototype.hasOwnProperty.call(materials, matId)) {
+                    continue;
+                }
                 mat2parent[matId] = parentMatId;
-                if (materials[matId].has_sub) {
+                if (materials[matId].has_sub && materials[matId].sub) {
                     p(matId, materials[matId].sub);
                 }
             }
         }
+
         p(0, oMaterials.tree);
+    };
+
+    onLoad(function () {
+        init();
+        oMaterials.rebuildMat2parent();
     });
 
     /**
@@ -1648,12 +1660,7 @@ var oMaterials = new (function () {
             $$$("item-" + openedItemId + "-material").value = matId;
         }
 
-        itemActiveMats = [selectedMatId];
-        var m = selectedMatId;
-        while (mat2parent[m] != 0) {
-            m = mat2parent[m];
-            itemActiveMats.push(m);
-        }
+        itemActiveMats = buildItemActiveMats(selectedMatId);
 
         // Цена
         displayMatPrice(selectedMatId);
@@ -1666,6 +1673,8 @@ var oMaterials = new (function () {
         }
         if (!elPopupContent.querySelector(".materials-row")) {
             elPopupContent.innerHTML = materialsHtml(mIds, 1);
+        } else if (!elPopupContent.querySelector("#materials-level2")) {
+            elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
         }
 
         // количество элементов (материалов) у позиции
@@ -1674,6 +1683,55 @@ var oMaterials = new (function () {
 
         this.onChangePageSize(false);
     };
+
+    this.initFromSsr = function (itemId) {
+        if (typeof this.items2mats[itemId] == "undefined") return;
+        openedItemId = itemId;
+        if (!elPopup) {
+            init();
+            if (!elPopup) {
+                return;
+            }
+        }
+
+        elPopup.style.display = "block";
+
+        var matInput = $$$("item-" + openedItemId + "-material");
+        selectedMatId = matInput ? parseInt(matInput.value, 10) || 0 : 0;
+
+        itemActiveMats = buildItemActiveMats(selectedMatId);
+
+        var mIds = [];
+        for (var i = 0, l = this.items2mats[openedItemId].length; i < l; i++) {
+            mIds.push(this.items2mats[openedItemId][i].material_id);
+        }
+        if (!elPopupContent.querySelector(".materials-row")) {
+            elPopupContent.innerHTML = materialsHtml(mIds, 1);
+        } else if (!elPopupContent.querySelector("#materials-level2")) {
+            elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
+        }
+
+        const el = document.getElementById("materials-popup-content");
+        if (el) {
+            el.dataset.counts = mIds.length;
+        }
+
+        this.onChangePageSize(false);
+    };
+
+    function buildItemActiveMats(matId) {
+        var chain = [matId];
+        var m = matId;
+        while (
+            m &&
+            typeof mat2parent[m] !== "undefined" &&
+            mat2parent[m] != 0
+        ) {
+            m = mat2parent[m];
+            chain.push(m);
+        }
+        return chain;
+    }
 
     this.sortSubByOrder2 = function (obj) {
         // Создаем глубокую копию объекта
@@ -1688,6 +1746,10 @@ var oMaterials = new (function () {
     };
 
     this.sortSubByOrder = function (obj) {
+        if (!obj || !obj.sub) {
+            return { sub: {} };
+        }
+
         // Получаем массив элементов sub
         const subEntries = Object.entries(obj.sub);
 
@@ -1711,52 +1773,106 @@ var oMaterials = new (function () {
         };
     };
 
+    function ensureLevelPanels() {
+        if (!elPopupContent) return;
+        if (!elPopupContent.querySelector("#materials-level2")) {
+            elPopupContent.insertAdjacentHTML("beforeend", materialsHtml([], 1));
+        }
+    }
+
+    function setMaterialsExpanded(expanded) {
+        var block = document.getElementById("material-selected");
+        if (!block) return;
+        if (expanded) {
+            block.classList.add("is-materials-expanded");
+        } else {
+            block.classList.remove("is-materials-expanded");
+        }
+    }
+
     /**
      * Открываем список подматериалов 2-го уровня
      * @param	{int}	mId
      */
     this.openLevel2 = function (mId) {
+        mId = parseInt(mId, 10);
+        if (!mId) {
+            return;
+        }
+
+        if (!Object.keys(mat2parent).length && oMaterials.tree) {
+            oMaterials.rebuildMat2parent();
+        }
+
+        if (!elPopup) {
+            init();
+        }
+        ensureLevelPanels();
         // Отображаем плашку для 2-го уровня материалов
         var elLevel2 = $$$("materials-level2");
         if (!elLevel2) return;
-        elLevel2.style.display = "";
+
+        var treeMat = this.tree[mId];
+        if (!treeMat || !treeMat.sub) {
+            return;
+        }
 
         // Перемещаем плашку так, чтобы она шла сразу под текущим рядом материалов (рядом, в кот. нах-ся кликнутый материал)
         var elMaterial = $$$("material-" + mId);
+        if (!elMaterial) {
+            return;
+        }
+
         var elRow = elMaterial.parentNode;
-        while (elRow.className.indexOf("materials-row") === -1) {
+        while (
+            elRow &&
+            (!elRow.className ||
+                elRow.className.indexOf("materials-row") === -1)
+        ) {
             elRow = elRow.parentNode;
+        }
+        if (!elRow) {
+            return;
         }
 
         elRow.parentNode.insertBefore(elLevel2, elRow.nextSibling);
+
+        elLevel2.style.setProperty("display", "block", "important");
+        elLevel2.style.zIndex = "200";
+        setMaterialsExpanded(true);
 
         // Подсвечиваем кликнутый материал
         highlightMaterial(mId);
 
         // Отображаем в плашке название кликнутого материала
-        var m = matById(mId).material;
-        $$$("materials-level2-title").innerHTML = m.name;
+        var matInfo = matById(mId);
+        var m = matInfo ? matInfo.material : treeMat;
+        var titleEl = $$$("materials-level2-title");
+        if (titleEl) {
+            titleEl.innerHTML = m.name;
+        }
 
         // Перемещаем хвостик плашки
-        $$$("materials-level2-tail").style.left =
-            elPos(elMaterial).x - elPos(elRow).x + "px";
+        var tailEl = $$$("materials-level2-tail");
+        if (tailEl) {
+            tailEl.style.left =
+                elPos(elMaterial).x - elPos(elRow).x + "px";
+        }
 
-        // -----
-        const sortedData = this.sortSubByOrder(this.tree[mId]);
-        //console.log(sortedData);
-        // -----
+        const sortedData = this.sortSubByOrder(treeMat);
 
         // Отображаем материалы 2-го уровня
         var mIds = [];
         for (var i in sortedData.sub) {
-            mIds.push(sortedData.sub[i].id);
+            if (Object.prototype.hasOwnProperty.call(sortedData.sub, i)) {
+                mIds.push(sortedData.sub[i].id);
+            }
         }
 
-        $$$("materials-level2-content").innerHTML = materialsHtml(
-            mIds,
-            2,
-            false
-        );
+        var contentEl = $$$("materials-level2-content");
+        if (contentEl) {
+            contentEl.innerHTML = materialsHtml(mIds, 2, false);
+        }
 
         this.onChangePageSize(true);
 
@@ -1770,6 +1886,10 @@ var oMaterials = new (function () {
         var elLevel2 = $$$("materials-level2");
         if (!elLevel2) return;
         elLevel2.style.display = "none";
+        var elLevel3 = $$$("materials-level3");
+        if (!elLevel3 || elLevel3.style.display === "none") {
+            setMaterialsExpanded(false);
+        }
 
         // this.onChangePageSize(false);
     };
@@ -1779,37 +1899,91 @@ var oMaterials = new (function () {
      * @param	{int}	mId
      */
     this.openLevel3 = function (mId) {
+        mId = parseInt(mId, 10);
+        if (!mId) {
+            return;
+        }
+
+        if (!Object.keys(mat2parent).length && oMaterials.tree) {
+            oMaterials.rebuildMat2parent();
+        }
+
+        if (!elPopup) {
+            init();
+        }
+        ensureLevelPanels();
         // Отображаем плашку для 3-го уровня материалов
         var elLevel3 = $$$("materials-level3");
         if (!elLevel3) return;
-        elLevel3.style.display = "";
+
+        var p = mat2parent[mId];
+        if (
+            !p ||
+            !this.tree[p] ||
+            !this.tree[p].sub ||
+            !this.tree[p].sub[mId] ||
+            !this.tree[p].sub[mId].sub
+        ) {
+            return;
+        }
 
         // Перемещаем плашку так, чтобы она шла сразу под текущим рядом материалов (рядом, в кот. нах-ся кликнутый материал)
         var elMaterial = $$$("material-" + mId);
+        if (!elMaterial) {
+            return;
+        }
+
         var elRow = elMaterial.parentNode;
-        while (elRow.className.indexOf("materials-row") === -1) {
+        while (
+            elRow &&
+            (!elRow.className ||
+                elRow.className.indexOf("materials-row") === -1)
+        ) {
             elRow = elRow.parentNode;
         }
+        if (!elRow) {
+            return;
+        }
         elRow.parentNode.insertBefore(elLevel3, elRow.nextSibling);
+
+        elLevel3.style.setProperty("display", "block", "important");
+        elLevel3.style.zIndex = "200";
+        setMaterialsExpanded(true);
 
         // Подсвечиваем кликнутый материал
         highlightMaterial(mId);
 
         // Отображаем в плашке название кликнутого материала
-        var m = matById(mId).material;
-        $$$("materials-level3-title").innerHTML = m.name;
+        var matInfo = matById(mId);
+        var m = matInfo ? matInfo.material : this.tree[p].sub[mId];
+        var titleEl = $$$("materials-level3-title");
+        if (titleEl) {
+            titleEl.innerHTML = m.name;
+        }
 
         // Перемещаем хвостик плашки
-        $$$("materials-level3-tail").style.left =
-            elPos(elMaterial).x - elPos(elRow).x + "px";
+        var tailEl = $$$("materials-level3-tail");
+        if (tailEl) {
+            tailEl.style.left =
+                elPos(elMaterial).x - elPos(elRow).x + "px";
+        }
 
-        // Отображаем материалы 2-го уровня
-        var p = mat2parent[mId];
+        // Отображаем материалы 3-го уровня
         var mIds = [];
         for (var i in this.tree[p].sub[mId].sub) {
-            mIds.push(this.tree[p].sub[mId].sub[i].id);
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    this.tree[p].sub[mId].sub,
+                    i
+                )
+            ) {
+                mIds.push(this.tree[p].sub[mId].sub[i].id);
+            }
         }
-        $$$("materials-level3-content").innerHTML = materialsHtml(mIds, 3);
+        var contentEl = $$$("materials-level3-content");
+        if (contentEl) {
+            contentEl.innerHTML = materialsHtml(mIds, 3);
+        }
 
         this.onChangePageSize(true);
 
@@ -1820,6 +1994,10 @@ var oMaterials = new (function () {
         var elLevel3 = $$$("materials-level3");
         if (!elLevel3) return;
         elLevel3.style.display = "none";
+        var elLevel2 = $$$("materials-level2");
+        if (!elLevel2 || elLevel2.style.display === "none") {
+            setMaterialsExpanded(false);
+        }
 
         this.onChangePageSize(true);
     };
@@ -1913,12 +2091,7 @@ var oMaterials = new (function () {
         var matInfo = showSelectMaterial();
 
         // Цепочка материалов от выбранного до верхнего уровня
-        itemActiveMats = [selectedMatId];
-        var m = selectedMatId;
-        while (mat2parent[m] != 0) {
-            m = mat2parent[m];
-            itemActiveMats.push(m);
-        }
+        itemActiveMats = buildItemActiveMats(selectedMatId);
 
         //if(!mobile){
         // Скролим станицу, чтобы был виден выбранный материал
@@ -1928,7 +2101,11 @@ var oMaterials = new (function () {
         //}
 
         // Вызываем калбеки
-        var topM = matById(selectedMatId).top;
+        var topMatInfo = matById(selectedMatId);
+        if (!topMatInfo) {
+            return;
+        }
+        var topM = topMatInfo.top;
         //this.onChangePageSize();
         this.onSave(
             {
@@ -1959,7 +2136,15 @@ var oMaterials = new (function () {
                 name: "",
                 image: false,
             };
-        var mat = matById(selectedMatId).material;
+        var matInfo = matById(selectedMatId);
+        if (!matInfo) {
+            return {
+                resultImage: false,
+                name: "",
+                image: false,
+            };
+        }
+        var mat = matInfo.material;
 
         var resultImage = $$$("item-" + openedItemId + "-image");
         var resultName = $$$("item-" + openedItemId + "-name");
@@ -1983,10 +2168,17 @@ var oMaterials = new (function () {
         // Название
         var name = [mat.name];
         var tmpId = mat.id;
-        while (mat2parent[tmpId] != 0) {
+        while (
+            tmpId &&
+            typeof mat2parent[tmpId] !== "undefined" &&
+            mat2parent[tmpId] != 0
+        ) {
             tmpId = mat2parent[tmpId];
-
-            name.push(matById(tmpId).material.name);
+            var parentInfo = matById(tmpId);
+            if (!parentInfo) {
+                break;
+            }
+            name.push(parentInfo.material.name);
         }
         name.reverse();
         name = name.join(" / ");
@@ -2011,7 +2203,11 @@ var oMaterials = new (function () {
      * @param {number} matId
      */
     function displayMatPrice(matId) {
-        const topM = matById(matId).top;
+        const matInfo = matById(matId);
+        if (!matInfo) {
+            return;
+        }
+        const topM = matInfo.top;
         const price = matPrice4Item(topM.id);
         const priceEl = $$$("item-" + openedItemId + "-price");
         const priceOldEl = $$$("item-" + openedItemId + "-price-old");
@@ -2086,24 +2282,35 @@ var oMaterials = new (function () {
      */
     function highlightMaterial(mId) {
         var m = $$$("material-" + mId);
+        if (!m) {
+            return;
+        }
 
         // Снимаем визуальное выделение со всех материалов на том же уровне
         var levelBlock = m.parentNode;
-        while (levelBlock.className.indexOf("materials-level") === -1) {
+        while (levelBlock && levelBlock !== document.body) {
+            var className = levelBlock.className;
+            if (
+                typeof className === "string" &&
+                className.indexOf("materials-level") !== -1
+            ) {
+                break;
+            }
             levelBlock = levelBlock.parentNode;
         }
+        if (!levelBlock || levelBlock === document.body) {
+            return;
+        }
+
         var mats = byTag("A", levelBlock);
         for (var i = 0, l = mats.length; i < l; i++) {
-            if (
-                mats[i].className == "material" ||
-                mats[i].className.indexOf("material ") !== -1
-            ) {
-                mats[i].className = mats[i].className.replace(" active", "");
+            if (mats[i].classList && mats[i].classList.contains("material")) {
+                mats[i].classList.remove("active");
             }
         }
 
         // Выделяем выбранный материал
-        m.className += " active";
+        m.classList.add("active");
     }
 
     /**
@@ -2166,6 +2373,11 @@ var oMaterials = new (function () {
      * @return	{object}		{material: {object}, top: {object}, level: {int}}
      */
     function matById(mId) {
+        mId = parseInt(mId, 10);
+        if (!mId || !oMaterials.tree) {
+            return null;
+        }
+
         var mIdTmp = mId;
         var ids = [mIdTmp];
 
@@ -2178,16 +2390,47 @@ var oMaterials = new (function () {
 
             var idsIter = 0;
             var mat = oMaterials.tree[ids[idsIter]];
-            while (mat.id != mId) {
+            while (mat && parseInt(mat.id, 10) != mId) {
                 idsIter++;
+                if (!mat.sub || !mat.sub[ids[idsIter]]) {
+                    break;
+                }
                 mat = mat.sub[ids[idsIter]];
             }
-            return {
-                material: mat,
-                top: oMaterials.tree[ids[0]],
-                level: ids.length,
-            };
+            if (mat && parseInt(mat.id, 10) == mId) {
+                return {
+                    material: mat,
+                    top: oMaterials.tree[ids[0]],
+                    level: ids.length,
+                };
+            }
         }
+
+        function search(materials, top, level) {
+            for (var id in materials) {
+                if (!Object.prototype.hasOwnProperty.call(materials, id)) {
+                    continue;
+                }
+                var node = materials[id];
+                var curTop = top || node;
+                if (parseInt(node.id, 10) === mId) {
+                    return {
+                        material: node,
+                        top: curTop,
+                        level: level,
+                    };
+                }
+                if (node.has_sub && node.sub) {
+                    var found = search(node.sub, curTop, level + 1);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+            return null;
+        }
+
+        return search(oMaterials.tree, null, 1);
     }
 
     /**
@@ -2279,6 +2522,9 @@ var oMaterials = new (function () {
      */
     function oneMaterialHtml(mId) {
         var tmp = matById(mId);
+        if (!tmp) {
+            return "";
+        }
         var m = tmp.material;
         var topM = tmp.top;
         var level = tmp.level;

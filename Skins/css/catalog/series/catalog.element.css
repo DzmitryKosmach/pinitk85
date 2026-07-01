@@ -976,20 +976,20 @@
   background-position: -60px 0;
 }
 #materials-popup .materials-level2 {
-  display: inline-block;
+  display: none;
   position: relative;
   top: -20px;
-  z-index: 50;
+  z-index: 200;
   padding: 20px 20px 0 20px;
   margin: 0;
   background: #fff;
   border: 1px solid #7a8a93;
 }
 #materials-popup .materials-level3 {
-  display: inline-block;
+  display: none;
   position: relative;
   top: -20px;
-  z-index: 50;
+  z-index: 200;
   padding: 20px 0 0 20px;
   margin: 0;
   background: #fff;
