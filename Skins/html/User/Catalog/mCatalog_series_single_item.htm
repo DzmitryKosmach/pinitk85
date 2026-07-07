@@ -660,10 +660,7 @@ if (count($itemInf['materials'])) {
                         </div>
                     </div>
                 </div>
-                <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                    <button class="hover:opacity-50">&lt; Пред.товар</button>
-                    <button class="hover:opacity-50">След.товар &gt;</button>
-                </div>
+                <?php include(Config::path('skins') . '/html/Components/series_neighbors.htm'); ?>
             </div>
 
             <!-- Название -->
@@ -848,10 +845,7 @@ if (count($itemInf['materials'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
-                            <button class="hover:opacity-50">&lt; Пред.товар</button>
-                            <button class="hover:opacity-50">След.товар &gt;</button>
-                        </div>
+                        <?php include(Config::path('skins') . '/html/Components/series_neighbors.htm'); ?>
                     </div>
 
                     <!-- Название -->

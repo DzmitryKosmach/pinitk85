@@ -211,6 +211,53 @@ class Catalog_Series extends ExtDbList
     }
 
 
+    /**
+     * Предыдущая и следующая серия в категории (порядок как в каталоге: order ASC, id ASC)
+     *
+     * @param array $seriesInf
+     * @return array{prev: array|false, next: array|false}
+     */
+    static function getNeighbors(array $seriesInf): array
+    {
+        $result = ['prev' => false, 'next' => false];
+
+        if (empty($seriesInf['id']) || empty($seriesInf['category_id'])) {
+            return $result;
+        }
+
+        $seriesId = (int)$seriesInf['id'];
+        $categoryId = (int)$seriesInf['category_id'];
+        $order = (int)($seriesInf['order'] ?? 0);
+
+        static $o;
+        if (!$o) {
+            $o = new self();
+        }
+
+        $baseCond = '`category_id` = ' . $categoryId . ' AND `out_of_production` = 0';
+
+        $prev = $o->getRow(
+            'id, name, category_id, url',
+            $baseCond . ' AND (`order` < ' . $order . ' OR (`order` = ' . $order . ' AND `id` < ' . $seriesId . '))',
+            '`order` DESC, `id` DESC'
+        );
+        if ($prev) {
+            $result['prev'] = $prev;
+        }
+
+        $next = $o->getRow(
+            'id, name, category_id, url',
+            $baseCond . ' AND (`order` > ' . $order . ' OR (`order` = ' . $order . ' AND `id` > ' . $seriesId . '))',
+            '`order` ASC, `id` ASC'
+        );
+        if ($next) {
+            $result['next'] = $next;
+        }
+
+        return $result;
+    }
+
+
     /** Курс валют для указанной серии
      * @static
      * @param int  $seriesId 0, чтобы получить общий курс по сайту
