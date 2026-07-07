@@ -922,6 +922,10 @@ class mCatalog
             $oItems->getCount('`series_id` = ' . self::$seriesId) +
             $oCrossItems->getCount('`where_series_id` = ' . self::$seriesId);
 
+        $seriesNeighbors = Catalog_Series::getNeighbors($seriesInf);
+        $prevSeries = $seriesNeighbors['prev'];
+        $nextSeries = $seriesNeighbors['next'];
+
         if (1 != $itemsCnt) {
             // В СЕРИИ БОЛЬШЕ ОДНОГО ТОВАРА (или товаров 0)
             // Товары в базовом комплекте
@@ -1069,6 +1073,8 @@ class mCatalog
                     'dealer' => $dealer,
                     'dealerExtra' => $dealerExtra,
                     'comments' => $comments,
+                    'prevSeries' => $prevSeries,
+                    'nextSeries' => $nextSeries,
                 ]
             );
 
@@ -1159,6 +1165,8 @@ class mCatalog
                     'dealer' => $dealer,
                     'dealerExtra' => $dealerExtra,
                     'comments' => $comments,
+                    'prevSeries' => $prevSeries,
+                    'nextSeries' => $nextSeries,
                 ]
             );
         }

@@ -1,0 +1,391 @@
+#section-photo.pic {
+    height: auto !important;
+    line-height: normal !important;
+    min-height: 260px;
+    width: 100%;
+    aspect-ratio: 600 / 400;
+}
+
+#mainImageContainer {
+    min-height: 260px;
+    width: 100%;
+    aspect-ratio: 600 / 400;
+}
+
+@media (min-width: 640px) {
+    #section-photo.pic,
+    #mainImageContainer {
+        min-height: 320px;
+    }
+}
+
+#options-block {
+    contain-intrinsic-size: auto 404px;
+}
+
+#options-block .description1 {
+    margin: 0 !important;
+    min-height: var(--options-panel-min-h, 200px);
+}
+
+#options-block .description1 > .text:not([hidden]) {
+    display: block !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+#options-block .description1 > .text[hidden] {
+    display: none !important;
+}
+
+#options-block .options-tabs-shell {
+    min-height: 4.75rem;
+    padding-top: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#options-block #tabsScroller1 {
+    height: 2.75rem;
+    align-items: center;
+}
+
+#options-block .tab-btn {
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    border-width: 2px;
+}
+
+#materials-popup {
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    width: 360px;
+}
+
+#materials-popup-content {
+    width: 360px;
+}
+
+#materials-level1-content,
+#materials-level2-content,
+#materials-level3-content {
+    position: relative;
+    z-index: 110;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 300px;
+}
+
+#materials-level2-content {
+    width: fit-content;
+    padding: 20px;
+}
+
+.material-in img {
+    border-radius: 5px;
+}
+
+@media (max-width: 639px) {
+    #materials-popup .materials-level2 {
+        padding: 10px 10px 0 10px;
+    }
+
+    #materials-popup .materials-level3 {
+        padding: 10px 0 0 10px;
+    }
+
+    #materials-level2-content {
+        padding: 10px;
+    }
+
+    #materials-popup .material .material-in {
+        box-sizing: border-box;
+        width: fit-content !important;
+        height: inherit;
+    }
+
+    #materials-popup .material {
+        width: fit-content;
+    }
+}
+
+#materials-popup .materials-row {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    width: 330px;
+    max-width: 100%;
+    min-height: 125px;
+    margin: 0 0 20px 0;
+}
+
+#materials-popup .materials-row.dis {
+    display: none;
+}
+
+.item-materials.materials-expanded #materials-popup .materials-row.dis {
+    display: flex;
+}
+
+#materials-popup .material {
+    display: block;
+    position: relative;
+    float: none !important;
+    flex: 0 0 110px;
+    box-sizing: border-box;
+    width: 110px !important;
+    height: 135px;
+    margin: 0;
+    text-decoration: none;
+    border-radius: 4px;
+    overflow: visible;
+}
+
+#materials-popup .material .material-in {
+    box-sizing: border-box;
+    width: 95px;
+    height: inherit;
+    overflow: visible;
+}
+
+#materials-popup .material .image {
+    display: block;
+    position: relative;
+    width: 76px !important;
+    height: 61px !important;
+    overflow: visible;
+    margin-bottom: 2px;
+    border: 3px solid #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.item-current-material .image {
+    display: block;
+    position: relative;
+    width: 76px !important;
+    height: 61px !important;
+    overflow: hidden;
+    margin-bottom: 2px;
+    border: 3px solid #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+#materials-popup .material .image > img,
+.item-current-material .image img {
+    display: block;
+    width: 76px !important;
+    height: 61px !important;
+    max-width: 76px !important;
+    max-height: 61px !important;
+    object-fit: cover;
+}
+
+#materials-popup .material .image .image-big {
+    display: none;
+    position: absolute;
+    z-index: 200;
+    width: 164px;
+    height: 132px;
+    left: -32px;
+    top: -65px;
+    background: #fff;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+#materials-popup .material .image .image-big img {
+    display: block;
+    width: 164px;
+    height: 132px;
+    max-width: none;
+    max-height: none;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+#materials-popup .material .image:hover .image-big {
+    display: block;
+}
+
+#materials-popup .material .info {
+    height: 55px;
+    overflow: hidden;
+    padding-left: 2px;
+}
+
+#materials-popup .material .name-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    height: 26px;
+}
+
+#materials-popup .material .name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 13px;
+    font-size: 11px;
+    color: #0075c2;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#materials-popup .material .name:hover {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+}
+
+#materials-popup .material .price {
+    display: block;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+#materials-popup .material.active .name {
+    font-weight: bold;
+}
+
+#materials-popup .material.active .image {
+    border-color: #2563EB;
+}
+
+#materials-popup .material.has-sub:after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 15;
+    box-sizing: border-box;
+    right: 15px;
+    top: -7px;
+    width: 30px;
+    height: 30px;
+    background: url('/Skins/img/user/materials-popup-hassub.png') no-repeat 0 0;
+    pointer-events: none;
+}
+
+#materials-popup .material.has-sub:hover:after {
+    background-position: -30px 0;
+}
+
+#materials-popup .material.has-sub.active:after {
+    background-position: -60px 0;
+}
+
+#materials-popup .materials-level2,
+#materials-popup .materials-level3 {
+  display: none;
+  position: relative;
+    top: -20px;
+    z-index: 200;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #7a8a93;
+    border-radius: 6px;
+}
+
+#materials-popup .materials-level2 {
+    padding: 20px 20px 0 20px;
+}
+
+#materials-popup .materials-level3 {
+    padding: 20px 0 0 20px;
+}
+
+#materials-popup .level-tail,
+.materials-level2 .level-tail,
+.materials-level3 .level-tail {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 0;
+    top: -9px;
+    margin-left: 25px;
+    background: #fff;
+    border: 1px solid #7a8a93;
+    border-left: 0;
+    border-bottom: 0;
+    transform: rotate(-45deg);
+}
+
+#materials-popup .level-title {
+    display: block;
+    padding: 5px 0 10px 2px;
+    color: #737769;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+#materials-popup .level-title:after {
+    content: ':';
+}
+
+#materials-popup .level-help {
+    display: block;
+    padding: 0 0 15px 2px;
+    color: #999;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.dis {
+    display: none;
+}
+
+.cl {
+    display: block;
+    clear: both;
+}
+
+.b2 {
+    font-size: 18px;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+#main-product-image {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.pictures.changegenimage {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.slider-thumbnails-container {
+    flex-shrink: 0;
+}
+
+.slider-thumbnails-container img {
+    width: 80px;
+    height: 80px;
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: cover;
+}
+
+.series-below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}

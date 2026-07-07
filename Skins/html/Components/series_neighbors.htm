@@ -1,0 +1,18 @@
+<?php
+$prevSeries = $prevSeries ?? false;
+$nextSeries = $nextSeries ?? false;
+$prevUrl = ($prevSeries && Catalog_Series::a($prevSeries)) ? Catalog_Series::a($prevSeries) : false;
+$nextUrl = ($nextSeries && Catalog_Series::a($nextSeries)) ? Catalog_Series::a($nextSeries) : false;
+?>
+<div class="flex gap-4 items-center mt-auto text-gray-500 text-sm mb-3">
+    <?php if ($prevUrl): ?>
+    <a href="<?php echo htmlspecialchars($prevUrl); ?>" class="hover:opacity-50" title="<?php echo htmlspecialchars($prevSeries['name']); ?>">&lt; Пред.товар</a>
+    <?php else: ?>
+    <span class="opacity-40 cursor-default">&lt; Пред.товар</span>
+    <?php endif; ?>
+    <?php if ($nextUrl): ?>
+    <a href="<?php echo htmlspecialchars($nextUrl); ?>" class="hover:opacity-50" title="<?php echo htmlspecialchars($nextSeries['name']); ?>">След.товар &gt;</a>
+    <?php else: ?>
+    <span class="opacity-40 cursor-default">След.товар &gt;</span>
+    <?php endif; ?>
+</div>

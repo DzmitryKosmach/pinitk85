@@ -1,0 +1,39 @@
+/* Fallback с метриками ближе к Montserrat — меньше CLS при подгрузке woff2 */
+@font-face {
+    font-family: "Montserrat Fallback";
+    src: local("Arial");
+    size-adjust: 103%;
+    ascent-override: 92%;
+    descent-override: 24%;
+    line-gap-override: 0%;
+}
+
+/* montserrat-regular - cyrillic_latin */
+@font-face {
+    font-display: optional;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/montserrat/montserrat-v31-cyrillic_latin-regular.woff2")
+        format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* montserrat-500 - cyrillic_latin */
+@font-face {
+    font-display: optional;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    src: url("../fonts/montserrat/montserrat-v31-cyrillic_latin-500.woff2")
+        format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* montserrat-700 - cyrillic_latin */
+@font-face {
+    font-display: optional;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 700;
+    src: url("../fonts/montserrat/montserrat-v31-cyrillic_latin-700.woff2")
+        format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
