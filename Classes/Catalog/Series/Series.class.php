@@ -474,19 +474,27 @@ class Catalog_Series extends ExtDbList
             return $series;
         }
 
-        // Получаем 1-е фотографии
+        // Получаем 1-е фотографии (как в админке: order ASC, id ASC)
         $oPhotos = new Catalog_Series_Photos();
         $photos = $oPhotos->get(
             '`' . Catalog_Series_Photos::$tab . '`.*',
-            '`series_id` IN (' . implode(',', $sIds) . ')',
+            '`' . Catalog_Series_Photos::$tab . '`.`series_id` IN (' . implode(',', $sIds) . ')',
             '',
             0,
             '
 				JOIN (
-					SELECT MIN(`order`) AS `order`
-					FROM `' . Catalog_Series_Photos::$tab . '`
-					GROUP BY `series_id`
-				) AS `tmptab` ON (`' . Catalog_Series_Photos::$tab . '`.order = `tmptab`.order)
+					SELECT `p`.`series_id`, MIN(`p`.`id`) AS `photo_id`
+					FROM `' . Catalog_Series_Photos::$tab . '` AS `p`
+					INNER JOIN (
+						SELECT `series_id`, MIN(`order`) AS `min_order`
+						FROM `' . Catalog_Series_Photos::$tab . '`
+						GROUP BY `series_id`
+					) AS `mo` ON (`p`.`series_id` = `mo`.`series_id` AND `p`.`order` = `mo`.`min_order`)
+					GROUP BY `p`.`series_id`
+				) AS `tmptab` ON (
+					`' . Catalog_Series_Photos::$tab . '`.`id` = `tmptab`.`photo_id`
+					AND `' . Catalog_Series_Photos::$tab . '`.`series_id` = `tmptab`.`series_id`
+				)
 			'
         );
         //dd($oPhotos::$imagePath);

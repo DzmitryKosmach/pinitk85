@@ -845,7 +845,7 @@ class mCatalog
             $oPhotos->get(
                 '*',
                 '`series_id` = ' . self::$seriesId,
-                'order'
+                '`order` ASC, `id` ASC'
             )
         );
 

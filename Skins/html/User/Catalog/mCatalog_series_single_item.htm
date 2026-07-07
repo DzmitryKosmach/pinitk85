@@ -152,7 +152,7 @@ if (count($itemInf['materials'])) {
         }
         $_materialsPopupHtml .= '<div class="materials-level2 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2" style="display:none">'
             . '<div class="level-tail" id="materials-level2-tail"></div>'
-            . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;">×</a>'
+            . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
             . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
             . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
             . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
@@ -210,9 +210,9 @@ if (count($itemInf['materials'])) {
         /*overflow: hidden;*/
     }
 
-    .single-item-info {
-        min-height: <?php echo (int)$_infoMinH; ?>px;
-    }
+    /*.single-item-info {*/
+    /*    min-height: <?php echo (int)$_infoMinH; ?>px;*/
+    /*}*/
 
     .single-item-benefits-slot {
         min-height: <?php echo (int)$_benefitsMinH; ?>px;
@@ -748,7 +748,7 @@ if (count($itemInf['materials'])) {
 
             <?php } ?>
 
-            <div class="info sm2:w-1/2 single-item-info">
+            <div class="info sm2:w-1/2">
                 <!-- Блок с названием и кнопками -->
                 <div class="md:block hidden">
                     <div class="flex items-center justify-between">

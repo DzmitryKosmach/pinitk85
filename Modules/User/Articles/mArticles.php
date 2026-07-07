@@ -17,7 +17,8 @@ class mArticles
      * @param array $pageInf
      * @return string
      */
-    static function main(array $pageInf = [])
+    // ИСПРАВЛЕНИЕ: добавлен амперсанд & для передачи по ссылке
+    static function main(&$pageInf = array())
     {
         $oArticles = new Articles();
         $artId = $oArticles->detectByUrl();

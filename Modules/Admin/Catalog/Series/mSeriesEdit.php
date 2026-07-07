@@ -193,7 +193,7 @@ class mSeriesEdit extends Admin
             $photoDb = $oPhotos->getRow(
                 '*',
                 '`series_id` = ' . self::$pId,
-                'order'
+                '`order` ASC, `id` ASC'
             );
             $photo0 = is_array($photoDb) ? $oPhotos->imageExtToData($photoDb) : [];
 
