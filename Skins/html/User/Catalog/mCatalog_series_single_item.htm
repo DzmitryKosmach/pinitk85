@@ -2,8 +2,7 @@
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 $_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
-$_singleDefaultTab = !empty(trim($seriesInf['text'] ?? '')) ? 'description' : (count($options) ? 'options' : 'delivery');
-$_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
+$_singleDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text'] ?? '')) ? 'description' : 'delivery');$_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
     $base = 'tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg hover:bg-gray-50 text-center whitespace-nowrap border-2 ';
     return $tab === $_singleDefaultTab
         ? $base . 'border-blue-600 text-blue-600'
@@ -199,13 +198,13 @@ if (count($itemInf['materials'])) {
     }
 
     #options-block {
-        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
+        /*min-height: <?php echo (int)$_optsBlockMinH; ?>px;*/
         /*height: <?php echo (int)$_optsBlockMinH; ?>px;*/
         --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
     }
 
     #options-block .description1 {
-        min-height: var(--options-panel-min-h);
+        /*min-height: var(--options-panel-min-h);*/
         /*height: var(--options-panel-min-h);*/
         /*overflow: hidden;*/
     }
@@ -871,27 +870,15 @@ if (count($itemInf['materials'])) {
             <div class="mods" style=" margin-top: 0;">
                 <!-- Табы -->
                 <div class="flex gap-2 text-sm mb-8">
-
-                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-                    <button class="tab-btn1
-                            px-4 py-2 rounded-lg break-all bg-white border border-gray-200
-                            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
-                            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
-                            active:translate-y-[-1px]
-                            transition-all duration-200 ease-in-out" data-tab="description">
-                        Описание
-                    </button>
-                    <?php } ?>
-
-                    <button class="tab-btn1
-                            px-4 py-2 rounded-lg break-all bg-white border border-gray-200
-                            shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
-                            hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
-                            active:translate-y-[-1px]
-                            transition-all duration-200 ease-in-out" data-tab="options">
+                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'options' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>" data-tab="options">
                         Характеристики
                     </button>
 
+                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'description' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>" data-tab="description">
+                        Описание
+                    </button>
+                    <?php } ?>
                 </div>
 
                 <script>
@@ -914,7 +901,7 @@ if (count($itemInf['materials'])) {
                             if (targetElement) {
                                 const elementTop = targetElement.getBoundingClientRect().top;
                                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                                const finalScrollPosition = scrollTop + elementTop - 76;
+                                const finalScrollPosition = scrollTop + elementTop - 36;
 
                                 window.scrollTo({
                                     top: finalScrollPosition,
@@ -1113,7 +1100,7 @@ if (count($itemInf['materials'])) {
 
                         <div id="materials-popup">
                             <div class="materials-level1" id="materials-popup-content" data-counts="<?php echo count($_topMatIds); ?>" data-ssr="1"><?php echo $_materialsPopupHtml; ?></div>
-                            <a href="javascript:void(0)" class="klink-dashed underline min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
+                            <a href="javascript:void(0)" class="klink-dashed underline text-blue-600 hover:text-blue-700 font-semibold min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
                                onclick="oMaterials.openrows(); return false;">Показать все</a>
                         </div>
                     </div>
@@ -1143,7 +1130,7 @@ if (count($itemInf['materials'])) {
     </div>
 
     <!-- Верхние вкладки -->
-    <div id="options-block" style="min-height: <?php echo (int)$_optsBlockMinH; ?>px; --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
+    <div id="options-block" style=" --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
         <!-- Кнопки-вкладки -->
         <div class="options-tabs-shell relative">
             <div id="tabsWrapper" class="relative overflow-hidden">
@@ -1153,13 +1140,6 @@ if (count($itemInf['materials'])) {
                 <!-- Область табов -->
                 <div id="tabsScroller1"
                      class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
-                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-                    <button
-                        class="<?php echo $_singleTabBtnClass('description'); ?>"
-                        data-tab="description">
-                        Описание
-                    </button>
-                    <?php } ?>
 
                     <?php if (count($options)) { ?>
                     <button
@@ -1167,6 +1147,14 @@ if (count($itemInf['materials'])) {
                         class="<?php echo $_singleTabBtnClass('options'); ?>"
                         data-tab="options">
                         Характеристики
+                    </button>
+                    <?php } ?>
+
+                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                    <button
+                        class="<?php echo $_singleTabBtnClass('description'); ?>"
+                        data-tab="description">
+                        Описание
                     </button>
                     <?php } ?>
 

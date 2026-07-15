@@ -81,6 +81,50 @@ class Clients_Projects extends ExtDbList
     }
 
 
+    /**
+     * Предыдущая и следующая работа в списке (порядок как на странице списка: order DESC, id DESC)
+     *
+     * @param array $projectInf
+     * @return array{prev: array|false, next: array|false}
+     */
+    static function getNeighbors(array $projectInf): array
+    {
+        $result = ['prev' => false, 'next' => false];
+
+        if (empty($projectInf['id'])) {
+            return $result;
+        }
+
+        $projectId = (int)$projectInf['id'];
+        $order = (int)($projectInf['order'] ?? 0);
+
+        static $o;
+        if (!$o) {
+            $o = new self();
+        }
+
+        $prev = $o->getRow(
+            'id, name, url, `order`',
+            '(`order` > ' . $order . ' OR (`order` = ' . $order . ' AND `id` > ' . $projectId . '))',
+            '`order` ASC, `id` ASC'
+        );
+        if ($prev) {
+            $result['prev'] = $prev;
+        }
+
+        $next = $o->getRow(
+            'id, name, url, `order`',
+            '(`order` < ' . $order . ' OR (`order` = ' . $order . ' AND `id` < ' . $projectId . '))',
+            '`order` DESC, `id` DESC'
+        );
+        if ($next) {
+            $result['next'] = $next;
+        }
+
+        return $result;
+    }
+
+
     /** Определяем ID проекта по URL'у
      * @param string $url
      * @return    bool|int    $newsId
