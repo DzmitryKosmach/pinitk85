@@ -38,7 +38,7 @@
 
       id="read-more-btn"
 
-      class="inline-block !text-gray-600 mt-2 cursor-pointer hidden relative z-10"
+      class="inline-block text-blue-600 hover:text-blue-700 font-semibold mt-2 cursor-pointer hidden relative z-10"
 
     >
 
@@ -211,65 +211,67 @@
 
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const textEl = document.getElementById("series-text");
+        const container = document.getElementById("series-text-container");
+        const btn = document.getElementById("read-more-btn");
+        const gradient = document.getElementById("fade-gradient");
+        const block = document.getElementById("series-block");
 
-  document.addEventListener("DOMContentLoaded", () => {
+        if (!textEl || !container || !btn) return;
 
-    const textEl = document.getElementById("series-text");
+        const checkHeight = () => {
+            // Если элемент скрыт (например, внутри неактивной вкладки), ничего не делаем
+            if (textEl.offsetParent === null) return;
 
-    const container = document.getElementById("series-text-container");
+            // ⭐ ГЛАВНОЕ ИСПРАВЛЕНИЕ: Если контейнер уже развернут, кнопка должна оставаться видимой ("Свернуть"), а градиент скрыт
+            if (container.classList.contains("expanded")) {
+                btn.classList.remove("hidden");
+                gradient.classList.add("hidden");
+                return;
+            }
 
-    const btn = document.getElementById("read-more-btn");
+            // В свернутом состоянии проверяем, превышает ли реальная высота видимую
+            if (textEl.scrollHeight > textEl.clientHeight + 1) {
+                btn.classList.remove("hidden");
+                gradient.classList.remove("hidden");
+            } else {
+                btn.classList.add("hidden");
+                gradient.classList.add("hidden");
+            }
+        };
 
-    const gradient = document.getElementById("fade-gradient");
+        // 1. Проверяем при загрузке с небольшой задержкой для гарантии рендеринга
+        setTimeout(checkHeight, 100);
 
-    const block = document.getElementById("series-block");
+        // 2. ResizeObserver отслеживает изменения размера (например, при переключении вкладок)
+        const observer = new ResizeObserver(() => {
+            checkHeight();
+        });
+        observer.observe(container);
 
+        // 3. Обработчик клика по кнопке
+        btn.addEventListener("click", () => {
+            if (!container.classList.contains("expanded")) {
+                // Раскрываем
+                container.classList.add("expanded");
+                btn.textContent = "Свернуть";
+                gradient.classList.add("hidden");
+            } else {
+                // Сворачиваем
+                container.classList.remove("expanded");
+                btn.textContent = "Читать все";
 
+                // Небольшая задержка, чтобы браузер успел применить CSS (line-clamp) и пересчитать высоту
+                setTimeout(() => {
+                    checkHeight();
+                }, 50);
 
-    if (!textEl || !container || !btn) return;
-
-
-
-    if (textEl.scrollHeight > textEl.clientHeight + 1) {
-
-      btn.classList.remove("hidden");
-
-      gradient.classList.remove("hidden");
-
-    }
-
-
-
-    btn.addEventListener("click", () => {
-
-      if (!container.classList.contains("expanded")) {
-
-        container.classList.add("expanded");
-
-        btn.textContent = "Свернуть";
-
-        gradient.classList.add("hidden");
-
-      } else {
-
-        container.classList.remove("expanded");
-
-        btn.textContent = "Читать все";
-
-        gradient.classList.remove("hidden");
-
-
-
-        const top = block.getBoundingClientRect().top + window.scrollY - 120;
-
-        window.scrollTo({ top, behavior: "smooth" });
-
-      }
-
+                const top = block.getBoundingClientRect().top + window.scrollY - 120;
+                window.scrollTo({ top, behavior: "smooth" });
+            }
+        });
     });
-
-  });
-
 </script>
 
 <?php endif; ?>

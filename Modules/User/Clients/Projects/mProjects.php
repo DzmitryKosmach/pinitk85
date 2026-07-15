@@ -91,13 +91,19 @@ class mProjects {
 				$pageInf['kwrd'] = $projectInf['kwrd'];
 			}
 
+			$projectNeighbors = Clients_Projects::getNeighbors($projectInf);
+			$prevProject = $projectNeighbors['prev'];
+			$nextProject = $projectNeighbors['next'];
+
 			// Выводим страницу
 			$tpl = Pages::tplFile($pageInf, 'view');
 			return pattExeP(fgc($tpl), array(
 				'pageInf'		=> $pageInf,
 				'projectInf'	=> $projectInf,
 				'photos'		=> $photos,
-				'schemes'		=> $schemes
+				'schemes'		=> $schemes,
+				'prevProject'	=> $prevProject,
+				'nextProject'	=> $nextProject
 			));
 		}
     }

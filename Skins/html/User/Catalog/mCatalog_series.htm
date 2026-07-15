@@ -6,6 +6,8 @@ $_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
 $_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
+$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+$_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text'] ?? '')) ? 'description' : 'delivery');
 ?>
 
 <style>
@@ -28,7 +30,7 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
     }
 
     #options-block {
-        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
+        /*min-height: <?php echo (int)$_optsBlockMinH; ?>px;*/
         --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
     }
 
@@ -55,9 +57,9 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
         align-items: center;
     }
 
-    #options-block .description1 {
-        min-height: var(--options-panel-min-h);
-    }
+    /*#options-block .description1 {*/
+    /*    min-height: var(--options-panel-min-h);*/
+    /*}*/
 
     #options-block .description1 > .text[hidden] {
         display: none !important;
@@ -124,6 +126,10 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
     .threeblock.compare {
         min-width: 26px;
         min-height: 26px;
+    }
+
+    .single-item-benefits-slot {
+        min-height: <?php echo (int)$_benefitsMinH; ?>px;
     }
 
 </style>
@@ -428,8 +434,9 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 
                     <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
-                    <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
-
+                    <div class="mt-10 single-item-benefits-slot">
+                        <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
+                    </div>
 
                 </div>
 
@@ -555,25 +562,30 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
                         <div class="flex gap-2 text-sm">
                             <button
                                 class="tab-btn1
-                  px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
-                  shadow-[0_0_8px_rgba(59,130,246,0.3)]
-                  hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
-                  active:translate-y-[-1px]
-                  transition-all duration-200 ease-in-out"
+                                  px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
+                                  shadow-[0_0_8px_rgba(59,130,246,0.3)]
+                                  hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+                                  active:translate-y-[-1px]
+                                  transition-all duration-200 ease-in-out"
                                 data-target="section-photo">
                                 Мебель на фото
                             </button>
 
+                            <?php if (count($options)) { ?>
                             <button
-                                class="tab-btn1 break-all
-                  px-4 py-2 rounded-lg bg-white border border-gray-200
-                  shadow-[0_0_8px_rgba(0,0,0,0.1)] text-gray-700 font-medium
-                  hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300
-                  active:translate-y-[-1px]
-                  transition-all duration-200 ease-in-out"
-                                data-target="section-specs">
+                                class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out bg-white text-gray-700"
+                                data-tab="options">
                                 Характеристики
                             </button>
+                            <?php } ?>
+
+                            <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                            <button
+                                class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_seriesDefaultTab === 'description' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>"
+                                data-tab="description">
+                                Описание
+                            </button>
+                            <?php } ?>
 
 
 
@@ -619,40 +631,37 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
                         <script>
                             document.querySelectorAll('.tab-btn1').forEach(button => {
                                 button.addEventListener('click', function () {
-                                    // Убираем активный класс со всех
                                     document.querySelectorAll('.tab-btn1').forEach(btn => {
                                         btn.classList.remove('active', 'bg-blue-600', 'text-white');
                                         btn.classList.add('bg-white', 'text-gray-700');
                                     });
 
-                                    // Добавляем активный класс к нажатой
                                     this.classList.add('active', 'bg-blue-600', 'text-white');
                                     this.classList.remove('bg-white', 'text-gray-700');
 
-                                    // Получаем целевой блок
+                                    const tabName = this.getAttribute('data-tab');
+                                    if (tabName && typeof showTab === 'function') {
+                                        showTab(tabName);
+
+                                        const optionsBlock = document.getElementById('options-block');
+                                        if (optionsBlock) {
+                                            const elementTop = optionsBlock.getBoundingClientRect().top;
+                                            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                                            window.scrollTo({
+                                                top: scrollTop + elementTop - 36,
+                                                behavior: 'smooth'
+                                            });
+                                        }
+                                        return;
+                                    }
+
                                     const targetId = this.getAttribute('data-target');
-                                    const targetElement = document.getElementById(targetId);
-
+                                    const targetElement = targetId ? document.getElementById(targetId) : null;
                                     if (targetElement) {
-                                        // Плавный скролл с отступом для sticky header
-                                        targetElement.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'start',
-                                            // Добавляем отступ, равный высоте sticky header
-                                            // Укажите здесь высоту вашего header, например, '56px' или '4rem'
-                                            // или рассчитайте динамически
-                                            // inline: 'nearest' // Оставляем по умолчанию
-                                        });
-
-                                        // --- Добавляем отступ вручную ---
-                                        // Рассчитываем смещение
-                                        const headerOffset = 60; // Замените на высоту вашего sticky header
+                                        const headerOffset = 60;
                                         const elementPosition = targetElement.getBoundingClientRect().top;
-                                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                                        // Прокручиваем с учетом смещения
                                         window.scrollTo({
-                                            top: offsetPosition,
+                                            top: elementPosition + window.pageYOffset - headerOffset,
                                             behavior: 'smooth'
                                         });
                                     }
@@ -683,7 +692,7 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
                                     <div id="series-set-row-<?php echo $i['id']; ?>"
                                          onmouseover="seriesSetHoverTable(<?php echo $i['id']; ?>, true)"
                                          onmouseout="seriesSetHoverTable(<?php echo $i['id']; ?>, false)"
-                                         class="series-item <?php if($in >= 2) { ?>hidden<?php } ?> flex flex-col gap-[6px] p-3 rounded-lg border border-gray-200 hover:shadow-sm transition"
+                                         class="series-item <?php if($in >= 2) { ?>hidden<?php } ?> flex flex-col gap-[6px] px-3 py-2 rounded-lg border border-gray-200 hover:shadow-sm transition"
                                     >
                                     <div class="flex flex-row justify-between items-center">
                                         <div>
@@ -788,12 +797,11 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="w-full h-[1px] bg-gray-200"></div>
                                 </div>
                                 <?php } ?>
 
                                 <?php if(count($seriesSet) > 2) { ?>
-                                <button class="text-sm text-gray-400 underline" onclick="setShowAll(this)">
+                                <button class="text-sm text-blue-600 hover:text-blue-700 font-semibold underline" onclick="setShowAll(this)">
                                     Показать все
                                 </button>
                                 <?php } ?>
@@ -1150,7 +1158,6 @@ $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 
 <!-- Верхние вкладки -->
 <?php
-$_seriesDefaultTab = count($options) ? 'options' : 'delivery';
 $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
     $base = 'tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg hover:bg-gray-50 text-center whitespace-nowrap border-2 ';
     return $tab === $_seriesDefaultTab
@@ -1158,7 +1165,7 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
         : $base . 'border-transparent bg-white text-gray-900';
 };
 ?>
-<div id="options-block" style="min-height: <?php echo (int)$_optsBlockMinH; ?>px; --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
+<div id="options-block" style=" --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
     <!-- Кнопки-вкладки -->
     <div class="options-tabs-shell relative">
         <div id="tabsWrapper1" class="relative overflow-hidden">
@@ -1174,6 +1181,14 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
                     class="<?php echo $_seriesTabBtnClass('options'); ?>"
                     data-tab="options">
                     Характеристики
+                </button>
+                <?php } ?>
+
+                <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+                <button
+                    class="<?php echo $_seriesTabBtnClass('description'); ?>"
+                    data-tab="description">
+                    Описание
                 </button>
                 <?php } ?>
 
@@ -1218,6 +1233,13 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
 
     <!-- Контент вкладок -->
     <div class="description1">
+
+        <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
+        <!-- Описание серии -->
+        <div class="text" id="tab-description"<?php if ($_seriesDefaultTab !== 'description') { ?> hidden<?php } ?>>
+            <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
+        </div>
+        <?php } ?>
 
         <!-- Характеристики -->
         <div class="text options" id="tab-options"<?php if ($_seriesDefaultTab !== 'options') { ?> hidden<?php } ?> itemprop="description">
@@ -1374,6 +1396,8 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
     </div>
 </div>
 
+<hr class="mb-6 border-gray-300 mt-12">
+
 <script>
     function showTab(tabName) {
         document.querySelectorAll('.description1 .text').forEach(div => {
@@ -1487,10 +1511,6 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
         document.head.appendChild(style);
     });
 </script>
-
-<hr class="mb-6 border-gray-300 mt-10" />
-
-<?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
 
 <?php if (count($itemsGroups)) { ?>
 <section id="section-prices" class="series-items mt-16">
