@@ -1325,11 +1325,10 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
                 const block = document.getElementById("tabsScroller1");
                 if (!button || !details || !buttonText || !arrow || !block) return;
 
-                // Установим большую max-height для анимации (в px)
-                const fullHeight = "810px"; // подберите по количеству пунктов
-
                 button.addEventListener("click", () => {
-                    if (details.style.maxHeight) {
+                    const isExpanded = details.style.maxHeight && details.style.maxHeight !== "0px";
+
+                    if (isExpanded) {
                         // Скрытие
                         details.style.maxHeight = null;
                         buttonText.textContent = "Смотреть все характеристики";
@@ -1339,8 +1338,8 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
                         const top = block.getBoundingClientRect().top + window.scrollY - 60;
                         window.scrollTo({ top, behavior: "smooth" });
                     } else {
-                        // Раскрытие
-                        details.style.maxHeight = fullHeight;
+                        // Раскрытие — реальная высота содержимого (важно на узких экранах)
+                        details.style.maxHeight = details.scrollHeight + "px";
                         buttonText.textContent = "Скрыть характеристики";
                         arrow.classList.add("rotate-180");
                     }
@@ -1368,7 +1367,9 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
 
         <!-- Ком. Пред (пример пустого контента) -->
         <div class="text" id="tab-commercial" hidden>
-            Здесь будет коммерческое предложение.
+            <p>
+                👉 <a href="/contacts/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">по запросу на эл.почту</a>
+            </p>
         </div>
 
         <!-- Комплекты -->
@@ -1383,9 +1384,9 @@ $_seriesTabBtnClass = function (string $tab) use ($_seriesDefaultTab): string {
 
         <!-- Вопросы -->
         <div class="text" id="tab-questions" hidden>
-            <a name="review"></a>
-            <h3>Задать вопрос</h3>
-            <p>Форма для отправки вопроса по товару.</p>
+            <p>
+                👉 <a href="/vopros-otvet/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">Посмотреть ответы на часто задаваемые вопросы, или задать свой. Все решим. Спасибо.</a>
+            </p>
         </div>
 
         <!-- Отзывы -->
