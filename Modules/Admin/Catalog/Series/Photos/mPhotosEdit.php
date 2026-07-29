@@ -88,6 +88,8 @@ class mPhotosEdit extends Admin {
 		$oPhotos->upd(self::$pId, $save);
 		$msg = 'Изменения сохранены.';
 
+		Cache_SeriesPage::invalidate(self::$seriesId);
+
 		Pages::flash(
 			$msg,
 			false,

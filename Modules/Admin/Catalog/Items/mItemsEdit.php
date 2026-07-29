@@ -413,6 +413,8 @@ class mItemsEdit extends Admin
             }
         }
 
+        Cache_SeriesPage::invalidate(self::$seriesId);
+
         Pages::flash(
             $msg,
             false,

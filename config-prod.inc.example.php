@@ -19,6 +19,20 @@ class Config extends ConfigBase {
     ];
 
 
+    // Redis-кеш (на Beget: данные подключения из панели «Redis»)
+    public static array $redis = [
+        'enabled' => true,
+        'host' => '127.0.0.1',
+        'port' => 6379,
+        'socket' => '',
+        'password' => '', // пароль из панели Beget
+        'database' => 1,
+        'prefix' => 'mebelioni:cache:',
+        'timeout' => 2.0,
+        'series_page_ttl' => 3600,
+    ];
+
+
     // Конфиг СЕССИИ
     public static array $session = [
         'name'		=> 'casapro',

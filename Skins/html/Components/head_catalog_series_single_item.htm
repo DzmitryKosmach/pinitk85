@@ -1,0 +1,115 @@
+<?php
+// 1. Получаем значения минимальных высот из настроек страницы (с безопасными дефолтными значениями)
+$_perfOptsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
+$_perfOptsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
+$_perfProductRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
+$_perfInfoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
+$_perfMaterialsMinH = (int)($pageInf['perf_materials_min_h'] ?? 404);
+$_perfMaterialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
+$_perfMaterialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
+$_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+?>
+
+<!-- 2. Предзагрузка критических шрифтов (предотвращает сдвиг текста при загрузке) -->
+<link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<link href="/Skins/css/fonts.css" rel="stylesheet">
+
+<!-- 3. Подключение основных стилей и скриптов -->
+<?php echo CssCopmress::load('catalog')?>
+<?php echo CssCopmress::load('series')?>
+<?php echo JsCopmress::load('catalog', false, true)?>
+<?php echo JsCopmress::load('series', false, true)?>
+
+<!-- 4. Критический CSS для стабилизации макета (CLS) -->
+<style>
+    /* Резервирование места под основные блоки */
+    .series-product-row { min-height: <?php echo $_perfProductRowMinH; ?>px; }
+    .series-info-col, .single-item-info { min-height: <?php echo $_perfInfoMinH; ?>px; }
+    .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinH; ?>px; }
+
+    /* Стабилизация текста описания (line-clamp предотвращает прыжки до загрузки JS) */
+    #series-text-container { min-height: 6rem; }
+    #series-text-container:not(.expanded) #series-text {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+        max-height: 6rem;
+    }
+    #read-more-btn { min-height: 1.75rem; }
+
+    /* Стили для блока описания серии (если он есть на странице) */
+    #series-block {
+        min-height: 8.5rem;
+        padding: 1rem 1.5rem;
+        background: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    }
+    #series-block h2, #series-block h3 { font-size: 1.125rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; line-height: 1.25; }
+    #series-block p { font-size: 1rem; line-height: 1.5; margin-bottom: 0.75rem; margin-top: 0; }
+    #series-block ul, #series-block ol { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; margin-top: 0; }
+    #series-block li { font-size: 1rem; margin-bottom: 0.5rem; }
+
+    /* Резервирование места под материалы */
+    #material-selected { min-height: <?php echo $_perfMaterialsMinH; ?>px; }
+    @media (min-width: 1280px) {
+        #material-selected { min-height: <?php echo $_perfMaterialsMinHDesktop; ?>px; }
+    }
+    #materials-popup-content { min-height: <?php echo $_perfMaterialsRowMinH; ?>px; }
+
+    /* Стабилизация блока опций и вкладок */
+    #options-block {
+        --options-panel-min-h: <?php echo $_perfOptsContentMinH; ?>px;
+        min-height: <?php echo $_perfOptsBlockMinH; ?>px; /* Активируем общую минимальную высоту */
+    }
+    #options-block .description1 {
+        margin: 0 !important;
+        min-height: var(--options-panel-min-h); /* Резервируем место под контент вкладок */
+    }
+    #options-block .description1 > .text:not([hidden]) {
+        display: block !important;
+        padding: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        line-height: 1.5 !important;
+        font-size: 1rem !important;
+    }
+    #options-block .description1 > .text[hidden] {
+        display: none !important;
+    }
+    #options-block .options-tabs-shell {
+        min-height: 4.75rem;
+        padding-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    #options-block #tabsScroller1 {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.75rem;
+        height: 2.75rem;
+        align-items: center;
+        overflow-x: auto;
+        scrollbar-width: none; /* Скрываем скроллбар для чистоты */
+    }
+    #options-block #tabsScroller1::-webkit-scrollbar { display: none; }
+
+    #options-block .tab-btn {
+        min-height: 2.75rem;
+        box-sizing: border-box;
+        border-width: 2px;
+        white-space: nowrap;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        border-radius: 0.5rem;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    /* Мелкие элементы, которые часто вызывают микросдвиги */
+    .text-delivery-price { min-width: 5rem; display: inline-block; min-height: 1.25rem; }
+    .series-qty-row { min-height: 2.5rem; align-items: center; }
+</style>

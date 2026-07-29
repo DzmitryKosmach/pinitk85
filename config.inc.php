@@ -93,6 +93,19 @@ class ConfigBase
         'name' => ''
     ];
 
+    // Redis (кеш приложения; сессии настраиваются отдельно в php.ini)
+    public static array $redis = [
+        'enabled' => false,
+        'host' => '127.0.0.1',
+        'port' => 6379,
+        'socket' => '',
+        'password' => '',
+        'database' => 1,
+        'prefix' => 'mebelioni:cache:',
+        'timeout' => 2.0,
+        'series_page_ttl' => 3600,
+    ];
+
     // Конфиг отправки почты
     public static int $email = SEND_MAIL;
     public static array $smtp = [
