@@ -761,6 +761,30 @@ class mCatalog
      */
     static function seriesOnePage(&$pageInf)
     {
+        $oItems = new Catalog_Items();
+        $oCrossItems = new Catalog_Series_CrossItems();
+        $itemsCnt = $oItems->getCount('`series_id` = ' . self::$seriesId)
+            + $oCrossItems->getCount('`where_series_id` = ' . self::$seriesId);
+        $seriesVariant = ($itemsCnt == 1)
+            ? Cache_SeriesPage::VARIANT_SINGLE
+            : Cache_SeriesPage::VARIANT_MULTI;
+
+        if (Cache_SeriesPage::isEnabled() && !Dealers_Security::getCurrent()) {
+            $cachedPage = Cache_SeriesPage::get(self::$seriesId, $seriesVariant);
+            if ($cachedPage !== null) {
+                Catalog_Recently::add(self::$seriesId);
+                if (!headers_sent()) {
+                    header('X-Series-Cache: HIT');
+                }
+                return self::renderSeriesPageFromCache($pageInf, $cachedPage);
+            }
+            if (!headers_sent()) {
+                header('X-Series-Cache: MISS');
+            }
+        } elseif (!headers_sent() && Cache_SeriesPage::isEnabled()) {
+            header('X-Series-Cache: BYPASS');
+        }
+
         // Параметры категории
         $oCategories = new Catalog_Categories();
         $catInf = $oCategories->getRow(
@@ -813,8 +837,6 @@ class mCatalog
         );
 
         // Серии, из которых взяты доп.товары
-        $oItems = new Catalog_Items();
-        $oCrossItems = new Catalog_Series_CrossItems();
         $crossItemsIds = $oCrossItems->getItemsIds(self::$seriesId, false);
         $allSeriesIds = array();
         if (count($crossItemsIds)) {
@@ -917,10 +939,6 @@ class mCatalog
                 $dealerExtra = $extras[$seriesInf['supplier_id']];
             }
         }
-
-        $itemsCnt =
-            $oItems->getCount('`series_id` = ' . self::$seriesId) +
-            $oCrossItems->getCount('`where_series_id` = ' . self::$seriesId);
 
         $seriesNeighbors = Catalog_Series::getNeighbors($seriesInf);
         $prevSeries = $seriesNeighbors['prev'];
@@ -1054,9 +1072,30 @@ class mCatalog
 
             $tpl = Pages::tplFile($pageInf, 'series');
 
-            return pattExeP(
-                fgc($tpl),
-                [
+            $templateVars = [
+                'pageInf' => $pageInf,
+                'categories' => $categories,
+                'breadcrumbs' => $breadcrumbs,
+                'catInf' => $catInf,
+                'seriesInf' => $seriesInf,
+                'options' => $options,
+                'materials' => $materials,
+                'photos' => $photos,
+                'seriesSet' => $seriesSet,
+                'itemsGroups' => $itemsGroups,
+                'crossSeries' => $crossSeries,
+                //'reviews' => $reviews,
+                'linkages' => $linkages,
+                'dealer' => $dealer,
+                'dealerExtra' => $dealerExtra,
+                'comments' => $comments,
+                'prevSeries' => $prevSeries,
+                'nextSeries' => $nextSeries,
+            ];
+
+            if (Cache_SeriesPage::isEnabled() && !$dealer) {
+                Cache_SeriesPage::set(self::$seriesId, Cache_SeriesPage::VARIANT_MULTI, [
+                    'tpl' => 'series',
                     'pageInf' => $pageInf,
                     'categories' => $categories,
                     'breadcrumbs' => $breadcrumbs,
@@ -1068,14 +1107,16 @@ class mCatalog
                     'seriesSet' => $seriesSet,
                     'itemsGroups' => $itemsGroups,
                     'crossSeries' => $crossSeries,
-                    //'reviews' => $reviews,
                     'linkages' => $linkages,
-                    'dealer' => $dealer,
-                    'dealerExtra' => $dealerExtra,
                     'comments' => $comments,
                     'prevSeries' => $prevSeries,
                     'nextSeries' => $nextSeries,
-                ]
+                ]);
+            }
+
+            return pattExeP(
+                fgc($tpl),
+                $templateVars
             );
 
         } else {
@@ -1148,9 +1189,33 @@ class mCatalog
 
             $tpl = Pages::tplFile($pageInf, 'series_single_item');
 
-            return pattExeP(
-                fgc($tpl),
-                [
+            $reviews = [];
+
+            $singleItemView = self::prepareSingleItemTemplateContext($itemInf, $materials, $options, $seriesInf);
+
+            $templateVars = [
+                'pageInf' => $pageInf,
+                'categories' => $categories,
+                'breadcrumbs' => $breadcrumbs,
+                'catInf' => $catInf,
+                'seriesInf' => $seriesInf,
+                'options' => $options,
+                'materials' => $materials,
+                'photos' => $photos,
+                'itemInf' => $singleItemView['itemInf'],
+                'reviews' => $reviews,
+                'linkages' => $linkages,
+                'dealer' => $dealer,
+                'dealerExtra' => $dealerExtra,
+                'comments' => $comments,
+                'prevSeries' => $prevSeries,
+                'nextSeries' => $nextSeries,
+            ];
+            $templateVars = array_merge($templateVars, $singleItemView);
+
+            if (Cache_SeriesPage::isEnabled() && !$dealer) {
+                Cache_SeriesPage::set(self::$seriesId, Cache_SeriesPage::VARIANT_SINGLE, [
+                    'tpl' => 'series_single_item',
                     'pageInf' => $pageInf,
                     'categories' => $categories,
                     'breadcrumbs' => $breadcrumbs,
@@ -1159,15 +1224,19 @@ class mCatalog
                     'options' => $options,
                     'materials' => $materials,
                     'photos' => $photos,
-                    'itemInf' => $itemInf,
+                    'itemInf' => $singleItemView['itemInf'],
                     'reviews' => $reviews,
                     'linkages' => $linkages,
-                    'dealer' => $dealer,
-                    'dealerExtra' => $dealerExtra,
                     'comments' => $comments,
                     'prevSeries' => $prevSeries,
                     'nextSeries' => $nextSeries,
-                ]
+                    'singleItemView' => $singleItemView,
+                ]);
+            }
+
+            return pattExeP(
+                fgc($tpl),
+                $templateVars
             );
         }
     }
@@ -1337,6 +1406,240 @@ class mCatalog
             'dealerExtra' => $dealerExtra
         ));
     }
+
+    /**
+     * Отрисовка страницы серии из Redis-кеша.
+     *
+     * @param array $pageInf
+     * @param array $cached
+     * @return string
+     */
+    private static function renderSeriesPageFromCache(array &$pageInf, array $cached): string
+    {
+        $pageInf = array_merge($pageInf, $cached['pageInf']);
+        self::$pageInf = $pageInf;
+
+        if (!empty($cached['photos'][0])) {
+            Catalog::sharePhotoSeries($cached['photos'][0]);
+        }
+
+        $tpl = Pages::tplFile($pageInf, $cached['tpl']);
+        $vars = [
+            'pageInf' => $pageInf,
+            'categories' => $cached['categories'],
+            'breadcrumbs' => $cached['breadcrumbs'],
+            'catInf' => $cached['catInf'],
+            'seriesInf' => $cached['seriesInf'],
+            'options' => $cached['options'],
+            'materials' => $cached['materials'],
+            'photos' => $cached['photos'],
+            'linkages' => $cached['linkages'],
+            'dealer' => false,
+            'dealerExtra' => 1,
+            'comments' => $cached['comments'],
+            'prevSeries' => $cached['prevSeries'],
+            'nextSeries' => $cached['nextSeries'],
+        ];
+
+        if ($cached['tpl'] === 'series') {
+            $vars['seriesSet'] = $cached['seriesSet'];
+            $vars['itemsGroups'] = $cached['itemsGroups'];
+            $vars['crossSeries'] = $cached['crossSeries'];
+        } else {
+            $vars['itemInf'] = $cached['itemInf'];
+            $vars['reviews'] = $cached['reviews'] ?? [];
+            if (!empty($cached['singleItemView']) && is_array($cached['singleItemView'])) {
+                $vars = array_merge($vars, $cached['singleItemView']);
+            }
+        }
+
+        return pattExeP(fgc($tpl), $vars);
+    }
+
+
+    /**
+     * Предрасчёт данных для шаблона series_single_item (материалы, вкладки).
+     * Результат кешируется в Redis и пропускает тяжёлый PHP-блок в шаблоне.
+     *
+     * @param array $itemInf
+     * @param array $materials
+     * @param array $options
+     * @param array $seriesInf
+     * @return array
+     */
+    private static function prepareSingleItemTemplateContext(
+        array $itemInf,
+        array $materials,
+        array $options,
+        array $seriesInf
+    ): array {
+        $mActive = false;
+        $mActiveName = [];
+        $_materialsPopupHtml = '';
+        $_showAllMatsLink = false;
+        $_topMatIds = [];
+        $_singleDefaultTab = count($options)
+            ? 'options'
+            : (!empty(trim($seriesInf['text'] ?? '')) ? 'description' : 'delivery');
+
+        if (!empty($itemInf['materials'])) {
+            foreach ($itemInf['materials'] as $n => $im) {
+                if (!isset($materials[$im['material_id']])) {
+                    unset($itemInf['materials'][$n]);
+                }
+            }
+            $itemInf['materials'] = array_values($itemInf['materials']);
+        }
+
+        if (count($itemInf['materials'])) {
+            $materialId = $itemInf['price_min_material_id'];
+            if (isset($materials[$materialId])) {
+                $mActive = $materials[$materialId];
+                $mActiveName = [$mActive['name']];
+                while ($mActive['has_sub'] && !empty($mActive['sub'])) {
+                    $keys = array_keys($mActive['sub']);
+                    $nextKey = array_shift($keys);
+                    if (!isset($mActive['sub'][$nextKey])) {
+                        break;
+                    }
+                    $mActive = $mActive['sub'][$nextKey];
+                    $mActiveName[] = $mActive['name'];
+                }
+            }
+
+            $_matsInRow = 3;
+            foreach ($itemInf['materials'] as $_im) {
+                if (isset($materials[$_im['material_id']])) {
+                    $_topMatIds[] = (int)$_im['material_id'];
+                }
+            }
+
+            $_mat2parent = [];
+            $_fillMat2parent = function (array $mats, int $parentId) use (&$_fillMat2parent, &$_mat2parent): void {
+                foreach ($mats as $_id => $_m) {
+                    $_id = (int)$_id;
+                    $_mat2parent[$_id] = $parentId;
+                    if (!empty($_m['has_sub']) && !empty($_m['sub'])) {
+                        $_fillMat2parent($_m['sub'], $_id);
+                    }
+                }
+            };
+            $_fillMat2parent($materials, 0);
+
+            $_selectedMatId = ($mActive && !empty($mActive['id'])) ? (int)$mActive['id'] : 0;
+            $_itemActiveMats = [];
+            if ($_selectedMatId) {
+                $_m = $_selectedMatId;
+                $_itemActiveMats[] = $_m;
+                while (!empty($_mat2parent[$_m])) {
+                    $_m = (int)$_mat2parent[$_m];
+                    $_itemActiveMats[] = $_m;
+                }
+            }
+
+            $_itemMatPrice = function (int $topMatId) use ($itemInf): float {
+                foreach ($itemInf['materials'] as $_im) {
+                    if ((int)$_im['material_id'] === $topMatId) {
+                        return (float)$_im['price'];
+                    }
+                }
+                return 0.0;
+            };
+
+            $_renderMaterialCard = function (int $mId) use ($materials, $_itemActiveMats, $_itemMatPrice): string {
+                if (empty($materials[$mId])) {
+                    return '';
+                }
+                $m = $materials[$mId];
+                $active = in_array($mId, $_itemActiveMats, true);
+                $className = 'material';
+                if (!empty($m['has_sub'])) {
+                    $className .= ' has-sub';
+                    $onclick = 'oMaterials.openLevel2(' . $mId . ')';
+                } else {
+                    $onclick = 'oMaterials.selectMaterial(' . $mId . ')';
+                }
+                if ($active) {
+                    $className .= ' active';
+                }
+
+                $image = '';
+                $imageBig = '';
+                if (!empty($m['image']['ext'])) {
+                    $imgBase = Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id'];
+                    $ext = hsch($m['image']['ext']);
+                    $image = '<img src="' . $imgBase . '_76x61_0.' . $ext . '" width="76" height="61" alt="" decoding="async">';
+                    $imageBig = '<img src="' . $imgBase . '_164x132_0.' . $ext . '" width="164" height="132" alt="" loading="lazy" decoding="async">';
+                }
+
+                $price = $_itemMatPrice($mId);
+                $priceStr = abs($price) > 0 ? Catalog::priceFormat($price) . ' ₽' : 'по запросу';
+                $imageClasses = 'image block relative w-[76px] h-[61px] mb-[2px] border-2 shadow';
+                $imageClasses .= $active ? ' border-[#ffa800]' : ' border-white';
+                $nameClasses = 'name table-cell align-middle h-[26px] leading-[13px] text-[11px] text-[#0075c2] underline';
+                if ($active) {
+                    $nameClasses .= ' font-semibold';
+                }
+
+                $html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
+                $html .= '<div class="material-in box-border w-[95px] h-full">';
+                $html .= '<div class="' . $imageClasses . '">' . $image;
+                if ($imageBig) {
+                    $html .= '<div class="image-big absolute z-[800] w-[164px] h-[132px] left-[-32px] top-[-65px] bg-white border-2 border-white shadow" style="display:none;">' . $imageBig . '</div>';
+                }
+                $html .= '</div>';
+                $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
+                $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
+                $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
+                $html .= '</div></div></a>';
+                return $html;
+            };
+
+            if (!empty($_topMatIds)) {
+                $rowHtml = '';
+                $rowIndex = 0;
+                foreach ($_topMatIds as $i => $mId) {
+                    if ($i > 0 && $i % $_matsInRow === 0) {
+                        $rowClass = $rowIndex > 0 ? ' dis' : '';
+                        $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+                        $rowHtml = '';
+                        $rowIndex++;
+                    }
+                    $rowHtml .= $_renderMaterialCard($mId);
+                }
+                if ($rowHtml !== '') {
+                    $rowClass = $rowIndex > 0 ? ' dis' : '';
+                    $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[100] w-[330px] h-[125px] mb-5">' . $rowHtml . '<div class="cl"></div></div>';
+                }
+                $_materialsPopupHtml .= '<div class="materials-level2 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2" style="display:none">'
+                    . '<div class="level-tail" id="materials-level2-tail"></div>'
+                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
+                    . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
+                    . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
+                    . '</div>';
+                $_materialsPopupHtml .= '<div class="materials-level3 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3" style="display:none">'
+                    . '<div class="level-tail" id="materials-level3-tail"></div>'
+                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+                    . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>'
+                    . '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>'
+                    . '</div>';
+            }
+            $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
+        }
+
+        return [
+            'singleItemViewReady' => true,
+            'itemInf' => $itemInf,
+            '_singleDefaultTab' => $_singleDefaultTab,
+            'mActive' => $mActive,
+            'mActiveName' => $mActiveName,
+            '_materialsPopupHtml' => $_materialsPopupHtml,
+            '_showAllMatsLink' => $_showAllMatsLink,
+            '_topMatIds' => $_topMatIds,
+        ];
+    }
+
 
     /**
      * Массив комментариев к серии

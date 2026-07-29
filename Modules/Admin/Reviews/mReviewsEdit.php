@@ -150,6 +150,10 @@ class mReviewsEdit extends Admin
             );
         }*/
 
+        if ($save['object'] === 'series' && $save['object_id']) {
+            Cache_SeriesPage::invalidate($save['object_id']);
+        }
+
         Pages::flash($msg, false, self::retURL());
     }
 }

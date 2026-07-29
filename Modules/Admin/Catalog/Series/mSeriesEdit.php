@@ -654,6 +654,8 @@ class mSeriesEdit extends Admin
         // Ключевые слова
         $oSeries->updateKeywords(self::$pId);
 
+        Cache_SeriesPage::invalidate(self::$pId);
+
         Pages::flash($msg, false, self::retURL());
     }
 

@@ -176,6 +176,8 @@ class mPhotos extends Admin
 
         //dd($id, $_GET, $_POST);
 
+        Cache_SeriesPage::invalidate(self::$seriesId);
+
         Pages::flash( count($files) == 1 ? 'Фотография успешно сохранена.' : 'Фотографии успешно сохранены.');
     }
 
@@ -194,7 +196,12 @@ class mPhotos extends Admin
     function delItem($iId)
     {
         $oPhotos = new Catalog_Series_Photos();
+        $photoInf = $oPhotos->getRow('series_id', '`id` = ' . intval($iId));
         $oPhotos->del(intval($iId));
+
+        if (!empty($photoInf['series_id'])) {
+            Cache_SeriesPage::invalidate((int)$photoInf['series_id']);
+        }
 
         Pages::flash('Фотография удалена.');
     }
