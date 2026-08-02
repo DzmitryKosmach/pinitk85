@@ -1163,7 +1163,7 @@ class mCatalog
             $galleryMinH = count($photos) ? 400 : 260;
             $infoMinH = 120 + 180 + 120 + $materialsMinHMobile;
 
-            $pageInf['perf_layout'] = 'catalog_series';
+            $pageInf['perf_layout'] = 'catalog_series_single_item';
             $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
             $pageInf['perf_opts_block_min_h'] = 144 + $optsContentMinH;
             $pageInf['perf_materials_min_h'] = $materialsMinHMobile;
@@ -1417,6 +1417,9 @@ class mCatalog
     private static function renderSeriesPageFromCache(array &$pageInf, array $cached): string
     {
         $pageInf = array_merge($pageInf, $cached['pageInf']);
+        if ($cached['tpl'] === 'series_single_item') {
+            $pageInf['perf_layout'] = 'catalog_series_single_item';
+        }
         self::$pageInf = $pageInf;
 
         if (!empty($cached['photos'][0])) {

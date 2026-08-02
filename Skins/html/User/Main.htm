@@ -132,8 +132,12 @@ function getHomeUrl() {
     <link rel="preload" href="/images/index/main1_414.webp" as="image" media="(max-width: 414px)" fetchpriority="high">
     <link rel="preload" href="/images/index/main1.webp" as="image" media="(min-width: 415px)" fetchpriority="high">
     <?php } ?>
-    <?php if (!empty($pageInf['perf_layout']) && $pageInf['perf_layout'] === 'catalog_series') {
-        include(Config::path('skins') . '/html/Components/head_catalog_series.htm');
+    <?php if (!empty($pageInf['perf_layout'])) {
+        if ($pageInf['perf_layout'] === 'catalog_series_single_item') {
+            include(Config::path('skins') . '/html/Components/head_catalog_series_single_item.htm');
+        } elseif ($pageInf['perf_layout'] === 'catalog_series') {
+            include(Config::path('skins') . '/html/Components/head_catalog_series.htm');
+        }
     } ?>
 
     <?php echo CssCopmress::load('core') ?>
@@ -355,7 +359,7 @@ function getHomeUrl() {
 
     <?php echo Options::name('head-scripts'); ?>
 
-    <?php if (empty($pageInf['perf_layout']) || $pageInf['perf_layout'] !== 'catalog_series') { ?>
+    <?php if (empty($pageInf['perf_layout']) || !in_array($pageInf['perf_layout'], ['catalog_series', 'catalog_series_single_item'], true)) { ?>
     <link rel="preload" href="/Skins/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link href="/Skins/css/fonts.css" rel="stylesheet">

@@ -1,9 +1,10 @@
-<?php
+﻿<?php
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 $_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
 
-$_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
+$_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480) - 300;
+$_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? max($_infoMinH, 480));
 $_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
 $_materialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
 $_materialsMinHMobile = (int)($pageInf['perf_materials_min_h'] ?? 404);
@@ -163,36 +164,19 @@ if (empty($singleItemViewReady)) {
         $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     }
 }
-
-$_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
-    $base = 'tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs xs2:text-sm md:text-base rounded-lg hover:bg-gray-50 text-center whitespace-nowrap border-2 ';
-    return $tab === $_singleDefaultTab
-        ? $base . 'border-blue-600 text-blue-600'
-        : $base . 'border-transparent bg-white text-gray-900';
-};
 ?>
-<?php echo CssCopmress::load('catalog')?>
-<?php echo CssCopmress::load('series')?>
-
-<?php echo JsCopmress::load('catalog')?>
-<?php echo JsCopmress::load('series')?>
 <script>
     oCompare.url = '<?php echo Url::a('catalog-compare'); ?>';
     oFavorite.url = '<?php echo Url::a('catalog-favorite'); ?>';
 </script>
 <style>
-    #section-photo.pic {
-        height: auto !important;
-        line-height: normal !important;
-        min-height: 260px;
-        width: 100%;
-        aspect-ratio: 600 / 400;
-    }
-
+    /* 1. Карточка основного изображения */
+    #section-photo.pic,
     #mainImageContainer {
-        min-height: 260px;
         width: 100%;
+        min-height: 260px;
         aspect-ratio: 600 / 400;
+        contain: layout paint;
     }
 
     @media (min-width: 640px) {
@@ -202,48 +186,24 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         }
     }
 
-    #options-block {
-        /*min-height: <?php echo (int)$_optsBlockMinH; ?>px;*/
-        /*height: <?php echo (int)$_optsBlockMinH; ?>px;*/
-        --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
+    /* 2. Колонки информации и преимущества */
+    .single-item-info {
+        min-height: <?php echo (int)$_infoMinH; ?>px;
     }
-
-    #options-block .description1 {
-        /*min-height: var(--options-panel-min-h);*/
-        /*height: var(--options-panel-min-h);*/
-        /*overflow: hidden;*/
-    }
-
-    /*.single-item-info {*/
-    /*    min-height: <?php echo (int)$_infoMinH; ?>px;*/
-    /*}*/
 
     .single-item-benefits-slot {
         min-height: <?php echo (int)$_benefitsMinH; ?>px;
     }
 
-    .material-nojs {
-        display: none !important;
+    /* 3. Блок опций */
+    #options-block {
+        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
+        --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
+        contain: layout style;
     }
 
-    #material-selected {
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
-        overflow: visible;
-    }
-
-    #material-selected.is-materials-expanded {
-        height: auto;
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
-    }
-
-    @media (min-width: 1280px) {
-        #material-selected {
-            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
-        }
-
-        #material-selected.is-materials-expanded {
-            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
-        }
+    #options-block .description1 {
+        min-height: var(--options-panel-min-h, <?php echo (int)$_optsContentMinH; ?>px);
     }
 
     #options-block .description1 > .text:not([hidden]) {
@@ -258,16 +218,46 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         min-height: 4.75rem;
         padding-top: 2.5rem;
         margin-bottom: 1.5rem;
+        box-sizing: border-box;
     }
 
     #options-block #tabsScroller1 {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.75rem;
         height: 2.75rem;
+        min-height: 2.75rem;
         align-items: center;
+        overflow-x: auto;
+        scrollbar-width: none;
     }
 
     #options-block .tab-btn {
         box-sizing: border-box;
         min-height: 2.75rem;
+    }
+
+    /* 4. Блок материалов */
+    .material-nojs {
+        display: none !important;
+    }
+
+    #material-selected {
+        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+        overflow: visible;
+        contain: layout style;
+    }
+
+    #material-selected.is-materials-expanded {
+        height: auto;
+        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+    }
+
+    @media (min-width: 1280px) {
+        #material-selected,
+        #material-selected.is-materials-expanded {
+            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
+        }
     }
 
     #materials-popup {
@@ -297,7 +287,7 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         padding: 20px;
     }
 
-    .material-in img{
+    .material-in img {
         border-radius: 5px;
     }
 
@@ -314,18 +304,10 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
             padding: 10px;
         }
 
+        #materials-popup .material,
         #materials-popup .material .material-in {
-            box-sizing: border-box;
             width: fit-content !important;
             height: inherit;
-        }
-
-        #materials-popup .material .material-in {
-            width: fit-content !important;
-        }
-
-        #materials-popup .material {
-            width: fit-content;
         }
     }
 
@@ -355,7 +337,8 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         height: inherit;
     }
 
-    #materials-popup .material .image, .item-current-material .image {
+    #materials-popup .material .image,
+    .item-current-material .image {
         display: block;
         position: relative;
         width: 76px;
@@ -410,12 +393,10 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
-
         line-height: 13px;
         font-size: 11px;
         color: #0075c2;
         text-decoration: underline;
-
         transition: all 0.3s ease;
         cursor: pointer;
     }
@@ -683,9 +664,10 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
     <link itemprop="url" href="<?php echo ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     <div>
         <div>
-            <div class="flex flex-col sm2:flex-row xl:gap-12 gap-6 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>">
+            <div class="series-product-row flex flex-col md:flex-row xl:gap-12 gap-6 js-element js-elementid<?php echo $seriesInf['id']; ?> offers propvision1" data-elementid="<?php echo $seriesInf['id']; ?>" data-elementname="<?php echo hsch($seriesInf['name']); ?>" style="min-height: <?php echo (int)$_productRowMinH; ?>px">
                 <?php if(count($photos)) { ?>
-                <div class="pictures sm2:w-1/2 changegenimage">
+
+                <div class="md:w-1/2 pictures changegenimage">
                     <div class="flex lg:flex-row flex-col-reverse items-start gap-4">
 
                         <?php include(Config::path('skins') . '/html/Components/slider_thumbnails.htm'); ?>
@@ -745,11 +727,11 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
                     <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
                 </div>
 
-            </div>
+                </div>
 
             <?php } ?>
 
-            <div class="info sm2:w-1/2">
+            <div class="info single-item-info md:w-1/2" style="min-height: <?php echo (int)$_infoMinH; ?>px;">
                 <!-- Блок с названием и кнопками -->
                 <div class="md:block hidden">
                     <div class="flex items-center justify-between">
@@ -1115,375 +1097,46 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
                 <script>
                     onLoad(function () {
-                        if (typeof oMaterials.initFromSsr === 'function') {
-                            oMaterials.initFromSsr(<?php echo (int)$itemInf['id']; ?>);
-                        } else if (typeof oMaterials.open === 'function') {
-                            oMaterials.open(<?php echo (int)$itemInf['id']; ?>);
+                        var runMaterials = function () {
+                            if (typeof oMaterials.initFromSsr === 'function') {
+                                oMaterials.initFromSsr(<?php echo (int)$itemInf['id']; ?>);
+                            } else if (typeof oMaterials.open === 'function') {
+                                oMaterials.open(<?php echo (int)$itemInf['id']; ?>);
+                            }
+                        };
+                        var popup = document.getElementById('materials-popup-content');
+                        if (popup && popup.getAttribute('data-ssr') === '1' && popup.querySelector('.materials-row')) {
+                            if (window.requestIdleCallback) {
+                                requestIdleCallback(runMaterials, { timeout: 3000 });
+                            } else {
+                                setTimeout(runMaterials, 0);
+                            }
+                            return;
                         }
+                        runMaterials();
                     });
                 </script>
                 <?php } else { ?>
                 <script>
                     onLoad(function () {
-                        oCart.setInfo();
+                        var runCartInfo = function () { oCart.setInfo(); };
+                        if (window.requestIdleCallback) {
+                            requestIdleCallback(runCartInfo, { timeout: 3000 });
+                        } else {
+                            setTimeout(runCartInfo, 0);
+                        }
                     });
                 </script>
                 <?php } ?>
             </div>
 
+            </div>
+
         </div>
     </div>
+</div>
 
-    <!-- Верхние вкладки -->
-    <div id="options-block" style=" --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px">
-        <!-- Кнопки-вкладки -->
-        <div class="options-tabs-shell relative">
-            <div id="tabsWrapper" class="relative overflow-hidden">
-                <!-- Fade справа -->
-                <div id="fadeRight1" class="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white z-10 transition-opacity duration-300 opacity-0"></div>
-
-                <!-- Область табов -->
-                <div id="tabsScroller1"
-                     class="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide pb-0 -mx-2 px-2">
-
-                    <?php if (count($options)) { ?>
-                    <button
-                        id="section-specs"
-                        class="<?php echo $_singleTabBtnClass('options'); ?>"
-                        data-tab="options">
-                        Характеристики
-                    </button>
-                    <?php } ?>
-
-                    <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-                    <button
-                        class="<?php echo $_singleTabBtnClass('description'); ?>"
-                        data-tab="description">
-                        Описание
-                    </button>
-                    <?php } ?>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('delivery'); ?>"
-                        data-tab="delivery">
-                        Доставка и оплата
-                    </button>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('commercial'); ?>"
-                        data-tab="commercial">
-                        Ком. Пред
-                    </button>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('sets'); ?>"
-                        data-tab="sets">
-                        Комплекты
-                    </button>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('download'); ?>"
-                        data-tab="download">
-                        Скачать
-                    </button>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('questions'); ?>"
-                        data-tab="questions">
-                        Вопросы
-                    </button>
-
-                    <button
-                        class="<?php echo $_singleTabBtnClass('reviews'); ?>"
-                        data-tab="reviews">
-                        Отзывы
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Контент вкладок -->
-        <div class="description1">
-
-            <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-            <!-- Описание серии -->
-            <div class="text" id="tab-description"<?php if ($_singleDefaultTab !== 'description') { ?> hidden<?php } ?>>
-                <?php include(Config::path('skins') . '/html/Components/info_under_gallery.htm'); ?>
-            </div>
-            <?php } ?>
-
-            <!-- Характеристики -->
-            <div class="text options" id="tab-options"<?php if ($_singleDefaultTab !== 'options') { ?> hidden<?php } ?> itemprop="description">
-
-                <?php
-    $processedOptions = [];
-
-    // 1. Добавляем "Срок доставки" как первую характеристику, если есть
-    if (!is_null($seriesInf['delivery_time']) && trim($seriesInf['delivery_time']) !== '') {
-        $processedOptions[] = [
-            'name' => 'Срок доставки',
-                'value' => htmlspecialchars($seriesInf['delivery_time'])
-                ];
-                }
-
-                // 2. Добавляем остальные опции
-                foreach ($options as $o) {
-                $processedOptions[] = [
-                'name' => htmlspecialchars($o['name']),
-                'value' => htmlspecialchars($o['value'])
-                ];
-                }
-
-                // 3. Берём первые 2 — основные, остальные — дополнительные
-                $mainOptions = array_slice($processedOptions, 0, 2);
-                $additionalOptions = array_slice($processedOptions, 2);
-                ?>
-
-                <!-- Основные характеристики (первые 6, включая срок доставки)  -->
-                <?php if (!empty($mainOptions)): ?>
-                <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2 mb-4">
-                    <?php foreach ($mainOptions as $o): ?>
-                    <div
-                        class="font-medium text-gray-600 text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
-                        <?= $o['name'] ?>:
-                    </div>
-                    <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
-                        <?= formatFirstCharUpper($o['value']) ?>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <!-- Дополнительные характеристики -->
-                <?php if (!empty($additionalOptions)): ?>
-                <div id="additionalDetails" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
-                    <div class="grid grid-cols-1 md:grid-cols-[min(360px,100%),1fr] gap-x-4 gap-y-2">
-                        <?php foreach ($additionalOptions as $o): ?>
-                        <div
-                            class="font-medium text-gray-600 text-base flex items-center border-b  border-none md:border-dotted  md:border-[#7D838A]">
-                            <?= $o['name'] ?>:
-                        </div>
-                        <div class="text-base md:text-lg font-medium border-b md:border-none border-dotted  border-[#7D838A]">
-                            <?= formatFirstCharUpper($o['value']) ?>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Кнопка -->
-                <button id="toggleButton"
-                        class="mt-4 px-4 py-2 rounded-full bg-white text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-300 flex items-center">
-                    <div id="buttonText">Смотреть все характеристики</div>
-                    <svg id="arrow" xmlns="http://www.w3.org/2000/svg"
-                         class="ml-2 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20"
-                         fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <?php endif; ?>
-
-            </div>
-
-            <script>
-                //Кнопка все характеристики
-                document.addEventListener("DOMContentLoaded", () => {
-                    const button = document.getElementById("toggleButton");
-                    const details = document.getElementById("additionalDetails");
-                    const buttonText = document.getElementById("buttonText");
-                    const arrow = document.getElementById("arrow");
-                    const block = document.getElementById("tabsScroller1");
-                    if (!button || !details || !buttonText || !arrow || !block) return;
-
-                    button.addEventListener("click", () => {
-                        const isExpanded = details.style.maxHeight && details.style.maxHeight !== "0px";
-
-                        if (isExpanded) {
-                            // Скрытие
-                            details.style.maxHeight = null;
-                            buttonText.textContent = "Смотреть все характеристики";
-                            arrow.classList.remove("rotate-180");
-
-                            const top = block.getBoundingClientRect().top + window.scrollY - 60;
-                            window.scrollTo({ top, behavior: "smooth" });
-                        } else {
-                            // Раскрытие — берём реальную высоту содержимого
-                            details.style.maxHeight = details.scrollHeight + "px";
-                            buttonText.textContent = "Скрыть характеристики";
-                            arrow.classList.add("rotate-180");
-                        }
-                    });
-                });
-            </script>
-
-            <!-- Доставка и оплата -->
-            <div class="text" id="tab-delivery"<?php if ($_singleDefaultTab !== 'delivery') { ?> hidden<?php } ?>>
-                <div id="text-delivery">
-                    <?php
-            $t = $catInf['series_info'];
-            $t = str_replace('[name]', $seriesInf['name'], $t);
-            $t = str_replace('%d%', '<span class="text-delivery-price info-delivery"></span>', $t);
-                    $t = str_replace('%a%', '<span class="text-delivery-price info-assembly"></span>', $t);
-                    $t = str_replace('%F%', '<span class="text-delivery-price info-unloading"></span>', $t);
-                    $t = preg_replace('/\+\s*40\s*руб\.?\s*\/\s*км\.?/u', '', $t);
-                    $t = preg_replace('/Километраж\s+считается[\s\S]*?покупателя\./u', '', $t);
-                    $t = preg_replace('/Нет\s+лифта[^0-9]*3[^0-9]*р\.?[^0-9]*за[^0-9]*1[^0-9]*кг\.?[^0-9]*за[^0-9]*1[^0-9]*этаж[^,]*,[^0-9]*но[^0-9]*не[^0-9]*менее[^0-9]*800[^а-я]*руб\.?/iu', '', $t);
-                    $t = preg_replace('/6%\s*-\s*от\s*стоимости\s*мебели,\s*[^<]*?800\s*руб\.?/u', '', $t);
-                    print $t;
-                    ?>
-                </div>
-            </div>
-
-            <!-- Ком. Пред (пример пустого контента) -->
-            <div class="text" id="tab-commercial" hidden>
-                <p>
-                    👉 <a href="/contacts/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">по запросу на эл.почту</a>
-                </p>
-            </div>
-
-            <!-- Комплекты -->
-            <div class="text" id="tab-sets" hidden>
-                <p>
-                    👉 <a href="/contacts/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">по запросу на эл.почту</a>
-                </p>
-            </div>
-
-            <!-- Скачать -->
-            <div class="text" id="tab-download" hidden>
-                <p>
-                    👉 <a href="/contacts/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">по запросу на эл.почту</a>
-                </p>
-            </div>
-
-            <!-- Вопросы -->
-            <div class="text" id="tab-questions" hidden>
-                <p>
-                    👉 <a href="/vopros-otvet/" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">Посмотреть ответы на часто задаваемые вопросы, или задать свой. Все решим. Спасибо.</a>
-                </p>
-            </div>
-
-            <!-- Отзывы -->
-            <div class="text" id="tab-reviews" hidden>
-                <h3>Отзывы покупателей</h3>
-                <p>Отзывы и рейтинги пользователей.</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.description1 .text').forEach(div => {
-                div.hidden = (div.id !== 'tab-' + tabName);
-            });
-
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-blue-600', 'text-blue-600', 'border-transparent', 'bg-white', 'text-gray-900');
-                if (btn.dataset.tab === tabName) {
-                    btn.classList.add('border-blue-600', 'text-blue-600');
-                } else {
-                    btn.classList.add('border-transparent', 'bg-white', 'text-gray-900');
-                }
-            });
-
-            const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-
-            // Если выбрана вкладка "reviews", выполнить плавный скролл к отзывам
-            if (tabName === 'reviews') {
-                const reviewsElement = document.getElementById('reviews');
-                if (reviewsElement) {
-                    // Вычислить смещение с учетом фиксированного шапки или других элементов
-                    const headerOffset = 60; // Вы можете настроить это значение
-                    const elementPosition = reviewsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            } else if (activeButton) {
-                positionTabSmart(activeButton);
-            }
-        }
-
-        function positionTabSmart(tab) {
-            if (!tab) return;
-            const tabsScroller = document.getElementById('tabsScroller1');
-            if (!tabsScroller) return;
-
-            // ⭐ Если экран меньше 400px — центрируем активный таб
-            if (window.innerWidth < 400) {
-                const tabCenter = tab.offsetLeft + tab.offsetWidth / 2;
-                const scrollTo = tabCenter - tabsScroller.clientWidth / 2;
-
-                const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
-                const targetScrollLeft = Math.max(0, Math.min(scrollTo, maxScroll));
-
-                tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-
-                setTimeout(updateFade, 300);
-                return;
-            }
-
-            // ⭐ Поведение для ширины > 400px — ваше прежнее
-            const allTabs = Array.from(tabsScroller.querySelectorAll('.tab-btn'));
-            const isFirstTab = allTabs[0] === tab;
-
-            if (isFirstTab) {
-                tabsScroller.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                const tabOffsetLeft = tab.offsetLeft;
-                const firstTab = allTabs[0];
-                const firstTabWidth = firstTab ? firstTab.offsetWidth : 0;
-                const gap = parseInt(getComputedStyle(tabsScroller).gap) || 12;
-
-                let targetScrollLeft = tabOffsetLeft - firstTabWidth - gap;
-                const maxScroll = tabsScroller.scrollWidth - tabsScroller.clientWidth;
-                targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
-
-                tabsScroller.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-            }
-
-            setTimeout(updateFade, 300);
-        }
-
-        function updateFade() {
-            const tabsScroller = document.getElementById('tabsScroller1');
-            const fadeRight = document.getElementById('fadeRight1');
-            if (!tabsScroller || !fadeRight) return;
-            const isAtEnd = tabsScroller.scrollLeft + tabsScroller.clientWidth >= tabsScroller.scrollWidth - 10;
-            fadeRight.style.opacity = isAtEnd ? '0' : '1';
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showTab(btn.dataset.tab);
-                });
-            });
-
-            setTimeout(updateFade, 100);
-            const tabsScroller = document.getElementById('tabsScroller1');
-            if (tabsScroller) {
-                tabsScroller.addEventListener('scroll', updateFade);
-                window.addEventListener('resize', updateFade);
-            }
-
-            const style = document.createElement('style');
-            style.textContent = `
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-    `;
-            document.head.appendChild(style);
-        });
-    </script>
+<?php include(Config::path('skins') . '/html/Components/series_options_block.htm'); ?>
 
     <hr class="mb-6 border-gray-300 mt-12" />
 
@@ -1543,5 +1196,3 @@ $_singleTabBtnClass = function (string $tab) use ($_singleDefaultTab): string {
 
 </div>
 </div>
-</div>
-
