@@ -1,13 +1,10 @@
 ﻿<?php
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
-$_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 $_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
+$_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
+$_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
 
-$_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480) - 300;
-$_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? max($_infoMinH, 480));
 $_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
-$_materialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
-$_materialsMinHMobile = (int)($pageInf['perf_materials_min_h'] ?? 404);
 
 if (empty($singleItemViewReady)) {
     $_singleDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text'] ?? '')) ? 'description' : 'delivery');
@@ -187,23 +184,21 @@ if (empty($singleItemViewReady)) {
     }
 
     /* 2. Колонки информации и преимущества */
-    .single-item-info {
-        min-height: <?php echo (int)$_infoMinH; ?>px;
-    }
-
     .single-item-benefits-slot {
         min-height: <?php echo (int)$_benefitsMinH; ?>px;
     }
 
-    /* 3. Блок опций */
+    .series-product-row {
+        min-height: <?php echo (int)$_productRowMinH; ?>px;
+    }
+
     #options-block {
-        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
         --options-panel-min-h: <?php echo (int)$_optsContentMinH; ?>px;
-        contain: layout style;
+        min-height: <?php echo (int)$_optsBlockMinH; ?>px;
     }
 
     #options-block .description1 {
-        min-height: var(--options-panel-min-h, <?php echo (int)$_optsContentMinH; ?>px);
+        margin: 0 !important;
     }
 
     #options-block .description1 > .text:not([hidden]) {
@@ -243,21 +238,11 @@ if (empty($singleItemViewReady)) {
     }
 
     #material-selected {
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
         overflow: visible;
-        contain: layout style;
     }
 
     #material-selected.is-materials-expanded {
         height: auto;
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
-    }
-
-    @media (min-width: 1280px) {
-        #material-selected,
-        #material-selected.is-materials-expanded {
-            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
-        }
     }
 
     #materials-popup {
@@ -731,7 +716,7 @@ if (empty($singleItemViewReady)) {
 
             <?php } ?>
 
-            <div class="info single-item-info md:w-1/2" style="min-height: <?php echo (int)$_infoMinH; ?>px;">
+            <div class="info single-item-info md:w-1/2">
                 <!-- Блок с названием и кнопками -->
                 <div class="md:block hidden">
                     <div class="flex items-center justify-between">
@@ -1134,9 +1119,10 @@ if (empty($singleItemViewReady)) {
 
         </div>
     </div>
-</div>
 
 <?php include(Config::path('skins') . '/html/Components/series_options_block.htm'); ?>
+
+</div>
 
     <hr class="mb-6 border-gray-300 mt-12" />
 

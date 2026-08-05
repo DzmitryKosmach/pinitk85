@@ -24,9 +24,7 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
 
 <!-- 4. Критический CSS для стабилизации макета (CLS) -->
 <style>
-    /* Резервирование места под основные блоки */
-    .series-product-row { min-height: <?php echo $_perfProductRowMinH; ?>px; }
-    .series-info-col  { min-height: <?php echo $_perfInfoMinH; ?>px; }
+    /* Резервирование места под основные блоки — только галерея и benefits */
     .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinH; ?>px; }
 
     /* Стабилизация текста описания (line-clamp предотвращает прыжки до загрузки JS) */
@@ -53,23 +51,20 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     #series-block ul, #series-block ol { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; margin-top: 0; }
     #series-block li { font-size: 1rem; margin-bottom: 0.5rem; }
 
-    /* Резервирование места под материалы */
-    #material-selected { min-height: <?php echo $_perfMaterialsMinH; ?>px; }
-    @media (min-width: 1280px) {
-        #material-selected { min-height: <?php echo $_perfMaterialsMinHDesktop; ?>px; }
-    }
+    /* Резервирование места под ряд материалов (не весь блок #material-selected) */
     #materials-popup-content { min-height: <?php echo $_perfMaterialsRowMinH; ?>px; }
 
+    .series-product-row {
+        min-height: <?php echo $_perfProductRowMinH; ?>px;
+    }
+
     #options-block {
+        --options-panel-min-h: <?php echo $_perfOptsContentMinH; ?>px;
         min-height: <?php echo $_perfOptsBlockMinH; ?>px;
-        contain-intrinsic-size: auto <?php echo $_perfOptsBlockMinH; ?>px;
-        contain: layout style;
     }
 
     #options-block .description1 {
         margin: 0 !important;
-        /* Задаем явное fallback-значение на случай, если CSS-переменная не задана */
-        min-height: var(--options-panel-min-h, <?php echo $_perfOptsContentMinH; ?>px);
     }
 
     #options-block .description1 > .text:not([hidden]) {
