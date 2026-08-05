@@ -25,7 +25,6 @@
 
 #options-block .description1 {
     margin: 0 !important;
-    min-height: var(--options-panel-min-h, 200px);
 }
 
 #options-block .description1 > .text:not([hidden]) {

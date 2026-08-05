@@ -1047,16 +1047,16 @@ class mCatalog
             if (count($options)) {
                 $optsMain = min(2, $processedOptsCount);
                 $optsExtra = max(0, $processedOptsCount - 2);
-                $optsContentMinH = 56 + $optsMain * 44 + ($optsExtra > 0 ? 64 : 0);
+                $optsContentMinH = 16 + $optsMain * 44 + ($optsExtra > 0 ? 48 : 0);
             } else {
-                $optsContentMinH = 280;
+                $optsContentMinH = 120;
             }
 
             $pageInf['perf_layout'] = 'catalog_series';
             $pageInf['perf_product_row_min_h'] = max($leftColMinH, $infoMinH);
             $pageInf['perf_info_min_h'] = $infoMinH;
             $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
-            $pageInf['perf_opts_block_min_h'] = 144 + $optsContentMinH;
+            $pageInf['perf_opts_block_min_h'] = 100 + $optsContentMinH;
             if (!empty($photos[0])) {
                 $pageInf['perf_lcp'] = Catalog::photoUrl(
                     Catalog_Series_Photos::$imagePath,
@@ -1151,21 +1151,21 @@ class mCatalog
             if (count($options)) {
                 $optsMain = min(2, $processedOptsCount);
                 $optsExtra = max(0, $processedOptsCount - 2);
-                $optsContentMinH = 56 + $optsMain * 44 + ($optsExtra > 0 ? 64 : 0);
+                $optsContentMinH = 16 + $optsMain * 44 + ($optsExtra > 0 ? 48 : 0);
             } else {
-                $optsContentMinH = 280;
+                $optsContentMinH = 120;
             }
 
             $matCount = count($itemInf['materials']);
             $materialsRowMinH = 135;
-            $materialsMinHDesktop = $matCount ? 228 : 0;
-            $materialsMinHMobile = $matCount ? 404 : 0;
+            $materialsMinHDesktop = $matCount ? 200 : 0;
+            $materialsMinHMobile = $matCount ? (120 + $materialsRowMinH + 40) : 0;
             $galleryMinH = count($photos) ? 400 : 260;
-            $infoMinH = 120 + 180 + 120 + $materialsMinHMobile;
+            $infoMinH = 420 + $materialsMinHMobile;
 
             $pageInf['perf_layout'] = 'catalog_series_single_item';
             $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
-            $pageInf['perf_opts_block_min_h'] = 144 + $optsContentMinH;
+            $pageInf['perf_opts_block_min_h'] = 100 + $optsContentMinH;
             $pageInf['perf_materials_min_h'] = $materialsMinHMobile;
             $pageInf['perf_materials_min_h_desktop'] = $materialsMinHDesktop;
             $pageInf['perf_materials_row_min_h'] = $materialsRowMinH;
