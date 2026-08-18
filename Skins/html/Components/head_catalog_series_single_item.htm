@@ -24,7 +24,13 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
 
 <!-- 4. Критический CSS для стабилизации макета (CLS) -->
 <style>
-    /* Резервирование места под основные блоки — только галерея и benefits */
+    html.catalog-series-single-item-page .series-product-row {
+        align-items: flex-start;
+    }
+
+    /* Резервирование места под основные блоки */
+    .series-product-row { min-height: <?php echo $_perfProductRowMinH; ?>px; }
+    .series-info-col  { min-height: <?php echo $_perfInfoMinH; ?>px; }
     .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinH; ?>px; }
 
     /* Стабилизация текста описания (line-clamp предотвращает прыжки до загрузки JS) */
@@ -51,20 +57,23 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     #series-block ul, #series-block ol { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; margin-top: 0; }
     #series-block li { font-size: 1rem; margin-bottom: 0.5rem; }
 
-    /* Резервирование места под ряд материалов (не весь блок #material-selected) */
+    /* Резервирование места под материалы */
+    #material-selected { min-height: <?php echo $_perfMaterialsMinH; ?>px; }
+    @media (min-width: 1280px) {
+        #material-selected { min-height: <?php echo $_perfMaterialsMinHDesktop; ?>px; }
+    }
     #materials-popup-content { min-height: <?php echo $_perfMaterialsRowMinH; ?>px; }
 
-    .series-product-row {
-        min-height: <?php echo $_perfProductRowMinH; ?>px;
-    }
-
     #options-block {
-        --options-panel-min-h: <?php echo $_perfOptsContentMinH; ?>px;
         min-height: <?php echo $_perfOptsBlockMinH; ?>px;
+        contain-intrinsic-size: auto <?php echo $_perfOptsBlockMinH; ?>px;
+        contain: layout style;
     }
 
     #options-block .description1 {
         margin: 0 !important;
+        /* Задаем явное fallback-значение на случай, если CSS-переменная не задана */
+        min-height: var(--options-panel-min-h, <?php echo $_perfOptsContentMinH; ?>px);
     }
 
     #options-block .description1 > .text:not([hidden]) {
@@ -110,4 +119,46 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     /* Мелкие элементы, которые часто вызывают микросдвиги */
     .text-delivery-price { min-width: 5rem; display: inline-block; min-height: 1.25rem; }
     .series-qty-row { min-height: 2.5rem; align-items: center; }
+
+    /* После load + 1с JS добавляет html.is-layout-compact — убираем лишние отступы после «Цветовая гамма» */
+    html.catalog-series-single-item-page.is-layout-compact .series-product-row {
+        min-height: 0 !important;
+        height: auto !important;
+        align-items: flex-start !important;
+        contain: none !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact .series-info-col,
+    html.catalog-series-single-item-page.is-layout-compact .single-item-info {
+        min-height: 0 !important;
+        height: auto !important;
+        contain: none !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact #material-selected,
+    html.catalog-series-single-item-page.is-layout-compact #material-selected.is-materials-expanded {
+        min-height: 0 !important;
+        height: auto !important;
+        contain: none !important;
+        margin-bottom: 0 !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact #materials-popup-content {
+        min-height: 0 !important;
+        height: auto !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact #options-block {
+        min-height: 0 !important;
+        height: auto !important;
+        margin-top: 0 !important;
+        contain: none !important;
+        contain-intrinsic-size: none !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact #options-block .description1 {
+        min-height: 0 !important;
+        height: auto !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact #options-block .options-tabs-shell {
+        padding-top: 0 !important;
+        min-height: 0 !important;
+        margin-bottom: 0.75rem !important;
+    }
 </style>
+<script>document.documentElement.classList.add('catalog-series-single-item-page');</script>
