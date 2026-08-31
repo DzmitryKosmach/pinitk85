@@ -272,6 +272,37 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
         min-height: <?php echo (int)$_materialsRowMinH; ?>px;
     }
 
+    @media (max-width: 480px) {
+        #materials-popup {
+            width: 300px;
+        }
+
+        #materials-popup-content {
+            width: 300px;
+        }
+
+        #materials-popup .materials-row {
+            width: 264px;
+        }
+
+        #materials-popup .material .material-in {
+            width: 82px !important;
+        }
+
+        #materials-popup .material {
+            width: 94px !important;
+        }
+
+        #materials-popup .materials-level2 {
+            padding: 8px 8px 0 8px !important;
+        }
+
+        #materials-popup .materials-row {
+            width: 282px !important;
+        }
+
+    }
+
     #materials-level1-content,
     #materials-level2-content,
     #materials-level3-content {
@@ -284,7 +315,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
     #materials-level2-content {
         width: fit-content;
-        padding: 20px;
+        padding: 4px;
     }
 
     .material-in img {
@@ -306,7 +337,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
         #materials-popup .material,
         #materials-popup .material .material-in {
-            width: fit-content !important;
+            /*width: fit-content !important;*/
             height: inherit;
         }
     }
@@ -333,7 +364,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
     #materials-popup .material .material-in {
         box-sizing: border-box;
-        width: 95px;
+        width: 92px;
         height: inherit;
     }
 
