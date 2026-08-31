@@ -1584,7 +1584,7 @@ class mCatalog
                     $nameClasses .= ' font-semibold';
                 }
 
-                $html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
+                $html = '<button type="button" id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" onclick="' . $onclick . '; return false;">';
                 $html .= '<div class="material-in box-border w-[95px] h-full">';
                 $html .= '<div class="' . $imageClasses . '">' . $image;
                 if ($imageBig) {
@@ -1594,7 +1594,7 @@ class mCatalog
                 $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
                 $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
                 $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
-                $html .= '</div></div></a>';
+                $html .= '</div></div></button>';
                 return $html;
             };
 
@@ -1616,14 +1616,14 @@ class mCatalog
                 }
                 $_materialsPopupHtml .= '<div class="materials-level2 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level2" style="display:none">'
                     . '<div class="level-tail" id="materials-level2-tail"></div>'
-                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+                    . '<button type="button" class="close" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></button>'
                     . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
                     . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
                     . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
                     . '</div>';
                 $_materialsPopupHtml .= '<div class="materials-level3 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded" id="materials-level3" style="display:none">'
                     . '<div class="level-tail" id="materials-level3-tail"></div>'
-                    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+                    . '<button type="button" class="close" onclick="oMaterials.closeLevel3(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></button>'
                     . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level3-title"></strong>'
                     . '<div id="materials-level3-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px]"></div>'
                     . '</div>';

@@ -117,7 +117,7 @@ if ($active) {
 $nameClasses .= ' font-semibold';
 }
 
-$html = '<a id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" href="javascript:void(0)" onclick="' . $onclick . '; return false;">';
+$html = '<button type="button" id="material-' . $mId . '" class="' . $className . ' material block relative float-left box-border w-[110px] h-[135px] m-0 no-underline rounded hover:bg-gray-50" onclick="' . $onclick . '; return false;">';
     $html .= '<div class="material-in box-border w-[95px] h-full">';
         $html .= '<div class="' . $imageClasses . '">' . $image;
             if ($imageBig) {
@@ -127,7 +127,7 @@ $html = '<a id="material-' . $mId . '" class="' . $className . ' material block 
         $html .= '<div class="info material-info h-[55px] overflow-hidden pl-[2px]">';
             $html .= '<div class="' . $nameClasses . '">' . hsch($m['name']) . '</div>';
             $html .= '<div class="price block whitespace-nowrap text-[11px]">' . $priceStr . '</div>';
-            $html .= '</div></div></a>';
+            $html .= '</div></div></button>';
 return $html;
 };
 
@@ -149,7 +149,7 @@ $_materialsPopupHtml .= '<div class="materials-row' . $rowClass . ' relative z-[
 }
 $_materialsPopupHtml .= '<div class="materials-level2 relative -top-5 z-[200] p-5 bg-white border border-[#7a8a93] rounded sm2:w-72" id="materials-level2" style="display:none">'
     . '<div class="level-tail" id="materials-level2-tail"></div>'
-    . '<a class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></a>'
+    . '<button type="button" class="close" href="javascript:void(0)" onclick="oMaterials.closeLevel2(); return false;"><span class="flex justify-end text-red-600 hover:text-red-800 !text-5xl leading-none no-underline hover:no-underline">×</span></button>'
     . '<strong class="level-title block py-2 pl-[2px] text-[#737769] font-normal text-[16px]" id="materials-level2-title"></strong>'
     . '<div class="level-help block pb-4 pl-[2px] text-gray-500 text-[12px]">Нажмите на изображение материала, чтобы выбрать его</div>'
     . '<div id="materials-level2-content" class="relative z-[1000] overflow-y-scroll overflow-x-hidden h-[300px] w-[300px] p-5"></div>'
@@ -771,8 +771,6 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                         </div>
                     </div>
 
-
-
                 </div>
 
                 <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
@@ -1142,8 +1140,8 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
                         <div id="materials-popup" class="mb-8">
                             <div class="materials-level1" id="materials-popup-content" data-counts="<?php echo count($_topMatIds); ?>" data-ssr="1"><?php echo $_materialsPopupHtml; ?></div>
-                            <a href="javascript:void(0)" class="klink-dashed underline text-blue-600 hover:text-blue-700 font-semibold min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
-                               onclick="oMaterials.openrows(); return false;">Показать все</a>
+                            <button type="button" href="javascript:void(0)" class="klink-dashed underline text-blue-600 hover:text-blue-700 font-semibold min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
+                               onclick="oMaterials.openrows(); return false;">Показать все</button>
                         </div>
                     </div>
 
