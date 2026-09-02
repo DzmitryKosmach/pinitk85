@@ -119,7 +119,7 @@
 
         <a href="/preimuschestva/" target="_blank">
             <button id="toggle-benefits-btn"
-                    class="self-start md:self-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95">
+                    class="self-start md:self-auto px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95">
                 Узнать
             </button>
         </a>
@@ -156,8 +156,16 @@
 
 <section>
     <div class="mt-8 md:mt-16">
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <style>
+            #index-page a {
+                color: var(--color-primary) !important;
+                text-decoration: underline;
+            }
+            #index-page a:hover {
+                color: var(--color-primary-dark) !important;
+            }
+        </style>
+        <div id="index-page" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <?php if ($_SERVER['REQUEST_URI'] == '/'){  ?>
                 <?php echo $pageInf['text'];?>
@@ -295,7 +303,7 @@
                 </div>
                 <div class="text-center mt-12">
                     <a href="/customers/" target="_blank"
-                       class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
+                       class="inline-block border border-primary text-primary font-semibold px-6 py-2 rounded-full hover:bg-primary-50 transition">
                         Смотреть всех клиентов
                     </a>
                 </div>
@@ -323,7 +331,7 @@
                 </div>
                 <div class="text-center mt-12">
                     <a href="/letters/" target="_blank"
-                       class="inline-block border border-blue-500 text-blue-500 font-semibold px-6 py-2 rounded-full hover:bg-blue-50 transition">
+                       class="inline-block border border-primary text-primary font-semibold px-6 py-2 rounded-full hover:bg-primary-50 transition">
                         Смотреть все письма
                     </a>
                 </div>
@@ -370,7 +378,7 @@
 
         <a href="/reviews/" target="_blank">
             <div class="text-center mt-6">
-                <button class="bg-blue-600 text-white font-semibold px-8 py-3 rounded hover:bg-blue-700 transition">
+                <button class="bg-primary text-white font-semibold px-8 py-3 rounded hover:bg-primary-dark transition">
                     Оставить отзыв
                 </button>
             </div>
@@ -382,8 +390,8 @@
 <?php include(Config::path('skins') . '/html/Components/brands_section.htm'); ?>
 
 <div class="max-w-[760px] mx-auto block mt-20 border-[3px] text-[14px] text-center leading-4 sm:text-[15px] md:text-base
-     border-blue-600 text-blue-600 font-semibold px-6 sm:px-8 md:px-16 py-3
-         rounded-[40px] mb:rounded-full hover:bg-blue-50 transition">
+     border-primary text-primary font-semibold px-6 sm:px-8 md:px-16 py-3
+         rounded-[40px] mb:rounded-full hover:bg-primary-50 transition">
     Часть средств от продажи офисной мебели оптом, перечисляются на
     благотворительность.
 </div>

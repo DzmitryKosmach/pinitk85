@@ -106,14 +106,14 @@
                        msg_maxlen="Имя не должно превышать 100 символов"
                        required
                        msg_required="Вы не ввели ваше имя"
-                    class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                    class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                     >
 			</div>
             <div style="display:none">
                 <input type="text" name="last_name" id="last_name" autocomplete="off" maxlength="100">
             </div>
             <div class="line clearfix">
-                <input class="maskPhone w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all" type="text" name="phone" value="" placeholder="Номер телефона*:"
+                <input class="maskPhone w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="text" name="phone" value="" placeholder="Номер телефона*:"
                        maxlength="20"
                        msg_maxlen="Номер телефона не должен превышать 20 символов"
                        required
@@ -127,7 +127,7 @@
             <div class="line buttons clearfix">
                 <input type="hidden" name="csrf_token" value="<?php echo $pageInf['csrf_token']; ?>">
                 <input type="hidden" name="enigma<?php echo time(); ?>" value="<?php echo bin2hex(random_bytes(8)) ?>">
-                <input class="btn btn1 !bg-main px-6 py-3 text-white rounded-md hover:bg-opacity-90 transition" type="submit" name="submit" value="Отправить">
+                <input class="btn btn1 !bg-primary px-6 py-3 text-white rounded-md hover:bg-primary-dark transition" type="submit" name="submit" value="Отправить">
             </div>
 		</form>
 	</div>

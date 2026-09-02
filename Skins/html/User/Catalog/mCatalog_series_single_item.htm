@@ -448,7 +448,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     }
 
     #materials-popup .material.active .image {
-        border-color: #2563EB;
+        border-color: var(--color-primary);
     }
 
     #materials-popup .material.has-sub:after {
@@ -910,12 +910,12 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
             <div class="mods" style=" margin-top: 0;">
                 <!-- Табы -->
                 <div class="flex gap-2 text-sm mb-8">
-                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'options' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>" data-tab="options">
+                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'options' ? 'bg-primary text-white' : 'bg-white text-gray-700' ?>" data-tab="options">
                         Характеристики
                     </button>
 
                     <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
-                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'description' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>" data-tab="description">
+                    <button class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_singleDefaultTab === 'description' ? 'bg-primary text-white' : 'bg-white text-gray-700' ?>" data-tab="description">
                         Описание
                     </button>
                     <?php } ?>
@@ -925,11 +925,11 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                     document.querySelectorAll('.tab-btn1').forEach(button => {
                         button.addEventListener('click', function () {
                             document.querySelectorAll('.tab-btn1').forEach(btn => {
-                                btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                                btn.classList.remove('active', 'bg-primary', 'text-white');
                                 btn.classList.add('bg-white', 'text-gray-700');
                             });
 
-                            this.classList.add('active', 'bg-blue-600', 'text-white');
+                            this.classList.add('active', 'bg-primary', 'text-white');
                             this.classList.remove('bg-white', 'text-gray-700');
 
                             const tabName = this.getAttribute('data-tab');
@@ -1040,7 +1040,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                                 <?php $btnDisabled = !empty($seriesInf['out_of_production']) && !$inCart; ?>
                                 <button
                                     type="<?= $inCart ? 'button' : 'submit' ?>"
-                                    class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                                    class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-primary text-white hover:!bg-primary-dark') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg"
                                     title="<?= $inCart ? 'Перейти в корзину' : ($btnDisabled ? 'Товар снят с производства' : 'Отложить в 1 клик со СКИДКОЙ') ?>"
                                 <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
                                 <?= $btnDisabled ? 'disabled' : '' ?>>
@@ -1052,7 +1052,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
                             <div class="w-full sm:w-fit">
                                 <a rel="nofollow"
-                                   class="block sm:inline-block sm:w-fit border-2 border-blue-600 text-blue-600 py-[10px] px-6 rounded text-center font-semibold hover:bg-blue-50 transition-colors"
+                                   class="block sm:inline-block sm:w-fit border-2 border-primary text-primary py-[10px] px-6 rounded text-center font-semibold hover:bg-primary-50 transition-colors"
                                    href="<?= Url::a('contacts') ?>?reason=<?= Contacts_Feedback::REASON_CHEAPER ?>"
                                    title="Нашли дешевле?">
                                     Нашли дешевле?
@@ -1073,7 +1073,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                         const btn = form.querySelector("button.submit");
                         if (!btn) return;
 
-                        btn.classList.remove("add2basket", "!bg-blue-600", "hover:!bg-blue-700");
+                        btn.classList.remove("add2basket", "!bg-primary", "hover:!bg-primary-dark");
                         btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
 
                         btn.textContent = "✓ В корзину";
@@ -1124,7 +1124,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                 <div id="material-selected" class="flex flex-col xl:flex-row gap-0 xl:gap-20">
                     <div class="item-current-material max-w-[140px] mt-8" style="float: none">
                         <span class="b2">Выбран:</span>
-                        <div class="image border-2 mb-1 w-[76px] h-[61px] shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB;">
+                        <div class="image border-2 mb-1 w-[76px] h-[61px] shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: var(--color-primary);">
                             <?php if($mActive && $mActive['image']['ext']) { ?>
                             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_76x61_0.<?php echo $mActive['image']['ext']; ?>"
                                  width="76" height="61" alt="" decoding="async">
@@ -1140,7 +1140,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
                         <div id="materials-popup" class="mb-8">
                             <div class="materials-level1" id="materials-popup-content" data-counts="<?php echo count($_topMatIds); ?>" data-ssr="1"><?php echo $_materialsPopupHtml; ?></div>
-                            <button type="button" href="javascript:void(0)" class="klink-dashed underline text-blue-600 hover:text-blue-700 font-semibold min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
+                            <button type="button" href="javascript:void(0)" class="klink-dashed underline text-primary hover:text-primary-dark font-semibold min-h-[1.25rem] inline-block<?php if (empty($_showAllMatsLink)) { ?> hidden<?php } ?>"
                                onclick="oMaterials.openrows(); return false;">Показать все</button>
                         </div>
                     </div>

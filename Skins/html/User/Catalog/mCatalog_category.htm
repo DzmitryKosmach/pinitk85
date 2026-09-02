@@ -12,10 +12,6 @@
 </script>
 
 <!-- Предзагрузка критических ресурсов -->
-<link rel="preload" as="image" href="/images/category/sofa.png" fetchpriority="high">
-<link rel="preload" as="image" href="/images/category/ruler.png">
-<link rel="preload" as="image" href="/images/category/shelves.png">
-<link rel="preload" as="image" href="/images/category/time.png">
 
 <div>
     <div>
@@ -274,9 +270,9 @@
                         function updateTabStyles(tabElement, isSelected) {
                             if (isSelected) {
                                 tabElement.classList.remove("bg-white", "border-gray-300", "text-gray-800", "hover:bg-gray-50");
-                                tabElement.classList.add("bg-blue-600", "text-white", "border-blue-600", "font-medium");
+                                tabElement.classList.add("bg-primary", "text-white", "border-primary", "font-medium");
                             } else {
-                                tabElement.classList.remove("bg-blue-600", "text-white", "border-blue-600", "font-medium");
+                                tabElement.classList.remove("bg-primary", "text-white", "border-primary", "font-medium");
                                 tabElement.classList.add("bg-white", "border-gray-300", "text-gray-800", "hover:bg-gray-50");
                             }
                         }
@@ -739,7 +735,7 @@
                                     hiddenWrapper.classList.remove("max-h-0", "opacity-0");
                                     hiddenWrapper.classList.add("max-h-[1000px]", "opacity-100"); // max-h-[1000px] или другое значение
                                     document.getElementById("btnText").textContent = "Скрыть";
-                                    showMoreBtn.classList.remove("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    showMoreBtn.classList.remove("bg-primary", "hover:bg-primary-dark", "attention");
                                     showMoreBtn.classList.add("bg-gray-600", "hover:bg-gray-700");
                                     document.getElementById("btnIcon").classList.add("rotate-180");
                                 } else {
@@ -747,7 +743,7 @@
                                     hiddenWrapper.classList.remove("max-h-[1000px]", "opacity-100");
                                     document.getElementById("btnText").textContent = "Ещё";
                                     showMoreBtn.classList.remove("bg-gray-600", "hover:bg-gray-700");
-                                    showMoreBtn.classList.add("bg-blue-600", "hover:bg-blue-700", "attention");
+                                    showMoreBtn.classList.add("bg-primary", "hover:bg-primary-dark", "attention");
                                     document.getElementById("btnIcon").classList.remove("rotate-180");
                                 }
 
@@ -876,18 +872,10 @@
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-between text-sm md:text-base font-medium"
             >
                 <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div
-                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-                    >
-                        <img
-                            src="/images/category/sofa.png"
-                            class="advantage-icon"
-                            width="26"
-                            height="26"
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                        />
+                    <div class="shadow-icon-box p-3 rounded-md shrink-0">
+                        <svg width="26" height="26" viewBox="0 0 26 26" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M5.417 12.458V8.667C5.417 7.148 6.648 5.917 8.167 5.917h9.666c1.519 0 2.75 1.231 2.75 2.75v3.791c1.507.46 2.583 1.86 2.583 3.5v3.708h-2.167v1.083h-2.166V19.5H7.333v1.083H5.167V19.5H3V15.958c0-1.64 1.076-3.04 2.417-3.5zm2.75-1.625h9.666V8.667H8.167v2.166zM5.167 14.417c-.598 0-1.084.485-1.084 1.083v2.167h17.834v-2.167c0-.598-.486-1.083-1.084-1.083H5.167z"/>
+                        </svg>
                     </div>
                     <p class="text-base xl:text-lg font-medium">
                         Эксклюзивный дизайн:
@@ -900,18 +888,10 @@
                     </p>
                 </div>
                 <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div
-                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-                    >
-                        <img
-                            src="/images/category/ruler.png"
-                            class="advantage-icon"
-                            width="26"
-                            height="26"
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                        />
+                    <div class="shadow-icon-box p-3 rounded-md shrink-0">
+                        <svg width="26" height="26" viewBox="0 0 26 26" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M18.362 3.041L22.958 7.637c.423.423.423 1.109 0 1.532L9.17 22.958c-.423.423-1.109.423-1.532 0L3.042 18.361c-.423-.423-.423-1.109 0-1.532L16.83 3.041c.423-.423 1.109-.423 1.532 0zM7.638 15.297L5.34 17.595l3.064 3.064L20.66 8.403l-3.064-3.064-2.298 2.298 1.532 1.532-1.532 1.532-1.532-1.532-1.532 1.532 1.532 1.532-1.532 1.532-1.532-1.532-1.532 1.532 1.532 1.532-1.532 1.532-1.532-1.532z"/>
+                        </svg>
                     </div>
                     <p class="text-base xl:text-lg font-medium">
                         Функциональные решения:
@@ -923,18 +903,10 @@
                     </p>
                 </div>
                 <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div
-                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-                    >
-                        <img
-                            src="/images/category/shelves.png"
-                            class="advantage-icon"
-                            width="26"
-                            height="26"
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                        />
+                    <div class="shadow-icon-box p-3 rounded-md shrink-0">
+                        <svg width="26" height="26" viewBox="0 0 26 26" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4.333 3.25h17.334v2.167H4.333V3.25zm0 8.667h17.334v2.166H4.333v-2.166zm0 8.666h17.334V22.75H4.333v-2.167zM6.5 5.417h2.167v6.5H6.5v-6.5zm10.833 0H19.5v6.5h-2.167v-6.5zM6.5 14.083h2.167v6.5H6.5v-6.5zm10.833 0H19.5v6.5h-2.167v-6.5z"/>
+                        </svg>
                     </div>
                     <p class="text-base xl:text-lg font-medium">
                         Мобильные и модульные системы:
@@ -945,18 +917,10 @@
                     </p>
                 </div>
                 <div class="flex items-start gap-2 bg-white p-3 shadow rounded">
-                    <div
-                        class="shadow-[inset_0px_0px_10px_4px_rgba(43,72,241,0.20)] p-3 rounded-md shrink-0"
-                    >
-                        <img
-                            src="/images/category/time.png"
-                            class="advantage-icon"
-                            width="26"
-                            height="26"
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                        />
+                    <div class="shadow-icon-box p-3 rounded-md shrink-0">
+                        <svg width="26" height="26" viewBox="0 0 26 26" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M13 2.167A10.833 10.833 0 1 0 23.833 13 10.845 10.845 0 0 0 13 2.167zm0 19.5A8.667 8.667 0 1 1 21.667 13 8.677 8.677 0 0 1 13 21.667zm.917-13.542h-2.167v6.283l5.417 3.25 1.083-1.842-4.333-2.6V8.125z"/>
+                        </svg>
                     </div>
                     <p class="text-base xl:text-lg font-medium">
                         Долгий срок службы:
@@ -1026,12 +990,12 @@
                 }
 
                 #catalog-page a {
-                    color: #2563bb;
+                    color: var(--color-primary);
                     text-decoration: underline;
                 }
 
                 #catalog-page a:hover {
-                    color: #1e40af;             /* text-blue-800 */
+                    color: var(--color-primary-dark);
                 }
 
                 #catalog-page strong,

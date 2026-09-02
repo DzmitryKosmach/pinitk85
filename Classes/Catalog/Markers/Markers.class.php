@@ -35,19 +35,19 @@ class Catalog_Markers extends ExtDbList
         self::GREEN => array(
             'file' => '/Skins/img/user/markers/1.png',
             'name' => 'Зелёный',
-            'color' => '#008000',
+            'color' => '#15803d',
             'shadow' => true
         ),
         self::BLUE => array(
             'file' => '/Skins/img/user/markers/2.png',
             'name' => 'Синий',
-            'color' => '#0000ff',
+            'color' => '#1d4ed8',
             'shadow' => true
         ),
         self::ORANGE => array(
             'file' => '/Skins/img/user/markers/3.png',
             'name' => 'Оранжевый',
-            'color' => '#ffa500',
+            'color' => '#c2410c',
             'shadow' => false
         ),
         self::SKYBLUE => array(
@@ -59,13 +59,13 @@ class Catalog_Markers extends ExtDbList
         self::BROWN => array(
             'file' => '/Skins/img/user/markers/5.png',
             'name' => 'Коричневый',
-            'color' => '#a52a2a',
+            'color' => '#78350f',
             'shadow' => true
         ),
         self::PURPLE => array(
             'file' => '/Skins/img/user/markers/6.png',
             'name' => 'Фиолетовый',
-            'color' => '#800080',
+            'color' => '#7e22ce',
             'shadow' => false
         ),
         self::BLACK => array(
@@ -83,13 +83,13 @@ class Catalog_Markers extends ExtDbList
         self::YELLOW => array(
             'file' => '/Skins/img/user/markers/9.png',
             'name' => 'Жёлтый',
-            'color' => '#ffff00',
+            'color' => '#a16207',
             'shadow' => false
         ),
         self::RED => array(
             'file' => '/Skins/img/user/markers/10.png',
             'name' => 'Красный',
-            'color' => '#ff0000',
+            'color' => '#b91c1c',
             'shadow' => true
         )
     );

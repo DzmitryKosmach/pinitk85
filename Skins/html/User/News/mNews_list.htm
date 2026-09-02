@@ -37,7 +37,7 @@
         <?php foreach($news as $n) { ?>
 
 
-        <!-- Карточка статьи -->
+        <!-- Карточка новости -->
         <div class="bg-white rounded-lg shadow p-4 lg:p-6 flex flex-col">
           <div>
             <a href="<?php echo News::a($n['id'])?>">
@@ -79,7 +79,7 @@
 
           <a
             href="<?php echo News::a($n['id'])?>"
-            class="mt-auto text-sm lg:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-2 py-2 hover:bg-blue-50 transition"
+            class="mt-auto text-sm lg:text-base text-center border-[3px] border-primary text-primary rounded-md px-2 py-2 hover:bg-primary-50 transition"
           >
             Подробнее
           </a>

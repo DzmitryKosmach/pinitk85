@@ -34,7 +34,7 @@
 
                 <p>
                     <a
-                        class="add2review absolute top-[-14px] left-0 w-fit btn3 inline-block px-4 py-2 rounded-md bg-main text-white hover:bg-opacity-90 transition"
+                        class="add2review absolute top-[-14px] left-0 w-fit inline-block px-4 py-2 rounded-md bg-primary text-white hover:bg-primary-dark transition"
                         href="#addreview">Добавить отзыв</a>
                 </p>
                 <p><br></p>
@@ -81,7 +81,7 @@
                                         <input type="text" name="REVIEW_AUTHOR" id="REVIEW_USER" maxlength="192"
                                                value="<?php echo isset($_SESSION['review_name']) ? $_SESSION['review_name'] : 'Гость'; ?>"
                                                required
-                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                     </div>
                                 </div>
 
@@ -91,7 +91,7 @@
                                         <input type="email" name="REVIEW_AUTHOR_EMAIL" id="REVIEW_EMAIL"
                                                value="<?php echo isset($_SESSION['review_email']) ? $_SESSION['review_email'] : ''; ?>"
                                                required
-                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                         <small class="block mt-1 text-xs text-gray-500">Не будет опубликован на сайте.</small>
                                     </div>
                                 </div>
@@ -100,14 +100,14 @@
                                     <div class="fieldname text-sm font-medium text-gray-700">Ваш отзыв</div>
                                     <div class="md:col-span-2">
                         <textarea
-                            class="comment w-full min-h-[120px] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="comment w-full min-h-[120px] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                             name="REVIEW_TEXT_comment" id="REVIEW_TEXT_comment"
                             required><?php echo isset($_SESSION['review_comment']) ? $_SESSION['review_comment'] : ''; ?></textarea>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center justify-end">
-                                    <input class="send px-6 py-3 bg-main text-white rounded-md hover:bg-opacity-90 transition"
+                                    <input class="send px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark transition cursor-pointer"
                                            name="send_button" id="send_review" type="button" value="Отправить">
                                 </div>
                             </form>
