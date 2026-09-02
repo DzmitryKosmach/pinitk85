@@ -68,7 +68,7 @@
                   <!-- Серия -->
                   <td class="item px-4 py-3">
                     <?php if($c['series']) { ?>
-                    <a href="<?php echo Catalog_Series::a($c['series'])?>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                    <a href="<?php echo Catalog_Series::a($c['series'])?>" target="_blank" class="text-primary hover:text-primary-dark">
                       <?php echo $c['series']['name']; ?>
                     </a>
                     <?php } ?>
@@ -181,7 +181,7 @@
                         type="text"
                         name="amount[<?php echo intval($c['item']['id'])?>][<?php echo intval($c['material']['id']); ?>]"
                         value="<?php echo $c['amount']; ?>"
-                        class="w-12 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-12 text-center border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                       <span class="js-measurename text-xs text-gray-500">шт</span>
                       <a
@@ -233,7 +233,7 @@
                 <tr class="no-borders border-t border-gray-200">
                   <td colspan="4" class="px-4 py-3"></td>
                   <td class="px-4 py-3">
-                    <button type="submit" name="recalc" value="1" class="px-4 py-2 bg-main text-white rounded-md hover:bg-main_hover transition font-medium">
+                    <button type="submit" name="recalc" value="1" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition font-medium">
                       пересчитать
                     </button>
                   </td>
@@ -396,7 +396,7 @@
               </div>
             </div>
             <div class="h4 block after:content-[''] after:block after:clear-both">
-              <a class="btn btn1 orderbtn !bg-main px-4 py-2 bg-main text-white rounded-md hover:bg-main_hover transition font-medium"
+              <a class="btn btn1 orderbtn !bg-primary px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition font-medium"
                  href="<?php echo Url::a('catalog-cart')?>?clear=1"
                  onclick="return window.confirm('Вы действительно хотите удалить все товары из корзины?')">
                 очистить корзину
@@ -425,14 +425,14 @@
                     placeholder="Контактное лицо *"
                     maxlength="1000"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
                 <div class="vl">
                   <input
-                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     type="text"
                     name="quick[phone]"
                     value="<?php echo $userInf['phone']; ?>"
@@ -446,7 +446,7 @@
                 <button
                   onclick="yaCounter19019251.reachGoal('zakaz_1click_korzina'); return true;"
                   type="submit"
-                  class="btn btn1 orderbtn !bg-main px-12 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
+                  class="btn btn1 orderbtn !bg-primary px-12 py-3 text-white font-medium rounded-md hover:bg-primary-dark transition"
                 >
                   Оформить
                 </button>
@@ -472,14 +472,14 @@
                     msg_maxlen="Контактное лицо не должно превышать 1000 символов"
                     required
                     msg_required="Вы не ввели Контактное лицо"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                 </div>
               </div>
               <div class="line f_text" data-type="TEXT">
                 <div class="vl">
                   <input
-                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="maskPhone w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     type="text"
                     name="user[phone]"
                     placeholder="Телефон *"
@@ -500,7 +500,7 @@
                     msg_maxlen="E-mail не должен превышать 1000 символов"
                     required
                     msg_required="Вы не ввели ваш E-mail"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                 </div>
               </div>
@@ -514,7 +514,7 @@
                     msg_maxlen="Название города не должно превышать 100 символов"
                     required
                     msg_required="Вы не ввели ваш город"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                 </div>
               </div>
@@ -528,7 +528,7 @@
                     msg_maxlen="Адрес доставки не должен превышать 1000 символов"
                     required
                     msg_required="Вы не ввели адрес доставки"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                 </div>
               </div>
@@ -541,7 +541,7 @@
             style="min-height: 120px;"
             maxlength="5000"
             msg_maxlen="Комментарий к заказу не должен превышать 5000 символов"
-            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           ></textarea>
                 </div>
               </div>
@@ -561,7 +561,7 @@
                   <div class="flex justify-center">
                     <button
                       type="submit"
-                      class="btn btn1 orderbtn !bg-main px-6 py-3 text-white font-medium rounded-md hover:bg-opacity-90 transition"
+                      class="btn btn1 orderbtn !bg-primary px-6 py-3 text-white font-medium rounded-md hover:bg-primary-dark transition"
                     >
                       Продолжить оформление
                     </button>

@@ -66,7 +66,7 @@
 
 .modal-order-call-form .modal-order-call-form__button button {
     display: block;
-    background: #1daef9;
+    background: var(--color-primary);
     color: #fff;
     text-align: center;
     border-radius: 3px;
@@ -125,7 +125,7 @@
 	padding-right: 27px;
 }
 .modal-order-call-form .modal-order-call-form__button a {
-	background: #1daef9 none repeat scroll 0 0;
+	background: var(--color-primary) none repeat scroll 0 0;
 	border: medium none;
 	border-radius: 3px;
 	color: #fff;
@@ -199,7 +199,7 @@
 }
 .modal-order-call-form .modal-order-call-form__button a {
     display: block;
-    background: #1daef9;
+    background: var(--color-primary);
     color: #fff;
     text-align: center;
     border-radius: 3px;
@@ -288,7 +288,7 @@
     width: 188px;
     height: 40px;
     border: none;
-    background: #1daef9;
+    background: var(--color-primary);
     color: #fff;
     line-height: 40px;
     text-align: center;

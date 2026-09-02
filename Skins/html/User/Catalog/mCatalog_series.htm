@@ -359,7 +359,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                                             onclick="showItemPopup2('<?php echo Catalog_Items::a($seriesInf, $i)?>', <?php echo $i['id']; ?>); return handleOnclick(event);"
                                         >
                                             <circle cx="25" cy="25" r="16" fill="white" />
-                                            <circle cx="25" cy="25" r="14" fill="#2563eb" />
+                                            <circle cx="25" cy="25" r="14" fill="var(--color-primary)" />
                                         </svg>
 
                                         <!-- Подпись — появляется при hover -->
@@ -562,9 +562,9 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                         <div class="flex gap-2 text-sm">
                             <button
                                 class="tab-btn1
-                                  px-4 py-2 rounded-lg bg-blue-600 text-white font-medium
-                                  shadow-[0_0_8px_rgba(59,130,246,0.3)]
-                                  hover:shadow-[0_0_12px_rgba(59,130,246,0.4)]
+                                  px-4 py-2 rounded-lg bg-primary text-white font-medium
+                                  shadow-[0_0_8px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_0_12px_rgba(0,0,0,0.15)]
                                   active:translate-y-[-1px]
                                   transition-all duration-200 ease-in-out"
                                 data-target="section-photo">
@@ -581,7 +581,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
 
                             <?php if (!empty(trim($seriesInf['text'] ?? ''))) { ?>
                             <button
-                                class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_seriesDefaultTab === 'description' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700' ?>"
+                                class="tab-btn1 px-4 py-2 rounded-lg break-all border border-gray-200 shadow-[0_0_8px_rgba(0,0,0,0.1)] font-medium hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:border-gray-300 active:translate-y-[-1px] transition-all duration-200 ease-in-out <?= $_seriesDefaultTab === 'description' ? 'bg-primary text-white' : 'bg-white text-gray-700' ?>"
                                 data-tab="description">
                                 Описание
                             </button>
@@ -592,16 +592,16 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             <style>
                                 @keyframes pulseGlow {
                                     0%, 100% {
-                                        background-color: #1d4ed8; /* blue-700 */
+                                        background-color: var(--color-primary-dark);
                                         color: white;
-                                        box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
-                                        border-color: #3b82f6;
+                                        box-shadow: 0 0 12px var(--color-primary);
+                                        border-color: var(--color-primary);
                                     }
                                     50% {
                                         background-color: white;
-                                        color: #3b82f6;
+                                        color: var(--color-primary);
                                         box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-                                        border-color: #d1d5db; /* gray-300 */
+                                        border-color: #d1d5db;
                                     }
                                 }
 
@@ -632,11 +632,11 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             document.querySelectorAll('.tab-btn1').forEach(button => {
                                 button.addEventListener('click', function () {
                                     document.querySelectorAll('.tab-btn1').forEach(btn => {
-                                        btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                                        btn.classList.remove('active', 'bg-primary', 'text-white');
                                         btn.classList.add('bg-white', 'text-gray-700');
                                     });
 
-                                    this.classList.add('active', 'bg-blue-600', 'text-white');
+                                    this.classList.add('active', 'bg-primary', 'text-white');
                                     this.classList.remove('bg-white', 'text-gray-700');
 
                                     const tabName = this.getAttribute('data-tab');
@@ -801,7 +801,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                                 <?php } ?>
 
                                 <?php if(count($seriesSet) > 2) { ?>
-                                <button class="text-sm text-blue-600 hover:text-blue-700 font-semibold underline" onclick="setShowAll(this)">
+                                <button class="text-sm text-primary hover:text-primary-dark font-semibold underline" onclick="setShowAll(this)">
                                     Показать все
                                 </button>
                                 <?php } ?>
@@ -892,7 +892,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             <?php $btnDisabled = !empty($seriesInf['out_of_production']) && !$inCart; ?>
                             <button
                                 type="<?= $inCart ? 'button' : 'submit' ?>"
-                                class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg border-2 border-transparent inline-flex items-center justify-center"
+                                class="<?= $inCart ? '!bg-green-600 text-white opacity-90 cursor-pointer' : ($btnDisabled ? '!bg-gray-400 text-gray-600 opacity-60 cursor-not-allowed' : 'submit add2basket !w-full sm:w-fit text-center !bg-primary text-white hover:!bg-primary-dark') ?> !w-full sm:!w-fit text-center py-3 px-6 rounded font-semibold transition-colors shadow-lg border-2 border-transparent inline-flex items-center justify-center"
                                 title="<?= $inCart ? 'Перейти в корзину' : ($btnDisabled ? 'Товар снят с производства' : 'Отложить в 1 клик со СКИДКОЙ') ?>"
                             <?= $inCart ? 'onclick="window.location.href=\'/cart/\'"' : '' ?>
                             <?= $btnDisabled ? 'disabled' : '' ?>>
@@ -903,7 +903,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
 
                         <!-- Кнопка "Нашли дешевле?" (Белая кнопка) -->
                         <a rel="nofollow"
-                           class="cheaper detail fancyajax fancybox.ajax border-2 border-blue-600 text-blue-600 text-center hover:bg-blue-50 transition-colors rounded font-semibold inline-flex items-center justify-center min-h-[48px] w-full sm:w-fit py-2 px-6"
+                           class="cheaper detail fancyajax fancybox.ajax border-2 border-primary text-primary text-center hover:bg-primary-50 transition-colors rounded font-semibold inline-flex items-center justify-center min-h-[48px] w-full sm:w-fit py-2 px-6"
                            href="<?php echo Url::a('contacts')?>?reason=<?php echo Contacts_Feedback::REASON_CHEAPER?>"
                            title="Нашли дешевле?">
                             Нашли дешевле?
@@ -915,7 +915,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             const btn = form.querySelector("button.submit");
                             if (!btn) return;
 
-                            btn.classList.remove("add2basket", "!bg-blue-600", "hover:!bg-blue-700");
+                            btn.classList.remove("add2basket", "!bg-primary", "hover:!bg-primary-dark");
                             btn.classList.add("!bg-green-600", "cursor-pointer", "opacity-90");
 
                             btn.textContent = "✓ В корзину";
@@ -999,7 +999,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             <?php if($m['has_sub']) { ?>
                             <button type="button" class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out " >
                                 <div class="flex gap-3 flex-wrap mb-1">
-                                    <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
+                                    <div class="w-14 h-14 border-[3px] hover:border-primary rounded-lg">
                                         <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
                                             <?php if($m['image']['ext']) { ?>
                                             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
@@ -1024,7 +1024,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             <?php if($m['image']['ext']) { ?>
                             <button type="button" class="level1 w-16 !h-auto transform transition-transform duration-300 ease-in-out ">
                                 <div class="flex gap-3 flex-wrap mb-1">
-                                    <div class="w-14 h-14 border-[3px] hover:border-blue-500 rounded-lg">
+                                    <div class="w-14 h-14 border-[3px] hover:border-primary rounded-lg">
                                         <div class="w-full h-full bg-[#8B4513] border-[3px] border-white rounded-lg flex items-center justify-center overflow-hidden">
                                             <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $m['image']['id']; ?>_70x70_0.<?php echo $m['image']['ext']; ?>"
                                                  width="70" height="70" alt="<?php echo hsch(getMaterialAlt($m['name']))?>"
@@ -1052,7 +1052,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                             <div class="cl"></div>
                         </div>
                     </div>
-                    <button id="series-materials-toggle" type="button" class="hidden mt-2 text-sm text-blue-600 hover:text-blue-700 underline cursor-pointer">
+                    <button id="series-materials-toggle" type="button" class="hidden mt-2 text-sm text-primary hover:text-primary-dark underline cursor-pointer">
                         Показать все
                     </button>
                 </div>
@@ -1234,7 +1234,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                     `flex-shrink-0 w-[${getTabWidth()}px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm bg-white hover:bg-gray-50 text-center transition whitespace-nowrap overflow-hidden text-ellipsis`;
 
                 const getActiveClass = () =>
-                    `flex-shrink-0 w-[${getTabWidth()}px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm border-2 border-blue-600 text-blue-600 text-center transition whitespace-nowrap overflow-hidden text-ellipsis`;
+                    `flex-shrink-0 w-[${getTabWidth()}px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow text-xs sm:text-sm border-2 border-primary text-primary text-center transition whitespace-nowrap overflow-hidden text-ellipsis`;
 
                 const resetStyles = () => links.forEach(l => l.className = getBaseClass());
                 const setActive   = l  => { resetStyles(); l.className = getActiveClass(); };
@@ -1354,7 +1354,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                 window.addEventListener('resize', () => {
                     updateFade();
                     resetStyles();
-                    const activeTab = document.querySelector('.group-tab-link.border-blue-600');
+                    const activeTab = document.querySelector('.group-tab-link.border-primary');
                     if (activeTab) {
                         setActive(activeTab);
                     }
@@ -1590,7 +1590,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                 <!-- Кнопка -->
                 <button type="button"
                         onclick="showItemPopup1('<?php echo Catalog_Items::a($seriesInf, $item)?>', <?php echo $item['id']; ?>); return false;"
-                        class="mt-4 text-sm sm:text-base text-center border-[3px] border-blue-600 text-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 transition font-medium"
+                        class="mt-4 text-sm sm:text-base text-center border-[3px] border-primary text-primary rounded-md px-4 py-2 hover:bg-primary-50 transition font-medium"
                 >
                     Отложить
                 </button>
@@ -1601,7 +1601,7 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
                 <?php $hiddenCount = $itemsCount - $visibleLimit; ?>
                 <div class="flex justify-center items-end mt-6 mb-2 col-span-full">
                     <button type="button"
-                            class="show-more-btn inline-flex items-center justify-self-center h-fit gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm sm:text-base rounded-lg px-2 sm:px-6 py-2 sm:py-3 shadow-md"
+                            class="show-more-btn inline-flex items-center justify-self-center h-fit gap-2 bg-primary hover:bg-primary-dark text-white font-medium text-sm sm:text-base rounded-lg px-2 sm:px-6 py-2 sm:py-3 shadow-md"
                             data-group-id="<?php echo $groupId; ?>"
                     >
                         <svg class="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">

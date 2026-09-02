@@ -419,7 +419,7 @@ function getHomeUrl() {
                             <a href="/catalog/" class="inline-block catalog-main-link hover:underline">Каталог</a>
                             <div class="relative group catalog-dropdown-container">
                                 <button id="catalog-toggle1"
-                                        class="catalog-toggle flex items-center justify-center w-[26px] h-[26px] bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                                        class="catalog-toggle flex items-center justify-center w-[26px] h-[26px] bg-primary text-white rounded-md hover:bg-primary-dark transition duration-200"
                                         aria-label="Открыть каталог">
                                     <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M0 1H20" stroke="currentColor" stroke-width="2" />
@@ -1269,7 +1269,9 @@ function getHomeUrl() {
 
             <div class="mt-4 space-y-1">
                 <p class="flex gap-4 font-semibold">
-                    <img src="/images/index/phone_f.png" alt="Телефон" class="w-5 h-5" />
+                    <svg width="20" height="20" viewBox="0 0 26 26" class="w-5 h-5 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"/>
+                    </svg>
                     <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
                 </p>
                 <p class="ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
@@ -1277,11 +1279,11 @@ function getHomeUrl() {
 
             <div class="mt-4 flex flex-col gap-2">
                 <a href="/contacts/callback/"
-                   class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
+                   class="fancyajax fancybox.ajax recall callback bg-primary hover:bg-primary-dark text-white text-center py-3 px-4 rounded text-sm">
                     Заказать звонок
                 </a>
                 <a href="/contacts/"
-                   class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded text-center text-sm">Выезд
+                   class="fancyajax fancybox.ajax feedback border border-primary text-primary hover:bg-primary-50 py-3 px-4 rounded text-center text-sm">Выезд
                     консультанта</a>
             </div>
         </div>
@@ -1290,21 +1292,25 @@ function getHomeUrl() {
         <div class="lg:col-span-1">
             <h3 class="font-semibold text-base mb-2"><a href="/contacts/" class="hover:underline">КОНТАКТЫ</a></h3>
             <div class="flex items-center gap-1 mb-2">
-                <img src="/images/index/location_f.png" alt="Местоположение" class="w-5 h-5 mr-1" />
+                <svg width="20" height="24" viewBox="0 0 20 24" class="w-5 h-5 mr-1 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"/>
+                </svg>
                 <p class="mb-2">
                     Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
                 </p>
             </div>
             <div class="flex gap-1 mb-2">
-                <img src="/images/index/mail_f.png" alt="email" class="w-5 h-5 mr-1" />
+                <svg width="20" height="20" viewBox="0 0 20 20" class="w-5 h-5 mr-1 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M2.5 4.167A1.667 1.667 0 0 1 4.167 2.5h11.666A1.667 1.667 0 0 1 17.5 4.167v11.666A1.667 1.667 0 0 1 15.833 17.5H4.167A1.667 1.667 0 0 1 2.5 15.833V4.167zm1.667.5v.55l5.833 3.64 5.833-3.64v-.55H4.167zm11.666 1.93-5.42 3.38a1.25 1.25 0 0 1-1.36 0l-5.42-3.38v8.736h12.2V6.597z"/>
+                </svg>
                 <div>
                     <p>
                         Для заказа: <br />
-                        <?php echo emailPartial('zakaz@mebelioni.ru', 'zakaz@mebelioni.ru', 'text-blue-600'); ?>
+                        <?php echo emailPartial('zakaz@mebelioni.ru', 'zakaz@mebelioni.ru', 'text-primary'); ?>
                     </p>
                     <p>
                         Для информации: <br />
-                        <?php echo emailPartial('info@mebelioni.ru', 'info@mebelioni.ru', 'text-blue-600'); ?>
+                        <?php echo emailPartial('info@mebelioni.ru', 'info@mebelioni.ru', 'text-primary'); ?>
 
                     </p>
                     <div class="flex flex-wrap gap-3 mt-3">
@@ -1325,7 +1331,7 @@ function getHomeUrl() {
                     <?php foreach($catsMenu as $n =>
                     $c) { ?>
                     <li>
-                        <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                        <a href="<?php echo Catalog_Categories::a($c['id']); ?>" class="hover:text-primary hover:underline">
                             <?php echo $c['name']; ?>
                         </a>
                     </li>
@@ -1349,7 +1355,9 @@ function getHomeUrl() {
             <h3 class="font-semibold text-base mb-1"><a href="/contacts/" class="hover:underline">КОНТАКТЫ</a></h3>
             <div class="mt-4 space-y-1">
                 <p class="flex gap-4 font-semibold">
-                    <img src="<?php echo getImagePath('/images/index/phone_f.png'); ?>" alt="Телефон" class="w-5 h-5" />
+                    <svg width="20" height="20" viewBox="0 0 26 26" class="w-5 h-5 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M10.146 11.5723C11.1605 13.3562 12.6438 14.8395 14.4277 15.8539L15.3859 14.5124C15.7045 14.0665 16.3059 13.9287 16.7869 14.1915C18.3109 15.024 19.9952 15.5299 21.7521 15.669C22.3156 15.7136 22.75 16.1838 22.75 16.749V21.5837C22.75 22.1391 22.3299 22.6045 21.7774 22.6613C21.2033 22.7203 20.6242 22.75 20.0417 22.75C10.7679 22.75 3.25 15.2321 3.25 5.95833C3.25 5.37579 3.27971 4.79669 3.33871 4.22257C3.39549 3.67006 3.86094 3.25 4.41637 3.25H9.25104C9.81619 3.25 10.2864 3.68446 10.331 4.24785C10.4701 6.00479 10.976 7.68911 11.8085 9.21314C12.0713 9.6941 11.9335 10.2955 11.4876 10.614L10.146 11.5723ZM7.4146 10.8606L9.47288 9.39043C8.88926 8.13057 8.4893 6.79448 8.28454 5.41667H5.42649C5.41995 5.59685 5.41667 5.77742 5.41667 5.95833C5.41667 14.0354 11.9646 20.5833 20.0417 20.5833C20.2226 20.5833 20.4032 20.5801 20.5833 20.5735V17.7154C19.2056 17.5107 17.8695 17.1107 16.6096 16.5271L15.1394 18.5855C14.5446 18.3544 13.9702 18.0825 13.4197 17.7733L13.3567 17.7374C11.2338 16.5303 9.46979 14.7662 8.26258 12.6433L8.22677 12.5803C7.91753 12.0298 7.64567 11.4554 7.4146 10.8606Z"/>
+                    </svg>
                     <span><?php echo phonePartial('+74959204824', '+7 (495) 920-48-24'); ?><br /><?php echo phonePartial('88002349084', '8 (800) 234-90-84'); ?></span>
                 </p>
                 <p class="ml-[36px]">Пн–Пт с 09:00 до 19:00</p>
@@ -1357,11 +1365,11 @@ function getHomeUrl() {
 
             <div class="mt-4 flex flex-col gap-2">
                 <a href="/contacts/callback/"
-                   class="fancyajax fancybox.ajax recall callback bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded text-sm">
+                   class="fancyajax fancybox.ajax recall callback bg-primary hover:bg-primary-dark text-white text-center py-3 px-4 rounded text-sm">
                     Заказать звонок
                 </a>
                 <a href="/contacts/"
-                   class="fancyajax fancybox.ajax feedback border border-blue-600 text-blue-600 hover:bg-blue-50 text-center py-3 px-4 rounded text-sm">Выезд
+                   class="fancyajax fancybox.ajax feedback border border-primary text-primary hover:bg-primary-50 text-center py-3 px-4 rounded text-sm">Выезд
                     консультанта
                 </a>
             </div>
@@ -1370,22 +1378,25 @@ function getHomeUrl() {
         <!-- Блок 2: Контакты -->
         <div class="flex flex-wrap flex-row-reverse justify-center text-sm mt-8">
             <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
-                <img src="<?php echo getImagePath('/images/index/location_f.png'); ?>" alt="Местоположение"
-                     class="w-4 h-4 mr-1" />
+                <svg width="16" height="20" viewBox="0 0 20 24" class="w-4 h-4 mr-1 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M10 20.6405L15.3622 15.2782C18.3237 12.3168 18.3237 7.51526 15.3622 4.55379C12.4008 1.59231 7.59925 1.59231 4.63777 4.55379C1.6763 7.51526 1.6763 12.3168 4.63777 15.2782L10 20.6405ZM10 23.7046L3.10571 16.8103C-0.701903 13.0026 -0.701903 6.82934 3.10571 3.02173C6.91332 -0.785888 13.0866 -0.785888 16.8943 3.02173C20.7019 6.82934 20.7019 13.0026 16.8943 16.8103L10 23.7046ZM10 12.0827C11.1967 12.0827 12.1667 11.1127 12.1667 9.91601C12.1667 8.7194 11.1967 7.74935 10 7.74935C8.80335 7.74935 7.83333 8.7194 7.83333 9.91601C7.83333 11.1127 8.80335 12.0827 10 12.0827ZM10 14.2493C7.60677 14.2493 5.66667 12.3092 5.66667 9.91601C5.66667 7.52278 7.60677 5.58268 10 5.58268C12.3932 5.58268 14.3333 7.52278 14.3333 9.91601C14.3333 12.3092 12.3932 14.2493 10 14.2493Z"/>
+                </svg>
                 <p class="mb-2">
                     Адрес: г.Москва, <br />Наб. Космодамианская, д.4/22, к.5, пом.8Н
                 </p>
             </div>
             <div class="flex w-[45%] min-w-[220px] gap-1 mb-2">
-                <img src="<?php echo getImagePath('/images/index/mail_f.png'); ?>" alt="email" class="w-4 h-4 mr-1" />
+                <svg width="16" height="16" viewBox="0 0 20 20" class="w-4 h-4 mr-1 shrink-0" style="fill: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M2.5 4.167A1.667 1.667 0 0 1 4.167 2.5h11.666A1.667 1.667 0 0 1 17.5 4.167v11.666A1.667 1.667 0 0 1 15.833 17.5H4.167A1.667 1.667 0 0 1 2.5 15.833V4.167zm1.667.5v.55l5.833 3.64 5.833-3.64v-.55H4.167zm11.666 1.93-5.42 3.38a1.25 1.25 0 0 1-1.36 0l-5.42-3.38v8.736h12.2V6.597z"/>
+                </svg>
                 <div>
                     <p>
                         Для заказа: <br />
-                        <?php echo emailPartial('zakaz@mebelioni.ru', 'zakaz@mebelioni.ru', 'text-blue-600'); ?>
+                        <?php echo emailPartial('zakaz@mebelioni.ru', 'zakaz@mebelioni.ru', 'text-primary'); ?>
                     </p>
                     <p>
                         Для информации: <br />
-                        <?php echo emailPartial('info@mebelioni.ru', 'info@mebelioni.ru', 'text-blue-600'); ?>
+                        <?php echo emailPartial('info@mebelioni.ru', 'info@mebelioni.ru', 'text-primary'); ?>
 
                     </p>
                 </div>
@@ -1408,7 +1419,7 @@ function getHomeUrl() {
                         <?php foreach($catsMenu as $n =>
                         $c) { ?>
                         <li>
-                            <a href="<?php echo Catalog_Categories::a($c['id']); ?>">
+                            <a href="<?php echo Catalog_Categories::a($c['id']); ?>" class="hover:text-primary hover:underline">
                                 <?php echo $c['name']; ?>
                             </a>
                         </li>
@@ -1448,7 +1459,7 @@ function getHomeUrl() {
             aria-label="Заказать обратный звонок"
             aria-description="Нажмите для заказа обратного звонка. Наш менеджер свяжется с вами в ближайшее время."
             role="button"
-            class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-blue-600 text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-blue-700 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
+            class="flex flex-col items-center justify-center gap-2 px-1 py-2 sm:px-2 sm:py-2 bg-primary text-white text-[12px] sm:text-[12px] font-medium rounded-full sm:rounded-lg shadow-md hover:bg-primary-dark hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-1 transition-all duration-200 ease-in-out opacity-80 w-10 h-10 max-sm:w-10 max-sm:h-10 sm:w-auto sm:h-auto">
         <!-- Иконка -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8" aria-hidden="true">
             <!-- Телефон -->
@@ -1481,7 +1492,7 @@ function getHomeUrl() {
         </p>
 
         <div class="flex flex-col md:flex-row gap-4 mt-8">
-            <a class="yes flex-1 text-center py-3 px-4 bg-main text-white rounded-lg hover:bg-main_hover transition-colors font-medium"
+            <a class="yes flex-1 text-center py-3 px-4 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium"
                onclick='ttext("Отлично! Давайте перезвоним вам <br> бесплатно за 15 сек. и обсудим детали?");blockshowhide("vibiliunasnasaite","wix_call");return false'
                href="#">Да</a>
             <a class="no flex-1 text-center py-3 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
@@ -1506,7 +1517,7 @@ function getHomeUrl() {
                             <label for="wi_name_modal" class="label block text-gray-700 font-medium mb-2">Ваше имя:<sup
                                 class="text-red-500">*</sup></label>
                             <input
-                                class="!w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                                class="!w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 type="text" name="name" value="" id="wi_name_modal" placeholder="Введите имя" maxlength="100"
                                 required autocomplete="name" />
                             <div style="display:none" aria-hidden="true">
@@ -1519,7 +1530,7 @@ function getHomeUrl() {
                             <label for="wi_tele233" class="label block text-gray-700 font-medium mb-2">Телефон:<sup
                                 class="text-red-500">*</sup></label>
                             <input
-                                class="maskPhone !w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-main outline-none transition-all"
+                                class="maskPhone !w-full pl-4 pr-4 py-3 !mb-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 type="text" name="phone" value="" id="wi_tele233" placeholder="+7" maxlength="20" required
                                 inputmode="tel" autocomplete="tel" />
                             <input type="hidden" name="XMLHttpRequest" value="1" />
@@ -1532,7 +1543,7 @@ function getHomeUrl() {
                         <!--<a href="#">Жду звонка</a>-->
                         <!--button onclick="jduzvonka(1);return true;" type="submit" class="form_2calls_button">Жду звонка</button-->
                         <button type="submit"
-                                class="form_2calls_button !w-full !flex items-center justify-center py-3 !bg-main text-white rounded-lg hover:!bg-main_hover transition-colors font-medium cursor-pointer">
+                                class="form_2calls_button !w-full !flex items-center justify-center py-3 !bg-primary text-white rounded-lg hover:!bg-primary-dark transition-colors font-medium cursor-pointer">
                             Жду звонка
                         </button>
                     </div>
@@ -1674,7 +1685,7 @@ function getHomeUrl() {
 
 <!-- Кнопка "наверх" -->
 <button id="scrollToTopBtn"
-        class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-2 sm:right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-blue-600 opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-blue-700 focus:outline-none transition-all duration-300 transform hover:scale-110"
+        class="fixed w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bottom-20 right-2 sm:right-6 fade-out z-40 p-2 md:p-4 rounded-full bg-primary opacity-70 hover:opacity-90 text-white shadow-lg hover:bg-primary-dark focus:outline-none transition-all duration-300 transform hover:scale-110"
         aria-label="Наверх">
     <!-- Широкая стрелка SVG -->
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"

@@ -30,7 +30,7 @@
   <!-- Стрелка "назад" -->
   <button
     id="gallery-prev"
-    class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-2 rounded-full  hover:backdrop-blur-sm text-blue-600 transition-all duration-200 ease-in-out hover:scale-110 outline-none ring-0"
+    class="absolute lg:left-28 left-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-2 rounded-full  hover:backdrop-blur-sm text-primary transition-all duration-200 ease-in-out hover:scale-110 outline-none ring-0"
     aria-label="Предыдущее изображение"
   >
     <svg
@@ -47,7 +47,7 @@
 
   <!-- Стрелка "вперёд" -->
   <button id="gallery-next"
-          class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-2 rounded-full  hover:backdrop-blur-sm text-blue-600 transition-all duration-200 ease-in-out hover:scale-110 outline-none ring-0"
+          class="absolute right-4 top-[calc(50%-2.2rem)] -translate-y-1/2 z-[61] p-2 rounded-full  hover:backdrop-blur-sm text-primary transition-all duration-200 ease-in-out hover:scale-110 outline-none ring-0"
           aria-label="Следующее изображение">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"
          stroke-width="2">
@@ -340,7 +340,7 @@ $photosUnified[] = [
     // === Создание элемента миниатюры ===
     function createThumbnailElement(photo, index) {
       const thumbnail = document.createElement('div');
-      thumbnail.className = 'relative w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 flex-shrink-0 hover:border-blue-400 active:scale-95';
+      thumbnail.className = 'relative w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 transition-all duration-200 flex-shrink-0 hover:border-primary active:scale-95';
       thumbnail.style.borderColor = 'transparent';
       thumbnail.dataset.index = index;
 
@@ -421,7 +421,7 @@ $photosUnified[] = [
         Array.from(galleryThumbnailsDesktop.children).forEach((thumb, i) => {
           const isActive = i === currentGalleryIndex;
           thumb.classList.toggle('active', isActive);
-          thumb.style.borderColor = isActive ? '#3b82f6' : 'transparent';
+          thumb.style.borderColor = isActive ? 'var(--color-primary)' : 'transparent';
         });
       }
 
@@ -430,7 +430,7 @@ $photosUnified[] = [
         Array.from(galleryThumbnailsMobile.children).forEach((thumb, i) => {
           const isActive = i === currentGalleryIndex;
           thumb.classList.toggle('active', isActive);
-          thumb.style.borderColor = isActive ? '#3b82f6' : 'transparent';
+          thumb.style.borderColor = isActive ? 'var(--color-primary)' : 'transparent';
         });
       }
 
@@ -997,7 +997,7 @@ $photosUnified[] = [
         document.querySelectorAll('.slider-track img').forEach(img => {
           img.style.borderColor = '';
         });
-        thumb.style.setProperty('border-color', '#2563eb', 'important');
+        thumb.style.setProperty('border-color', 'var(--color-primary)', 'important');
         currentMainIndex = index;
         if (infoDots) infoDots.classList.toggle('hidden', index !== 0);
         return;
@@ -1007,7 +1007,7 @@ $photosUnified[] = [
       document.querySelectorAll('.slider-track img').forEach(img => {
         img.style.borderColor = '';
       });
-      thumb.style.setProperty('border-color', '#2563eb', 'important');
+      thumb.style.setProperty('border-color', 'var(--color-primary)', 'important');
 
       // Обновляем индекс
       currentMainIndex = index;
@@ -1042,7 +1042,7 @@ $photosUnified[] = [
       const currentSrc = mainImage ? (mainImage.currentSrc || mainImage.src || '') : '';
 
       if (mainImage && firstBigImage && imagePathMatches(currentSrc, firstBigImage)) {
-        firstThumb.style.setProperty('border-color', '#2563eb', 'important');
+        firstThumb.style.setProperty('border-color', 'var(--color-primary)', 'important');
         requestAnimationFrame(refreshSlider);
       } else {
         changeMainImage(firstThumb);

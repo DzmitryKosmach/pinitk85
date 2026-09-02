@@ -40,10 +40,10 @@
   }
   #materials-popup .material .image:hover .image-big { display:block; }
   #materials-popup .material .info { height:55px; overflow:hidden; padding-left:2px; }
-  #materials-popup .material .name { display:table-cell; vertical-align:middle; height:26px; line-height:13px; font-size:11px; color:#0075c2; text-decoration:underline; }
+  #materials-popup .material .name { display:table-cell; vertical-align:middle; height:26px; line-height:13px; font-size:11px; color:var(--color-primary); text-decoration:underline; }
   #materials-popup .material .price { display:block; white-space:nowrap; font-size:11px; }
   #materials-popup .material.active .name { font-weight:bold; }
-  #materials-popup .material.active .image { border-color:#2563EB; }
+  #materials-popup .material.active .image { border-color:var(--color-primary); }
   #materials-popup .material.has-sub:after { content:''; display:block; position:absolute; z-index:5; box-sizing:border-box; right:23px; top:-7px; width:30px; height:30px; background:url('/Skins/img/user/materials-popup-hassub.png') no-repeat 0 0; }
   #materials-popup .material.has-sub:hover:after { background-position:-30px 0; }
   #materials-popup .material.has-sub.active:after { background-position:-60px 0; }
@@ -106,7 +106,7 @@
       </div>
       <div class="item-series-name">
         Этот элемент из коллекции:
-        <a class="font-medium text-base text-blue-600 hover:underline" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
+        <a class="font-medium text-base text-primary hover:underline" href="<?php echo Catalog_Series::a($seriesInf)?>"><?php echo $seriesHeadersAndMeta['h1']; ?></a>
         <br><br>
       </div>
       <div class="options">
@@ -202,7 +202,7 @@
               <?php } else { ?>
               <button
                 type="submit"
-                class="submit add2basket w-fit text-center !bg-blue-600 text-white hover:!bg-blue-700 py-3 px-6 rounded font-semibold transition-colors shadow-lg"
+                class="submit add2basket w-fit text-center !bg-primary text-white hover:!bg-primary-dark py-3 px-6 rounded font-semibold transition-colors shadow-lg"
               <?php if($seriesInf['out_of_production']) { ?>disabled<?php } ?>
               title="Добавить в корзину"
               >
@@ -223,7 +223,7 @@
                 if (btn.disabled) return;
                 if (!btn.classList || !btn.classList.contains("add2basket")) return;
 
-                btn.classList.remove("add2basket", "!bg-blue-600", "hover:!bg-blue-700");
+                btn.classList.remove("add2basket", "!bg-primary", "hover:!bg-primary-dark");
                 btn.classList.add("inbasket", "!bg-green-600", "text-white", "opacity-90");
                 btn.title = "В корзине";
                 btn.innerHTML = '<i class="icon pngicons"></i>В корзине';
@@ -255,7 +255,7 @@
                   ?>
           <div id="material-selected2" class="item-current-material mt-4">
             <span class="b">Выбран цвет:</span>
-            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: #2563EB; border-radius: 8px;">
+            <div class="image" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: var(--color-primary); border-radius: 8px;">
               <?php if($mActive['image']['ext']) { ?>
               <img src="<?php echo Config::pathRel('images') . Catalog_Materials::$imagePath . $mActive['image']['id']; ?>_76x61_0.<?php echo $mActive['image']['ext']; ?>" width="76" alt="">
               <?php } ?>
