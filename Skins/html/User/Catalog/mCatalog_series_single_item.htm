@@ -243,20 +243,20 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     }
 
     #material-selected {
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+        min-height: 320px !important;
         overflow: visible;
         contain: layout style;
     }
 
     #material-selected.is-materials-expanded {
         height: auto;
-        min-height: <?php echo (int)$_materialsMinHMobile; ?>px;
+        min-height: 320px !important;
     }
 
     @media (min-width: 1280px) {
         #material-selected,
         #material-selected.is-materials-expanded {
-            min-height: <?php echo (int)$_materialsMinHDesktop; ?>px;
+            min-height: 320px !important;
         }
     }
 
@@ -542,9 +542,17 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     }
 
     html.catalog-series-single-item-page.is-layout-compact .series-product-row,
-    html.catalog-series-single-item-page.is-layout-compact .single-item-info,
+    html.catalog-series-single-item-page.is-layout-compact .single-item-info {
+        min-height: 0 !important;
+        height: auto !important;
+        contain: none !important;
+    }
     html.catalog-series-single-item-page.is-layout-compact #material-selected,
-    html.catalog-series-single-item-page.is-layout-compact #material-selected.is-materials-expanded,
+    html.catalog-series-single-item-page.is-layout-compact #material-selected.is-materials-expanded {
+        min-height: 320px !important;
+        height: auto !important;
+        contain: none !important;
+    }
     html.catalog-series-single-item-page.is-layout-compact #materials-popup-content,
     html.catalog-series-single-item-page.is-layout-compact #options-block,
     html.catalog-series-single-item-page.is-layout-compact #options-block .description1 {
@@ -776,7 +784,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                 <?php include(Config::path('skins') . '/html/Components/modal_gallery.htm'); ?>
 
                 <?php if(count($photos)) { ?>
-                <div class="mt-10 single-item-benefits-slot">
+                <div class="mt-4 mb-4 single-item-benefits-slot">
                     <?php include(Config::path('skins') . '/html/Components/benefits.htm'); ?>
                 </div>
                 <?php } ?>
@@ -1121,7 +1129,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                 </div>
 
                 <?php if(count($itemInf['materials'])) { ?>
-                <div id="material-selected" class="flex flex-col xl:flex-row gap-0 xl:gap-20">
+                <div id="material-selected" class="flex flex-col xl:flex-row gap-0 xl:gap-20" style="min-height: 320px !important;">
                     <div class="item-current-material max-w-[140px] mt-8" style="float: none">
                         <span class="b2">Выбран:</span>
                         <div class="image border-2 mb-1 w-[76px] h-[61px] shadow-[0_1px_4px_0_rgba(0,0,0,0.3)]" id="item-<?php echo $itemInf['id']; ?>-image" style="border-color: var(--color-primary);">
