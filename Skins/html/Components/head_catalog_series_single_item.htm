@@ -58,9 +58,9 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     #series-block li { font-size: 1rem; margin-bottom: 0.5rem; }
 
     /* Резервирование места под материалы */
-    #material-selected { min-height: <?php echo $_perfMaterialsMinH; ?>px; }
+    #material-selected { min-height: 320px !important; }
     @media (min-width: 1280px) {
-        #material-selected { min-height: <?php echo $_perfMaterialsMinHDesktop; ?>px; }
+        #material-selected { min-height: 320px !important; }
     }
     #materials-popup-content { min-height: <?php echo $_perfMaterialsRowMinH; ?>px; }
 
@@ -135,7 +135,7 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     }
     html.catalog-series-single-item-page.is-layout-compact #material-selected,
     html.catalog-series-single-item-page.is-layout-compact #material-selected.is-materials-expanded {
-        min-height: 0 !important;
+        min-height: 320px !important;
         height: auto !important;
         contain: none !important;
         margin-bottom: 0 !important;
