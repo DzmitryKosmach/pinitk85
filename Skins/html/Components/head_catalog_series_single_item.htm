@@ -7,7 +7,8 @@ $_perfInfoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
 $_perfMaterialsMinH = (int)($pageInf['perf_materials_min_h'] ?? 404);
 $_perfMaterialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
 $_perfMaterialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
-$_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+$_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 520);
+$_perfBenefitsMinHDesktop = (int)($pageInf['perf_benefits_min_h_desktop'] ?? 360);
 ?>
 
 <!-- 2. Предзагрузка критических шрифтов (предотвращает сдвиг текста при загрузке) -->
@@ -31,7 +32,65 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     /* Резервирование места под основные блоки */
     .series-product-row { min-height: <?php echo $_perfProductRowMinH; ?>px; }
     .series-info-col  { min-height: <?php echo $_perfInfoMinH; ?>px; }
-    .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinH; ?>px; }
+    .single-item-benefits-slot {
+        min-height: <?php echo $_perfBenefitsMinH; ?>px;
+        box-sizing: border-box;
+    }
+    .single-item-benefits-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .single-item-benefits-card {
+        min-height: 7.25rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        box-sizing: border-box;
+    }
+    @media (min-width: 1024px) {
+        .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinHDesktop; ?>px; }
+        .single-item-benefits-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .series-gallery-layout {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .slider-thumbnails-container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .slider-thumbnails-container .slider-track {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        overflow-x: auto;
+        max-height: 5.5rem;
+    }
+    .slider-thumbnails-container .slider-track img {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+        object-fit: cover;
+    }
+    @media (min-width: 1024px) {
+        .series-gallery-layout {
+            flex-direction: row;
+        }
+        .slider-thumbnails-container {
+            width: 80px;
+            flex-shrink: 0;
+        }
+        .slider-thumbnails-container .slider-track {
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+    }
 
     /* Стабилизация текста описания (line-clamp предотвращает прыжки до загрузки JS) */
     #series-text-container { min-height: 6rem; }
@@ -143,6 +202,15 @@ $_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
     html.catalog-series-single-item-page.is-layout-compact #materials-popup-content {
         min-height: 0 !important;
         height: auto !important;
+    }
+    html.catalog-series-single-item-page.is-layout-compact .single-item-benefits-slot {
+        min-height: <?php echo $_perfBenefitsMinH; ?>px !important;
+        height: auto !important;
+    }
+    @media (min-width: 1024px) {
+        html.catalog-series-single-item-page.is-layout-compact .single-item-benefits-slot {
+            min-height: <?php echo $_perfBenefitsMinHDesktop; ?>px !important;
+        }
     }
     html.catalog-series-single-item-page.is-layout-compact #options-block {
         min-height: 0 !important;

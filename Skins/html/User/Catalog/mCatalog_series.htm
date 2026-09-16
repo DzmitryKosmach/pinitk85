@@ -6,7 +6,8 @@ $_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
 $_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
 $_optsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_optsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
-$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 520);
+$_benefitsMinHDesktop = (int)($pageInf['perf_benefits_min_h_desktop'] ?? 360);
 $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text'] ?? '')) ? 'description' : 'delivery');
 ?>
 
@@ -130,6 +131,12 @@ $_seriesDefaultTab = count($options) ? 'options' : (!empty(trim($seriesInf['text
 
     .single-item-benefits-slot {
         min-height: <?php echo (int)$_benefitsMinH; ?>px;
+        box-sizing: border-box;
+    }
+    @media (min-width: 1024px) {
+        .single-item-benefits-slot {
+            min-height: <?php echo (int)$_benefitsMinHDesktop; ?>px;
+        }
     }
 
 </style>

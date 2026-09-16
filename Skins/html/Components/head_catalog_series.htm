@@ -3,6 +3,8 @@ $_perfOptsBlockMinH = (int)($pageInf['perf_opts_block_min_h'] ?? 360);
 $_perfOptsContentMinH = (int)($pageInf['perf_opts_content_min_h'] ?? 200);
 $_perfProductRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? 480);
 $_perfInfoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
+$_perfBenefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 520);
+$_perfBenefitsMinHDesktop = (int)($pageInf['perf_benefits_min_h_desktop'] ?? 360);
 ?>
 <link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/Skins/fonts/montserrat/montserrat-v31-cyrillic_latin-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -72,7 +74,65 @@ $_perfInfoMinH = (int)($pageInf['perf_info_min_h'] ?? 480);
         min-height: <?php echo (int)($pageInf['perf_info_min_h'] ?? 480); ?>px;
     }
     .single-item-benefits-slot {
-        min-height: <?php echo (int)($pageInf['perf_benefits_min_h'] ?? 88); ?>px;
+        min-height: <?php echo $_perfBenefitsMinH; ?>px;
+        box-sizing: border-box;
+    }
+    .single-item-benefits-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .single-item-benefits-card {
+        min-height: 7.25rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        box-sizing: border-box;
+    }
+    @media (min-width: 1024px) {
+        .single-item-benefits-slot { min-height: <?php echo $_perfBenefitsMinHDesktop; ?>px; }
+        .single-item-benefits-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .series-gallery-row {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .slider-thumbnails-container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .slider-thumbnails-container .slider-track {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        overflow-x: auto;
+        max-height: 5.5rem;
+    }
+    .slider-thumbnails-container .slider-track img {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+        object-fit: cover;
+    }
+    @media (min-width: 1024px) {
+        .series-gallery-row {
+            flex-direction: row;
+            align-items: stretch;
+            gap: 1rem;
+        }
+        .slider-thumbnails-container {
+            width: 80px;
+            flex-shrink: 0;
+            align-self: stretch;
+        }
+        .slider-thumbnails-container .slider-track {
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 400px;
+        }
     }
     #materials-popup-content {
         min-height: <?php echo (int)($pageInf['perf_materials_row_min_h'] ?? 135); ?>px;

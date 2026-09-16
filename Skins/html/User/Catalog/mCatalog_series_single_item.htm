@@ -5,7 +5,8 @@ $_materialsRowMinH = (int)($pageInf['perf_materials_row_min_h'] ?? 135);
 
 $_infoMinH = (int)($pageInf['perf_info_min_h'] ?? 480) - 300;
 $_productRowMinH = (int)($pageInf['perf_product_row_min_h'] ?? max($_infoMinH, 480));
-$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 88);
+$_benefitsMinH = (int)($pageInf['perf_benefits_min_h'] ?? 520);
+$_benefitsMinHDesktop = (int)($pageInf['perf_benefits_min_h_desktop'] ?? 360);
 $_materialsMinHDesktop = (int)($pageInf['perf_materials_min_h_desktop'] ?? 228);
 $_materialsMinHMobile = (int)($pageInf['perf_materials_min_h'] ?? 404);
 
@@ -193,6 +194,12 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
 
     .single-item-benefits-slot {
         min-height: <?php echo (int)$_benefitsMinH; ?>px;
+        box-sizing: border-box;
+    }
+    @media (min-width: 1024px) {
+        .single-item-benefits-slot {
+            min-height: <?php echo (int)$_benefitsMinHDesktop; ?>px;
+        }
     }
 
     /* 3. Блок опций */
@@ -547,6 +554,15 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
         height: auto !important;
         contain: none !important;
     }
+    html.catalog-series-single-item-page.is-layout-compact .single-item-benefits-slot {
+        min-height: <?php echo (int)$_benefitsMinH; ?>px !important;
+        height: auto !important;
+    }
+    @media (min-width: 1024px) {
+        html.catalog-series-single-item-page.is-layout-compact .single-item-benefits-slot {
+            min-height: <?php echo (int)$_benefitsMinHDesktop; ?>px !important;
+        }
+    }
     html.catalog-series-single-item-page.is-layout-compact #material-selected,
     html.catalog-series-single-item-page.is-layout-compact #material-selected.is-materials-expanded {
         min-height: 320px !important;
@@ -727,7 +743,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                 <?php if(count($photos)) { ?>
 
                 <div class="w-full md:w-1/2 pictures changegenimage">
-                    <div class="flex lg:flex-row flex-col-reverse items-start gap-4">
+                    <div class="series-gallery-layout flex lg:flex-row flex-col-reverse items-start gap-4">
 
                         <?php include(Config::path('skins') . '/html/Components/slider_thumbnails.htm'); ?>
 

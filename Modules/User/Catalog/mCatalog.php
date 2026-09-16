@@ -1057,6 +1057,8 @@ class mCatalog
             $pageInf['perf_info_min_h'] = $infoMinH;
             $pageInf['perf_opts_content_min_h'] = $optsContentMinH;
             $pageInf['perf_opts_block_min_h'] = 100 + $optsContentMinH;
+            $pageInf['perf_benefits_min_h'] = 520;
+            $pageInf['perf_benefits_min_h_desktop'] = 360;
             if (!empty($photos[0])) {
                 $pageInf['perf_lcp'] = Catalog::photoUrl(
                     Catalog_Series_Photos::$imagePath,
@@ -1171,7 +1173,8 @@ class mCatalog
             $pageInf['perf_materials_row_min_h'] = $materialsRowMinH;
             $pageInf['perf_info_min_h'] = $infoMinH;
             $pageInf['perf_product_row_min_h'] = max($galleryMinH, $infoMinH);
-            $pageInf['perf_benefits_min_h'] = 88;
+            $pageInf['perf_benefits_min_h'] = 520;
+            $pageInf['perf_benefits_min_h_desktop'] = 360;
             if (!empty($photos[0])) {
                 $pageInf['perf_lcp'] = Catalog::photoUrl(
                     Catalog_Series_Photos::$imagePath,
