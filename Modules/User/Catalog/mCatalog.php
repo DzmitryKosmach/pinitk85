@@ -204,6 +204,14 @@ class mCatalog
             }
         }
 
+        if (isset($_GET['onpage']) && intval($_GET['onpage']) === -1) {
+            $allPagesSuffix = ' - Все страницы.';
+            $title = trim((string)($pageInf['title'] ?? ''));
+            if ($title !== '' && mb_stripos($title, 'Все страницы') === false) {
+                $pageInf['title'] = $title . $allPagesSuffix;
+            }
+        }
+
         if (!is_null($source['h1']) && trim($source['h1']) !== '') {
             $pageInf['header'] = $source['h1'];
         }
@@ -763,9 +771,16 @@ class mCatalog
     {
         $oItems = new Catalog_Items();
         $oCrossItems = new Catalog_Series_CrossItems();
+        $oCategories = new Catalog_Categories();
         $itemsCnt = $oItems->getCount('`series_id` = ' . self::$seriesId)
             + $oCrossItems->getCount('`where_series_id` = ' . self::$seriesId);
-        $seriesVariant = ($itemsCnt == 1)
+
+        $catInf = $oCategories->getRow(
+            '*',
+            '`id` = ' . self::$catId
+        );
+        $useSingleItemTpl = self::shouldUseSingleItemSeriesTemplate($itemsCnt, $catInf);
+        $seriesVariant = $useSingleItemTpl
             ? Cache_SeriesPage::VARIANT_SINGLE
             : Cache_SeriesPage::VARIANT_MULTI;
 
@@ -784,13 +799,6 @@ class mCatalog
         } elseif (!headers_sent() && Cache_SeriesPage::isEnabled()) {
             header('X-Series-Cache: BYPASS');
         }
-
-        // Параметры категории
-        $oCategories = new Catalog_Categories();
-        $catInf = $oCategories->getRow(
-            '*',
-            '`id` = ' . self::$catId
-        );
 
         if (trim($catInf['title']) === '') {
             $catInf['title'] = $catInf['name'];
@@ -944,8 +952,8 @@ class mCatalog
         $prevSeries = $seriesNeighbors['prev'];
         $nextSeries = $seriesNeighbors['next'];
 
-        if (1 != $itemsCnt) {
-            // В СЕРИИ БОЛЬШЕ ОДНОГО ТОВАРА (или товаров 0)
+        if (!$useSingleItemTpl) {
+            // В СЕРИИ БОЛЬШЕ ОДНОГО ТОВАРА (или товаров 0), шаблон списка
             // Товары в базовом комплекте
             $oSetItems = new Catalog_Series_SetItems();
             $tmp = $oSetItems->get(
@@ -1127,7 +1135,8 @@ class mCatalog
             if ($oItems->getCount('`series_id` = ' . self::$seriesId)) {
                 $iId = $oItems->getCell(
                     'id',
-                    '`series_id` = ' . self::$seriesId
+                    '`series_id` = ' . self::$seriesId,
+                    '`price_min` ASC, `order` ASC, `id` ASC'
                 );
             } else {
                 // Товар на самом деле из другой серии
@@ -1408,6 +1417,36 @@ class mCatalog
             'dealer' => $dealer,
             'dealerExtra' => $dealerExtra
         ));
+    }
+
+    /**
+     * Карточка одного товара: один SKU или серия кресел/стульев
+     * (несколько артикулов одной модели).
+     */
+    private static function shouldUseSingleItemSeriesTemplate(int $itemsCnt, array $catInf): bool
+    {
+        if ($itemsCnt < 1) {
+            return false;
+        }
+        if ($itemsCnt === 1) {
+            return true;
+        }
+
+        $catUrl = (string)($catInf['url'] ?? '');
+        if ($catUrl === 'ofisnye-kresla' || $catUrl === 'ofisnye-stulya') {
+            return true;
+        }
+
+        $parentId = (int)($catInf['parent_id'] ?? 0);
+        if ($parentId > 0) {
+            $oCategories = new Catalog_Categories();
+            $parentUrl = (string)$oCategories->getCell('url', '`id` = ' . $parentId);
+            if ($parentUrl === 'ofisnye-kresla') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

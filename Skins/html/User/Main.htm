@@ -1714,6 +1714,37 @@ $dynamicCatalogLink = isset($catInf['id']) ? Catalog_Categories::a($catInf['id']
             height: auto !important;
         }
     }
+
+    /* Блокировка прокрутки фона под модалкой (iOS / мобильный Chrome) */
+    html.is-modal-scroll-locked,
+    html.is-modal-scroll-locked body,
+    body.is-modal-scroll-locked {
+        overflow: hidden !important;
+        overscroll-behavior: none;
+    }
+    body.is-modal-scroll-locked {
+        position: fixed !important;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+    .fancybox-lock .fancybox-overlay,
+    .fancybox-overlay-fixed {
+        overflow: hidden !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        touch-action: none;
+    }
+    .fancybox-inner,
+    #kmodal {
+        touch-action: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 </style>
 
 <!-- Кнопка "наверх" -->
@@ -1849,6 +1880,61 @@ $dynamicCatalogLink = isset($catInf['id']) ? Catalog_Categories::a($catInf['id']
 
         document.cookie = updatedCookie;
     }
+
+    (function () {
+        var lockCount = 0;
+        var scrollY = 0;
+
+        window.lockPageScroll = function () {
+            lockCount += 1;
+            if (lockCount > 1) {
+                return;
+            }
+            scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            document.documentElement.classList.add("is-modal-scroll-locked");
+            document.body.classList.add("is-modal-scroll-locked");
+            document.body.style.top = "-" + scrollY + "px";
+        };
+
+        window.unlockPageScroll = function () {
+            lockCount = Math.max(0, lockCount - 1);
+            if (lockCount > 0) {
+                return;
+            }
+            document.documentElement.classList.remove("is-modal-scroll-locked");
+            document.body.classList.remove("is-modal-scroll-locked");
+            document.body.style.top = "";
+            window.scrollTo(0, scrollY);
+        };
+
+        document.addEventListener(
+            "touchmove",
+            function (e) {
+                if (!document.body.classList.contains("is-modal-scroll-locked")) {
+                    return;
+                }
+                var target = e.target;
+                var allow = target.closest
+                    ? target.closest(".fancybox-inner, #kmodal, .modal-order-call")
+                    : null;
+                if (allow && allow.scrollHeight > allow.clientHeight + 1) {
+                    return;
+                }
+                e.preventDefault();
+            },
+            { passive: false }
+        );
+
+        if (window.jQuery) {
+            jQuery(document)
+                .on("afterShow.fb", function () {
+                    window.lockPageScroll();
+                })
+                .on("afterClose.fb", function () {
+                    window.unlockPageScroll();
+                });
+        }
+    })();
 
     function kclose() {
         $(".fancybox-skin").removeClass("rr");

@@ -501,7 +501,7 @@
                             if (!paginationContainer) return;
 
                             // Находим все ссылки пагинации
-                            const paginationLinks = paginationContainer.querySelectorAll('a[href*="page"], a[href*="onpage"]');
+                            const paginationLinks = paginationContainer.querySelectorAll('a[href]');
 
                             paginationLinks.forEach(link => {
                                 // Удаляем старый обработчик, если есть
