@@ -34,7 +34,8 @@ class mExport extends Admin
             return self::calc(
                 intval($_GET['category_id']),
                 intval($_GET['supplier_id']),
-                intval($_GET['series_id'])
+                intval($_GET['series_id']),
+                intval($_GET['include_out_of_production'] ?? 0)
             );
         }
 
@@ -84,7 +85,9 @@ class mExport extends Admin
         $frm->adminMode = true;
 
         if (isset($_SESSION['export-options']) && is_array($_SESSION['export-options'])) {
-            $frm->setInit($_SESSION['export-options']);
+            $init = $_SESSION['export-options'];
+            $init['items'] = 1;
+            $frm->setInit($init);
         }
 
         return $frm->run('mExport::export');
@@ -98,38 +101,26 @@ class mExport extends Admin
      * @param int $seriesId
      * @return    int
      */
-    static function calc($categoryId, $supplierId, $seriesId)
+    static function calc($categoryId, $supplierId, $seriesId, $includeOutOfProduction = 0)
     {
         self::$output = OUTPUT_FRAME;
 
-        $categoryId = intval($categoryId);
-        $supplierId = intval($supplierId);
-        $seriesId = intval($seriesId);
-
-        // Поисковый запрос
-        $q = array('`out_of_production` = 0');
-        if ($categoryId) {
-            $q[] = '`category_id` = ' . $categoryId;
-        }
-        if ($supplierId) {
-            $q[] = '`supplier_id` = ' . $supplierId;
-        }
-        if ($seriesId) {
-            $q[] = '`id` = ' . $seriesId;
-        }
-
-        // Получаем ID серий
+        $cond = self::seriesSearchCond($categoryId, $supplierId, $seriesId, $includeOutOfProduction);
         $oSeries = new Catalog_Series();
-        $seriesIds = $oSeries->getCol('id', implode(' AND ', $q));
+        $seriesIds = $oSeries->getCol('id', $cond);
+        $seriesCnt = count($seriesIds);
 
-        // Вычисляем к-во товаров
-        if (count($seriesIds)) {
+        if ($seriesCnt) {
             $oItems = new Catalog_Items();
             $itemsCnt = $oItems->getCount('`series_id` IN (' . implode(',', $seriesIds) . ')');
         } else {
             $itemsCnt = 0;
         }
-        return $itemsCnt;
+
+        return json_encode(array(
+            'series' => $seriesCnt,
+            'items' => intval($itemsCnt)
+        ));
     }
 
     /**
@@ -138,50 +129,95 @@ class mExport extends Admin
      */
     static function export($initData, $newData)
     {
+        Catalog_Prices_Export::prepareRuntime();
+
         $_SESSION['export-options'] = array(
-            'options' => $newData['options'],
-            'items' => intval($newData['items']) ? 1 : 0,
-            'series-extra-formula' => intval(intval($newData['series-extra-formula'])) ? 1 : 0
+            'options' => isset($newData['options']) ? $newData['options'] : array(),
+            'items' => intval($newData['items'] ?? 0) ? 1 : 0,
+            'series-extra-formula' => intval($newData['series-extra-formula'] ?? 0) ? 1 : 0,
+            'include_out_of_production' => intval($newData['include_out_of_production'] ?? 0) ? 1 : 0
         );
 
-        // Параметры выгрузки серий
-        $optSeries = $newData['options']['series'];
+        $optSeries = (isset($newData['options']['series']) && is_array($newData['options']['series']))
+            ? $newData['options']['series']
+            : array();
         $optSeries[] = Catalog_Prices::FLD_SERIES_ID;
         $optSeries[] = Catalog_Prices::FLD_SERIES_CATEGORY;
         $optSeries[] = Catalog_Prices::FLD_SERIES_NAME;
-        $seriesExtraFormula = intval($newData['series-extra-formula']) ? true : false;
+        $seriesExtraFormula = !empty($newData['series-extra-formula']);
 
-        // Параметры выгрузки товаров
-        if ($newData['items']) {
-            $optItems = $newData['options']['items'];
+        if (!empty($newData['items'])) {
+            $optItems = (isset($newData['options']['items']) && is_array($newData['options']['items']))
+                ? $newData['options']['items']
+                : array();
             $optItems[] = Catalog_Prices::FLD_ITEMS_ID;
             $optItems[] = Catalog_Prices::FLD_ITEMS_NAME;
             $optItems[] = Catalog_Prices::FLD_ITEMS_ART;
         } else {
-            $optItems = false;
+            $optItems = array();
         }
 
-        // Поисковый запрос (для поиска серий)
-        $q = array('`out_of_production` = 0');
-        if ($categoryId = intval($newData['category_id'])) {
-            $q[] = '`category_id` = ' . $categoryId;
+        $q = self::seriesSearchCond(
+            intval($newData['category_id'] ?? 0),
+            intval($newData['supplier_id'] ?? 0),
+            intval($newData['series_id'] ?? 0),
+            intval($newData['include_out_of_production'] ?? 0)
+        );
+
+        $params = array(
+            'query' => $q,
+            'optSeries' => array_values($optSeries),
+            'optItems' => array_values($optItems),
+            'seriesExtraFormula' => $seriesExtraFormula
+        );
+
+        try {
+            $oExport = new Catalog_Prices_Export();
+            $filePath = $oExport->exportToFile(
+                $params['query'],
+                $params['optSeries'],
+                $params['optItems'],
+                $params['seriesExtraFormula']
+            );
+            header('Location: /xls/' . basename($filePath));
+            exit;
+        } catch (Throwable $e) {
+            Pages::flash('Ошибка экспорта: ' . $e->getMessage(), true);
         }
-        if ($supplierId = intval($newData['supplier_id'])) {
+    }
+
+    /**
+     * Условие выборки серий для подсчёта и экспорта.
+     */
+    private static function seriesSearchCond($categoryId, $supplierId, $seriesId, $includeOutOfProduction = 0): string
+    {
+        $categoryId = intval($categoryId);
+        $supplierId = intval($supplierId);
+        $seriesId = intval($seriesId);
+        $q = array();
+
+        if (!intval($includeOutOfProduction)) {
+            $q[] = '`out_of_production` = 0';
+        }
+
+        if ($categoryId) {
+            $oCategories = new Catalog_Categories();
+            $ids = $oCategories->getFinishIds($categoryId);
+            $ids[] = $categoryId;
+            $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+            if (count($ids) === 1) {
+                $q[] = '`category_id` = ' . $ids[0];
+            } elseif (count($ids)) {
+                $q[] = '`category_id` IN (' . implode(',', $ids) . ')';
+            }
+        }
+        if ($supplierId) {
             $q[] = '`supplier_id` = ' . $supplierId;
         }
-        if ($seriesId = intval($newData['series_id'])) {
+        if ($seriesId) {
             $q[] = '`id` = ' . $seriesId;
         }
 
-        // Экспортируем прайс
-        $oExport = new Catalog_Prices_Export();
-        $oExport->export(
-            implode(' AND ', $q),
-            (!$optSeries ? [] : $optSeries),
-            (!$optItems ? [] : $optItems),
-            $seriesExtraFormula
-        );
-
-        exit;
+        return implode(' AND ', $q);
     }
 }

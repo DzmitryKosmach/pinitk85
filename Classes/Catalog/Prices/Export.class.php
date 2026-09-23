@@ -7,7 +7,7 @@
  * @author    HeoH
  */
 
-require 'vendor/autoload.php';
+require_once _ROOT . '/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -83,6 +83,17 @@ class Catalog_Prices_Export extends Catalog_Prices
 
 
     /**
+     * Снимаем лимиты времени/памяти для большой выгрузки.
+     */
+    public static function prepareRuntime(): void
+    {
+        @ignore_user_abort(true);
+        @set_time_limit(0);
+        @ini_set('max_execution_time', '0');
+        @ini_set('memory_limit', '5512M');
+    }
+
+    /**
      * Основной метод (точка входа): генерит XLS-прайс и отправляет на скачивание в браузер
      *
      * @param string $query Запрос для выборки серий
@@ -92,24 +103,47 @@ class Catalog_Prices_Export extends Catalog_Prices
      */
     function export(string $query, array $optSeries, array $optItems, bool $seriesExtraFormula = false): void
     {
-        // Создаём XLS-файл
-        $filename = 'mebelioni-' . date('Y-m-d-H-i-s') . '.xlsx';
+        $filePath = $this->exportToFile($query, $optSeries, $optItems, $seriesExtraFormula);
+        $filename = basename($filePath);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Location: /xls/' . $filename);
+    }
+
+    /**
+     * Генерирует XLSX на диск и возвращает абсолютный путь к файлу.
+     */
+    function exportToFile(
+        string $query,
+        array $optSeries,
+        array $optItems,
+        bool $seriesExtraFormula = false
+    ): string {
+        self::prepareRuntime();
+
+        $filename = 'mebelioni-' . date('Y-m-d-H-i-s') . '-' . bin2hex(random_bytes(3)) . '.xlsx';
+        $xlsDir = _ROOT . '/xls';
+        if (!is_dir($xlsDir) && !mkdir($xlsDir, 0775, true) && !is_dir($xlsDir)) {
+            throw new RuntimeException('Не удалось создать каталог /xls');
+        }
 
         $spreadsheet = new Spreadsheet();
         $this->aSheet = $spreadsheet->getActiveSheet();
         $this->aSheet->setTitle('Лист1');
 
-        // Заполняем файл данными
         $this->fillSeries($query, $optSeries, $optItems, $seriesExtraFormula);
 
+        $filePath = $xlsDir . '/' . $filename;
         $writer = new Xlsx($spreadsheet);
-        $writer->save(_ROOT . '/xls/' . $filename);
+        $writer->setPreCalculateFormulas(false);
+        $writer->save($filePath);
 
-        // Отдаем файл пользователю в браузер
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-        header("Location: " . "/xls/" . $filename);
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet, $writer);
+
+        return $filePath;
     }
 
 
@@ -132,23 +166,59 @@ class Catalog_Prices_Export extends Catalog_Prices
         $oSuppliers = new Catalog_Suppliers();
         $suppNames = $oSuppliers->getHash('id, name', '', 'name');
 
-        // Находим серии для экспорта
+        // Находим серии для экспорта (без тяжёлых text/video — они в прайс не попадают)
         $oSeries = new Catalog_Series();
-        $series = $oSeries->get('*', $query, 'order');
+        $series = $oSeries->get(
+            'id, name, url, category_id, supplier_id, extra_charge, import_extra_formula, title, h1, dscr, kwrd',
+            $query,
+            'order'
+        );
 
-        // Для каждой серии получаем все ID материалов и вычисляем их максимальное к-во среди всех серий
+        $needItemPrices = count($optItems) && in_array(self::FLD_ITEMS_PRICES, $optItems, true);
+        $needCharacters = in_array(self::FLD_SERIES_CHARACTERS, $optSeries, true);
+
         $maxMaterialsCnt = 0;
-        $oSeries2Materials = new Catalog_Series_2Materials();
-        foreach ($series as &$s) {
-            $s['materials'] = $oSeries2Materials->getCol(
-                'material_id',
-                '`series_id` = ' . $s['id']
+        $materialsBySeries = [];
+        if ($needItemPrices && count($series)) {
+            $seriesIds = array_map('intval', array_column($series, 'id'));
+            $oSeries2Materials = new Catalog_Series_2Materials();
+            $matRows = $oSeries2Materials->get(
+                'series_id, material_id',
+                '`series_id` IN (' . implode(',', $seriesIds) . ')'
             );
+            foreach ($matRows as $matRow) {
+                $sid = (int)$matRow['series_id'];
+                if (!isset($materialsBySeries[$sid])) {
+                    $materialsBySeries[$sid] = [];
+                }
+                $materialsBySeries[$sid][] = $matRow['material_id'];
+            }
+            unset($matRows);
+        }
+        foreach ($series as &$s) {
+            $s['materials'] = $materialsBySeries[(int)$s['id']] ?? [];
             $maxMaterialsCnt = max($maxMaterialsCnt, count($s['materials']));
         }
-        unset($s);
+        unset($s, $materialsBySeries);
 
-        $oSeriesOptions = new Catalog_Series_Options();
+        $optionsBySeries = [];
+        if ($needCharacters && count($series)) {
+            $seriesIds = array_map('intval', array_column($series, 'id'));
+            $oSeriesOptions = new Catalog_Series_Options();
+            $optRows = $oSeriesOptions->get(
+                'series_id, name, value, `order`',
+                '`series_id` IN (' . implode(',', $seriesIds) . ')',
+                '`order` ASC'
+            );
+            foreach ($optRows as $optRow) {
+                $sid = (int)$optRow['series_id'];
+                if (!isset($optionsBySeries[$sid])) {
+                    $optionsBySeries[$sid] = [];
+                }
+                $optionsBySeries[$sid][] = $optRow;
+            }
+            unset($optRows);
+        }
 
         $row = 1;
         foreach ($series as $seriesInf) {
@@ -224,13 +294,9 @@ class Catalog_Prices_Export extends Catalog_Prices
                 }
             }
 
-            if (in_array(self::FLD_SERIES_CHARACTERS, $optSeries)) {
+            if ($needCharacters) {
                 // Характеристики серии
-                $options = $oSeriesOptions->get(
-                    'name, value',
-                    '`series_id` = ' . $seriesInf['id'],
-                    'order'
-                );
+                $options = $optionsBySeries[(int)$seriesInf['id']] ?? [];
 
                 $cRow = $seriesLastRow + 1;
                 $this->aSheet->setCellValue('B' . $cRow, 'Параметр');
@@ -260,6 +326,8 @@ class Catalog_Prices_Export extends Catalog_Prices
             $row = $seriesLastRow + 2;
         }
 
+        unset($optionsBySeries);
+
         // Настраиваем ширину ячеек
         $this->setColsWidth($optSeries, $optItems, 2 + $maxMaterialsCnt * 2);
     }
@@ -278,10 +346,11 @@ class Catalog_Prices_Export extends Catalog_Prices
      */
     protected function fillItems($startCol, $startRow, $seriesInf, $optItems, $seriesExtraFormula, $seriesExtraCell)
     {
-        // Все возможные материалы
-        $oMaterials = new Catalog_Materials();
-        $matNames = $oMaterials->getHash('id, name', '', 'order');
-
+        static $matNames;
+        if ($matNames === null) {
+            $oMaterials = new Catalog_Materials();
+            $matNames = $oMaterials->getHash('id, name', '', 'order');
+        }
 
         // Группы товаров
         static $groupsByCats;
@@ -298,16 +367,36 @@ class Catalog_Prices_Export extends Catalog_Prices
         }
         $groupsNames = $groupsByCats[$seriesInf['category_id']];
 
-        // Получаем список товаров серии
         static $oItems;
         if (!$oItems) {
             $oItems = new Catalog_Items();
         }
+        $itemFields = 'id, name, art, size, volume, weight, extra_charge, discount, group_id, price, currency, series_id';
+        if (in_array(self::FLD_ITEMS_DESCRIPTION, $optItems, true)) {
+            $itemFields .= ', text';
+        }
         $items = $oItems->get(
-            '*',
+            $itemFields,
             '`series_id` = ' . intval($seriesInf['id']),
             'order'
         );
+
+        $materialsByItem = [];
+        if (count($items) && in_array(self::FLD_ITEMS_PRICES, $optItems, true)) {
+            static $oItems2Materials;
+            if (!$oItems2Materials) {
+                $oItems2Materials = new Catalog_Items_2Materials();
+            }
+            $itemIds = array_map('intval', array_column($items, 'id'));
+            $matPriceRows = $oItems2Materials->get(
+                '*',
+                '`item_id` IN (' . implode(',', $itemIds) . ')'
+            );
+            foreach ($matPriceRows as $matPriceRow) {
+                $materialsByItem[(int)$matPriceRow['item_id']][$matPriceRow['material_id']] = $matPriceRow;
+            }
+            unset($matPriceRows);
+        }
 
         // Наценка серии
         $seriesExtra = Catalog::num2percent($seriesInf['extra_charge'], Catalog::PC_INCREASE);
@@ -447,7 +536,6 @@ class Catalog_Prices_Export extends Catalog_Prices
                 $matCol += 2;
             }
 
-            $oItems2Materials = new Catalog_Items_2Materials();
             $row = $startRow + 2;
             foreach ($items as $item) {
                 // Входная цена
@@ -484,16 +572,7 @@ class Catalog_Prices_Export extends Catalog_Prices
                 }
                 $this->setCellStyle($cell2, $priceFormat, self::STYLE_BORDER_RIGHT);
 
-                // Цены по материалам
-                $materials = $oItems2Materials->getWhtKeys(
-                    '*',
-                    '`item_id` = ' . $item['id'],
-                    '',
-                    0,
-                    '',
-                    '',
-                    'material_id'
-                );
+                $materials = $materialsByItem[(int)$item['id']] ?? [];
 
                 $matCol = $col + 2;
                 foreach ($seriesInf['materials'] as $mId) {
@@ -591,151 +670,10 @@ class Catalog_Prices_Export extends Catalog_Prices
      */
     protected function setCellStyle(string $cell, string $style): void
     {
-        $styles = [];
-
-        $styles[self::STYLE_BOLD] = array(
-            'font' => array(
-                'bold' => true
-            )
-        );
-
-        $styles[self::STYLE_H1] = array(
-            'font' => array(
-                'size' => '13',
-                'color' => array(
-                    'rgb' => '003366'
-                ),
-                'bold' => true
-            ),
-            'alignment' => array(
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER
-            ),
-            'borders' => array(
-                'bottom' => array(
-                    'borderStyle' => Border::BORDER_THICK,
-                    'color' => array(
-                        'rgb' => 'c0c0c0'
-                    )
-                )
-            )
-        );
-
-        $styles[self::STYLE_H2] = array(
-            'font' => array(
-                'size' => '11',
-                'color' => array(
-                    'rgb' => '003366'
-                ),
-                'bold' => true
-            ),
-            'alignment' => array(
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER
-            ),
-            'borders' => array(
-                'bottom' => array(
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => array(
-                        'rgb' => '0066cc'
-                    )
-                )
-            )
-        );
-
-        $styles[self::STYLE_H3] = array(
-            'font' => array(
-                'size' => '11',
-                'color' => array(
-                    'rgb' => 'FFFFFF'
-                ),
-                'bold' => true
-            ),
-            'fill' => array(
-                'type' => Fill::FILL_SOLID,
-                'startcolor' => array(
-                    'rgb' => 'c0c0c0'
-                )
-            ),
-            'alignment' => array(
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER
-            ),
-            'borders' => [
-                'bottom' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => [
-                        'rgb' => '0066cc'
-                    ]
-                ]
-            ]
-        );
-
-        $styles[self::STYLE_LINK] = array(
-            'font' => array(
-                'color' => array(
-                    'rgb' => '0000FF'
-                ),
-                'underline' => Font::UNDERLINE_SINGLE
-            ),
-        );
-
-        $styles[self::STYLE_M3] = array(
-            'numberFormat' => array(
-                'formatCode' => FORMAT_CURRENCY_M3
-            )
-        );
-
-        $styles[self::STYLE_KG] = array(
-            'numberFormat' => array(
-                'formatCode' => FORMAT_CURRENCY_KG
-            )
-        );
-
-        $styles[self::STYLE_USD] = array(
-            'numberFormat' => array(
-                'formatCode' => NumberFormat::FORMAT_CURRENCY_USD
-            )
-        );
-
-        $styles[self::STYLE_RUR] = array(
-            'numberFormat' => array(
-                'formatCode' => FORMAT_CURRENCY_RUR
-            )
-        );
-
-        $styles[self::STYLE_PERC] = array(
-            'numberFormat' => array(
-                'formatCode' => NumberFormat::FORMAT_PERCENTAGE
-            )
-        );
-
-        $styles[self::STYLE_GREY] = array(
-            'font' => array(
-                'color' => array(
-                    'rgb' => '777777'
-                )
-            )
-        );
-
-        $styles[self::STYLE_GREEN] = array(
-            'font' => array(
-                'color' => array(
-                    'rgb' => '009900'
-                )
-            )
-        );
-
-        $styles[self::STYLE_BORDER_RIGHT] = array(
-            'borders' => array(
-                'right' => array(
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => array(
-                        'rgb' => '000000'
-                    )
-                )
-            )
-        );
+        static $styles = null;
+        if ($styles === null) {
+            $styles = $this->cellStyleMap();
+        }
 
         if (isset($styles[$style])) {
             $this->aSheet->getStyle($cell)->applyFromArray($styles[$style]);
@@ -744,12 +682,152 @@ class Catalog_Prices_Export extends Catalog_Prices
                 $args = func_get_args();
 
                 for ($n = 2; $n < func_num_args(); $n++) {
-                    $style = $args[$n];
-                    if (isset($styles[$style])) {
-                        $this->aSheet->getStyle($cell)->applyFromArray($styles[$style]);
+                    $styleName = $args[$n];
+                    if (isset($styles[$styleName])) {
+                        $this->aSheet->getStyle($cell)->applyFromArray($styles[$styleName]);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @return array<string, array>
+     */
+    protected function cellStyleMap(): array
+    {
+        return array(
+            self::STYLE_BOLD => array(
+                'font' => array(
+                    'bold' => true
+                )
+            ),
+            self::STYLE_H1 => array(
+                'font' => array(
+                    'size' => '13',
+                    'color' => array(
+                        'rgb' => '003366'
+                    ),
+                    'bold' => true
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER
+                ),
+                'borders' => array(
+                    'bottom' => array(
+                        'borderStyle' => Border::BORDER_THICK,
+                        'color' => array(
+                            'rgb' => 'c0c0c0'
+                        )
+                    )
+                )
+            ),
+            self::STYLE_H2 => array(
+                'font' => array(
+                    'size' => '11',
+                    'color' => array(
+                        'rgb' => '003366'
+                    ),
+                    'bold' => true
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER
+                ),
+                'borders' => array(
+                    'bottom' => array(
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => array(
+                            'rgb' => '0066cc'
+                        )
+                    )
+                )
+            ),
+            self::STYLE_H3 => array(
+                'font' => array(
+                    'size' => '11',
+                    'color' => array(
+                        'rgb' => 'FFFFFF'
+                    ),
+                    'bold' => true
+                ),
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'startcolor' => array(
+                        'rgb' => 'c0c0c0'
+                    )
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER
+                ),
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => [
+                            'rgb' => '0066cc'
+                        ]
+                    ]
+                ]
+            ),
+            self::STYLE_LINK => array(
+                'font' => array(
+                    'color' => array(
+                        'rgb' => '0000FF'
+                    ),
+                    'underline' => Font::UNDERLINE_SINGLE
+                ),
+            ),
+            self::STYLE_M3 => array(
+                'numberFormat' => array(
+                    'formatCode' => FORMAT_CURRENCY_M3
+                )
+            ),
+            self::STYLE_KG => array(
+                'numberFormat' => array(
+                    'formatCode' => FORMAT_CURRENCY_KG
+                )
+            ),
+            self::STYLE_USD => array(
+                'numberFormat' => array(
+                    'formatCode' => NumberFormat::FORMAT_CURRENCY_USD
+                )
+            ),
+            self::STYLE_RUR => array(
+                'numberFormat' => array(
+                    'formatCode' => FORMAT_CURRENCY_RUR
+                )
+            ),
+            self::STYLE_PERC => array(
+                'numberFormat' => array(
+                    'formatCode' => NumberFormat::FORMAT_PERCENTAGE
+                )
+            ),
+            self::STYLE_GREY => array(
+                'font' => array(
+                    'color' => array(
+                        'rgb' => '777777'
+                    )
+                )
+            ),
+            self::STYLE_GREEN => array(
+                'font' => array(
+                    'color' => array(
+                        'rgb' => '009900'
+                    )
+                )
+            ),
+            self::STYLE_BORDER_RIGHT => array(
+                'borders' => array(
+                    'right' => array(
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => array(
+                            'rgb' => '000000'
+                        )
+                    )
+                )
+            )
+        );
     }
 }

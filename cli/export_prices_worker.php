@@ -4,6 +4,11 @@ if (php_sapi_name() !== 'cli') {
     exit(1);
 }
 
+@ignore_user_abort(true);
+@set_time_limit(0);
+@ini_set('max_execution_time', '0');
+@ini_set('memory_limit', '5512M');
+
 $jobId = isset($argv[1]) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $argv[1]) : '';
 if ($jobId === '') {
     exit(1);
@@ -17,9 +22,18 @@ require EXPORT_ROOT . '/includes.php';
  * @param string $jobId
  * @return string
  */
+function exportJobDir()
+{
+    return EXPORT_ROOT . '/tmp/export-jobs';
+}
+
+/**
+ * @param string $jobId
+ * @return string
+ */
 function exportJobFile($jobId)
 {
-    return EXPORT_ROOT . '/tmp/export-jobs/' . $jobId . '.json';
+    return exportJobDir() . '/' . $jobId . '.json';
 }
 
 /**
@@ -28,7 +42,7 @@ function exportJobFile($jobId)
  */
 function exportPayloadFile($jobId)
 {
-    return EXPORT_ROOT . '/tmp/export-jobs/' . $jobId . '.payload.json';
+    return exportJobDir() . '/' . $jobId . '.payload.json';
 }
 
 /**
@@ -37,8 +51,18 @@ function exportPayloadFile($jobId)
  */
 function saveExportJob($jobId, array $data)
 {
-    @file_put_contents(exportJobFile($jobId), json_encode($data, JSON_UNESCAPED_UNICODE));
+    $dir = exportJobDir();
+    if (!is_dir($dir)) {
+        mkdir($dir, 0775, true);
+    }
+    file_put_contents(exportJobFile($jobId), json_encode($data, JSON_UNESCAPED_UNICODE));
 }
+
+saveExportJob($jobId, array(
+    'status' => 'running',
+    'message' => 'Идёт формирование файла',
+    'started_at' => time()
+));
 
 $payloadFile = exportPayloadFile($jobId);
 if (!is_file($payloadFile)) {
@@ -62,6 +86,7 @@ if (!is_array($params)) {
 }
 
 try {
+    Catalog_Prices_Export::prepareRuntime();
     $oExport = new Catalog_Prices_Export();
     $filePath = $oExport->exportToFile(
         isset($params['query']) ? $params['query'] : '',
@@ -85,4 +110,3 @@ try {
     ));
     exit(1);
 }
-

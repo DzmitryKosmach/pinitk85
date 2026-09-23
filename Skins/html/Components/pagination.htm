@@ -6,10 +6,20 @@ function addOrReplaceQueryParam($key, $value) {
     unset($params['p0']);
     unset($params['p1']);
 
-    $params[$key] = $value;
+    // Первая страница — канонический URL без ?page=1
+    if ($key === 'page' && (int)$value === 1) {
+        unset($params['page']);
+    } else {
+        $params[$key] = $value;
+    }
 
     $query = http_build_query($params);
-    return $query ? '?' . $query : '';
+    if ($query) {
+        return '?' . $query;
+    }
+
+    $path = strtok($_SERVER['REQUEST_URI'] ?? '', '?');
+    return $path !== false && $path !== '' ? $path : './';
 }
 
 // Функция для получения полного URL страницы
@@ -19,7 +29,11 @@ function getCurrentPageUrl($page = null) {
     unset($params['p1']);
 
     if ($page !== null) {
-        $params['page'] = $page;
+        if ((int)$page === 1) {
+            unset($params['page']);
+        } else {
+            $params['page'] = $page;
+        }
     }
 
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

@@ -60,14 +60,23 @@
 		url += '&category_id=' + parseInt($$$('cat').value);
 		url += '&supplier_id=' + parseInt($$$('supplier').value);
 		url += '&series_id=' + parseInt($$$('series').value);
+		url += '&include_out_of_production=' + ($$$('include_out_of_production') && $$$('include_out_of_production').checked ? 1 : 0);
 
 		AJAX.lookup(
 			url,
-			function(itemsCnt){
-				itemsCnt = parseInt(itemsCnt);
-				$$$('items-cnt').innerHTML = itemsCnt;
+			function(raw){
+				var seriesCnt = 0;
+				var itemsCnt = 0;
+				try {
+					var data = JSON.parse(raw);
+					seriesCnt = parseInt(data.series, 10) || 0;
+					itemsCnt = parseInt(data.items, 10) || 0;
+				} catch (e) {
+					itemsCnt = parseInt(raw, 10) || 0;
+				}
+				$$$('items-cnt').innerHTML = 'серий ' + seriesCnt + ', товаров ' + itemsCnt;
 
-				if(itemsCnt){
+				if(seriesCnt || itemsCnt){
 					$$$('options').style.display = 'block';
 					$$$('items-cnt-outer').className = 'blue';
 					$$$('submit-button').disabled = false;
@@ -138,10 +147,20 @@
 			<option value="<?php echo $sId?>"><?php echo $sName?></option>
 		<?php } ?>
 	</select>
-	<br><br><br><br>
+	<br><br>
+	<input type="checkbox" name="include_out_of_production" value="1" id="include_out_of_production" onchange="calcItems()">
+	<label for="include_out_of_production">
+		Включать снятые с производства
+	</label>
+	<div style="padding-left: 23px; padding-top: 4px;">
+		<b class="small">
+			По умолчанию серии и товары, снятые с производства, в файл не попадают.
+		</b>
+	</div>
+	<br><br>
 
 	<b id="items-cnt-outer" class="blue">
-		Найдено товаров по запросу:
+		Найдено по запросу:
 		<span id="items-cnt"></span>
 	</b>
 	<br><br>
@@ -243,7 +262,7 @@
 
 
 
-		<input type="checkbox" name="items" value="1" id="items" onchange="showHideItemsBlock()">
+		<input type="checkbox" name="items" value="1" id="items" onchange="showHideItemsBlock()" checked>
 		<label for="items">
 			<strong>Товары:</strong>
 		</label>
