@@ -439,10 +439,6 @@ class Catalog_Prices_Export extends Catalog_Prices
                         );
                     } elseif ($fld === self::FLD_ITEMS_ART) {
                         $this->aSheet->setCellValue($cell, $item['art']);
-                        $this->aSheet->getCell($cell)->getHyperlink()->setUrl(
-                            'https://' . _HOST . Catalog_Items::a($seriesInf, $item)
-                        );
-                        $this->setCellStyle($cell, self::STYLE_LINK);
                     } elseif ($fld === self::FLD_ITEMS_VOLUME) {
                         $this->aSheet->setCellValue($cell, $item['volume']);
                         $this->setCellStyle($cell, self::STYLE_M3);
@@ -675,6 +671,26 @@ class Catalog_Prices_Export extends Catalog_Prices
             $styles = $this->cellStyleMap();
         }
 
+        static $skipOnFast = [
+            self::STYLE_H1 => 1,
+            self::STYLE_H2 => 1,
+            self::STYLE_H3 => 1,
+            self::STYLE_LINK => 1,
+            self::STYLE_BOLD => 1,
+            self::STYLE_GREEN => 1,
+            self::STYLE_GREY => 1,
+            self::STYLE_BORDER_RIGHT => 1,
+        ];
+        if (isset($skipOnFast[$style])) {
+            if (func_num_args() > 2) {
+                $args = func_get_args();
+                for ($n = 2; $n < func_num_args(); $n++) {
+                    $this->setCellStyle($cell, $args[$n]);
+                }
+            }
+            return;
+        }
+
         if (isset($styles[$style])) {
             $this->aSheet->getStyle($cell)->applyFromArray($styles[$style]);
 
@@ -683,6 +699,9 @@ class Catalog_Prices_Export extends Catalog_Prices
 
                 for ($n = 2; $n < func_num_args(); $n++) {
                     $styleName = $args[$n];
+                    if (isset($skipOnFast[$styleName])) {
+                        continue;
+                    }
                     if (isset($styles[$styleName])) {
                         $this->aSheet->getStyle($cell)->applyFromArray($styles[$styleName]);
                     }

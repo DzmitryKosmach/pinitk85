@@ -16,39 +16,29 @@ if ($jobId === '') {
 
 define('EXPORT_ROOT', dirname(__DIR__));
 $_GET['no_session'] = 1;
+
+$autoload = EXPORT_ROOT . '/vendor/autoload.php';
+if (is_file($autoload)) {
+    require_once $autoload;
+}
+
 require EXPORT_ROOT . '/includes.php';
 
-/**
- * @param string $jobId
- * @return string
- */
 function exportJobDir()
 {
     return EXPORT_ROOT . '/tmp/export-jobs';
 }
 
-/**
- * @param string $jobId
- * @return string
- */
 function exportJobFile($jobId)
 {
     return exportJobDir() . '/' . $jobId . '.json';
 }
 
-/**
- * @param string $jobId
- * @return string
- */
 function exportPayloadFile($jobId)
 {
     return exportJobDir() . '/' . $jobId . '.payload.json';
 }
 
-/**
- * @param string $jobId
- * @param array $data
- */
 function saveExportJob($jobId, array $data)
 {
     $dir = exportJobDir();

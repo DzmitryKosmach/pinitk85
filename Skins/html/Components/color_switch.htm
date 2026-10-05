@@ -126,9 +126,9 @@
 </style>
 
 <div class="color-widget" id="colorWidget" onclick="toggleWidget(event)">
-    <div class="color-swatch swatch-red" data-color="red" onclick="setColor('red', event)" title="Красный"></div>
+    <div class="color-swatch swatch-blue" data-color="blue" onclick="setColor('blue', event)" title="Синий"></div>
     <div class="color-swatch swatch-green" data-color="green" onclick="setColor('green', event)" title="Зелёный"></div>
-    <div class="color-swatch swatch-blue active" data-color="blue" onclick="setColor('blue', event)" title="Синий"></div>
+    <div class="color-swatch swatch-red active" data-color="red" onclick="setColor('red', event)" title="Красный"></div>
 </div>
 
 <script>
@@ -136,7 +136,7 @@
         event.stopPropagation(); // Важно для мобилок
 
         const root = document.documentElement;
-        if (color === 'blue') {
+        if (color === 'red') {
             root.removeAttribute('data-theme');
         } else {
             root.setAttribute('data-theme', color);

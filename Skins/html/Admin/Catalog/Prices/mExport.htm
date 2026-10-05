@@ -1,52 +1,86 @@
 <script>
-	var series = [];
+	var seriesByCat = <?php echo json_encode($seriesByCat, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP); ?>;
+	var suppliersAll = <?php echo json_encode($suppliers, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP); ?>;
 
-	<?php foreach($seriesByCat as $cId => $seriesBySupp) { ?>
-		series[<?php echo $cId?>] = [];
-		<?php foreach($seriesBySupp as $suppId => $series) { ?>
-			<?php
-			foreach($series as $n => &$s){
-				$s = $n . '::' . $s;
+	function optionsToStr(map, first) {
+		var parts = [first];
+		for (var id in map) {
+			if (!Object.prototype.hasOwnProperty.call(map, id)) continue;
+			parts.push(id + '::' + map[id]);
+		}
+		return parts.join('//');
+	}
+
+	function hasKey(map, id) {
+		return !!(map && (map[id] !== undefined || map[String(id)] !== undefined));
+	}
+
+	function collectSeries(catId, suppId) {
+		var out = {};
+		function addFromSuppliers(bySupp) {
+			if (!bySupp) return;
+			for (var sid in bySupp) {
+				if (!Object.prototype.hasOwnProperty.call(bySupp, sid)) continue;
+				if (suppId && parseInt(sid, 10) !== suppId) continue;
+				var list = bySupp[sid];
+				for (var seriesId in list) {
+					if (Object.prototype.hasOwnProperty.call(list, seriesId)) {
+						out[seriesId] = list[seriesId];
+					}
+				}
 			}
-			unset($s);
-			?>
-			series[<?php echo $cId?>][<?php echo $suppId?>] = '<?php echo str_replace('\'', '\\\'', implode('//', $series)); ?>';
-		<?php } ?>
-	<?php } ?>
+		}
+		if (catId) {
+			addFromSuppliers(seriesByCat[catId] || seriesByCat[String(catId)]);
+		} else {
+			for (var c in seriesByCat) {
+				if (Object.prototype.hasOwnProperty.call(seriesByCat, c)) {
+					addFromSuppliers(seriesByCat[c]);
+				}
+			}
+		}
+		return out;
+	}
+
+	function collectSuppliers(catId) {
+		if (!catId) {
+			return suppliersAll;
+		}
+		var out = {};
+		var bySupp = seriesByCat[catId] || seriesByCat[String(catId)] || {};
+		for (var sid in bySupp) {
+			if (!Object.prototype.hasOwnProperty.call(bySupp, sid)) continue;
+			if (suppliersAll[sid] !== undefined) {
+				out[sid] = suppliersAll[sid];
+			} else if (suppliersAll[String(sid)] !== undefined) {
+				out[sid] = suppliersAll[String(sid)];
+			}
+		}
+		return out;
+	}
+
+	function updateFilters() {
+		var catId = parseInt($$$('cat').value, 10) || 0;
+		var suppId = parseInt($$$('supplier').value, 10) || 0;
+		var seriesId = parseInt($$$('series').value, 10) || 0;
+
+		var suppMap = collectSuppliers(catId);
+		if (suppId && !hasKey(suppMap, suppId)) {
+			suppId = 0;
+		}
+		setSelectOptions($$$('supplier'), optionsToStr(suppMap, '0:: - все поставщики - '), suppId || false);
+
+		var seriesMap = collectSeries(catId, suppId);
+		if (seriesId && !hasKey(seriesMap, seriesId)) {
+			seriesId = 0;
+		}
+		setSelectOptions($$$('series'), optionsToStr(seriesMap, '0:: - все серии - '), seriesId || false);
+
+		calcItems();
+	}
 
 	function showSeries(){
-		var catId = parseInt($$$('cat').value);
-		var suppId = parseInt($$$('supplier').value);
-
-		if(typeof(series[catId]) != 'undefined'){
-			if(suppId && typeof(series[catId][suppId]) != 'undefined'){
-				// Серии по категории и поставщику
-				setSelectOptions(
-					$$$('series'),
-					'0:: - все серии - //' + series[catId][suppId],
-					0
-				);
-			}else{
-				// Серии по категории
-				var s = [];
-				for(var i in series[catId]){
-					s.push(series[catId][i]);
-				}
-				setSelectOptions(
-					$$$('series'),
-					'0:: - все серии - //' + s.join('//'),
-					0
-				);
-			}
-		}else{
-			// Нет серий
-			setSelectOptions(
-				$$$('series'),
-				'0:: - все серии - ',
-				0
-			);
-		}
-		calcItems();
+		updateFilters();
 	}
 
 
@@ -87,7 +121,7 @@
 		);
 	}
 	onLoad(function(){
-		calcItems();
+		updateFilters();
 	});
 
 
@@ -123,10 +157,75 @@
 <form action="">
 	<h3>Экспорт товаров:</h3>
 
+	<?php if (!empty($exportJobId)) { ?>
+	<div id="export-job-box" style="margin: 16px 0; padding: 12px; border: 1px solid #9bb1d4; background: #eef3fb;">
+		<strong id="export-job-title">Экспорт выполняется…</strong>
+		<div id="export-job-message" style="margin-top: 6px;">Файл собирается в фоне. Страница не должна уходить в 504 — можно подождать здесь.</div>
+	</div>
+	<script>
+		(function () {
+			var jobId = '<?php echo htmlspecialchars($exportJobId, ENT_QUOTES, 'UTF-8'); ?>';
+			var statusUrl = '<?php echo $exportStatusUrl; ?>?job_status=' + encodeURIComponent(jobId);
+			var titleEl = document.getElementById('export-job-title');
+			var msgEl = document.getElementById('export-job-message');
+			var started = Date.now();
+
+			function xlsUrl(file) {
+				if (!file) return '';
+				if (file.indexOf('http') === 0) return file;
+				var prefix = '';
+				var path = window.location.pathname || '';
+				var idx = path.indexOf('/admin/');
+				if (idx > 0) {
+					prefix = path.substring(0, idx);
+				}
+				return prefix + file;
+			}
+
+			function poll() {
+				AJAX.lookup(statusUrl, function (raw) {
+					var data = {};
+					try {
+						data = JSON.parse(raw);
+					} catch (e) {
+						data = {status: 'error', message: 'Некорректный ответ сервера'};
+					}
+
+					if (data.status === 'done' && data.file) {
+						titleEl.innerHTML = 'Экспорт готов';
+						msgEl.innerHTML = 'Файл сформирован, начинается скачивание.';
+						window.location.href = xlsUrl(data.file);
+						return;
+					}
+
+					if (data.status === 'error') {
+						titleEl.innerHTML = 'Ошибка экспорта';
+						msgEl.innerHTML = data.message || 'Не удалось сформировать файл';
+						return;
+					}
+
+					if (data.status === 'queued' && Date.now() - started > 30000) {
+						titleEl.innerHTML = 'Экспорт не запустился';
+						msgEl.innerHTML = 'Фоновый процесс не стартовал. Проверьте PHP CLI на сервере.';
+						return;
+					}
+
+					var elapsed = Math.round((Date.now() - started) / 1000);
+					titleEl.innerHTML = data.status === 'running' ? 'Экспорт выполняется…' : 'Ожидание запуска…';
+					msgEl.innerHTML = (data.message || 'Идёт формирование файла') + ' (' + elapsed + ' сек.)';
+					setTimeout(poll, 2500);
+				});
+			}
+
+			poll();
+		})();
+	</script>
+	<?php } ?>
+
 	<br><br>
 
 	Категория:<br>
-	<select name="category_id" id="cat" onchange="showSeries()">
+	<select name="category_id" id="cat" onchange="updateFilters()">
 		<option value="0"> - все категории - </option>
 		<?php foreach($catsIds as $cId) { ?>
 			<option value="<?php echo $cId; ?>"><?php echo Catalog_Categories::name($cId); ?></option>';
@@ -141,7 +240,7 @@
 	<br><br>
 
 	Поставщик:<br>
-	<select name="supplier_id" id="supplier" onchange="showSeries()">
+	<select name="supplier_id" id="supplier" onchange="updateFilters()">
 		<option value="0"> - все поставщики - </option>
 		<?php foreach($suppliers as $sId => $sName) { ?>
 			<option value="<?php echo $sId?>"><?php echo $sName?></option>
