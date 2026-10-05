@@ -9,16 +9,16 @@
 /*}*/
 
 :root {
-    --color-primary: #2563EB;
-    --color-primary-dark: #1D4ED8;
-    --color-primary-light: #60a5fa;
-    --color-primary-50: #eff6ff;
+    --color-primary: #ef4444;
+    --color-primary-dark: #dc2626;
+    --color-primary-light: #f87171;
+    --color-primary-50: #fef2f2;
+    --icon-box: inset 0px 0px 10px 4px rgba(239, 68, 68, 0.20);
     --surface: #ffffff;
     --surface-2: #f8fafc;
     --text: #0f172a;
     --text-secondary: #64748b;
     --border: #e2e8f0;
-    --icon-box: inset 0px 0px 10px 4px rgba(43, 72, 241, 0.20);
 }
 
 :root[data-theme="green"] {
@@ -29,12 +29,12 @@
     --icon-box: inset 0px 0px 10px 4px rgba(34, 197, 94, 0.20);
 }
 
-:root[data-theme="red"] {
-    --color-primary: #ef4444;
-    --color-primary-dark: #dc2626;
-    --color-primary-light: #f87171;
-    --color-primary-50: #fef2f2;
-    --icon-box: inset 0px 0px 10px 4px rgba(239, 68, 68, 0.20);
+:root[data-theme="blue"] {
+    --color-primary: #2563EB;
+    --color-primary-dark: #1D4ED8;
+    --color-primary-light: #60a5fa;
+    --color-primary-50: #eff6ff;
+    --icon-box: inset 0px 0px 10px 4px rgba(43, 72, 241, 0.20);
 }
 
 /**, *::before, *::after {*/

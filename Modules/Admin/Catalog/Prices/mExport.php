@@ -39,6 +39,24 @@ class mExport extends Admin
             );
         }
 
+        if (!empty($_GET['job_status'])) {
+            self::$output = OUTPUT_FRAME;
+            $jobId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$_GET['job_status']);
+            $job = self::readExportJob($jobId);
+            if (!$job) {
+                $job = array(
+                    'status' => 'error',
+                    'message' => 'Задача экспорта не найдена'
+                );
+            }
+            return json_encode($job, JSON_UNESCAPED_UNICODE);
+        }
+
+        $exportJobId = '';
+        if (!empty($_GET['job'])) {
+            $exportJobId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$_GET['job']);
+        }
+
         // Серии (по категориям и по поставщикам)
         $oSeries = new Catalog_Series();
         $series = $oSeries->get(
@@ -78,7 +96,9 @@ class mExport extends Admin
         $formHtml = pattExeP(fgc($tpl), array(
             'seriesByCat' => $seriesByCat,
             'catsIds' => $catsIds,
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'exportJobId' => $exportJobId,
+            'exportStatusUrl' => Url::a('admin-catalog-export')
         ));
         // Выводим форму
         $frm = new Form($formHtml);
@@ -171,19 +191,25 @@ class mExport extends Admin
             'seriesExtraFormula' => $seriesExtraFormula
         );
 
-        try {
-            $oExport = new Catalog_Prices_Export();
-            $filePath = $oExport->exportToFile(
-                $params['query'],
-                $params['optSeries'],
-                $params['optItems'],
-                $params['seriesExtraFormula']
-            );
-            header('Location: /xls/' . basename($filePath));
-            exit;
-        } catch (Throwable $e) {
-            Pages::flash('Ошибка экспорта: ' . $e->getMessage(), true);
+        $jobId = bin2hex(random_bytes(8));
+        self::ensureExportJobDir();
+        self::writeExportJob($jobId, array(
+            'status' => 'queued',
+            'message' => 'Экспорт поставлен в очередь',
+            'created_at' => time()
+        ));
+        file_put_contents(
+            self::exportPayloadFile($jobId),
+            json_encode($params, JSON_UNESCAPED_UNICODE)
+        );
+
+        if (!self::startExportWorker($jobId)) {
+            Pages::flash('Не удалось запустить фоновый экспорт. Проверьте PHP CLI.', true);
+            return;
         }
+
+        header('Location: ' . Url::a('admin-catalog-export') . '?job=' . urlencode($jobId));
+        exit;
     }
 
     /**
@@ -219,5 +245,105 @@ class mExport extends Admin
         }
 
         return implode(' AND ', $q);
+    }
+
+    private static function exportJobDir(): string
+    {
+        return _ROOT . '/tmp/export-jobs';
+    }
+
+    private static function exportJobFile($jobId): string
+    {
+        return self::exportJobDir() . '/' . $jobId . '.json';
+    }
+
+    private static function exportPayloadFile($jobId): string
+    {
+        return self::exportJobDir() . '/' . $jobId . '.payload.json';
+    }
+
+    private static function ensureExportJobDir(): void
+    {
+        $dir = self::exportJobDir();
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+    }
+
+    private static function readExportJob($jobId)
+    {
+        $file = self::exportJobFile($jobId);
+        if ($jobId === '' || !is_file($file)) {
+            return null;
+        }
+        $data = json_decode((string)file_get_contents($file), true);
+        return is_array($data) ? $data : null;
+    }
+
+    private static function writeExportJob($jobId, array $data): void
+    {
+        file_put_contents(self::exportJobFile($jobId), json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
+
+    private static function phpCliBinary(): string
+    {
+        $candidates = array();
+        if (defined('PHP_BINARY') && PHP_BINARY !== '') {
+            $dir = dirname(PHP_BINARY);
+            $candidates[] = $dir . DIRECTORY_SEPARATOR . 'php';
+            $candidates[] = $dir . DIRECTORY_SEPARATOR . 'php.exe';
+            $candidates[] = PHP_BINARY;
+        }
+        $candidates[] = '/usr/bin/php';
+        $candidates[] = '/usr/local/bin/php';
+        $candidates[] = 'php';
+        foreach ($candidates as $bin) {
+            if ($bin === 'php') {
+                return $bin;
+            }
+            if (!is_file($bin)) {
+                continue;
+            }
+            $base = strtolower(basename($bin));
+            if (strpos($base, 'php-fpm') !== false || strpos($base, 'php-cgi') !== false) {
+                continue;
+            }
+            return $bin;
+        }
+        return 'php';
+    }
+
+    private static function startExportWorker($jobId): bool
+    {
+        $script = _ROOT . '/cli/export_prices_worker.php';
+        if (!is_file($script)) {
+            return false;
+        }
+
+        $php = self::phpCliBinary();
+        $log = self::exportJobDir() . '/' . $jobId . '.log';
+        $cmd = escapeshellarg($php) . ' ' . escapeshellarg($script) . ' ' . escapeshellarg($jobId);
+
+        try {
+            if (PHP_OS_FAMILY === 'Windows') {
+                pclose(popen('start /B "" ' . $cmd . ' > ' . escapeshellarg($log) . ' 2>&1', 'r'));
+                return true;
+            }
+            $full = $cmd . ' > ' . escapeshellarg($log) . ' 2>&1 < /dev/null &';
+            if (function_exists('exec')) {
+                exec($full);
+                return true;
+            }
+            if (function_exists('proc_open')) {
+                $proc = proc_open($full, array(), $pipes);
+                if (is_resource($proc)) {
+                    proc_close($proc);
+                    return true;
+                }
+            }
+            return false;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 }

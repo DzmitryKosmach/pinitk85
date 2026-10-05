@@ -64,24 +64,27 @@ abstract class Catalog_Prices {
 		self::FLD_ITEMS_DISCOUNT	=> 'Скидка (%)'
 	);
 
-	/**
-	 * @var array
-	 */
-	protected static $xlsColChars = array(
-		'A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',  'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z',
-		'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
-		'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-		'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ'
-	);
-
-
 	/** Возвращает букву столбца по его номеру (нумерация с нуля)
 	 * @static
 	 * @param	int	$num
 	 * @return	string
 	 */
 	protected static function colN2C($num){
-		return isset(self::$xlsColChars[$num]) ? self::$xlsColChars[$num] : '?';
+		$num = (int)$num;
+		if ($num < 0) {
+			$num = 0;
+		}
+		if (class_exists('\\PhpOffice\\PhpSpreadsheet\\Cell\\Coordinate')) {
+			return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($num + 1);
+		}
+		$letters = '';
+		$n = $num + 1;
+		while ($n > 0) {
+			$n--;
+			$letters = chr(65 + ($n % 26)) . $letters;
+			$n = intdiv($n, 26);
+		}
+		return $letters;
 	}
 
 
@@ -91,8 +94,19 @@ abstract class Catalog_Prices {
 	 * @return	int
 	 */
 	protected static function colC2N($char){
-		$num = array_search($char, self::$xlsColChars);
-		return $num ? $num : 0;
+		$char = strtoupper((string)$char);
+		if ($char === '') {
+			return 0;
+		}
+		if (class_exists('\\PhpOffice\\PhpSpreadsheet\\Cell\\Coordinate')) {
+			return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($char) - 1;
+		}
+		$num = 0;
+		$len = strlen($char);
+		for ($i = 0; $i < $len; $i++) {
+			$num = $num * 26 + (ord($char[$i]) - 64);
+		}
+		return max(0, $num - 1);
 	}
 }
 

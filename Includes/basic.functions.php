@@ -20,6 +20,15 @@ spl_autoload_register(function ($className)
     if (strpos($className, 'PHPExcel') === 0) {
         return false;
     }
+    if ($className === 'IntlChar'
+        || strpos($className, 'PhpOffice\\') === 0
+        || strpos($className, 'Psr\\') === 0
+        || strpos($className, 'Composer\\') === 0
+        || strpos($className, 'voku\\') === 0
+        || strpos($className, 'Symfony\\') === 0
+    ) {
+        return false;
+    }
 
     // Парсим имя класса
     $className = str_replace('__', '_*', $className);

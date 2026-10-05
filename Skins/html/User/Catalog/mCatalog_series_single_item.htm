@@ -198,7 +198,7 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     }
     @media (min-width: 1024px) {
         .single-item-benefits-slot {
-            min-height: <?php echo (int)$_benefitsMinHDesktop; ?>px;
+            min-height: <?php echo (int)$_benefitsMinHDesktop - 100; ?>px;
         }
     }
 
@@ -961,17 +961,6 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
                                 showTab(tabName);
                             }
 
-                            const targetElement = document.getElementById('options-block');
-                            if (targetElement) {
-                                const elementTop = targetElement.getBoundingClientRect().top;
-                                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                                const finalScrollPosition = scrollTop + elementTop - 36;
-
-                                window.scrollTo({
-                                    top: finalScrollPosition,
-                                    behavior: 'smooth'
-                                });
-                            }
                         });
                     });
                 </script>
@@ -1214,10 +1203,6 @@ $_showAllMatsLink = count($_topMatIds) > $_matsInRow;
     </div>
     <?php include(Config::path('skins') . '/html/Components/series_options_block.htm'); ?>
 </div>
-
-
-
-<?php include(Config::path('skins') . '/html/Components/single_item_layout_compact.htm'); ?>
 
 <hr class="mb-6 border-gray-300 mt-12" />
 
